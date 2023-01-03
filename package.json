@@ -48,8 +48,7 @@
     "**/*.{ts,tsx}": [
       "prettier src/ --write",
       "eslint src/ --fix",
-      "jest --bail --findRelatedTests --passWithNoTests",
-      "git add"
+      "jest --bail --findRelatedTests --passWithNoTests"
     ]
   }
 }
