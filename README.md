@@ -54,4 +54,4 @@ To run tests, run the following command
 
 ## Authors
 
-- [@warren-sadler](https://www.github.com/warren-sadler)
+-   [@warren-sadler](https://www.github.com/warren-sadler)
