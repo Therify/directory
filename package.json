@@ -39,7 +39,7 @@
     "@storybook/react": "^7.0.0-beta.19",
     "@storybook/testing-library": "^0.0.13",
     "eslint-plugin-storybook": "^0.6.8",
-    "husky": "^8.0.2",
+    "husky": "^8.0.3",
     "lint-staged": "^13.1.0",
     "storybook": "^7.0.0-beta.19",
     "ts-node": "^10.9.1"
