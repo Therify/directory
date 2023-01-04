@@ -10,7 +10,10 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "prisma:init": "prisma init",
+    "prisma:generate": "prisma generate",
+    "prisma:studio": "prisma studio"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
@@ -19,6 +22,7 @@
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.3",
     "@next/font": "13.1.1",
+    "@prisma/client": "^4.8.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@types/node": "18.11.18",
@@ -46,6 +50,7 @@
     "eslint-plugin-storybook": "^0.6.8",
     "husky": "^8.0.3",
     "lint-staged": "^13.1.0",
+    "prisma": "^4.8.0",
     "storybook": "^7.0.0-beta.19",
     "ts-jest": "^29.0.3",
     "ts-node": "^10.9.1"
