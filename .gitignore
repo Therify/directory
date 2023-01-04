@@ -34,3 +34,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Env Files
+.env
+.env*
+
+# Generated Files
+src/lib/schema
