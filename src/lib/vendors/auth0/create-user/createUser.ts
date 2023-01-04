@@ -23,20 +23,19 @@ interface CreateUserFactory {
 
 export const factory: CreateUserFactory = ({ auth0, connection }) => {
     return async function createUser(input) {
-        try {
-            const createUserParams = inputSchema.parse(input);
-            const user = await auth0.createUser({
-                ...createUserParams,
-                connection,
-            });
-            return user;
-        } catch (error) {
-            console.log(`Error in ${CONTEXT_DEFINITION.identifier}`);
-            if (error instanceof ZodError) {
-                console.info('ZodError', error);
-                throw error;
-            }
-            throw error;
-        }
+        return new Promise((resolve, reject) => {
+            auth0.createUser(
+                {
+                    ...input,
+                    connection,
+                },
+                (error, user) => {
+                    if (error) {
+                        reject(error);
+                    }
+                    resolve(user);
+                }
+            );
+        });
     };
 };
