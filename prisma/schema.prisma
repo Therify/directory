@@ -7,6 +7,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+generator zod {
+  provider    = "zod-prisma"
+  output      = "../src/lib/schema"
+  modelSuffix = "Schema"
+}
+
 model User {
   id           String   @id @default(cuid())
   emailAddress String   @unique @map("email_address")
