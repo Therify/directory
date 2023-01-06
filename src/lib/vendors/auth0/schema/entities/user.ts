@@ -32,13 +32,13 @@ export const schema = z.object({
     family_name: z.string().optional(),
 });
 
-export type Auth0User = z.infer<typeof schema>;
+export type User = z.infer<typeof schema>;
 
-export const validate = (value: unknown): Auth0User => {
+export const validate = (value: unknown): User => {
     return schema.parse(value);
 };
 
-export const isValid = (value: unknown): value is Auth0User => {
+export const isValid = (value: unknown): value is User => {
     try {
         validate(value);
         return true;
