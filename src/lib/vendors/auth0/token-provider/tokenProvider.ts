@@ -44,8 +44,6 @@ export const generateTokenProvider: GenerateTokenProvider = ({
             const NOW = new Date();
             // Handle expired token
             if (EXPIRES_AT && EXPIRES_AT < NOW) {
-                console.log('Token expired');
-                console.log('Retrieving new token');
                 const response = await nodeFetch(oauthEndpoint, requestParams);
                 const result = await response.json();
                 const { access_token, expires_in } =
@@ -55,8 +53,6 @@ export const generateTokenProvider: GenerateTokenProvider = ({
                 return TOKEN;
             }
             if (!TOKEN) {
-                console.log('No token');
-                console.log('Retrieving new token');
                 const response = await nodeFetch(oauthEndpoint, requestParams);
                 const result = await response.json();
                 const { access_token, expires_in } =
