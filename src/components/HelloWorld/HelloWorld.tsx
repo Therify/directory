@@ -1,3 +1,5 @@
+import { Typography } from '@mui/material';
+
 export const LANGUAGES = {
     en: 'Hello',
     es: 'Hola',
@@ -15,5 +17,9 @@ export const TEST_IDS = {
 };
 
 export const HelloWorld: React.FC<HelloWorldProps> = ({ language }) => {
-    return <div data-testid={TEST_IDS.root}>{LANGUAGES[language]}, World!</div>;
+    return (
+        <Typography data-testid={TEST_IDS.root} variant={'h1'}>
+            {LANGUAGES[language]}, World!
+        </Typography>
+    );
 };
