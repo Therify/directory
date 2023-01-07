@@ -1,7 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
 @font-face {
-    font-family: 'P22 Mackinac';
-    src: url(/fonts/P22Mackinac/P22Mackinac-Bold_23.otf);
+    font-family: 'P22Mackinac';
+    src: url(/fonts/P22Mackinac.woff2) format('woff2'),
+        url(/fonts/P22Mackinac.woff) format('woff');
     font-style: bold;
     font-weight: 700;
     font-display: swap;
@@ -51,4 +52,9 @@ button {
         background-color: #0f0f0f;
         color: #fff;
     }
+}
+
+::selection {
+    background-color: #f0f0f0;
+    color: #000;
 }
