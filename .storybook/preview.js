@@ -1,4 +1,6 @@
 import '../src/styles/globals.css';
+import { THERIFY_THEME } from '../src/styles/theme';
+import { ThemeProvider } from '@mui/material/styles';
 
 export const parameters = {
     actions: { argTypesRegex: '^on[A-Z].*' },
@@ -9,3 +11,7 @@ export const parameters = {
         },
     },
 };
+
+export const decorators = [
+    (Story) => <ThemeProvider theme={THERIFY_THEME}>{Story()}</ThemeProvider>,
+];
