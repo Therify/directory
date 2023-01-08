@@ -24,7 +24,7 @@ const AUTH0_CLIENT_SECRET = 'AUTH0_CLIENT_SECRET' as const;
  * @property {string} AUTH0_CLIENT_ID - The client ID of your Auth0 application
  * @property {string} AUTH0_CLIENT_SECRET - The client secret of your Auth0 application
  */
-interface Auth0Configuration {
+export interface Auth0Configuration {
     AUTH0_DOMAIN: string;
     AUTH0_CLIENT_ID: string;
     AUTH0_CLIENT_SECRET: string;
