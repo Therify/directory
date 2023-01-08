@@ -14,6 +14,11 @@ const CONFIG: Config = {
     moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
         prefix: '<rootDir>/src',
     }),
+    testPathIgnorePatterns: [
+        '<rootDir>/.next/',
+        '<rootDir>/node_modules/',
+        '<rootDir>/e2e/',
+    ],
 };
 
 export default createJestConfig(CONFIG);

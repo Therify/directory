@@ -1,6 +1,7 @@
 import { Auth0User, auth0UserSchema } from '../../types';
 import { getAccessToken } from '../get-access-token';
 import { getResourceEndpoint } from '../get-resource-endpoint';
+import fetch from 'node-fetch';
 
 export async function getUser(userId: string): Promise<Auth0User> {
     const endpoint = getResourceEndpoint('USERS', userId);
@@ -13,8 +14,9 @@ export async function getUser(userId: string): Promise<Auth0User> {
         },
     });
     if (!response.ok) {
+        console.info('response', response);
         throw new Error(`Failed to get user: ${response.statusText}`);
     }
-    const result = await response.json();
+    const [result] = await response.json();
     return auth0UserSchema.parse(result);
 }

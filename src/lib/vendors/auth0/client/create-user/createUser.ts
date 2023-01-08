@@ -2,6 +2,8 @@ import { Input, Output } from './schema';
 import { getAccessToken } from '../get-access-token';
 import { getResourceEndpoint } from '../get-resource-endpoint';
 import { auth0UserSchema } from '../../types';
+import fetch from 'node-fetch';
+import { handleCreateUserError } from './errors';
 
 /**
  * Create a new Auth0 user
@@ -22,7 +24,11 @@ export async function createUser(input: Input): Promise<Output> {
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to create user: ${response.statusText}`);
+        console.info('response', response);
+        const error = new Error(
+            `Failed to create user: ${response.statusText}`
+        );
+        handleCreateUserError(error, response);
     }
     const result = await response.json();
     return auth0UserSchema.parse(result);

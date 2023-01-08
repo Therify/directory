@@ -10,6 +10,7 @@
     "lint": "next lint",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:e2e": "jest --config ./e2e/jest.config.ts",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "prisma:init": "prisma init",

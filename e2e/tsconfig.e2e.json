@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "types": ["jest"],
+        "baseUrl": "../src",
+        "paths": {
+            "@/*": ["*"]
+        }
+    },
+    "include": ["**/*.spec.ts", "**/*.d.ts"]
+}

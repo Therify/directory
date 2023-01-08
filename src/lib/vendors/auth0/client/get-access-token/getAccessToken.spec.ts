@@ -4,9 +4,16 @@
 jest.mock('node-fetch', () => {
     return jest.fn();
 });
-import { clearAccessToken, getAccessToken } from './getAccessToken';
+import { generateGetAccessToken } from './getAccessToken';
 import nodeFetch from 'node-fetch';
 import { sleep } from '@/lib/utils';
+import { withAuth0Configuration } from '../../configuration';
+
+const { getAccessToken, clearAccessToken } = withAuth0Configuration(
+    (CONFIG) => {
+        return generateGetAccessToken(CONFIG);
+    }
+);
 
 describe('getAccessToken', () => {
     beforeEach(() => {
