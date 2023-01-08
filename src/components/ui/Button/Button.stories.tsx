@@ -1,6 +1,4 @@
-import { THERIFY_THEME } from '@/styles/theme';
 import { Typography } from '@mui/material';
-import { ThemeProvider } from '@mui/material/styles';
 import { Meta, StoryObj, StoryFn } from '@storybook/react';
 import Button, { ButtonProps, BUTTON_COLORS, BUTTON_SIZE } from './Button';
 
