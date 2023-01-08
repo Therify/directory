@@ -1,2 +1,2 @@
-export * from './generateWithConfig';
-export * from './getAuth0Configuration';
+export * from './generate-with-config';
+export * from './sleep';
