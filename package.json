@@ -24,7 +24,7 @@
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.3",
     "@next/font": "13.1.1",
-    "@prisma/client": "^4.8.0",
+    "@prisma/client": "^4.8.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@types/node": "18.11.18",
