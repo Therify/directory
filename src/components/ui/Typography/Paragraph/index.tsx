@@ -9,17 +9,14 @@ export const PARAGRAPH_SIZE = {
 
 export type ParagraphSize = typeof PARAGRAPH_SIZE[keyof typeof PARAGRAPH_SIZE];
 
-export const enum ParagraphFontWeight {
-    Bold = 'bold',
-    Normal = 'normal',
-    Medium = 'medium',
-}
-
 export const PARAGRAPH_FONT_WEIGHT = {
     BOLD: 'bold',
     NORMAL: 'normal',
     MEDIUM: 'medium',
 } as const;
+
+export type ParagraphFontWeight =
+    typeof PARAGRAPH_FONT_WEIGHT[keyof typeof PARAGRAPH_FONT_WEIGHT];
 
 export const PARAGRAPH_TEXT_DECORATION = {
     UNDERLINE: 'underline',
@@ -65,7 +62,7 @@ export const Paragraph = styled(MuiParagraph, {
         size = PARAGRAPH_SIZE.MEDIUM,
         italic,
         bold,
-        fontWeight = ParagraphFontWeight.Normal,
+        fontWeight = PARAGRAPH_FONT_WEIGHT.NORMAL,
         textDecoration,
         noMargin,
     }) => {

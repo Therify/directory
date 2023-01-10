@@ -2,6 +2,7 @@ import { renderWithTheme } from '../../../fixtures/renderWithTheme';
 import {
     Paragraph,
     ParagraphFontWeight,
+    PARAGRAPH_FONT_WEIGHT,
     PARAGRAPH_SIZE,
     PARAGRAPH_TEXT_DECORATION,
 } from './index';
@@ -61,7 +62,9 @@ describe('Paragraph', () => {
 
     it('should pass font weight', () => {
         const { getByText } = renderWithTheme(
-            <Paragraph fontWeight={ParagraphFontWeight.Bold}>{text}</Paragraph>
+            <Paragraph fontWeight={PARAGRAPH_FONT_WEIGHT.BOLD}>
+                {text}
+            </Paragraph>
         );
         const p = getByText(text);
         expect(p).toHaveStyle('font-weight: bold');
@@ -77,7 +80,7 @@ describe('Paragraph', () => {
 
     it('should override font-weight when bold flag present', () => {
         const { getByText } = renderWithTheme(
-            <Paragraph bold fontWeight={ParagraphFontWeight.Medium}>
+            <Paragraph bold fontWeight={PARAGRAPH_FONT_WEIGHT.MEDIUM}>
                 {text}
             </Paragraph>
         );

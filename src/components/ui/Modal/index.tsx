@@ -4,7 +4,11 @@ import { Theme, useTheme } from '@mui/material/styles';
 import { CSSProperties, ReactNode } from 'react';
 import { colors } from '../../themes/therify-design-system';
 import { Button, BUTTON_SIZE, BUTTON_TYPE, IconButton } from '../Button';
-import { Paragraph, ParagraphFontWeight, PARAGRAPH_SIZE } from '../Typography';
+import {
+    Paragraph,
+    PARAGRAPH_FONT_WEIGHT,
+    PARAGRAPH_SIZE,
+} from '../Typography';
 
 interface BaseModalProps {
     isOpen: boolean;
@@ -130,7 +134,7 @@ export const Modal = ({
                     {title && (
                         <Paragraph
                             data-testid={TEST_IDS.TITLE}
-                            fontWeight={ParagraphFontWeight.Bold}
+                            fontWeight={PARAGRAPH_FONT_WEIGHT.BOLD}
                         >
                             {title}
                         </Paragraph>
