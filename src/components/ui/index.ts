@@ -1,22 +1,23 @@
 export { Accordion, TEST_IDS as ACCORDION_TEST_IDS } from './Accordion';
-export { Alert, AlertType } from './Alert';
+export { Alert } from './Alert';
+export type { AlertType } from './Alert';
 export {
     Avatar,
-    AvatarSize,
-    AvatarColor,
+    AVATAR_COLOR,
+    AVATAR_SIZE,
     TEST_IDS as AVATAR_TEST_IDS,
 } from './Avatar';
 export {
     Badge,
-    BadgeColor,
-    BadgeSize,
-    BadgeType,
+    BADGE_COLOR,
+    BADGE_SIZE,
+    BADGE_TYPE,
     TEST_IDS as BADGE_TEST_IDS,
 } from './Badge';
-export { BlockQuote, BlockQuoteSize } from './BlockQuote';
+export { BlockQuote, BLOCK_QUOTE_SIZE } from './BlockQuote';
 export { Carousel } from './Carousel';
 export { IconWithBadge } from './IconWithBadge';
-export { Button, ButtonSize, ButtonType, IconButton } from './Button';
+export { Button, BUTTON_SIZE, BUTTON_TYPE, IconButton } from './Button';
 export type { ButtonProps } from './Button';
 export { Card, TEST_IDS as CARD_TEST_IDS } from './Card';
 export { DataTable } from './DataTable';
@@ -42,4 +43,3 @@ export { TopBar } from './TopBar';
 export * from './Typography';
 export * from './Wizard';
 export * from './Picker';
-export * from './Calendar';

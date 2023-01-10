@@ -9,7 +9,9 @@ export const schema: z.ZodType<Stripe.Response<unknown>> = z.object({
     lastResponse: z.object({
         headers: z.object({}),
         responseId: z.string(),
+        requestId: z.string(),
         request: z.object({
+            requestId: z.string(),
             idempotencyKey: z.string().optional(),
             method: z.string(),
             path: z.string(),

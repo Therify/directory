@@ -1,1 +1,2 @@
-export { generateTransaction, TransactionDefinition } from './transaction';
+export type { TransactionDefinition } from './transaction';
+export { generateTransaction } from './transaction';
