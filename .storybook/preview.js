@@ -1,5 +1,5 @@
 import '../src/styles/globals.css';
-import { THERIFY_THEME } from '../src/styles/theme';
+import { therifyDesignSystem } from '../src/components/themes/therify-design-system';
 import { ThemeProvider } from '@mui/material/styles';
 
 export const parameters = {
@@ -13,5 +13,7 @@ export const parameters = {
 };
 
 export const decorators = [
-    (Story) => <ThemeProvider theme={THERIFY_THEME}>{Story()}</ThemeProvider>,
+    (Story) => (
+        <ThemeProvider theme={therifyDesignSystem}>{Story()}</ThemeProvider>
+    ),
 ];
