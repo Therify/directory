@@ -1,48 +1,13 @@
-import { Typography } from '@mui/material';
-import { Meta, StoryObj, StoryFn } from '@storybook/react';
-import Button, { ButtonProps, BUTTON_COLORS, BUTTON_SIZE } from './Button';
+import { Meta, StoryFn } from '@storybook/react';
+import { Button, ButtonProps, BUTTON_SIZE, BUTTON_TYPE } from './Button';
 
-const meta: Meta = {
+const meta: Meta<typeof Button> = {
     title: 'Components/Button',
     component: Button,
 };
 
-export const Default: StoryObj<ButtonProps> = {
-    args: {
-        children: 'Button',
-    },
-};
-
-export const Buttons: StoryFn<ButtonProps> = (args) => {
-    return (
-        <>
-            {Object.keys(BUTTON_COLORS).map((color) => (
-                <div key={color}>
-                    <Typography variant="h2">
-                        {BUTTON_COLORS[color as keyof typeof BUTTON_COLORS]}
-                    </Typography>
-                    {Object.keys(BUTTON_SIZE).map((size) => (
-                        <>
-                            <Button
-                                color={
-                                    BUTTON_COLORS[
-                                        color as keyof typeof BUTTON_COLORS
-                                    ]
-                                }
-                                size={
-                                    BUTTON_SIZE[
-                                        size as keyof typeof BUTTON_SIZE
-                                    ]
-                                }
-                            >
-                                {size}
-                            </Button>
-                        </>
-                    ))}
-                </div>
-            ))}
-        </>
-    );
-};
-
 export default meta;
+
+export const Default: StoryFn<ButtonProps> = (args) => (
+    <Button {...args}>Button!</Button>
+);
