@@ -1,11 +1,11 @@
+import { Box } from '@mui/material';
 import {
-    Box,
     styled,
     keyframes,
     useTheme,
     SxProps,
     Theme,
-} from '@mui/material';
+} from '@mui/material/styles';
 import { colors } from '../../../../themes/therify-design-system';
 
 const gradientColors = [
