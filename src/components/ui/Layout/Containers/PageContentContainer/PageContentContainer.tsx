@@ -1,4 +1,5 @@
-import { styled, Box } from '@mui/material';
+import { Box } from '@mui/material';
+import { styled } from '@mui/material/styles';
 
 const maxWidthStyles = {
     maxWidth: '1413px',

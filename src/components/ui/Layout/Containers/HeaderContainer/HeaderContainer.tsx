@@ -1,4 +1,5 @@
-import { Box, styled, SxProps, Theme } from '@mui/material';
+import { Box } from '@mui/material';
+import { styled, SxProps, Theme } from '@mui/material/styles';
 
 import { colors } from '../../../../themes/therify-design-system';
 import { AbstractShape2, AbstractShape3 } from '../../../Shapes';

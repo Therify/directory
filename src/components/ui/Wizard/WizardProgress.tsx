@@ -1,4 +1,5 @@
-import { Step, StepLabel, Stepper, styled } from '@mui/material';
+import { Step, StepLabel, Stepper } from '@mui/material';
+import { styled } from '@mui/material/styles';
 
 import { WizardChildProps } from './types';
 
