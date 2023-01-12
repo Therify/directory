@@ -1,5 +1,4 @@
 import Stripe from 'stripe';
-import { StripeVendorFactoryParams } from '../types';
 import { Input } from './schema';
 
 export interface RetrieveCustomerFactoryParams {

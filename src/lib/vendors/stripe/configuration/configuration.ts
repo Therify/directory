@@ -12,6 +12,7 @@ export const getStripeConfiguration = (
 ) => {
     return {
         [STRIPE_SECRET_KEY]: get(STRIPE_SECRET_KEY).required().asString(),
+        ...overrides,
     };
 };
 

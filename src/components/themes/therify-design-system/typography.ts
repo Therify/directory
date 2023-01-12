@@ -4,6 +4,7 @@ const DOCUMENT_FONT_FAMILY = ['Roboto', '-apple-system', 'sans-serif'] as const;
 const HEADING_DISPLAY_FONT_FAMILY = ['P22 Mackinac', 'Georgia'] as const;
 
 declare module '@mui/material/styles' {
+    // eslint-disable-next-line no-unused-vars
     interface TypographyVariants {
         captionSmall: React.CSSProperties;
         overlineLarge: React.CSSProperties;
@@ -17,6 +18,7 @@ declare module '@mui/material/styles' {
     }
 
     // allow configuration using `createTheme`
+    // eslint-disable-next-line no-unused-vars
     interface TypographyVariantsOptions {
         captionSmall?: React.CSSProperties;
         overlineLarge?: React.CSSProperties;
@@ -32,6 +34,7 @@ declare module '@mui/material/styles' {
 
 // Update the Typography's variant prop options
 declare module '@mui/material/Typography' {
+    // eslint-disable-next-line no-unused-vars
     interface TypographyPropsVariantOverrides {
         captionSmall: true;
         overlineLarge: true;
@@ -73,6 +76,10 @@ export const typography: TypographyOptions = {
         fontWeight: 'bold',
         marginBottom: '1.5rem',
         // TODO: Handle mobile size changes from design system
+        '@media (min-width:600px)': {
+            fontSize: '3rem',
+            lineHeight: '3.563rem',
+        },
     },
     h2: {
         fontFamily: HEADING_DISPLAY_FONT_FAMILY.join(', '),
@@ -80,6 +87,9 @@ export const typography: TypographyOptions = {
         lineHeight: '2.688rem',
         fontWeight: 'bold',
         marginBottom: '1.125rem',
+        '@media (min-width:600px)': {
+            fontSize: '2.5rem',
+        },
     },
     h3: {
         fontFamily: HEADING_DISPLAY_FONT_FAMILY.join(', '),

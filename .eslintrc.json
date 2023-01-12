@@ -1,7 +1,7 @@
 {
     "extends": ["next/core-web-vitals", "plugin:storybook/recommended"],
     "rules": {
-        "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+        "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
         "no-unused-expressions": [
             "error",
             { "allowShortCircuit": true, "allowTernary": true }
