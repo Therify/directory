@@ -29,6 +29,12 @@
     "paths": {
       "@/*": [
         "*"
+      ],
+      "@features": [
+        "lib/features"
+      ],
+      "@services": [
+        "lib/services"
       ]
     },
     "plugins": [

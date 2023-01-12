@@ -1,4 +1,5 @@
 import Stripe from 'stripe';
+import { CreateCheckoutSession } from './client/create-checkout-session';
 import { CreateCustomer } from './client/create-customer';
 import { CreateProduct } from './client/create-product';
 import { DeleteCustomer } from './client/delete-customer';
@@ -28,6 +29,9 @@ export const VendorStripe = withStripeConfiguration((CONFIG) => {
             stripe,
         }),
         deleteProduct: DeleteProduct.factory({
+            stripe,
+        }),
+        createCheckoutSession: CreateCheckoutSession.factory({
             stripe,
         }),
     };

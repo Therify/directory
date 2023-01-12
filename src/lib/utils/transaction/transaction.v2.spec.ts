@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { v4 as uuid } from 'uuid';
-import { generateTransaction } from './transaction';
+import { generateTransaction } from './transaction.v2';
 
 interface User {
     name: string;
