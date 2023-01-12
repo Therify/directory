@@ -1,4 +1,4 @@
-![Therify Logo](https://uploads-ssl.webflow.com/63036fae7a2d87adca378a78/63922c7832daff12332bfb5f_Therify_Logo_FullColor_RGB_2022.svg)
+![Therify Logo](https://res.cloudinary.com/dbrkfldqn/image/upload/v1673472296/app.therify.co/logo/therify-logo_e45lbl.svg)
 
 # Therify App
 
@@ -17,7 +17,7 @@ Please adhere to this project's `code of conduct`.
 Clone the project
 
 ```bash
-  git clone https://therify/app
+  git clone https://therify/directory
 ```
 
 Go to the project directory
