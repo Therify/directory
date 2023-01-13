@@ -4,7 +4,7 @@ import { PasswordInput as Input, FormValidation } from '@/components/ui';
 import { TEST_IDS } from './testIds';
 
 interface PasswordInputProps {
-    control: Control<RegisterProvider.Input['providerDetails']>;
+    control: Control<RegisterProvider.Input>;
 }
 
 export const PasswordInput = ({ control }: PasswordInputProps) => (

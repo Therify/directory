@@ -7,29 +7,22 @@ interface CreateAuth0UserFactory {
     ): RegisterProviderTransaction['createAuth0User'];
 }
 
-export const factory: CreateAuth0UserFactory = ({
-    providerDetails: { emailAddress, password },
-}) => {
+export const factory: CreateAuth0UserFactory = ({ emailAddress, password }) => {
     return {
-        async commit(
-            { auth0 },
-            { createTherifyUserEntity: { therifyUserId } }
-        ) {
+        async commit({ auth0 }) {
             const { user_id: auth0UserId } = await auth0.createUser({
                 email: emailAddress,
                 password,
-                user_metadata: {
-                    therify_user_id: therifyUserId,
-                },
+                verify_email: process.env.NODE_ENV === 'production',
             });
+            if (!auth0UserId) throw new Error('No Auth0 user ID was returned.');
             return {
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                auth0UserId: auth0UserId!,
+                auth0UserId,
                 emailAddress,
             };
         },
         rollback({ auth0 }, { createAuth0User: { auth0UserId } }) {
-            return auth0.deleteUser({ user_id: auth0UserId });
+            return auth0.deleteUser(auth0UserId);
         },
     };
 };

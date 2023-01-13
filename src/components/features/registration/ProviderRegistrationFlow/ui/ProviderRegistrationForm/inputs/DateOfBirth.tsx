@@ -4,7 +4,7 @@ import { DatePicker } from '@/components/ui';
 import { RegisterProvider } from '@/lib/features/registration';
 
 interface DOBInputProps {
-    control: Control<RegisterProvider.Input['providerDetails']>;
+    control: Control<RegisterProvider.Input>;
     defaultValue?: string;
 }
 

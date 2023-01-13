@@ -8,7 +8,7 @@ import { RetrieveCustomer } from './client/retrieve-customer';
 import { SearchProduct } from './client/search-product';
 import { withStripeConfiguration } from './configuration';
 
-export const VendorStripe = withStripeConfiguration((CONFIG) => {
+export const vendorStripe = withStripeConfiguration((CONFIG) => {
     const stripe = new Stripe(CONFIG.STRIPE_SECRET_KEY, {
         apiVersion: '2022-11-15',
     });
@@ -37,4 +37,4 @@ export const VendorStripe = withStripeConfiguration((CONFIG) => {
     };
 });
 
-export type VendorStripe = typeof VendorStripe;
+export type VendorStripe = typeof vendorStripe;

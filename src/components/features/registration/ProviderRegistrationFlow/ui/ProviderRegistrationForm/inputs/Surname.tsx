@@ -4,7 +4,7 @@ import { RegisterProvider } from '@/lib/features/registration';
 import { TEST_IDS } from './testIds';
 
 interface SurnameInputProps {
-    control: Control<RegisterProvider.Input['providerDetails']>;
+    control: Control<RegisterProvider.Input>;
     defaultValue?: string;
 }
 

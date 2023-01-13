@@ -4,7 +4,7 @@ import { Input, FormValidation } from '@/components/ui';
 import { TEST_IDS } from './testIds';
 
 interface EmailInputProps {
-    control: Control<RegisterProvider.Input['providerDetails']>;
+    control: Control<RegisterProvider.Input>;
     defaultValue?: string;
     isEmailUnique?: boolean;
     disabled?: boolean;

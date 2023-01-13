@@ -2,8 +2,8 @@ import { useForm } from 'react-hook-form';
 import { RegisterProvider } from '@/lib/features/registration';
 
 interface ProviderRegistrationFormProps {
-    defaultProviderDetails?: Partial<RegisterProvider.Input['providerDetails']>;
-    defaultNumberOfSeats?: Partial<RegisterProvider.Input['numberOfSeats']>;
+    defaultProviderDetails?: Partial<RegisterProvider.Input>;
+    defaultNumberOfSeats?: number;
 }
 
 export const useRegistrationForms = (
@@ -11,15 +11,13 @@ export const useRegistrationForms = (
 ) => {
     const { defaultProviderDetails, defaultNumberOfSeats } = options ?? {};
 
-    const providerDetailsForm = useForm<
-        RegisterProvider.Input['providerDetails']
-    >({
+    const providerDetailsForm = useForm<RegisterProvider.Input>({
         mode: 'onChange',
         defaultValues: defaultProviderDetails,
     });
 
     const numberOfSeatsForm = useForm<{
-        numberOfSeats: RegisterProvider.Input['numberOfSeats'];
+        numberOfSeats: number;
     }>({
         mode: 'onChange',
         defaultValues: {

@@ -4,10 +4,10 @@ import { getUser } from './client/get-user';
 export * from './types';
 export * from './configuration';
 
-export const VendorAuth0 = {
+export const vendorAuth0 = {
     createUser,
     deleteUser,
     getUser,
 } as const;
 
-export type VendorAuth0 = typeof VendorAuth0;
+export type VendorAuth0 = typeof vendorAuth0;

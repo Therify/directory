@@ -4,13 +4,11 @@ const PROVIDER_DETAILS_STORAGE_KEY =
     'therify-registration-providerDetails' as const;
 
 type SafeProviderDetails = Pick<
-    RegisterProvider.Input['providerDetails'],
+    RegisterProvider.Input,
     'givenName' | 'surname' | 'emailAddress' | 'dateOfBirth'
 >;
 export const useRegistrationStorage = () => {
-    const storeProviderDetails = (
-        providerDetails: RegisterProvider.Input['providerDetails']
-    ) => {
+    const storeProviderDetails = (providerDetails: RegisterProvider.Input) => {
         const savedProviderDetails: SafeProviderDetails = {
             givenName: providerDetails.givenName,
             surname: providerDetails.surname,

@@ -5,7 +5,7 @@ import { RegisterProvider } from '@/lib/features/registration';
 import { TEST_IDS } from './testIds';
 
 interface TermsAndConditionsInputProps {
-    control: Control<RegisterProvider.Input['providerDetails']>;
+    control: Control<RegisterProvider.Input>;
 }
 
 export const TermsAndConditionsInput = ({

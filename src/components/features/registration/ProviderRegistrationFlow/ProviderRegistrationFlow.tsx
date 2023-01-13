@@ -4,14 +4,13 @@ import { styled, Box, CircularProgress } from '@mui/material';
 import { ReportProblemRounded } from '@mui/icons-material';
 import {
     Alert,
-    AlertType,
     CenteredContainer,
     Stepper,
     TherifyLogo,
     H3,
     FormValidation,
 } from '../../../ui';
-import { ProviderRegistrationForm, FlowNavigation, SeatCountForm } from './ui';
+import { ProviderRegistrationForm, FlowNavigation } from './ui';
 import {
     useRegistrationForms,
     useRegistrationStorage,
@@ -20,13 +19,10 @@ import {
 import { RegisterProvider } from '@/lib/features/registration';
 import { ALERT_TYPE } from '@/components/ui/Alert';
 
-const REGISTRATION_STEPS = ['Registration', 'Select Plan', 'Payment'] as const;
+const REGISTRATION_STEPS = ['Registration'] as const;
 
 interface ProviderRegistrationFlowProps {
-    registerProvider: (input: {
-        providerDetails: RegisterProvider.Input['providerDetails'];
-        numberOfSeats: RegisterProvider.Input['numberOfSeats'];
-    }) => void;
+    registerProvider: (providerDetails: RegisterProvider.Input) => void;
     errorMessage?: string;
     clearErrorMessage: () => void;
     isRegisteringProvider: boolean;
@@ -59,34 +55,13 @@ export const ProviderRegistrationFlow = ({
         REGISTRATION_STEPS as unknown as string[]
     );
 
-    const handleNext = () => {
-        if (currentStepIndex === 0) {
-            storeProviderDetails(providerDetailsForm.getValues());
-            return setCurrentStepIndex(1);
-        }
-        if (currentStepIndex === 1) {
-            return registerProvider({
-                providerDetails: providerDetailsForm.getValues(),
-                numberOfSeats: numberOfSeatsForm.getValues().numberOfSeats,
-            });
-        }
+    const handleSubmit = () => {
+        // TODO: Store partial on blur
+        storeProviderDetails(providerDetailsForm.getValues());
+        return registerProvider(providerDetailsForm.getValues());
     };
     const debounceRef = useRef<number>();
     const emailAddress = providerDetailsForm.watch('emailAddress');
-    const numberOfSeats = numberOfSeatsForm.watch('numberOfSeats');
-
-    const isNextDisabled = () => {
-        if (currentStepIndex === 0) {
-            return !providerDetailsForm.formState.isValid;
-        }
-        if (currentStepIndex === 1) {
-            return (
-                !numberOfSeatsForm.formState.isValid ||
-                !providerDetailsForm.formState.isValid
-            );
-        }
-        return false;
-    };
 
     useEffect(() => {
         const shouldFetchUniqueness =
@@ -127,19 +102,11 @@ export const ProviderRegistrationFlow = ({
                 </StepperContainer>
             </HeaderContainer>
             <FormContainer isError={Boolean(errorMessage)}>
-                {currentStepIndex === 0 && (
-                    <ProviderRegistrationForm
-                        isEmailUnique={emailsCheckedForUniqueness[emailAddress]}
-                        control={providerDetailsForm.control}
-                        password={providerDetailsForm.watch('password')}
-                    />
-                )}
-                {currentStepIndex === 1 && (
-                    <SeatCountForm
-                        control={numberOfSeatsForm.control}
-                        {...{ baseSeatPrice, numberOfSeats }}
-                    />
-                )}
+                <ProviderRegistrationForm
+                    isEmailUnique={emailsCheckedForUniqueness[emailAddress]}
+                    control={providerDetailsForm.control}
+                    password={providerDetailsForm.watch('password')}
+                />
 
                 {errorMessage && (
                     <motion.div
@@ -162,10 +129,10 @@ export const ProviderRegistrationFlow = ({
             <FlowNavigation
                 currentStepIndex={currentStepIndex}
                 onBack={back}
-                onNext={handleNext}
-                isFinalStep={currentStepIndex === 1}
+                onNext={handleSubmit}
+                isFinalStep
                 isNextLoading={isLoadingNextStep || isRegisteringProvider}
-                isNextDisabled={isNextDisabled()}
+                isNextDisabled={!providerDetailsForm.formState.isValid}
             />
         </Box>
     );

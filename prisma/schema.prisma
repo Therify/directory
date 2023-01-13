@@ -20,31 +20,40 @@ enum Role {
 }
 
 model User {
-  id               String   @id @default(cuid())
-  emailAddress     String   @unique @map("email_address")
-  givenName        String   @map("given_name")
-  surname          String
-  dateOfBirth      DateTime @map("date_of_birth")
-  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt        DateTime @default(now()) @map("updated_at") @db.Timestamp(6)
-  stripeCustomerId String?  @map("stripe_customer_id")
-  role             Role
-  auth0Id          String   @unique @map("auth0_id")
-  account          Account?
+  id                            String   @id @default(cuid())
+  emailAddress                  String   @unique @map("email_address")
+  givenName                     String   @map("given_name")
+  surname                       String
+  dateOfBirth                   DateTime @map("date_of_birth")
+  hasAcceptedTermsAndConditions Boolean  @map("has_accepted_terms_and_conditions")
+  createdAt                     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt                     DateTime @default(now()) @map("updated_at") @db.Timestamp(6)
+  role                          Role
+  stripeCustomerId              String?  @map("stripe_customer_id")
+  auth0Id                       String   @unique @map("auth0_id")
 
-  accountId String @unique
+  account                    Account?                     @relation(fields: [accountId], references: [id])
+  accountId                  String?                      @unique
+  plan                       Plan[]
+  stripeInvoice              StripeInvoice[]
+  practiceProvider           PracticeProvider[]
+  directoryListingInvitation DirectoryListingInvitation[]
+  providerProfile            ProviderProfile?
 
   @@map("users")
 }
 
 model Account {
-  id               String             @id @default(cuid()) @map("account_id")
-  user             User               @relation(fields: [userId], references: [id])
-  userId           String             @unique @map("user_id")
-  name             String
-  createdAt        DateTime           @default(now()) @map("created_at")
-  updatedAt        DateTime           @updatedAt @map("updated_at")
-  registrationCode RegistrationCode[] @map("registration_code")
+  id                 String             @id @default(cuid()) @map("account_id")
+  name               String
+  createdAt          DateTime           @default(now()) @map("created_at")
+  updatedAt          DateTime           @updatedAt @map("updated_at")
+  registrationCode   RegistrationCode[]
+  registrationCodeId String?            @map("registration_code_id")
+  plan               Plan[]
+  stripeInvoice      StripeInvoice[]
+  practice           Practice[]
+  users              User[]
 
   @@map("accounts")
 }
@@ -63,14 +72,21 @@ enum ListingStatus {
 }
 
 model DirectoryListing {
-  practice   Practice        @relation(fields: [practiceId], references: [id])
-  practiceId String          @map("practice_id")
-  profile    ProviderProfile
-  profileId  String?
-  status     ListingStatus
+  id                Int             @id @default(autoincrement())
+  practice          Practice        @relation(fields: [practiceId], references: [id])
+  practiceId        String          @map("practice_id")
+  profile           ProviderProfile @relation(fields: [profileId], references: [id])
+  profileId         String          @map("profile_id")
+  status            ListingStatus
+  providerProfileId Int
 
-  @@id([practiceId, profileId])
   @@map("directory_listings")
+}
+
+enum ProductType {
+  subscription_provider
+  subscription_member
+  session
 }
 
 model Plan {
@@ -82,16 +98,15 @@ model Plan {
   endDate              DateTime        @map("end_date")
   // start This might not be needed. One subscription to many users. The invitations represent the seat usage
   accountId            String?         @map("account_id") // Missing account id means individual plan
-  userId               Int?            @map("user_id") // Missing user id means unclaimed seat
+  userId               String          @unique @map("user_id") // Missing user id means unclaimed seat
   // end
-  billingUserId        Int?            @map("billing_user_id")
+  billingUserId        String?         @map("billing_user_id")
   createdAt            DateTime        @default(now()) @map("created_at")
   updatedAt            DateTime        @updatedAt @map("updated_at")
   status               String
   stripeCustomerId     String?         @map("stripe_customer_id")
   stripeSubscriptionId String?         @unique @map("stripe_subscription_id")
-  product              Product         @relation(fields: [productId], references: [id])
-  productId            String          @map("product_id")
+  product              ProductType
   invoices             StripeInvoice[]
 
   @@index([stripeCustomerId, stripeSubscriptionId])
@@ -105,7 +120,7 @@ model StripeInvoice {
   planId          Int?     @map("plan_id")
   invoiceId       String   @map("invoice_id") @db.VarChar(255)
   user            User?    @relation(fields: [userId], references: [id])
-  userId          Int?     @map("user_id")
+  userId          String   @unique @map("user_id")
   account         Account? @relation(fields: [accountId], references: [id])
   accountId       String?  @map("account_id")
   status          String
@@ -122,7 +137,7 @@ model StripeInvoice {
 }
 
 model Practice {
-  id               String             @id @default(autoincrement())
+  id               String             @id @default(cuid())
   name             String
   address          String
   address2         String?            @map("address_2")
@@ -135,10 +150,12 @@ model Practice {
   directoryListing DirectoryListing[]
   account          Account?           @relation(fields: [accountId], references: [id])
   accountId        String?            @map("account_id")
-  registrationCode RegistrationCode[] @map("registration_code")
+  // registrationCode RegistrationCode[] @map("registration_code")
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt                  DateTime                     @default(now()) @map("created_at")
+  updatedAt                  DateTime                     @updatedAt @map("updated_at")
+  practiceProvider           PracticeProvider[]
+  directoryListingInvitation DirectoryListingInvitation[]
 
   @@map("practices")
 }
@@ -146,13 +163,13 @@ model Practice {
 model PracticeProvider {
   practice   Practice @relation(fields: [practiceId], references: [id])
   practiceId String   @map("practice_id")
-  provider   User     @relation(fields: [providerId], references: [id])
+  provider   User     @relation(fields: [userId], references: [id])
   userId     String   @map("user_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@id([practiceId, providerId])
+  @@id([practiceId, userId])
   @@map("practice_providers")
 }
 
@@ -181,18 +198,18 @@ model DirectoryListingInvitation {
 //credentialing,
 //license/npi numbers and types
 model ProviderProfile {
-  id                     Int       @id @default(autoincrement()) @map("provider_profile_id")
-  createdAt              DateTime  @default(now()) @map("created_at")
-  updatedAt              DateTime? @updatedAt @map("updated_at")
-  user                   User?     @relation(fields: [userId], references: [id])
-  userId                 Int?      @unique @map("user_id")
-  bio                    String?   @db.Text
-  profileImageUrl        String?   @map("profile_image_url")
-  yearsOfExperience      String    @map("years_of_experience")
-  minimumRate            Int       @map("minimum_rate")
-  maximumRate            Int?      @map("maximum_rate")
-  idealClientDescription String?   @map("ideal_client_description") @db.Text
-  practiceNotes          String?   @map("practice_notes")
+  id                     String             @id @default(cuid()) @map("provider_profile_id")
+  createdAt              DateTime           @default(now()) @map("created_at")
+  updatedAt              DateTime?          @updatedAt @map("updated_at")
+  user                   User?              @relation(fields: [userId], references: [id])
+  userId                 String?            @unique @map("user_id")
+  bio                    String?            @db.Text
+  profileImageUrl        String?            @map("profile_image_url")
+  yearsOfExperience      String             @map("years_of_experience")
+  minimumRate            Int                @map("minimum_rate")
+  maximumRate            Int?               @map("maximum_rate")
+  idealClientDescription String?            @map("ideal_client_description") @db.Text
+  practiceNotes          String?            @map("practice_notes")
   // gender                 Gender                          @relation(fields: [genderId], references: [id])
   // genderId               String                          @map("gender_id")
   // sessionTypes           ProviderSessionType[]
@@ -212,6 +229,7 @@ model ProviderProfile {
   // bookings               Booking[]
   // schedule               ProviderSchedule?
   // stripeAccount          ProviderStripeAccount?
+  directoryListing       DirectoryListing[]
 
   @@map("provider_profiles")
 }

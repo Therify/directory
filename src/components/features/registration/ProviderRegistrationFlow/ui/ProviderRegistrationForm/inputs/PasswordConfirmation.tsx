@@ -5,7 +5,7 @@ import { TEST_IDS } from './testIds';
 import React, { useEffect } from 'react';
 
 interface PasswordConfirmInputProps {
-    control: Control<RegisterProvider.Input['providerDetails']>;
+    control: Control<RegisterProvider.Input>;
     password: string;
 }
 

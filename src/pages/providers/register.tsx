@@ -6,7 +6,6 @@ import { Box, styled } from '@mui/material';
 import { trpc } from '@/lib/utils/trpc';
 
 export default function ProviderRegistrationPage() {
-    const priceId = 'price_1MOmC0Allox7wzg5rapKGwqU';
     const [registrationError, setRegistrationError] = useState<string>();
     const { clearRegistrationStorage } = useRegistrationStorage();
     const handleError = (errorMessage: string) => {
@@ -28,13 +27,10 @@ export default function ProviderRegistrationPage() {
         },
     });
 
-    const registerProvider = async function (input: {
-        providerDetails: RegisterProvider.Input['providerDetails'];
-        numberOfSeats: RegisterProvider.Input['numberOfSeats'];
-    }) {
+    const registerProvider = async function (input: RegisterProvider.Input) {
         setRegistrationError(undefined);
 
-        mutation.mutate({ ...input, priceId });
+        mutation.mutate(input);
     };
 
     return (

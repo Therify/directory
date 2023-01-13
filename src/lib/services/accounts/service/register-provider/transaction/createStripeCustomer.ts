@@ -3,13 +3,18 @@ import { RegisterProvider } from '@/lib/features/registration';
 import { RegisterProviderTransaction } from './definition';
 
 export const factory = ({
-    providerDetails: { givenName, surname, emailAddress: customerEmail },
+    providerDetails: { givenName, surname, emailAddress: email },
 }: RegisterProvider.Input): RegisterProviderTransaction['createStripeCustomer'] => ({
-    async commit({ stripe }, { createTherifyUserEntity: { therifyUserId } }) {
-        const { customerId } = await stripe.createCustomer({
-            customerName: `${givenName} ${surname}`,
-            customerEmail,
-            therifyUserId,
+    async commit(
+        { stripe },
+        { createTherifyUserEntity: { therifyUserId: therify_user_id } }
+    ) {
+        const { id: customerId } = await stripe.createCustomer({
+            name: `${givenName} ${surname}`,
+            email,
+            metadata: {
+                therify_user_id,
+            },
         });
         return {
             customerId,

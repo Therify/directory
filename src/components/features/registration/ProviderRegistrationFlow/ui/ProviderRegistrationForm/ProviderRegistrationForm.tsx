@@ -18,12 +18,12 @@ import {
 export interface ProviderRegistrationFormProps {
     defaultValues?: Partial<
         Omit<
-            RegisterProvider.Input['providerDetails'],
+            RegisterProvider.Input,
             'password' | 'confirmPassword' | 'hasAcceptedTermsAndConditions'
         >
     >;
     password: string;
-    control?: Control<RegisterProvider.Input['providerDetails']>;
+    control?: Control<RegisterProvider.Input>;
     isEmailUnique?: boolean;
     isEmailDisabled?: boolean;
     emailHelperText?: string;

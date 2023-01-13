@@ -1,7 +1,6 @@
-import { Company } from '@therify/concepts';
 import * as z from 'zod';
 
-const providerDetails = z
+export const schema = z
     .object({
         givenName: z.string(),
         surname: z.string(),
@@ -9,7 +8,6 @@ const providerDetails = z
         password: z.string(),
         confirmPassword: z.string(),
         dateOfBirth: z.string(),
-        practiceName: Company.SCHEMA.optional().default('Unselected'),
         hasAcceptedTermsAndConditions: z.boolean().default(false),
     })
     .refine(
@@ -21,12 +19,6 @@ const providerDetails = z
             path: ['confirmPassword'],
         }
     );
-
-export const schema = z.object({
-    providerDetails,
-    numberOfSeats: z.number().default(1),
-    priceId: z.string(),
-});
 
 export type Input = z.infer<typeof schema>;
 
