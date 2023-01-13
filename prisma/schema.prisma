@@ -13,6 +13,12 @@ generator zod {
   modelSuffix = "Schema"
 }
 
+enum Role {
+  provider_coach
+  provider_therapist
+  member
+}
+
 model User {
   id               String   @id @default(cuid())
   emailAddress     String   @unique @map("email_address")
@@ -22,7 +28,7 @@ model User {
   createdAt        DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt        DateTime @default(now()) @map("updated_at") @db.Timestamp(6)
   stripeCustomerId String?  @map("stripe_customer_id")
-  role             String
+  role             Role
   auth0Id          String   @unique @map("auth0_id")
   account          Account?
 
@@ -35,6 +41,7 @@ model Account {
   id               String             @id @default(cuid()) @map("account_id")
   user             User               @relation(fields: [userId], references: [id])
   userId           String             @unique @map("user_id")
+  name             String
   createdAt        DateTime           @default(now()) @map("created_at")
   updatedAt        DateTime           @updatedAt @map("updated_at")
   registrationCode RegistrationCode[] @map("registration_code")
@@ -46,33 +53,165 @@ model RegistrationCode {
   id        String  @id @default(cuid())
   account   Account @relation(fields: [accountId], references: [id])
   accountId String  @map("account_id")
+
+  @@map("registration_codes")
+}
+
+enum ListingStatus {
+  listed
+  unlisted
 }
 
 model DirectoryListing {
-  practiceId
+  practice   Practice        @relation(fields: [practiceId], references: [id])
+  practiceId String          @map("practice_id")
+  profile    ProviderProfile
   profileId  String?
-  status
+  status     ListingStatus
+
+  @@id([practiceId, profileId])
+  @@map("directory_listings")
 }
 
-model Subscription {
-  id                                    Int                                     @id @default(autoincrement()) @map("subscription_id")
-  account                               Account?                                @relation(fields: [accountId], references: [id])
-  user                                  User?                                   @relation(fields: [userId], references: [id])
-  startDate                             DateTime                                @map("start_date")
-  endDate                               DateTime                                @map("end_date")
-  trialStartDate                        DateTime?                               @map("trial_start_date")
-  trialEndDate                          DateTime?                               @map("trial_end_date")
-  accountId                             String?                                 @map("account_id") // Missing account id means individual plan
-  userId                                Int?                                    @map("user_id") // Missing user id means unclaimed seat
-  createdAt                             DateTime                                @default(now()) @map("created_at")
-  updatedAt                             DateTime                                @updatedAt @map("updated_at")
-  status                                String
-  subscriptionBillingProviderIdentifier SubscriptionBillingProviderIdentifier[]
-  product                               Product                                 @relation(fields: [productId], references: [id])
-  productId                             String                                  @map("product_id")
-  invoice                               BillingProviderInvoice[]
-  registrationCodeSubscription          RegistrationCodeSubscription[]
-  giftCard                              GiftCard[]
+model Plan {
+  id                   Int             @id @default(autoincrement()) @map("plan_id")
+  seats                Int
+  account              Account?        @relation(fields: [accountId], references: [id])
+  user                 User?           @relation(fields: [userId], references: [id])
+  startDate            DateTime        @map("start_date")
+  endDate              DateTime        @map("end_date")
+  // start This might not be needed. One subscription to many users. The invitations represent the seat usage
+  accountId            String?         @map("account_id") // Missing account id means individual plan
+  userId               Int?            @map("user_id") // Missing user id means unclaimed seat
+  // end
+  billingUserId        Int?            @map("billing_user_id")
+  createdAt            DateTime        @default(now()) @map("created_at")
+  updatedAt            DateTime        @updatedAt @map("updated_at")
+  status               String
+  stripeCustomerId     String?         @map("stripe_customer_id")
+  stripeSubscriptionId String?         @unique @map("stripe_subscription_id")
+  product              Product         @relation(fields: [productId], references: [id])
+  productId            String          @map("product_id")
+  invoices             StripeInvoice[]
 
-  @@map("subscriptions")
+  @@index([stripeCustomerId, stripeSubscriptionId])
+  @@map("plans")
+}
+
+model StripeInvoice {
+  id              Int      @id @default(autoincrement())
+  stripeInvoiceId String   @map("stripe_invoice_id")
+  plan            Plan?    @relation(fields: [planId], references: [id], onDelete: Cascade)
+  planId          Int?     @map("plan_id")
+  invoiceId       String   @map("invoice_id") @db.VarChar(255)
+  user            User?    @relation(fields: [userId], references: [id])
+  userId          Int?     @map("user_id")
+  account         Account? @relation(fields: [accountId], references: [id])
+  accountId       String?  @map("account_id")
+  status          String
+  total           Int
+  amountDue       Int      @map("amount_due")
+  amountPaid      Int      @map("amoint_paid")
+  amountRemaining Int      @map("amount_remaining")
+  invoicePdf      String?  @map("invoice_pdf")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@index([invoiceId, userId])
+  @@map("billing_provider_invoices")
+}
+
+model Practice {
+  id               String             @id @default(autoincrement())
+  name             String
+  address          String
+  address2         String?            @map("address_2")
+  city             String
+  state            String
+  zip              String
+  phone            String?
+  email            String
+  website          String?
+  directoryListing DirectoryListing[]
+  account          Account?           @relation(fields: [accountId], references: [id])
+  accountId        String?            @map("account_id")
+  registrationCode RegistrationCode[] @map("registration_code")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("practices")
+}
+
+model PracticeProvider {
+  practice   Practice @relation(fields: [practiceId], references: [id])
+  practiceId String   @map("practice_id")
+  provider   User     @relation(fields: [providerId], references: [id])
+  userId     String   @map("user_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@id([practiceId, providerId])
+  @@map("practice_providers")
+}
+
+enum InvitationStatus {
+  pending
+  accepted
+  declined
+  expired
+}
+
+model DirectoryListingInvitation {
+  id             String           @id @default(cuid())
+  status         InvitationStatus
+  practice       Practice         @relation(fields: [practiceId], references: [id])
+  practiceId     String           @map("practice_id")
+  recipientEmail String           @map("recipient_email")
+  sender         User             @relation(fields: [senderId], references: [id])
+  senderId       String           @map("sender_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("directory_listing_invitations")
+}
+
+//credentialing,
+//license/npi numbers and types
+model ProviderProfile {
+  id                     Int       @id @default(autoincrement()) @map("provider_profile_id")
+  createdAt              DateTime  @default(now()) @map("created_at")
+  updatedAt              DateTime? @updatedAt @map("updated_at")
+  user                   User?     @relation(fields: [userId], references: [id])
+  userId                 Int?      @unique @map("user_id")
+  bio                    String?   @db.Text
+  profileImageUrl        String?   @map("profile_image_url")
+  yearsOfExperience      String    @map("years_of_experience")
+  minimumRate            Int       @map("minimum_rate")
+  maximumRate            Int?      @map("maximum_rate")
+  idealClientDescription String?   @map("ideal_client_description") @db.Text
+  practiceNotes          String?   @map("practice_notes")
+  // gender                 Gender                          @relation(fields: [genderId], references: [id])
+  // genderId               String                          @map("gender_id")
+  // sessionTypes           ProviderSessionType[]
+  // licensedStates         ProviderStates[]
+  // specialties            ProviderSpecialties[]
+  // ethnicity              ProviderEthnicities[]
+  // communitiesServed      ProviderCommunities[]
+  // religions              ProviderReligions[]
+  // acceptedInsurances     ProviderInsurancePanels[]
+  // evidenceBasedPractices ProviderEvidenceBasedPractice[]
+  // modalities             ProviderModalities[]
+  // languagesSpoken        ProviderLanguages[]
+  // pronouns               Pronoun                         @relation(fields: [pronounId], references: [id])
+  // pronounId              String                          @map("pronoun_id")
+  // // Todo: Remove in favor of `schedule` property
+  // availability           Availability[]
+  // bookings               Booking[]
+  // schedule               ProviderSchedule?
+  // stripeAccount          ProviderStripeAccount?
+
+  @@map("provider_profiles")
 }
