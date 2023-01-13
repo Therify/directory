@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    experimental: {
+        appDir: './src/app',
+    },
     images: {
         domains: ['res.cloudinary.com'],
     },
