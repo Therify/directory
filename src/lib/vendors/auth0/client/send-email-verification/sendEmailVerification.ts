@@ -21,9 +21,10 @@ export const sendEmailVerification = async ({
     });
 
     if (!response.ok) {
-        console.info('response', response);
+        const errorResult = await response.json();
         const error = new Error(
-            `Failed to create email send job: ${response.statusText}`
+            errorResult.message ??
+                `Failed to create email send job: ${response.statusText}`
         );
         handleSendVerificationEmailError(error, response);
     }

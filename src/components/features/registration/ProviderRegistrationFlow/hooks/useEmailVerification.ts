@@ -48,12 +48,10 @@ export const useEmailVerification = (auth0UserId?: string) => {
     useEffect(() => {
         if (jobId) {
             if (emailStatus === 'completed') {
-                console.log({ emailStatus });
                 return window.clearInterval(pollingRef.current ?? undefined);
             }
             window.clearInterval(pollingRef.current ?? undefined);
             pollingRef.current = window.setInterval(() => {
-                console.log('refetching...');
                 refetch();
             }, 2000);
         }

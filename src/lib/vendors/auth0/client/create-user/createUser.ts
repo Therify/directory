@@ -22,7 +22,7 @@ export async function createUser(input: Input): Promise<Output> {
         },
         body: JSON.stringify({
             ...input,
-            connection: 'Username-Password-Authentication',
+            connection: input.connection ?? 'Username-Password-Authentication',
         }),
     });
 

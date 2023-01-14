@@ -1,13 +1,10 @@
-import { z } from 'zod';
+import * as z from 'zod';
 
 export const schema = z.object({
-    userId: z.string(),
+    id: z.string(),
     status: z.string(),
     type: z.string(),
-    created_at: z.string(),
-    id: z.string(),
-    connection_id: z.string(),
-    external_id: z.string().optional(),
+    created_at: z.string().optional(),
 });
 
 export type Job = z.infer<typeof schema>;

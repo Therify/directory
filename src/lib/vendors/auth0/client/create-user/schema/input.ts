@@ -4,6 +4,7 @@ export const schema = z.object({
     email: z.string().email(),
     password: z.string().min(8),
     verify_email: z.boolean().default(false),
+    connection: z.string().optional(),
     user_metadata: z
         .record(z.string(), z.union([z.string(), z.number()]))
         .optional(),
