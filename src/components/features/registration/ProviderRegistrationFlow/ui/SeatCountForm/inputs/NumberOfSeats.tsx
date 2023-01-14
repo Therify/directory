@@ -1,10 +1,10 @@
 import { Control, Controller } from 'react-hook-form';
-import { Slider, useTheme } from '@mui/material';
-import { RegisterProvider } from '@therify/features/accounts';
+import { Slider } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 interface NumberOfSeatsInputProps {
     control: Control<{
-        numberOfSeats: RegisterProvider.Input['numberOfSeats'];
+        numberOfSeats: number;
     }>;
     max?: number;
     min?: number;

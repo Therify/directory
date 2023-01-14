@@ -29,6 +29,6 @@ export const isUniqueEmailFactory =
     (urlEndpoint: string) =>
     async (email: string): Promise<boolean> => {
         const response = await fetch(`${urlEndpoint}?emailAddress=${email}`);
-        const data = (await response.json()) as IsEmailUnique.Output;
+        const data = IsEmailUnique.outputSchema.parse(await response.json());
         return data.isUnique;
     };

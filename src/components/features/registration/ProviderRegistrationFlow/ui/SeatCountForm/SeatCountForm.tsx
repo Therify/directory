@@ -1,14 +1,14 @@
 import { Control } from 'react-hook-form';
-import { styled, Box, Link } from '@mui/material';
-import { H1, LoadingContainer, Subhead, Paragraph, H3 } from '@therify/ui/core';
-import { RegisterProvider } from '@therify/features/accounts';
+import { Box, Link } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { H1, LoadingContainer, Subhead, Paragraph, H3 } from '@/components/ui';
 import { NumberOfSeatsInput } from './inputs/NumberOfSeats';
 
 interface SeatCountFormProps {
     control: Control<{
-        numberOfSeats: RegisterProvider.Input['numberOfSeats'];
+        numberOfSeats: number;
     }>;
-    defaultValue?: RegisterProvider.Input['numberOfSeats'];
+    defaultValue?: number;
     isLoading?: boolean;
     minimumSeats?: number;
     maximumSeats?: number;

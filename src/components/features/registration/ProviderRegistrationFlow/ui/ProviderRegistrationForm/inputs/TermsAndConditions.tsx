@@ -1,5 +1,6 @@
 import { Controller, Control } from 'react-hook-form';
-import { Link, useTheme } from '@mui/material';
+import { Link } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { Caption, Toggle } from '@/components/ui';
 import { RegisterProvider } from '@/lib/features/registration';
 import { TEST_IDS } from './testIds';

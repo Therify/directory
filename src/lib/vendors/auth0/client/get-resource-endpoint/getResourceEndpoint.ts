@@ -3,6 +3,8 @@ import { Auth0Configuration } from '../../configuration';
 export const ENDPOINTS = {
     USERS: '/api/v2/users',
     USER: '/api/v2/users/{id}',
+    EMAIL_VERIFICATION: '/api/v2/jobs/verification-email',
+    JOB_STATUS: '/api/v2/jobs/{id}',
     OAUTH_TOKEN: '/oauth/token',
 } as const;
 

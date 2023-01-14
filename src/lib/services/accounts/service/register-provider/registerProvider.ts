@@ -12,15 +12,17 @@ import {
 
 export function factory(context: Context) {
     return async function registerProvider(params: RegisterProvider.Input) {
+        console.log({ params });
         return await TransactionV1.executeTransaction(
             transactionDefinition,
             { ...context },
             {
-                createTherifyUserEntity: CreateTherifyUser.factory(params),
                 createAuth0User: CreateAuth0User.factory(params),
+                createTherifyUserEntity: CreateTherifyUser.factory(params),
                 createStripeCustomer: CreateStripeCustomer.factory(params),
                 updateUserEntity: UpdateUserEntity.step,
-            }
+            },
+            true
         );
     };
 }

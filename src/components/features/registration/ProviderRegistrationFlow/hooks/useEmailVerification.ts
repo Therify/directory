@@ -1,4 +1,4 @@
-import { trpc } from '@therify/client/data/trpc-client';
+import { trpc } from '@/lib/utils/trpc';
 import { useEffect, useState, useRef } from 'react';
 
 export const useEmailVerification = (auth0UserId?: string) => {

@@ -5,6 +5,9 @@ import { vendorStripe } from '@/lib/vendors/stripe';
 import { CreateUser } from './create-user';
 import { RegisterProvider } from './register-provider';
 import { AccountsServiceParams } from './params';
+import { IsEmailUnique } from './is-email-unique';
+import { SendEmailVerification } from './send-email-verification';
+import { GetVerificationEmailStatus } from './get-verification-email-status';
 
 const factoryParams: AccountsServiceParams = {
     prisma,
@@ -14,6 +17,10 @@ const factoryParams: AccountsServiceParams = {
 export const AccountsService = {
     createUser: CreateUser.factory(factoryParams),
     registerProvider: RegisterProvider.factory(factoryParams),
+    isEmailUnique: IsEmailUnique.factory(factoryParams),
+    sendEmailVerification: SendEmailVerification.factory(factoryParams),
+    getVerificationEmailStatus:
+        GetVerificationEmailStatus.factory(factoryParams),
 };
 
 export type AccountsService = typeof AccountsService;

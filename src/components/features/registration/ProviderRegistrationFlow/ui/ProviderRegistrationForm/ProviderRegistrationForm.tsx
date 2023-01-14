@@ -1,6 +1,7 @@
 import { Control } from 'react-hook-form';
 
-import { Box, styled } from '@mui/material';
+import { Box } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { RegisterProvider } from '@/lib/features/registration';
 import { H1 } from '@/components/ui';
 

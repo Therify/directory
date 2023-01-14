@@ -1,11 +1,19 @@
 import { useState } from 'react';
+import { Box } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { useRegistrationStorage } from '@/components/features/registration/ProviderRegistrationFlow/hooks';
 import { RegisterProvider } from '@/lib/features/registration';
 import { ProviderRegistrationFlow } from '@/components/features/registration';
-import { Box, styled } from '@mui/material';
 import { trpc } from '@/lib/utils/trpc';
+import { GetServerSideProps, NextPage } from 'next';
 
-export default function ProviderRegistrationPage() {
+export const getServerSideProps: GetServerSideProps<Props> = async (
+    context
+) => ({ props: { host: context.req.headers.host || null } });
+
+type Props = { host: string | null };
+
+export default function ProviderRegistrationPage({ host }: Props) {
     const [registrationError, setRegistrationError] = useState<string>();
     const { clearRegistrationStorage } = useRegistrationStorage();
     const handleError = (errorMessage: string) => {
@@ -37,12 +45,11 @@ export default function ProviderRegistrationPage() {
         <PageContainer>
             <InnerContent>
                 <ProviderRegistrationFlow
-                    emailValidationUrl={`${window.location.origin}/api/accounts/is-email-unique`}
+                    emailValidationUrl="/api/accounts/is-email-unique"
                     registerProvider={registerProvider}
                     errorMessage={registrationError}
                     clearErrorMessage={() => setRegistrationError(undefined)}
                     isRegisteringProvider={mutation.isLoading}
-                    baseSeatPrice={42}
                 />
             </InnerContent>
         </PageContainer>

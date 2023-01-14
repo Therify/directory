@@ -10,6 +10,7 @@ interface CreateAuth0UserFactory {
 export const factory: CreateAuth0UserFactory = ({ emailAddress, password }) => {
     return {
         async commit({ auth0 }) {
+            console.log('Creating Auth0 user...');
             const { user_id: auth0UserId } = await auth0.createUser({
                 email: emailAddress,
                 password,

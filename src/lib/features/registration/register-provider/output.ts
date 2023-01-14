@@ -3,9 +3,8 @@ import * as z from 'zod';
 // ? Should the Registration Flow log you in?
 export const successSchema = z.object({
     wasSuccessful: z.literal(true),
-    userId: z.number(),
-    checkoutSessionUrl: z.string(),
-    auth0UserId: z.string().optional(),
+    userId: z.string(),
+    auth0UserId: z.string(),
     errors: z.array(z.string()),
 });
 

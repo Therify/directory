@@ -1,6 +1,6 @@
-import { Context } from '@therify/api/trpc/context';
-import { RegisterProvider } from '@therify/features/accounts';
-import { CreateStripeCustomerError } from '@therify/vendors/stripe';
+import { Context } from '@/lib/server/context';
+import { RegisterProvider } from '@/lib/features/registration';
+// import {  } from '@/lib/vendors/stripe';
 import { ProcedureResolver } from '@trpc/server/dist/declarations/src/internals/procedure';
 
 export const resolve: ProcedureResolver<
@@ -12,20 +12,20 @@ export const resolve: ProcedureResolver<
     ctx,
 }): Promise<RegisterProvider.Output> {
     // TODO: Remove once registration opens
-    if (input.providerDetails.emailAddress.split('@')[1] !== 'therify.co') {
+    if (input.emailAddress.split('@')[1] !== 'therify.co') {
         return {
             wasSuccessful: false,
             errors: ['Registration is not open.'],
         };
     }
-    const registrationResult = await ctx.accounts.users.registerProvider(input);
+    const registrationResult = await ctx.accounts.registerProvider(input);
     if (registrationResult.isErr()) {
         let errorMessage = 'Registration failed.';
         registrationResult.mapErr(([erroredStep, error]) => {
             console.log('Registration failed on step: ' + erroredStep, error);
-            if (error instanceof CreateStripeCustomerError) {
-                errorMessage = 'Registration failed: ' + error.message;
-            }
+            // if (error instanceof CreateStripeCustomerError) {
+            //     errorMessage = 'Registration failed: ' + error.message;
+            // }
         });
         return {
             wasSuccessful: false,
@@ -36,9 +36,6 @@ export const resolve: ProcedureResolver<
         wasSuccessful: true,
         auth0UserId: registrationResult.value.createAuth0User.auth0UserId,
         userId: registrationResult.value.createTherifyUserEntity.therifyUserId,
-        checkoutSessionUrl:
-            registrationResult.value.createStripeCheckoutSession
-                .stripeCheckoutSessionUrl,
         errors: [],
     };
 };

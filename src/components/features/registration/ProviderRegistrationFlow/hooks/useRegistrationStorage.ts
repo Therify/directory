@@ -9,6 +9,9 @@ type SafeProviderDetails = Pick<
 >;
 export const useRegistrationStorage = () => {
     const storeProviderDetails = (providerDetails: RegisterProvider.Input) => {
+        if (typeof window === 'undefined') {
+            return;
+        }
         const savedProviderDetails: SafeProviderDetails = {
             givenName: providerDetails.givenName,
             surname: providerDetails.surname,
@@ -25,6 +28,9 @@ export const useRegistrationStorage = () => {
         }
     };
     const getStoredProviderDetails = (): SafeProviderDetails | undefined => {
+        if (typeof window === 'undefined') {
+            return;
+        }
         const providerDetails = localStorage.getItem(
             PROVIDER_DETAILS_STORAGE_KEY
         );
@@ -37,6 +43,9 @@ export const useRegistrationStorage = () => {
     };
 
     const clearRegistrationStorage = () => {
+        if (typeof window === 'undefined') {
+            return;
+        }
         localStorage.removeItem(PROVIDER_DETAILS_STORAGE_KEY);
     };
 

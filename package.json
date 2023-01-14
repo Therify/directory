@@ -4,6 +4,7 @@
     "private": true,
     "scripts": {
         "postinstall": "yarn prisma:generate",
+        "dev:doppler": "doppler run --project=directory --config=dev --token=$DEV_DIRECTORY_DOPPLER_TOKEN -- yarn dev",
         "dev": "next dev",
         "build": "next build",
         "start": "next start",
@@ -15,6 +16,7 @@
         "build-storybook": "storybook build",
         "prisma:init": "prisma init",
         "prisma:generate": "prisma generate",
+        "prisma:dbpush": "doppler run --project=directory --config=dev --token=$DEV_DIRECTORY_DOPPLER_TOKEN -- yarn prisma db push",
         "prisma:studio": "prisma studio"
     },
     "dependencies": {

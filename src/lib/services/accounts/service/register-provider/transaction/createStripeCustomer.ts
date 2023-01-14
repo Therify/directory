@@ -3,7 +3,9 @@ import { RegisterProvider } from '@/lib/features/registration';
 import { RegisterProviderTransaction } from './definition';
 
 export const factory = ({
-    providerDetails: { givenName, surname, emailAddress: email },
+    givenName,
+    surname,
+    emailAddress: email,
 }: RegisterProvider.Input): RegisterProviderTransaction['createStripeCustomer'] => ({
     async commit(
         { stripe },

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { styled, Box, CircularProgress } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { ReportProblemRounded } from '@mui/icons-material';
 import {
     Alert,
@@ -27,7 +28,6 @@ interface ProviderRegistrationFlowProps {
     clearErrorMessage: () => void;
     isRegisteringProvider: boolean;
     emailValidationUrl: string;
-    baseSeatPrice: number;
 }
 
 export const ProviderRegistrationFlow = ({
@@ -36,7 +36,6 @@ export const ProviderRegistrationFlow = ({
     isRegisteringProvider,
     emailValidationUrl,
     clearErrorMessage,
-    baseSeatPrice,
 }: ProviderRegistrationFlowProps) => {
     const [emailsCheckedForUniqueness, setEmailsCheckedForUniqueness] =
         useState<Record<string, boolean>>({});
@@ -46,10 +45,8 @@ export const ProviderRegistrationFlow = ({
         defaultProviderDetails: getStoredProviderDetails(),
     });
     const {
-        currentStepIndex,
         steps,
         isLoading: isLoadingNextStep,
-        setCurrentStepIndex,
         back,
     } = useRegistrationFlowNavigation(
         REGISTRATION_STEPS as unknown as string[]
@@ -96,7 +93,7 @@ export const ProviderRegistrationFlow = ({
                 <Logo />
                 <StepperContainer>
                     <Stepper
-                        activeStepIndex={currentStepIndex}
+                        activeStepIndex={0}
                         steps={steps as unknown as string[]}
                     />
                 </StepperContainer>
@@ -127,7 +124,7 @@ export const ProviderRegistrationFlow = ({
             </FormContainer>
 
             <FlowNavigation
-                currentStepIndex={currentStepIndex}
+                currentStepIndex={0}
                 onBack={back}
                 onNext={handleSubmit}
                 isFinalStep
