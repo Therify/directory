@@ -1,6 +1,6 @@
 import { Context } from '@/lib/server/context';
 import { RegisterProvider } from '@/lib/features/registration';
-// import {  } from '@/lib/vendors/stripe';
+import { Errors as Auth0Errors } from '@/lib/vendors/auth0';
 import { ProcedureResolver } from '@trpc/server/dist/declarations/src/internals/procedure';
 
 export const resolve: ProcedureResolver<
@@ -23,6 +23,11 @@ export const resolve: ProcedureResolver<
         let errorMessage = 'Registration failed.';
         registrationResult.mapErr(([erroredStep, error]) => {
             console.log('Registration failed on step: ' + erroredStep, error);
+            if (
+                error instanceof Auth0Errors.createUser.UserAlreadyExistsError
+            ) {
+                errorMessage = error.message;
+            }
             // if (error instanceof CreateStripeCustomerError) {
             //     errorMessage = 'Registration failed: ' + error.message;
             // }

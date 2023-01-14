@@ -44,6 +44,7 @@ export const generateGetAccessToken = (CONFIG: Auth0Configuration) => {
             });
 
             if (!response.ok) {
+                console.log('response', response);
                 throw new Error(
                     `Failed to get access token: ${response.statusText}`
                 );

@@ -20,7 +20,7 @@ import {
 import { RegisterProvider } from '@/lib/features/registration';
 import { ALERT_TYPE } from '@/components/ui/Alert';
 
-const REGISTRATION_STEPS = ['Registration'] as const;
+const REGISTRATION_STEPS = ['Registration', 'Payment', 'Onboarding'] as const;
 
 interface ProviderRegistrationFlowProps {
     registerProvider: (providerDetails: RegisterProvider.Input) => void;
@@ -79,14 +79,7 @@ export const ProviderRegistrationFlow = ({
             }, 500);
         }
     }, [emailAddress, emailValidationUrl, emailsCheckedForUniqueness]);
-    if (isRegisteringProvider) {
-        return (
-            <CenteredContainer>
-                <H3>Creating your account...</H3>
-                <CircularProgress />
-            </CenteredContainer>
-        );
-    }
+
     return (
         <Box height="100%" width="100%">
             <HeaderContainer>
@@ -99,11 +92,18 @@ export const ProviderRegistrationFlow = ({
                 </StepperContainer>
             </HeaderContainer>
             <FormContainer isError={Boolean(errorMessage)}>
-                <ProviderRegistrationForm
-                    isEmailUnique={emailsCheckedForUniqueness[emailAddress]}
-                    control={providerDetailsForm.control}
-                    password={providerDetailsForm.watch('password')}
-                />
+                {isRegisteringProvider ? (
+                    <CenteredContainer>
+                        <H3>Creating your account...</H3>
+                        <CircularProgress />
+                    </CenteredContainer>
+                ) : (
+                    <ProviderRegistrationForm
+                        isEmailUnique={emailsCheckedForUniqueness[emailAddress]}
+                        control={providerDetailsForm.control}
+                        password={providerDetailsForm.watch('password')}
+                    />
+                )}
 
                 {errorMessage && (
                     <motion.div

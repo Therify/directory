@@ -1,5 +1,5 @@
 export { Accordion, TEST_IDS as ACCORDION_TEST_IDS } from './Accordion';
-export { Alert } from './Alert';
+export { Alert, ALERT_TYPE } from './Alert';
 export type { AlertType } from './Alert';
 export {
     Avatar,

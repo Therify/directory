@@ -1,39 +1,56 @@
 import { ThemeOptions } from '@mui/material';
+import {
+    PRIMARY,
+    SECONDARY,
+    ERROR,
+    WARNING,
+    SHADES,
+    SUCCESS,
+    NEUTRAL,
+} from './colors';
 
 export const LIGHT_PALETTE: ThemeOptions['palette'] = {
     mode: 'light',
     primary: {
-        main: '#D3A176',
-        light: '#F2E4D8',
-        dark: '#B08662',
-        contrastText: '#fff',
+        light: PRIMARY[300],
+        main: PRIMARY[400],
+        dark: PRIMARY[500],
+        contrastText: SHADES[0],
     },
     secondary: {
-        main: '#58737D',
-        light: '#C8D6DC',
-        dark: '#3B4D54',
-    },
-    success: {
-        main: '#67AC71',
-        light: '#C2DEC6',
-        dark: '#3E6744',
-        contrastText: '#fff',
+        main: SECONDARY.BLUE[300],
+        dark: SECONDARY.BLUE[400],
+        light: SECONDARY.BLUE[50],
+        contrastText: SHADES[0],
     },
     error: {
-        main: '#E08C7B',
-        light: '#F8E5E2',
-        dark: '#C77261',
-        contrastText: '#fff',
+        main: ERROR[400],
+        dark: ERROR[600],
+        contrastText: SHADES[0],
     },
     warning: {
-        main: '#E6C475',
-        light: '#F5E7C8',
-        dark: '#8A7646',
-        contrastText: '#fff',
+        main: WARNING[400],
+        dark: WARNING[500],
+        contrastText: SHADES[0],
+    },
+    success: {
+        main: SUCCESS[400],
+        dark: SUCCESS[500],
+        contrastText: SHADES[0],
     },
     info: {
-        main: '#817CAA',
-        light: '#CDC9EE',
-        dark: '#565371',
+        main: NEUTRAL.BLACK[400],
+        dark: NEUTRAL.BLACK[500],
+        contrastText: SHADES[0],
+    },
+    text: {
+        primary: SHADES[100],
+        secondary: NEUTRAL.BLACK[600],
+    },
+    divider: NEUTRAL.BLACK[100],
+    grey: NEUTRAL.BLACK,
+    background: {
+        default: NEUTRAL.BROWN[50],
+        paper: SHADES[0],
     },
 } as const;

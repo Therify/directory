@@ -1,19 +1,14 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useRegistrationStorage } from '@/components/features/registration/ProviderRegistrationFlow/hooks';
 import { RegisterProvider } from '@/lib/features/registration';
 import { ProviderRegistrationFlow } from '@/components/features/registration';
 import { trpc } from '@/lib/utils/trpc';
-import { GetServerSideProps, NextPage } from 'next';
 
-export const getServerSideProps: GetServerSideProps<Props> = async (
-    context
-) => ({ props: { host: context.req.headers.host || null } });
-
-type Props = { host: string | null };
-
-export default function ProviderRegistrationPage({ host }: Props) {
+export default function ProviderRegistrationPage() {
+    const router = useRouter();
     const [registrationError, setRegistrationError] = useState<string>();
     const { clearRegistrationStorage } = useRegistrationStorage();
     const handleError = (errorMessage: string) => {
@@ -21,10 +16,16 @@ export default function ProviderRegistrationPage({ host }: Props) {
     };
 
     const mutation = trpc.useMutation('accounts.users.register-provider', {
-        onSuccess(response) {
+        onSuccess(response, { emailAddress }) {
             if (response.wasSuccessful) {
                 clearRegistrationStorage();
-                window.location.href = response.checkoutSessionUrl;
+
+                router.push(
+                    `/providers/register/success?email=${encodeURIComponent(
+                        emailAddress
+                    )}&user_id=${encodeURIComponent(response.auth0UserId)}`
+                );
+
                 return;
             }
             const [error] = response.errors ?? [];

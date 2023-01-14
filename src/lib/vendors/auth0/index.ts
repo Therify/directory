@@ -1,4 +1,4 @@
-import { createUser } from './client/create-user';
+import { createUser, createUserErrors } from './client/create-user';
 import { deleteUser } from './client/delete-user';
 import { getEmailStatus } from './client/get-email-status';
 import { getUser } from './client/get-user';
@@ -15,3 +15,7 @@ export const vendorAuth0 = {
 } as const;
 
 export type VendorAuth0 = typeof vendorAuth0;
+
+export const Errors = {
+    createUser: createUserErrors,
+} as const;

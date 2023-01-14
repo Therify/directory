@@ -12,7 +12,7 @@ export const useEmailVerification = (auth0UserId?: string) => {
     const {
         mutate: sendEmailVerification,
         isLoading: isLoadingSendEmailVerification,
-    } = trpc.useMutation('accounts.v1.users.send-email-verification', {
+    } = trpc.useMutation('accounts.users.send-email-verification', {
         onSuccess: ({ status, jobId, errors }) => {
             const [errorMessage] = errors;
             setSendEmailErrorMessage(errorMessage);
@@ -34,7 +34,7 @@ export const useEmailVerification = (auth0UserId?: string) => {
         refetch,
     } = trpc.useQuery(
         [
-            'accounts.v1.users.get-verification-email-status',
+            'accounts.users.get-verification-email-status',
             {
                 jobId: jobId ?? '',
             },
