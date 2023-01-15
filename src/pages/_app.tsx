@@ -1,14 +1,14 @@
 import '../styles/globals.css';
 import type { AppProps, AppType } from 'next/app';
 import { ThemeProvider } from '@mui/material/styles';
-import { THERIFY_THEME } from '../styles/theme';
+import { therifyDesignSystem } from '../components/themes/therify-design-system';
 import { ApplicationContainer } from '@/components/ui/Layout/Containers/ApplicationContainer';
 import { withTRPC } from '@trpc/next';
 import { AppRouter } from '@/lib/server/routers/app';
 
 const App: AppType = ({ Component, pageProps }: AppProps) => {
     return (
-        <ThemeProvider theme={THERIFY_THEME}>
+        <ThemeProvider theme={therifyDesignSystem}>
             <ApplicationContainer>
                 <Component {...pageProps} />
             </ApplicationContainer>
