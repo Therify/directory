@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Box, CircularProgress } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { ReportProblemRounded } from '@mui/icons-material';
+import { styled, useTheme } from '@mui/material/styles';
+import { ReportProblemRounded, CheckCircle } from '@mui/icons-material';
 import {
     Alert,
     CenteredContainer,
@@ -10,6 +10,7 @@ import {
     TherifyLogo,
     H3,
     FormValidation,
+    Paragraph,
 } from '../../../ui';
 import { ProviderRegistrationForm, FlowNavigation } from './ui';
 import {
@@ -28,15 +29,18 @@ interface ProviderRegistrationFlowProps {
     clearErrorMessage: () => void;
     isRegisteringProvider: boolean;
     emailValidationUrl: string;
+    isRegistrationComplete: boolean;
 }
 
 export const ProviderRegistrationFlow = ({
     registerProvider,
     errorMessage,
     isRegisteringProvider,
+    isRegistrationComplete,
     emailValidationUrl,
     clearErrorMessage,
 }: ProviderRegistrationFlowProps) => {
+    const theme = useTheme;
     const [emailsCheckedForUniqueness, setEmailsCheckedForUniqueness] =
         useState<Record<string, boolean>>({});
     const { getStoredProviderDetails, storeProviderDetails } =
@@ -79,6 +83,23 @@ export const ProviderRegistrationFlow = ({
             }, 500);
         }
     }, [emailAddress, emailValidationUrl, emailsCheckedForUniqueness]);
+
+    if (isRegistrationComplete) {
+        return (
+            <FormContainer isError={false}>
+                <CenteredContainer>
+                    <CheckCircle
+                        color="success"
+                        style={{ width: 40, height: 40 }}
+                    />
+                    <H3>
+                        Welcome, {providerDetailsForm.getValues('givenName')}!
+                    </H3>
+                    <Paragraph>Registration successful</Paragraph>
+                </CenteredContainer>
+            </FormContainer>
+        );
+    }
 
     return (
         <Box height="100%" width="100%">

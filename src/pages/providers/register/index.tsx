@@ -51,6 +51,7 @@ export default function ProviderRegistrationPage() {
                     errorMessage={registrationError}
                     clearErrorMessage={() => setRegistrationError(undefined)}
                     isRegisteringProvider={mutation.isLoading}
+                    isRegistrationComplete={mutation.isSuccess}
                 />
             </InnerContent>
         </PageContainer>
