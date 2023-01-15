@@ -32,7 +32,7 @@ export default function RegistrationSuccessPage() {
                     <ErrorAlert
                         title="Oh no! Something went wrong."
                         message={
-                            "Looks like you're missing details in your registration link. Try checking the email you registered with to see if you have login instructions from us. If not, you can alway try registering again."
+                            "Looks like you're missing details in your registration link. Try checking the email you registered with to see if you have login instructions from us. If not, try logging in. If that doesn't work, you can alway try registering again."
                         }
                     />
                 </Box>
@@ -73,7 +73,9 @@ export default function RegistrationSuccessPage() {
                 <Paragraph>
                     You have successfully registered with Therify! Please check{' '}
                     <b>{email}</b> for instructions on how to verify your
-                    account. If you don&apos;t see it, check your spam folder.
+                    account. If you don&apos;t see an email from Therify, check
+                    your spam folder. If you still can&apos;t find it, resend
+                    your verification email.
                 </Paragraph>
 
                 <Box maxWidth="800px" width="100%" display="flex">
