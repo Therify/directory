@@ -17,4 +17,4 @@ jobs:
             - name: Install Dependencies
               run: yarn install --frozen-lockfile
             - name: Run Tests
-              run: doppler run --project=directory --config=dev --token=$DIRECTORY_DOPPLER_TOKEN_STAGING -- yarn run test
+              run: yarn doppler run --project=directory --config=dev --token=$DIRECTORY_DOPPLER_TOKEN_STAGING -- yarn run test

@@ -5481,6 +5481,11 @@ domutils@^2.5.2, domutils@^2.8.0:
     domelementtype "^2.2.0"
     domhandler "^4.2.0"
 
+doppler@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/doppler/-/doppler-1.0.0.tgz#7c5b780947601c566296d9decfcd41fdbfad785d"
+  integrity sha512-fr1qJ1KSNhdTO3GPeq6GE0SxbpLcRR+CnQmd9wS1//6x2zPlNQQlC64eker/rE6b0CDNBkhsvJamR51M4YC6TQ==
+
 dot-case@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/dot-case/-/dot-case-3.0.4.tgz#9b2b670d00a431667a8a75ba29cd1b98809ce751"
