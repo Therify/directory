@@ -1,5 +1,3 @@
-import { Auth0ManagementAPIError } from '../../errors';
-
 const GET_EMAIL_STATUS_ERROR_CODES = [400, 401, 403, 409, 429] as const;
 
 type GetEmailStatusErrorCode = typeof GET_EMAIL_STATUS_ERROR_CODES[number];
@@ -56,12 +54,16 @@ const GET_EMAIL_STATUS_ERROR_MAP = {
     429: ['Too Many Requests', TooManyRequestsError],
 } as const;
 
-export function processGetEmailStatusError(
-    auth0Error: Auth0ManagementAPIError
-) {
+export function handleGetEmailStatusError(error: Error, response: Response) {
     const [message, errorClass] =
         GET_EMAIL_STATUS_ERROR_MAP[
-            auth0Error.statusCode as keyof typeof GET_EMAIL_STATUS_ERROR_MAP
+            response.status as keyof typeof GET_EMAIL_STATUS_ERROR_MAP
         ];
-    return new errorClass(auth0Error.message ?? message);
+    if (errorClass) {
+        throw new errorClass(error.message ?? message);
+    }
+    throw new GetEmailStatusError(
+        response.status as GetEmailStatusErrorCode,
+        error.message ?? 'Unknown Error'
+    );
 }

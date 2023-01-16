@@ -1,5 +1,6 @@
 import { getAccessToken } from '../get-access-token';
 import { getResourceEndpoint } from '../get-resource-endpoint';
+import { handleGetEmailStatusError } from './errors';
 import { Input, Output, responseSchema } from './schema';
 
 export const getEmailStatus = async ({ jobId }: Input): Promise<Output> => {
@@ -14,11 +15,10 @@ export const getEmailStatus = async ({ jobId }: Input): Promise<Output> => {
     });
 
     if (!response.ok) {
-        console.info('response', response);
         const error = new Error(
             `Failed to create user: ${response.statusText}`
         );
-        // handleCreateUserError(error, response);
+        handleGetEmailStatusError(error, response);
     }
     const result = await response.json();
     const { status, time_left_seconds, percentage_done } =
