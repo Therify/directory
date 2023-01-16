@@ -23,7 +23,7 @@ export class BadRequest extends Error {
 
 export function handleCreateUserError(error: Error, response: Response): void {
     if (response.status === 409) {
-        throw new UserAlreadyExistsError(error.message);
+        throw new UserAlreadyExistsError('Email already in use.');
     }
     if (response.status === 403) {
         throw new InsufficientPermissionsError(error.message);

@@ -1,5 +1,6 @@
 import { Alert as MuiAlert, AlertTitle, Box } from '@mui/material';
 import { SxProps, Theme } from '@mui/material/styles';
+import { ReactNode } from 'react';
 import { Button, BUTTON_SIZE, BUTTON_TYPE } from '../Button';
 
 export const ALERT_TYPE = {
@@ -19,7 +20,7 @@ interface AlertAction {
 interface AlertProps {
     icon?: React.ReactNode | false;
     title: string;
-    message?: string;
+    message?: ReactNode;
     type?: AlertType;
     onClose?: () => void;
     actions?: AlertAction[];

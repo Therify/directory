@@ -17,6 +17,9 @@ export const schema: z.ZodType<Stripe.CustomerCreateParams> = z.object({
     phone: z.string().optional(),
     payment_method: z.string().optional(),
     shipping: shippingSchema.optional(),
+    metadata: z
+        .record(z.string(), z.union([z.string(), z.number()]))
+        .optional(),
 });
 
 export type Input = z.infer<typeof schema>;
