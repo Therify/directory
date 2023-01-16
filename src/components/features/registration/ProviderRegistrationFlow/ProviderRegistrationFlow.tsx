@@ -1,8 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { Box, CircularProgress } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
-import { ReportProblemRounded, CheckCircle } from '@mui/icons-material';
+import {
+    ReportProblemRounded,
+    CheckCircle,
+    ArrowForwardRounded as NextIcon,
+} from '@mui/icons-material';
 import {
     Alert,
     CenteredContainer,
@@ -11,13 +16,10 @@ import {
     H3,
     FormValidation,
     Paragraph,
-} from '../../../ui';
-import { ProviderRegistrationForm, FlowNavigation } from './ui';
-import {
-    useRegistrationForms,
-    useRegistrationStorage,
-    useRegistrationFlowNavigation,
-} from './hooks';
+    Button,
+} from '@/components/ui';
+import { ProviderRegistrationForm } from './ui';
+import { useRegistrationStorage } from './hooks';
 import { RegisterProvider } from '@/lib/features/registration';
 import { ALERT_TYPE } from '@/components/ui/Alert';
 
@@ -40,21 +42,15 @@ export const ProviderRegistrationFlow = ({
     emailValidationUrl,
     clearErrorMessage,
 }: ProviderRegistrationFlowProps) => {
-    const theme = useTheme;
+    const theme = useTheme();
     const [emailsCheckedForUniqueness, setEmailsCheckedForUniqueness] =
         useState<Record<string, boolean>>({});
     const { getStoredProviderDetails, storeProviderDetails } =
         useRegistrationStorage();
-    const { providerDetailsForm, numberOfSeatsForm } = useRegistrationForms({
-        defaultProviderDetails: getStoredProviderDetails(),
+    const providerDetailsForm = useForm<RegisterProvider.Input>({
+        mode: 'onChange',
+        defaultValues: getStoredProviderDetails(),
     });
-    const {
-        steps,
-        isLoading: isLoadingNextStep,
-        back,
-    } = useRegistrationFlowNavigation(
-        REGISTRATION_STEPS as unknown as string[]
-    );
 
     const handleSubmit = () => {
         // TODO: Store partial on blur
@@ -108,7 +104,7 @@ export const ProviderRegistrationFlow = ({
                 <StepperContainer>
                     <Stepper
                         activeStepIndex={0}
-                        steps={steps as unknown as string[]}
+                        steps={REGISTRATION_STEPS as unknown as string[]}
                     />
                 </StepperContainer>
             </HeaderContainer>
@@ -144,14 +140,16 @@ export const ProviderRegistrationFlow = ({
                 )}
             </FormContainer>
 
-            <FlowNavigation
-                currentStepIndex={0}
-                onBack={back}
-                onNext={handleSubmit}
-                isFinalStep
-                isNextLoading={isLoadingNextStep || isRegisteringProvider}
-                isNextDisabled={!providerDetailsForm.formState.isValid}
-            />
+            <ButtonContainer>
+                <Button
+                    isLoading={isRegisteringProvider}
+                    disabled={!providerDetailsForm.formState.isValid}
+                    endIcon={<NextIcon />}
+                    onClick={handleSubmit}
+                >
+                    Sign Up
+                </Button>
+            </ButtonContainer>
         </Box>
     );
 };
@@ -197,5 +195,14 @@ const FormContainer = styled(Box, {
     ...(isError && { border: `2px solid ${theme.palette.error.main}` }),
     [theme.breakpoints.up('md')]: {
         padding: theme.spacing(30),
+    },
+}));
+
+const ButtonContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginTop: theme.spacing(10),
+    '& button:last-child': {
+        marginLeft: theme.spacing(4),
     },
 }));
