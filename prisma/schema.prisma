@@ -28,7 +28,7 @@ model User {
   hasAcceptedTermsAndConditions Boolean  @map("has_accepted_terms_and_conditions")
   createdAt                     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt                     DateTime @default(now()) @map("updated_at") @db.Timestamp(6)
-  role                          Role
+  roles                         Role[]
   stripeCustomerId              String?  @map("stripe_customer_id")
   auth0Id                       String   @unique @map("auth0_id")
 

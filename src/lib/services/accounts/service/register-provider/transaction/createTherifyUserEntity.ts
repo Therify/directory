@@ -1,5 +1,4 @@
 import { RegisterProvider } from '@/lib/features/registration';
-import { Role } from '@prisma/client';
 import type { RegisterProviderTransaction } from './definition';
 
 interface CreateTherifyUserEntityFactory {
@@ -14,6 +13,7 @@ export const factory: CreateTherifyUserEntityFactory = ({
     surname,
     dateOfBirth,
     hasAcceptedTermsAndConditions,
+    role,
 }) => {
     return {
         async commit(
@@ -33,8 +33,7 @@ export const factory: CreateTherifyUserEntityFactory = ({
                     dateOfBirth,
                     hasAcceptedTermsAndConditions,
                     auth0Id,
-                    // TODO: How do we know coach vs therapist?
-                    role: Role.provider_therapist,
+                    roles: [role],
                 },
             });
             return {
