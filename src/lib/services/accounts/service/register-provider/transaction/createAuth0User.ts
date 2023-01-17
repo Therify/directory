@@ -1,3 +1,4 @@
+import { getNodeEnvironmentConfiguration } from '@/lib/configuration';
 import { RegisterProvider } from '@/lib/features/registration';
 import { RegisterProviderTransaction } from './definition';
 
@@ -13,7 +14,8 @@ export const factory: CreateAuth0UserFactory = ({ emailAddress, password }) => {
             const { user_id: auth0UserId } = await auth0.createUser({
                 email: emailAddress,
                 password,
-                verify_email: process.env.NODE_ENV === 'production',
+                verify_email:
+                    getNodeEnvironmentConfiguration().NODE_ENV === 'production',
             });
             if (!auth0UserId) throw new Error('No Auth0 user ID was returned.');
             return {
