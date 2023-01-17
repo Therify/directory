@@ -15,6 +15,7 @@ import { useRouter } from 'next/router';
 import { useEmailVerification } from '@/components/features/registration/ProviderRegistrationFlow/hooks';
 import { ReactNode } from 'react';
 import { motion } from 'framer-motion';
+import { URL_PATHS } from '@/lib/sitemap';
 
 export default function RegistrationSuccessPage() {
     const theme = useTheme();
@@ -97,10 +98,7 @@ export default function RegistrationSuccessPage() {
                             : 'Resend verification email'}
                     </Button>
                     <Button
-                        onClick={() => {
-                            // TODO: Link to login
-                            console.log('TODO: Go to login page');
-                        }}
+                        onClick={() => router.push(URL_PATHS.AUTH.LOGIN)}
                         style={{
                             flex: 2,
                             backgroundColor: theme.palette.background.paper,

@@ -38,7 +38,7 @@ export const generateGetAccessToken = (CONFIG: Auth0Configuration) => {
                 body: JSON.stringify({
                     client_id: CONFIG.AUTH0_BACKEND_CLIENT_ID,
                     client_secret: CONFIG.AUTH0_BACKEND_CLIENT_SECRET,
-                    audience: `https://${CONFIG.AUTH0_DOMAIN}/api/v2/`,
+                    audience: `https://${CONFIG.AUTH0_BACKEND_DOMAIN}/api/v2/`,
                     grant_type: 'client_credentials',
                 }),
             });

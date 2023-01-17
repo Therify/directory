@@ -3,7 +3,7 @@ let originalEnv: NodeJS.ProcessEnv;
 describe('Auth0 Configuration', () => {
     test('retrieving Auth0 configuration', () => {
         expect(getAuth0Configuration()).toMatchObject({
-            AUTH0_DOMAIN: expect.any(String),
+            AUTH0_BACKEND_DOMAIN: expect.any(String),
             AUTH0_BACKEND_CLIENT_ID: expect.any(String),
             AUTH0_BACKEND_CLIENT_SECRET: expect.any(String),
         });
@@ -11,7 +11,7 @@ describe('Auth0 Configuration', () => {
     describe('Required Environment Variables', () => {
         beforeAll(() => {
             originalEnv = process.env;
-            delete process.env.AUTH0_DOMAIN;
+            delete process.env.AUTH0_BACKEND_DOMAIN;
             delete process.env.AUTH0_BACKEND_CLIENT_ID;
             delete process.env.AUTH0_BACKEND_CLIENT_SECRET;
         });

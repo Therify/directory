@@ -2,7 +2,7 @@ import { getResourceEndpointFactory } from './getResourceEndpoint';
 
 describe('getResourceEndpoint', () => {
     const getResourceEndpoint = getResourceEndpointFactory({
-        AUTH0_DOMAIN: 'test.auth0.com',
+        AUTH0_BACKEND_DOMAIN: 'test.auth0.com',
     });
     it('should return the correct endpoint for a resource', () => {
         const endpoint = getResourceEndpoint('USERS');

@@ -12,8 +12,8 @@ export type Resource = keyof typeof ENDPOINTS;
 export type Endpoints = typeof ENDPOINTS[keyof typeof ENDPOINTS];
 
 export const getResourceEndpointFactory = ({
-    AUTH0_DOMAIN,
-}: Pick<Auth0Configuration, 'AUTH0_DOMAIN'>) => {
+    AUTH0_BACKEND_DOMAIN,
+}: Pick<Auth0Configuration, 'AUTH0_BACKEND_DOMAIN'>) => {
     /**
      * Returns the endpoint for a given resource. If an id is provided, the endpoint will be replaced with the id.
      * @param resource - The resource to get the endpoint for
@@ -27,6 +27,6 @@ export const getResourceEndpointFactory = ({
         const formattedEndpoint = id
             ? ENDPOINTS[resource].replace('{id}', id)
             : ENDPOINTS[resource];
-        return `https://${AUTH0_DOMAIN}${formattedEndpoint}`;
+        return `https://${AUTH0_BACKEND_DOMAIN}${formattedEndpoint}`;
     };
 };
