@@ -83,10 +83,14 @@ export const typography: TypographyOptions = {
     },
     h3: {
         fontFamily: HEADING_DISPLAY_FONT_FAMILY.join(', '),
-        fontSize: '2rem',
-        lineHeight: '2.375rem',
+        lineHeight: '2.063rem',
+        fontSize: '1.71rem',
         fontWeight: 'bold',
         marginBottom: '1rem',
+        '@media (min-width: 600px)': {
+            fontSize: '2rem',
+            lineHeight: '2.375rem',
+        },
     },
     h4: {
         fontFamily: HEADING_DISPLAY_FONT_FAMILY.join(', '),
