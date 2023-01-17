@@ -38,7 +38,9 @@ export const ROLES_BY_ENVIRONMENT: Record<
  */
 export function getRoleByEnvironment(
     role: Role,
-    environment: 'development' | 'production' = 'development'
+    environment: 'development' | 'test' | 'production' = 'development'
 ) {
-    return ROLES_BY_ENVIRONMENT[environment][role];
+    if (environment !== 'production')
+        return ROLES_BY_ENVIRONMENT['development'][role];
+    return ROLES_BY_ENVIRONMENT['production'][role];
 }
