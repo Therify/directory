@@ -80,7 +80,7 @@ export const ProviderRegistrationFlow = ({
         }
     }, [emailAddress, emailValidationUrl, emailsCheckedForUniqueness]);
 
-    if (isRegistrationComplete) {
+    if (isRegistrationComplete && errorMessage === undefined) {
         return (
             <FormContainer isError={false}>
                 <CenteredContainer>

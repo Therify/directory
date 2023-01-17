@@ -8,6 +8,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import { default as NextImage } from 'next/image';
 import { useRouter } from 'next/router';
 import { useUser } from '@auth0/nextjs-auth0/client';
+import { URL_PATHS } from '@/lib/sitemap';
 
 const ABSTRACT_SHAPE_URL =
     'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673455675/app.therify.co/shapes/abstract-shape_fbvcil.svg' as const;
@@ -46,7 +47,7 @@ export default function Home() {
                 <Paragraph>{JSON.stringify(user)}</Paragraph>
                 <Button
                     fullWidth
-                    onClick={() => router.push('/api/auth/logout')}
+                    onClick={() => router.push(URL_PATHS.AUTH.LOGOUT)}
                 >
                     Logout
                 </Button>
@@ -87,7 +88,9 @@ export default function Home() {
 
                             <Button
                                 fullWidth
-                                onClick={() => router.push('/api/auth/login')}
+                                onClick={() =>
+                                    router.push(URL_PATHS.AUTH.LOGIN)
+                                }
                             >
                                 Login
                             </Button>
