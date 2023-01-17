@@ -18,7 +18,7 @@ describe('CreateUser', function () {
         });
         const input = {
             ...generateMock(inputSchema),
-            role: Role.member,
+            roles: [Role.member],
             acceptTermsAndConditions: true,
             password: 'password',
             confirmPassword: 'password',
