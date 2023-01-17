@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { TwoColumnGrid } from '@/components/ui/Grids/TwoColumnGrid';
 import { Button } from '@/components/ui/Button';
-import { Caption, H1 } from '@/components/ui/Typography';
+import { Caption, H1, Paragraph, LoadingContainer } from '@/components/ui';
 import { CenteredContainer } from '@/components/ui/Layout/Containers/CenteredContainer';
 import Box from '@mui/material/Box';
 import { styled, useTheme } from '@mui/material/styles';
 import { default as NextImage } from 'next/image';
+import { useRouter } from 'next/router';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 const ABSTRACT_SHAPE_URL =
     'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673455675/app.therify.co/shapes/abstract-shape_fbvcil.svg' as const;
@@ -28,6 +30,8 @@ const LOGIN_IMAGES = [
 
 export default function Home() {
     const theme = useTheme();
+    const router = useRouter();
+    const { isLoading, user } = useUser();
     const [randomLoginImage, setRandomLoginImage] = useState<string | null>(
         null
     );
@@ -36,57 +40,77 @@ export default function Home() {
             LOGIN_IMAGES[Math.floor(Math.random() * LOGIN_IMAGES.length)]
         );
     }, []);
+    if (user) {
+        return (
+            <CenteredContainer fillSpace padding={8}>
+                <Paragraph>{JSON.stringify(user)}</Paragraph>
+                <Button
+                    fullWidth
+                    onClick={() => router.push('/api/auth/logout')}
+                >
+                    Logout
+                </Button>
+            </CenteredContainer>
+        );
+    }
     return (
-        <TwoColumnGrid
-            fillSpace
-            leftColumnSize={6}
-            rightSlot={
-                <CenteredContainer fillSpace>
-                    {/*
+        <LoadingContainer isLoading={isLoading}>
+            <TwoColumnGrid
+                fillSpace
+                leftColumnSize={6}
+                rightSlot={
+                    <CenteredContainer fillSpace>
+                        {/*
                         eslint-disable-next-line jsx-a11y/alt-text
             */}
-                    <Image fillSpace imageUrl={randomLoginImage} />
-                </CenteredContainer>
-            }
-            rightSlotSx={{
-                [theme.breakpoints.down('md')]: {
-                    display: 'none',
-                },
-            }}
-            leftSlot={
-                <LoginContainer fillSpace>
-                    <Box maxWidth={480}>
-                        <TherifyLogo
-                            alt="The Official logo of Therify Inc."
-                            src={THERIFY_LOGO_URL}
-                            data-cy="logo"
-                            width={279}
-                            height={96}
+                        <Image fillSpace imageUrl={randomLoginImage} />
+                    </CenteredContainer>
+                }
+                rightSlotSx={{
+                    [theme.breakpoints.down('md')]: {
+                        display: 'none',
+                    },
+                }}
+                leftSlot={
+                    <LoginContainer fillSpace>
+                        <Box maxWidth={480}>
+                            <TherifyLogo
+                                alt="The Official logo of Therify Inc."
+                                src={THERIFY_LOGO_URL}
+                                data-cy="logo"
+                                width={279}
+                                height={96}
+                            />
+                            <Header>
+                                The new standard for inclusive mental healthcare
+                            </Header>
+
+                            <Button
+                                fullWidth
+                                onClick={() => router.push('/api/auth/login')}
+                            >
+                                Login
+                            </Button>
+
+                            <Caption
+                                color="info"
+                                style={{
+                                    marginTop: theme.spacing(8),
+                                }}
+                            >
+                                Dont have an account?{' '}
+                            </Caption>
+                        </Box>
+                        <AbstractShape
+                            height={260}
+                            width={260}
+                            alt="Abstract shape"
+                            src={ABSTRACT_SHAPE_URL}
                         />
-                        <Header>
-                            The new standard for inclusive mental healthcare
-                        </Header>
-
-                        <Button fullWidth>Login</Button>
-
-                        <Caption
-                            color="info"
-                            style={{
-                                marginTop: theme.spacing(8),
-                            }}
-                        >
-                            Dont have an account?{' '}
-                        </Caption>
-                    </Box>
-                    <AbstractShape
-                        height={260}
-                        width={260}
-                        alt="Abstract shape"
-                        src={ABSTRACT_SHAPE_URL}
-                    />
-                </LoginContainer>
-            }
-        />
+                    </LoginContainer>
+                }
+            />
+        </LoadingContainer>
     );
 }
 
