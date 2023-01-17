@@ -6,6 +6,7 @@ import { useRegistrationStorage } from '@/components/features/registration/Provi
 import { RegisterProvider } from '@/lib/features/registration';
 import { ProviderRegistrationFlow } from '@/components/features/registration';
 import { trpc } from '@/lib/utils/trpc';
+import { ROLES } from '@/lib/types/roles';
 
 export default function ProviderRegistrationPage() {
     const router = useRouter();
@@ -52,6 +53,7 @@ export default function ProviderRegistrationPage() {
                     clearErrorMessage={() => setRegistrationError(undefined)}
                     isRegisteringProvider={mutation.isLoading}
                     isRegistrationComplete={mutation.isSuccess}
+                    role={ROLES.PROVIDER_COACH}
                 />
             </InnerContent>
         </PageContainer>

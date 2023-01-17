@@ -22,6 +22,7 @@ import { ProviderRegistrationForm } from './ui';
 import { useRegistrationStorage } from './hooks';
 import { RegisterProvider } from '@/lib/features/registration';
 import { ALERT_TYPE } from '@/components/ui/Alert';
+import { ROLES } from '@/lib/types/roles';
 
 const REGISTRATION_STEPS = ['Registration', 'Payment', 'Onboarding'] as const;
 
@@ -32,6 +33,7 @@ interface ProviderRegistrationFlowProps {
     isRegisteringProvider: boolean;
     emailValidationUrl: string;
     isRegistrationComplete: boolean;
+    role: typeof ROLES.PROVIDER_THERAPIST | typeof ROLES.PROVIDER_COACH;
 }
 
 export const ProviderRegistrationFlow = ({
@@ -41,15 +43,15 @@ export const ProviderRegistrationFlow = ({
     isRegistrationComplete,
     emailValidationUrl,
     clearErrorMessage,
+    role,
 }: ProviderRegistrationFlowProps) => {
-    const theme = useTheme();
     const [emailsCheckedForUniqueness, setEmailsCheckedForUniqueness] =
         useState<Record<string, boolean>>({});
     const { getStoredProviderDetails, storeProviderDetails } =
         useRegistrationStorage();
     const providerDetailsForm = useForm<RegisterProvider.Input>({
         mode: 'onChange',
-        defaultValues: getStoredProviderDetails(),
+        defaultValues: { ...getStoredProviderDetails(), role },
     });
 
     const handleSubmit = () => {
@@ -119,6 +121,7 @@ export const ProviderRegistrationFlow = ({
                         isEmailUnique={emailsCheckedForUniqueness[emailAddress]}
                         control={providerDetailsForm.control}
                         password={providerDetailsForm.watch('password')}
+                        role={role}
                     />
                 )}
 

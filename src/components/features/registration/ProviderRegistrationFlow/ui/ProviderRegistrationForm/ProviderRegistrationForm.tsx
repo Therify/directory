@@ -14,6 +14,7 @@ import {
     TermsAndConditionsInput,
     TEST_IDS,
 } from './inputs';
+import { ROLES } from '@/lib/types/roles';
 
 export interface ProviderRegistrationFormProps {
     defaultValues?: Partial<
@@ -27,6 +28,7 @@ export interface ProviderRegistrationFormProps {
     isEmailUnique?: boolean;
     isEmailDisabled?: boolean;
     emailHelperText?: string;
+    role: typeof ROLES.PROVIDER_THERAPIST | typeof ROLES.PROVIDER_COACH;
 }
 
 export const ProviderRegistrationForm = ({

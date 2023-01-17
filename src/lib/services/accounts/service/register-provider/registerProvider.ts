@@ -6,6 +6,7 @@ import {
     transactionDefinition,
     CreateTherifyUser,
     CreateAuth0User,
+    AssignAuth0Roles,
     CreateStripeCustomer,
     UpdateUserEntity,
 } from './transaction';
@@ -18,6 +19,7 @@ export function factory(context: Context) {
             { ...context },
             {
                 createAuth0User: CreateAuth0User.factory(params),
+                assignAuth0Roles: AssignAuth0Roles.factory(params.role),
                 createTherifyUserEntity: CreateTherifyUser.factory(params),
                 createStripeCustomer: CreateStripeCustomer.factory(params),
                 updateUserEntity: UpdateUserEntity.step,

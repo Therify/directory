@@ -1,4 +1,5 @@
 import * as z from 'zod';
+import { ROLES } from '@/lib/types/roles';
 
 export const schema = z
     .object({
@@ -9,6 +10,7 @@ export const schema = z
         confirmPassword: z.string(),
         dateOfBirth: z.string(),
         hasAcceptedTermsAndConditions: z.boolean().default(false),
+        role: z.enum([ROLES.PROVIDER_THERAPIST, ROLES.PROVIDER_COACH]),
     })
     .refine(
         (data) =>

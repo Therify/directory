@@ -8,6 +8,7 @@ export const transactionDefinition = z.object({
         auth0UserId: z.string(),
         emailAddress: z.string(),
     }),
+    assignAuth0Roles: z.unknown(),
     createTherifyUserEntity: z.object({
         therifyUserId: z.string(),
     }),
