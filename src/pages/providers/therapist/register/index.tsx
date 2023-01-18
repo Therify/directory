@@ -24,7 +24,7 @@ export default function ProviderRegistrationPage() {
 
                 router.push(
                     `${
-                        URL_PATHS.PROVIDERS.REGISTER_SUCCESS
+                        URL_PATHS.PROVIDERS.THERAPIST.REGISTER_SUCCESS
                     }?email=${encodeURIComponent(
                         emailAddress
                     )}&user_id=${encodeURIComponent(response.auth0UserId)}`
