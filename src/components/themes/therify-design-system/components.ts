@@ -1,7 +1,20 @@
 import { Components, Theme } from '@mui/material';
+import { colors } from '.';
 import { primary, secondary, shades } from './colors';
 
 export const components: Components<Theme> = {
+    MuiFilledInput: {
+        defaultProps: {
+            margin: 'dense',
+            size: 'small',
+        },
+    },
+    MuiSelect: {
+        defaultProps: {
+            margin: 'dense',
+            size: 'small',
+        },
+    },
     MuiButtonBase: {
         defaultProps: {
             disableRipple: true,
