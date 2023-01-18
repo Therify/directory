@@ -15,7 +15,8 @@ export const transactionDefinition = z.object({
     }),
 });
 
-export type CreatePracticeTransaction = TransactionV1.TransactionDefinition<
-    Context,
-    typeof transactionDefinition.shape
->;
+export type HandlePracticeOnboardingTransaction =
+    TransactionV1.TransactionDefinition<
+        Context,
+        typeof transactionDefinition.shape
+    >;

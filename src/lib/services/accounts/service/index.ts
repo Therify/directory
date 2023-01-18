@@ -9,7 +9,7 @@ import { IsEmailUnique } from './is-email-unique';
 import { SendEmailVerification } from './send-email-verification';
 import { GetVerificationEmailStatus } from './get-verification-email-status';
 import { GetPlanStatusByUserId } from './get-plan-status-by-user-id';
-import { CreatePractice } from './create-practice';
+import { HandlePracticeOnboarding } from './handle-practice-onboarding';
 
 const factoryParams: AccountsServiceParams = {
     prisma,
@@ -24,7 +24,7 @@ export const AccountsService = {
     getVerificationEmailStatus:
         GetVerificationEmailStatus.factory(factoryParams),
     getPlanStatusByUserId: GetPlanStatusByUserId.factory(factoryParams),
-    createPractice: CreatePractice.factory(factoryParams),
+    handlePracticeOnboarding: HandlePracticeOnboarding.factory(factoryParams),
 };
 
 export type AccountsService = typeof AccountsService;

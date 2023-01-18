@@ -1,1 +1,1 @@
-export * as CreatePractice from './create-practice';
+export * as HandlePracticeOnboarding from './handle-practice-onboarding';

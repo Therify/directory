@@ -1,13 +1,13 @@
-import { CreatePractice } from '@/lib/features/onboarding';
-import type { CreatePracticeTransaction } from './definition';
+import { HandlePracticeOnboarding } from '@/lib/features/onboarding';
+import type { HandlePracticeOnboardingTransaction } from './definition';
 
-interface CreatePracticeEntityFactory {
+interface HandlePracticeOnboardingEntityFactory {
     (
-        params: CreatePractice.Input
-    ): CreatePracticeTransaction['createPracticeEntity'];
+        params: HandlePracticeOnboarding.Input
+    ): HandlePracticeOnboardingTransaction['createPracticeEntity'];
 }
 
-export const factory: CreatePracticeEntityFactory = ({
+export const factory: HandlePracticeOnboardingEntityFactory = ({
     name,
     address,
     city,

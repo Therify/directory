@@ -1,10 +1,10 @@
-import { CreatePractice } from '@/lib/features/onboarding';
+import { HandlePracticeOnboarding } from '@/lib/features/onboarding';
 
-import { CreatePracticeTransaction } from './definition';
+import { HandlePracticeOnboardingTransaction } from './definition';
 
 export const factory = ({
     auth0UserId,
-}: CreatePractice.Input): CreatePracticeTransaction['getUserDetails'] => ({
+}: HandlePracticeOnboarding.Input): HandlePracticeOnboardingTransaction['getUserDetails'] => ({
     async commit({ prisma }) {
         const { stripeCustomerId } = await prisma.user.findUniqueOrThrow({
             where: {

@@ -1,11 +1,11 @@
-import { CreatePractice } from '@/lib/features/onboarding';
+import { HandlePracticeOnboarding } from '@/lib/features/onboarding';
 
-import { CreatePracticeTransaction } from './definition';
+import { HandlePracticeOnboardingTransaction } from './definition';
 
 export const factory = ({
     seatCount,
     priceId,
-}: CreatePractice.Input): CreatePracticeTransaction['createStripeCheckoutSession'] => ({
+}: HandlePracticeOnboarding.Input): HandlePracticeOnboardingTransaction['createStripeCheckoutSession'] => ({
     async commit({ stripe }, { getUserDetails: { stripeCustomerId } }) {
         const { url: checkoutSessionUrl, id: checkoutSessionId } =
             await stripe.createCheckoutSession({
