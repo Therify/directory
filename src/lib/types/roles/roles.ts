@@ -1,3 +1,4 @@
+import { NodeEnvironment } from '../nodeEnvironment';
 /**
  * This file contains the role IDs for the different roles in the application.
  */
@@ -38,7 +39,7 @@ export const ROLES_BY_ENVIRONMENT: Record<
  */
 export function getRoleByEnvironment(
     role: Role,
-    environment: 'development' | 'test' | 'production' = 'development'
+    environment: NodeEnvironment = 'development'
 ) {
     if (environment !== 'production')
         return ROLES_BY_ENVIRONMENT['development'][role];
