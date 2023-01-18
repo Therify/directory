@@ -31,7 +31,7 @@ export const resolve: ProcedureResolver<
             practiceId: result.value.createPracticeEntity.practiceId,
             checkoutSessionId:
                 result.value.createStripeCheckoutSession.checkoutSessionId,
-            checkourSessionUrl:
+            checkoutSessionUrl:
                 result.value.createStripeCheckoutSession.checkoutSessionUrl,
             errors: [],
         };

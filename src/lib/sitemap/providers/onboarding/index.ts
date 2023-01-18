@@ -1,3 +1,3 @@
 export const ONBOARDING_PATHS = {
-    BILLING: '/onboarding/billing',
+    BILLING: '/providers/onboarding/billing',
 } as const;
