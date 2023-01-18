@@ -1,1 +1,1 @@
-export * as CapturePractice from './capture-practice';
+export * as CreatePractice from './create-practice';
