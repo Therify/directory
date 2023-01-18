@@ -17,7 +17,7 @@ export const resolve: ProcedureResolver<
             errors: [],
         };
     } catch (error) {
-        let errorMessage = 'Status could not be checked.';
+        let errorMessage = 'Plan status could not be checked.';
         if (error instanceof Error) {
             errorMessage = error.message;
         }

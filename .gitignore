@@ -41,3 +41,6 @@ next-env.d.ts
 
 # Generated Files
 src/lib/schema
+
+# local development
+src/pages/api/test.ts
