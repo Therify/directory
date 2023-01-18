@@ -5,20 +5,16 @@ import { prismaMock } from '@/lib/prisma/__mock__';
 import * as GetPlanStatusByUserId from './getPlanStatusByUserId';
 
 describe('GetPlanStatusByUserId', function () {
-    it('sorts and references newest plan', async function () {
+    it('references newest plan', async function () {
         prismaMock.user.findUniqueOrThrow.mockResolvedValue({
             plans: [
-                {
-                    createdAt: new Date('2021-02-01'),
-                    status: PlanStatus.canceled,
-                } as Plan,
                 {
                     createdAt: new Date('2021-03-01'),
                     status: PlanStatus.active,
                 } as Plan,
                 {
-                    createdAt: new Date('2021-01-03'),
-                    status: PlanStatus.past_due,
+                    createdAt: new Date('2021-02-01'),
+                    status: PlanStatus.canceled,
                 } as Plan,
             ],
         } as unknown as User);

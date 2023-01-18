@@ -13,15 +13,19 @@ export const factory =
                 auth0Id: input.auth0Id,
             },
             select: {
-                plans: true,
+                plans: {
+                    orderBy: {
+                        createdAt: 'desc',
+                    },
+                    take: 1,
+                    select: {
+                        status: true,
+                        createdAt: true,
+                    },
+                },
             },
         });
-        // sort plans newest to oldest
-        const [newestPlan] = plans.sort((a, b) => {
-            if (a.createdAt > b.createdAt) return -1;
-            if (a.createdAt < b.createdAt) return 1;
-            return 0;
-        });
+        const [newestPlan] = plans;
 
         return {
             status: newestPlan?.status ?? null,
