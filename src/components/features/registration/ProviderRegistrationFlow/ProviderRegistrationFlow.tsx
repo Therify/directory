@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { Box, CircularProgress } from '@mui/material';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import {
     ReportProblemRounded,
     CheckCircle,
