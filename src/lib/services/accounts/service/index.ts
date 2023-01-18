@@ -8,6 +8,7 @@ import { AccountsServiceParams } from './params';
 import { IsEmailUnique } from './is-email-unique';
 import { SendEmailVerification } from './send-email-verification';
 import { GetVerificationEmailStatus } from './get-verification-email-status';
+import { GetPlanStatusByUserId } from './get-plan-status-by-user-id';
 
 const factoryParams: AccountsServiceParams = {
     prisma,
@@ -21,6 +22,7 @@ export const AccountsService = {
     sendEmailVerification: SendEmailVerification.factory(factoryParams),
     getVerificationEmailStatus:
         GetVerificationEmailStatus.factory(factoryParams),
+    getPlanStatusByUserId: GetPlanStatusByUserId.factory(factoryParams),
 };
 
 export type AccountsService = typeof AccountsService;

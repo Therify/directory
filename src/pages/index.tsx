@@ -9,6 +9,7 @@ import { default as NextImage } from 'next/image';
 import { useRouter } from 'next/router';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { URL_PATHS } from '@/lib/sitemap';
+import { trpc } from '@/lib/utils/trpc';
 
 const ABSTRACT_SHAPE_URL =
     'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673455675/app.therify.co/shapes/abstract-shape_fbvcil.svg' as const;
@@ -41,9 +42,27 @@ export default function Home() {
             LOGIN_IMAGES[Math.floor(Math.random() * LOGIN_IMAGES.length)]
         );
     }, []);
+    const { data: planStatus } = trpc.useQuery(
+        [
+            'accounts.users.get-plan-status-by-user-id',
+            {
+                auth0Id: user?.sub ?? '',
+            },
+        ],
+        {
+            refetchOnWindowFocus: false,
+            enabled: Boolean(user?.sub),
+        }
+    );
     if (user) {
+        if (planStatus?.status === null) {
+            router.push(URL_PATHS.ONBOARDING.BILLING);
+        }
         return (
             <CenteredContainer fillSpace padding={8}>
+                <Paragraph>
+                    {JSON.stringify({ planStatus: planStatus?.status })}
+                </Paragraph>
                 <Paragraph>{JSON.stringify(user)}</Paragraph>
                 <Button
                     fullWidth
