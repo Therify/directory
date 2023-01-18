@@ -18,11 +18,11 @@ import {
     Paragraph,
     Button,
 } from '@/components/ui';
-import { ProviderRegistrationForm } from './ui';
-import { useRegistrationStorage } from './hooks';
 import { RegisterProvider } from '@/lib/features/registration';
 import { ALERT_TYPE } from '@/components/ui/Alert';
 import { ROLES } from '@/lib/types/roles';
+import { ProviderRegistrationForm } from './ui';
+import { useRegistrationStorage } from './hooks';
 
 const REGISTRATION_STEPS = ['Registration', 'Payment', 'Onboarding'] as const;
 
