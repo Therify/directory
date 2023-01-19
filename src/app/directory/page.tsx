@@ -1,51 +1,44 @@
 'use client';
-import { Select } from '@/components/ui/FormElements/Select';
-import { H3 } from '@/components/ui/Typography/Headers';
-import { Paragraph } from '@/components/ui/Typography/Paragraph';
+import {
+    DirectoryCard,
+    MockDirectoryCardProps,
+} from '@/components/features/directory/DirectoryCard';
+import { ProviderSearchControls } from '@/components/features/directory/ProviderSearchControls';
 import Box from '@mui/material/Box';
-import FormControl from '@mui/material/FormControl';
 import { styled } from '@mui/material/styles';
-
-const STATES = ['New York', 'New Jersey'] as const;
+import { useRouter } from 'next/navigation';
 
 export default function Directory() {
+    const router = useRouter();
     return (
-        <Container>
-            <Header>
-                <H3>Find a provider that sees & understands you</H3>
-                <Paragraph>
-                    Our providers are licensed and ready to provide the care you
-                    deserve
-                </Paragraph>
-                <FilterSection>
-                    <FormControl fullWidth>
-                        <Select
-                            fullWidth
-                            sx={{ backgroundColor: 'white' }}
-                            options={STATES.map((state) => ({
-                                label: state,
-                                displayText: state,
-                                value: state,
-                            }))}
-                            selectedValue="New York"
-                            id="state"
-                        />
-                    </FormControl>
-                </FilterSection>
-            </Header>
-        </Container>
+        <DirectoryContainer>
+            <ProviderSearchControls />
+            <ProviderResultGrid>
+                {Array.from({ length: 10 }).map((_, i) => (
+                    <DirectoryCard
+                        key={i}
+                        onClick={() => {
+                            router.push(`/directory/${i}`);
+                        }}
+                        {...MockDirectoryCardProps}
+                    />
+                ))}
+            </ProviderResultGrid>
+        </DirectoryContainer>
     );
 }
-const FilterSection = styled(Box)(({ theme }) => ({}));
-const Header = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(8),
-    backgroundColor: theme.palette.secondary.dark,
-    borderRadius: theme.shape.borderRadius,
-    color: theme.palette.primary.contrastText,
-}));
 
-const Container = styled(Box)(({ theme }) => ({
+const DirectoryContainer = styled(Box)(({ theme }) => ({
     maxWidth: theme.breakpoints.values.lg,
     margin: '0 auto',
     padding: theme.spacing(4),
+    height: '100%',
+    overflowY: 'auto',
+}));
+
+const ProviderResultGrid = styled(Box)(({ theme }) => ({
+    margin: theme.spacing(4, 0),
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+    gridGap: theme.spacing(4),
 }));

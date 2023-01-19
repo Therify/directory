@@ -43,7 +43,6 @@ model User {
   @@map("users")
 }
 
-<<<<<<< HEAD
 model Account {
   id                 String             @id @default(cuid()) @map("account_id")
   name               String
@@ -242,18 +241,6 @@ model ProviderProfile {
   // schedule               ProviderSchedule?
   // stripeAccount          ProviderStripeAccount?
   directoryListing       DirectoryListing[]
-=======
-model ProviderProfile {
-  id             String   @id @default(cuid()) @map("provider_profile_id")
-  gender         String
-  specialties    String[]
-  licensedStates String[] @map("licensed_states")
-  ethnicity      String[]
-  bio            String
-  pronouns       String
-  minSessionRate Int      @map("min_session_rate")
-  maxSessionRate Int      @map("max_session_rate")
->>>>>>> feat/directory-page
 
   @@map("provider_profiles")
 }
