@@ -13,7 +13,6 @@ import {
 
 export function factory(context: Context) {
     return async function registerProvider(params: RegisterProvider.Input) {
-        console.log({ params });
         return await TransactionV1.executeTransaction(
             transactionDefinition,
             { ...context },

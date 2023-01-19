@@ -6,6 +6,7 @@ import { DeleteCustomer } from './client/delete-customer';
 import { DeleteProduct } from './client/delete-product';
 import { RetrieveCustomer } from './client/retrieve-customer';
 import { SearchProduct } from './client/search-product';
+import { ConstructEvent } from './client/construct-event';
 import { withStripeConfiguration } from './configuration';
 
 export const vendorStripe = withStripeConfiguration((CONFIG) => {
@@ -32,6 +33,9 @@ export const vendorStripe = withStripeConfiguration((CONFIG) => {
             stripe,
         }),
         createCheckoutSession: CreateCheckoutSession.factory({
+            stripe,
+        }),
+        constructEvent: ConstructEvent.factory({
             stripe,
         }),
     };

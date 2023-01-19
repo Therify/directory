@@ -7,6 +7,7 @@ import { RegisterProvider } from '@/lib/features/registration';
 import { ProviderRegistrationFlow } from '@/components/features/registration';
 import { trpc } from '@/lib/utils/trpc';
 import { ROLES } from '@/lib/types/roles';
+import { URL_PATHS } from '@/lib/sitemap';
 
 export default function ProviderRegistrationPage() {
     const router = useRouter();
@@ -22,7 +23,9 @@ export default function ProviderRegistrationPage() {
                 clearRegistrationStorage();
 
                 router.push(
-                    `/providers/register/success?email=${encodeURIComponent(
+                    `${
+                        URL_PATHS.PROVIDERS.THERAPIST.REGISTER_SUCCESS
+                    }?email=${encodeURIComponent(
                         emailAddress
                     )}&user_id=${encodeURIComponent(response.auth0UserId)}`
                 );
@@ -47,7 +50,7 @@ export default function ProviderRegistrationPage() {
         <PageContainer>
             <InnerContent>
                 <ProviderRegistrationFlow
-                    emailValidationUrl="/api/accounts/is-email-unique"
+                    emailValidationUrl={URL_PATHS.API.ACCOUNTS.IS_EMAIL_UNIQUE}
                     registerProvider={registerProvider}
                     errorMessage={registrationError}
                     clearErrorMessage={() => setRegistrationError(undefined)}
