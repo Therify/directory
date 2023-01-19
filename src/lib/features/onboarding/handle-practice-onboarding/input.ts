@@ -17,7 +17,7 @@ export const schema = PracticeSchema.pick({
         priceId: z.string(),
         auth0UserId: z.string(),
     })
-    .refine((data) => data.seatCount < 1, {
+    .refine((data) => data.seatCount > 0, {
         message: 'Must have at least one seat.',
     });
 

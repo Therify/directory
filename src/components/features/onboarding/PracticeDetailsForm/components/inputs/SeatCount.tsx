@@ -1,43 +1,44 @@
 import { Control, Controller } from 'react-hook-form';
 import { Slider } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { HandlePracticeOnboarding } from '@/lib/features/onboarding';
 
-interface NumberOfSeatsInputProps {
-    control: Control<{
-        numberOfSeats: number;
-    }>;
+interface SeatCountInputProps {
+    control: Control<HandlePracticeOnboarding.Input>;
     max?: number;
     min?: number;
     defaultValue?: number;
+    onInputBlur: () => void;
 }
 
-export const NumberOfSeatsInput = ({
+export const SeatCountInput = ({
     control,
     defaultValue = 1,
     max = 10,
     min = 1,
-}: NumberOfSeatsInputProps) => {
+    onInputBlur,
+}: SeatCountInputProps) => {
     const theme = useTheme();
     return (
         <Controller
             control={control}
-            name="numberOfSeats"
+            name="seatCount"
             defaultValue={defaultValue}
             rules={{
                 required: true,
             }}
-            render={({
-                field: { onChange, onBlur, value, name },
-                fieldState: { error, isTouched },
-            }) => (
+            render={({ field: { onChange, onBlur, value, name } }) => (
                 <Slider
                     aria-label="Number of seats"
                     id="numberOfSeats"
                     defaultValue={defaultValue}
                     style={{ margin: theme.spacing(0, 4) }}
+                    onBlur={() => {
+                        onBlur();
+                        onInputBlur();
+                    }}
                     {...{
                         onChange,
-                        onBlur,
                         value,
                         name,
                         min,
