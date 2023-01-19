@@ -9,6 +9,7 @@ import { IsEmailUnique } from './is-email-unique';
 import { SendEmailVerification } from './send-email-verification';
 import { GetVerificationEmailStatus } from './get-verification-email-status';
 import { GetPlanStatusByUserId } from './get-plan-status-by-user-id';
+import { GetPracticeByUserId } from './get-practice-by-user-id';
 import { HandlePracticeOnboarding } from './handle-practice-onboarding';
 
 const factoryParams: AccountsServiceParams = {
@@ -24,6 +25,7 @@ export const AccountsService = {
     getVerificationEmailStatus:
         GetVerificationEmailStatus.factory(factoryParams),
     getPlanStatusByUserId: GetPlanStatusByUserId.factory(factoryParams),
+    GetPracticeByUserId: GetPracticeByUserId.factory(factoryParams),
     handlePracticeOnboarding: HandlePracticeOnboarding.factory(factoryParams),
 };
 

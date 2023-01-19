@@ -13,6 +13,7 @@ export const schema = PracticeSchema.pick({
     website: true,
 })
     .extend({
+        id: z.string().optional(),
         seatCount: z.number().min(1),
         priceId: z.string(),
         auth0UserId: z.string(),

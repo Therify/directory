@@ -5,13 +5,14 @@ import {
     GetVerificationEmailStatus,
 } from '@/lib/features/registration';
 import { HandlePracticeOnboarding } from '@/lib/features/onboarding';
-import { GetPlanStatus } from '@/lib/features/users';
+import { GetPlanStatus, GetPracticeByUserId } from '@/lib/features/users';
 import {
     registerProviderResolver,
     sendEmailVerificationResolver,
     getVerificationEmailStatusResolver,
     getPlanStatusResolver,
     handlePracticeOnboardingResolver,
+    getPracticeByUserIdResolver,
 } from './resolvers';
 import { Context } from '../../context';
 
@@ -26,6 +27,11 @@ export const router = trpc
         input: GetPlanStatus.inputSchema,
         output: GetPlanStatus.outputSchema,
         resolve: getPlanStatusResolver,
+    })
+    .query(GetPracticeByUserId.TRPC_ROUTE, {
+        input: GetPracticeByUserId.inputSchema,
+        output: GetPracticeByUserId.outputSchema,
+        resolve: getPracticeByUserIdResolver,
     })
     .mutation(HandlePracticeOnboarding.TRPC_ROUTE, {
         input: HandlePracticeOnboarding.inputSchema,
