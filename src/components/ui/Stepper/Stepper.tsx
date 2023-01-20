@@ -25,6 +25,7 @@ export const Stepper = ({ steps, activeStepIndex }: StepperProps) => {
 };
 
 const StepperContainer = styled(MuiStepper)(({ theme }) => ({
+    width: '100%',
     '& .MuiStepLabel-label': {
         color: theme.palette.primary.light,
         '&.Mui-completed': { fontWeight: 400 },

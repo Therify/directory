@@ -56,7 +56,7 @@ export default function Home() {
     );
     if (user) {
         if (planStatus?.status === null) {
-            router.push(URL_PATHS.ONBOARDING.BILLING);
+            router.push(URL_PATHS.PROVIDERS.ONBOARDING.BILLING);
         }
         return (
             <CenteredContainer fillSpace padding={8}>
