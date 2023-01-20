@@ -28,7 +28,7 @@ export const resolve: ProcedureResolver<
             };
         }
         return {
-            practiceId: result.value.createPracticeEntity.practiceId,
+            practiceId: result.value.handlePracticeEntity.practiceId,
             checkoutSessionId:
                 result.value.createStripeCheckoutSession.checkoutSessionId,
             checkoutSessionUrl:

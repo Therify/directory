@@ -6,6 +6,7 @@ interface StateInputProps {
     control: Control<HandlePracticeOnboarding.Input>;
     defaultValue?: string;
     onInputBlur: () => void;
+    disabled?: boolean;
 }
 const options: SelectOption[] = [{ value: 'NY', displayText: 'New York' }];
 
@@ -13,6 +14,7 @@ export const StateInput = ({
     control,
     defaultValue = '',
     onInputBlur,
+    disabled,
 }: StateInputProps) => (
     <Controller
         control={control}
@@ -47,6 +49,7 @@ export const StateInput = ({
                     options,
                     onChange,
                     name,
+                    disabled,
                 }}
             />
         )}

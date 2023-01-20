@@ -50,13 +50,12 @@ export const PracticeEmailInput = ({
                     required
                     fullWidth
                     id="emailAddress"
-                    label="Primary contact email"
+                    label="Primary practice email"
                     errorMessage={
                         shouldShowErrorMessage ? errorMessage : undefined
                     }
                     autoComplete="email"
                     type="email"
-                    disabled={disabled}
                     helperText={helperText}
                     onBlur={() => {
                         onBlur();
@@ -66,6 +65,7 @@ export const PracticeEmailInput = ({
                         onChange,
                         value,
                         name,
+                        disabled,
                     }}
                 />
             );

@@ -6,12 +6,14 @@ interface PracticeNameInputProps {
     control: Control<HandlePracticeOnboarding.Input>;
     defaultValue?: string;
     onInputBlur: () => void;
+    disabled?: boolean;
 }
 
 export const PracticeNameInput = ({
     control,
     defaultValue = '',
     onInputBlur,
+    disabled,
 }: PracticeNameInputProps) => (
     <Controller
         control={control}
@@ -43,6 +45,7 @@ export const PracticeNameInput = ({
                     onInputBlur();
                 }}
                 {...{
+                    disabled,
                     onChange,
                     value,
                     name,

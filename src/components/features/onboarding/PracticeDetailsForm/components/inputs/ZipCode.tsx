@@ -6,12 +6,14 @@ interface ZipCodeInputProps {
     control: Control<HandlePracticeOnboarding.Input>;
     defaultValue?: string;
     onInputBlur: () => void;
+    disabled?: boolean;
 }
 
 export const ZipCodeInput = ({
     control,
     defaultValue = '',
     onInputBlur,
+    disabled,
 }: ZipCodeInputProps) => (
     <Controller
         control={control}
@@ -43,6 +45,7 @@ export const ZipCodeInput = ({
                     onInputBlur();
                 }}
                 {...{
+                    disabled,
                     onChange,
                     value,
                     name,

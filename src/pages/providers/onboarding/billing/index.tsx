@@ -16,6 +16,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { ArrowForwardRounded as NextIcon } from '@mui/icons-material';
 import { useUser } from '@auth0/nextjs-auth0/client';
+import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { getProductByEnvironment, PRODUCTS } from '@/lib/types';
 import { TRPCClientError } from '@trpc/client';
 import Link from 'next/link';
@@ -27,6 +28,7 @@ const PRODUCT = getProductByEnvironment(
     PRODUCTS.GROUP_PRACTICE_PLAN,
     process.env.NODE_ENV
 );
+export const getServerSideProps = withPageAuthRequired();
 
 export default function PracticeOnboardingPage() {
     const theme = useTheme();
@@ -41,6 +43,45 @@ export default function PracticeOnboardingPage() {
             priceId: PRODUCT.PRICES.DEFAULT,
         },
     });
+
+    const { isLoading: isLoadingPractice, data: practiceData } = trpc.useQuery(
+        [
+            'accounts.users.get-practice-by-user-id',
+            {
+                auth0Id: user?.sub ?? '',
+            },
+        ],
+        {
+            enabled: Boolean(user?.sub),
+        }
+    );
+
+    useEffect(() => {
+        if (practiceData?.practice) {
+            practiceDetailsForm.setValue('id', practiceData.practice.id);
+            practiceDetailsForm.setValue(
+                'address',
+                practiceData.practice.address
+            );
+            practiceDetailsForm.setValue(
+                'address2',
+                practiceData.practice.address2 ?? undefined
+            );
+            practiceDetailsForm.setValue('email', practiceData.practice.email);
+            practiceDetailsForm.setValue('city', practiceData.practice.city);
+            practiceDetailsForm.setValue('state', practiceData.practice.state);
+            practiceDetailsForm.setValue('zip', practiceData.practice.zip);
+            practiceDetailsForm.setValue('name', practiceData.practice.name);
+            practiceDetailsForm.setValue(
+                'phone',
+                practiceData.practice.phone ?? undefined
+            );
+            practiceDetailsForm.setValue(
+                'website',
+                practiceData.practice.website
+            );
+        }
+    }, [practiceDetailsForm, practiceData?.practice]);
 
     useEffect(() => {
         if (user?.sub) {
@@ -96,17 +137,23 @@ export default function PracticeOnboardingPage() {
                 >
                     <FormContainer
                         errorMessage={errorMessage}
-                        isLoading={isLoadingUser}
+                        isLoading={isLoadingUser || isLoadingPractice}
                     >
                         <PracticeDetailsForm
                             defaultValues={undefined}
                             control={practiceDetailsForm.control}
                             seatCount={practiceDetailsForm.watch('seatCount')}
                             baseSeatPrice={42}
+                            maximumSeats={35}
                             onInputBlur={() =>
                                 storePracticeDetails(
                                     practiceDetailsForm.getValues()
                                 )
+                            }
+                            disabled={
+                                isLoadingUser ||
+                                isLoadingPractice ||
+                                mutation.isLoading
                             }
                         />
                     </FormContainer>
@@ -126,7 +173,11 @@ export default function PracticeOnboardingPage() {
                         </Box>
                         <Button
                             isLoading={mutation.isLoading}
-                            disabled={!practiceDetailsForm.formState.isValid}
+                            disabled={
+                                !practiceDetailsForm.formState.isValid ||
+                                isLoadingUser ||
+                                isLoadingPractice
+                            }
                             endIcon={<NextIcon />}
                             onClick={handlePracticeOnboarding}
                         >

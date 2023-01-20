@@ -22,14 +22,12 @@ export const factory =
         // try {
         return await stripe.checkout.sessions.create({
             customer: customerId,
-
             line_items: [{ price: priceId, quantity }],
             mode: checkoutMode,
-            shipping_address_collection: { allowed_countries: ['US'] },
             success_url: successUrl,
             cancel_url: cancelUrl,
             payment_method_types: ['card'],
-            billing_address_collection: 'required',
+            billing_address_collection: 'auto',
             allow_promotion_codes: allowPromotionCodes,
             ...(submitMessage
                 ? {

@@ -4,6 +4,7 @@ import { CreateCustomer } from './client/create-customer';
 import { CreateProduct } from './client/create-product';
 import { DeleteCustomer } from './client/delete-customer';
 import { DeleteProduct } from './client/delete-product';
+import { ExpireCheckoutSession } from './client/expire-checkout-session';
 import { RetrieveCustomer } from './client/retrieve-customer';
 import { SearchProduct } from './client/search-product';
 import { withStripeConfiguration } from './configuration';
@@ -34,6 +35,7 @@ export const vendorStripe = withStripeConfiguration((CONFIG) => {
         createCheckoutSession: CreateCheckoutSession.factory({
             stripe,
         }),
+        expireCheckoutSession: ExpireCheckoutSession.factory({ stripe }),
     };
 });
 

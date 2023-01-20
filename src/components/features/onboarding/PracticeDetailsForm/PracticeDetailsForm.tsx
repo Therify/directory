@@ -20,6 +20,7 @@ export interface PracticeDetailsFormProps {
     maximumSeats?: number;
     baseSeatPrice: number;
     seatCount: number;
+    disabled?: boolean;
     onInputBlur: () => void;
 }
 
@@ -30,6 +31,7 @@ export const PracticeDetailsForm = ({
     maximumSeats = 15,
     baseSeatPrice,
     seatCount,
+    disabled,
     onInputBlur,
 }: PracticeDetailsFormProps) => {
     const theme = useTheme();
@@ -42,8 +44,9 @@ export const PracticeDetailsForm = ({
                     control={control}
                     defaultValue={defaultValues?.name}
                     onInputBlur={onInputBlur}
+                    disabled={disabled}
                 />
-                <SectionTitle>Practice Address</SectionTitle>
+                <SectionTitle>Practice address</SectionTitle>
                 <Caption>
                     Address will not be publicly listed unless you choose to
                     share on your profile(s).
@@ -58,6 +61,7 @@ export const PracticeDetailsForm = ({
                         zip: defaultValues?.zip,
                     }}
                     onInputBlur={onInputBlur}
+                    disabled={disabled}
                 />
                 <SectionTitle>Contact </SectionTitle>
                 <Caption>
@@ -68,19 +72,22 @@ export const PracticeDetailsForm = ({
                     control={control}
                     defaultValue={defaultValues?.email}
                     onInputBlur={onInputBlur}
+                    disabled={disabled}
                 />
                 <WebsiteInput
                     control={control}
                     defaultValue={defaultValues?.website ?? undefined}
                     onInputBlur={onInputBlur}
+                    disabled={disabled}
                 />
                 <PhoneNumberInput
                     control={control}
                     defaultValue={defaultValues?.phone ?? undefined}
                     onInputBlur={onInputBlur}
+                    disabled={disabled}
                 />
                 <SectionTitle>
-                    How many providers are in your practice?
+                    How many profiles do you want to list with Therify?
                 </SectionTitle>
                 <Subhead textAlign="center">{seatCount}</Subhead>
                 <Box display="flex" width="100%" marginRight={4}>
@@ -91,6 +98,7 @@ export const PracticeDetailsForm = ({
                         min={minimumSeats}
                         defaultValue={defaultValues?.seatCount ?? undefined}
                         onInputBlur={onInputBlur}
+                        disabled={disabled}
                     />
                     <Paragraph>{maximumSeats}</Paragraph>
                 </Box>
@@ -116,7 +124,7 @@ export const PracticeDetailsForm = ({
                         </Link>{' '}
                     </b>
                     for simplified billing. You will be redirected to
-                    Stripe&apos;s checkout experience
+                    Stripe&apos;s checkout experience.
                 </Paragraph>
             </Form>
         </Box>

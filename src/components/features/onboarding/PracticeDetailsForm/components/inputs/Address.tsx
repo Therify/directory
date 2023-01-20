@@ -10,6 +10,7 @@ import { ZipCodeInput } from './ZipCode';
 
 interface PracticeAddressInputProps {
     control: Control<HandlePracticeOnboarding.Input>;
+    disabled?: boolean;
     defaultValues?: Partial<
         Pick<
             HandlePracticeOnboarding.Input,
@@ -23,6 +24,7 @@ export const PracticeAddressInput = ({
     control,
     defaultValues = {},
     onInputBlur,
+    disabled,
 }: PracticeAddressInputProps) => {
     const theme = useTheme();
     return (
@@ -32,11 +34,13 @@ export const PracticeAddressInput = ({
                     control={control}
                     defaultValue={defaultValues.address}
                     onInputBlur={onInputBlur}
+                    disabled={disabled}
                 />
                 <Address2Input
                     control={control}
                     defaultValue={defaultValues.address2 ?? undefined}
                     onInputBlur={onInputBlur}
+                    disabled={disabled}
                 />
             </StreetContainer>
             <StateContainer>
@@ -44,17 +48,20 @@ export const PracticeAddressInput = ({
                     control={control}
                     defaultValue={defaultValues.city}
                     onInputBlur={onInputBlur}
+                    disabled={disabled}
                 />
                 <Box className="state-zip">
                     <StateInput
                         control={control}
                         defaultValue={defaultValues.state}
                         onInputBlur={onInputBlur}
+                        disabled={disabled}
                     />
                     <ZipCodeInput
                         control={control}
                         defaultValue={defaultValues.zip}
                         onInputBlur={onInputBlur}
+                        disabled={disabled}
                     />
                 </Box>
             </StateContainer>
@@ -97,19 +104,18 @@ const StateContainer = styled(Box)(({ theme }) => ({
         display: 'flex',
         width: '100%',
         margin: 0,
-        '& *': {
-            '&:first-of-type': {
-                marginRight: theme.spacing(1),
-            },
-            '&:last-of-type': {
-                marginLeft: theme.spacing(1),
-            },
+        [theme.breakpoints.up('md')]: {
+            paddingLeft: theme.spacing(2),
+        },
+        '& > *:first-of-type': {
+            flex: 1,
+            marginRight: theme.spacing(4),
         },
     },
     '& > *': {
         flex: 1,
         [theme.breakpoints.up('md')]: {
-            width: '50%',
+            width: `calc(50% - ${theme.spacing(1)})`,
             '&:first-of-type': {
                 marginRight: theme.spacing(1),
             },

@@ -6,12 +6,14 @@ interface PhoneNumberInputProps {
     control: Control<HandlePracticeOnboarding.Input>;
     defaultValue?: string;
     onInputBlur: () => void;
+    disabled?: boolean;
 }
 
 export const PhoneNumberInput = ({
     control,
     defaultValue = '',
     onInputBlur,
+    disabled,
 }: PhoneNumberInputProps) => (
     <Controller
         control={control}
@@ -45,6 +47,7 @@ export const PhoneNumberInput = ({
                     onChange,
                     value,
                     name,
+                    disabled,
                 }}
             />
         )}

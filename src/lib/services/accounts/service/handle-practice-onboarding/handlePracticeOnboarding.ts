@@ -4,8 +4,9 @@ import { TransactionV1 } from '@/lib/utils';
 
 import {
     transactionDefinition,
-    HandlePracticeOnboardingEntity,
+    HandlePracticeEntity,
     CreateStripeCheckoutSession,
+    DefendAgainstDuplicatePlans,
     GetUserDetails,
 } from './transaction';
 
@@ -18,8 +19,9 @@ export function factory(context: Context) {
             { ...context },
             {
                 getUserDetails: GetUserDetails.factory(params),
-                createPracticeEntity:
-                    HandlePracticeOnboardingEntity.factory(params),
+                defendAgainstDuplicatePlans:
+                    DefendAgainstDuplicatePlans.factory(params),
+                handlePracticeEntity: HandlePracticeEntity.factory(params),
                 createStripeCheckoutSession:
                     CreateStripeCheckoutSession.factory(params),
             },

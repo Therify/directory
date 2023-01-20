@@ -6,12 +6,14 @@ interface WebsiteInputProps {
     control: Control<HandlePracticeOnboarding.Input>;
     defaultValue?: string;
     onInputBlur: () => void;
+    disabled?: boolean;
 }
 
 export const WebsiteInput = ({
     control,
     defaultValue = '',
     onInputBlur,
+    disabled,
 }: WebsiteInputProps) => (
     <Controller
         control={control}
@@ -30,6 +32,7 @@ export const WebsiteInput = ({
                     onChange,
                     value,
                     name,
+                    disabled,
                 }}
             />
         )}

@@ -6,12 +6,14 @@ interface StreetAddressInputProps {
     control: Control<HandlePracticeOnboarding.Input>;
     defaultValue?: string;
     onInputBlur: () => void;
+    disabled?: boolean;
 }
 
 export const StreetAddressInput = ({
     control,
     defaultValue = '',
     onInputBlur,
+    disabled,
 }: StreetAddressInputProps) => (
     <Controller
         control={control}
@@ -45,6 +47,7 @@ export const StreetAddressInput = ({
                     onChange,
                     value,
                     name,
+                    disabled,
                 }}
             />
         )}

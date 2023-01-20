@@ -6,12 +6,14 @@ interface Address2InputProps {
     control: Control<HandlePracticeOnboarding.Input>;
     defaultValue?: string;
     onInputBlur: () => void;
+    disabled?: boolean;
 }
 
 export const Address2Input = ({
     control,
     defaultValue = '',
     onInputBlur,
+    disabled,
 }: Address2InputProps) => (
     <Controller
         control={control}
@@ -33,6 +35,7 @@ export const Address2Input = ({
                     onChange,
                     value,
                     name,
+                    disabled,
                 }}
             />
         )}

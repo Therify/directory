@@ -5,8 +5,12 @@ import { AccountsServiceParams as Context } from '../../params';
 export const transactionDefinition = z.object({
     getUserDetails: z.object({
         stripeCustomerId: z.string(),
+        userId: z.string(),
     }),
-    createPracticeEntity: z.object({
+    defendAgainstDuplicatePlans: z.object({
+        hasPlan: z.boolean(),
+    }),
+    handlePracticeEntity: z.object({
         practiceId: z.string(),
     }),
     createStripeCheckoutSession: z.object({

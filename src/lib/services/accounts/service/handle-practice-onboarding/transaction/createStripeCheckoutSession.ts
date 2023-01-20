@@ -1,4 +1,5 @@
 import { HandlePracticeOnboarding } from '@/lib/features/onboarding';
+import { URL_PATHS } from '@/lib/sitemap';
 
 import { HandlePracticeOnboardingTransaction } from './definition';
 
@@ -13,8 +14,8 @@ export const factory = ({
                 customerId: stripeCustomerId,
                 quantity: seatCount,
                 checkoutMode: 'subscription',
-                cancelUrl: '',
-                successUrl: '',
+                cancelUrl: `${process.env.APPLICATION_URL}${URL_PATHS.PROVIDERS.ONBOARDING.BILLING}`,
+                successUrl: `${process.env.APPLICATION_URL}${URL_PATHS.PROVIDERS.ONBOARDING.BILLING_SUCCESS}`,
                 allowPromotionCodes: true,
             });
         if (!checkoutSessionUrl) {
@@ -25,8 +26,10 @@ export const factory = ({
             checkoutSessionUrl,
         };
     },
-    async rollback() {
-        //TODO: Expire the stripe session
-        return;
+    async rollback(
+        { stripe },
+        { createStripeCheckoutSession: { checkoutSessionId: sessionId } }
+    ) {
+        return stripe.expireCheckoutSession({ sessionId });
     },
 });

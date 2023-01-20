@@ -9,6 +9,7 @@ interface SeatCountInputProps {
     min?: number;
     defaultValue?: number;
     onInputBlur: () => void;
+    disabled?: boolean;
 }
 
 export const SeatCountInput = ({
@@ -17,6 +18,7 @@ export const SeatCountInput = ({
     max = 10,
     min = 1,
     onInputBlur,
+    disabled,
 }: SeatCountInputProps) => {
     const theme = useTheme();
     return (
@@ -38,6 +40,7 @@ export const SeatCountInput = ({
                         onInputBlur();
                     }}
                     {...{
+                        disabled,
                         onChange,
                         value,
                         name,
