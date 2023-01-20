@@ -53,6 +53,7 @@ export default function PracticeOnboardingPage() {
         ],
         {
             enabled: Boolean(user?.sub),
+            refetchOnWindowFocus: false,
         }
     );
 
