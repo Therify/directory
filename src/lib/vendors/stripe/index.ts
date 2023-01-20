@@ -10,6 +10,8 @@ import { SearchProduct } from './client/search-product';
 import { ConstructEvent } from './client/construct-event';
 import { withStripeConfiguration } from './configuration';
 
+export * as Types from './types';
+
 export const vendorStripe = withStripeConfiguration((CONFIG) => {
     const stripe = new Stripe(CONFIG.STRIPE_SECRET_KEY, {
         apiVersion: '2022-11-15',
