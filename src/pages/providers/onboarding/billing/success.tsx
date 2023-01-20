@@ -2,10 +2,16 @@ import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { H1, CenteredContainer } from '@/components/ui';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { useEffect } from 'react';
+import { usePracticeOnboardingStorage } from '@/components/features/onboarding';
 
 export const getServerSideProps = withPageAuthRequired();
 
 export default function BillingSuccessPage() {
+    const { clearStorage } = usePracticeOnboardingStorage();
+
+    useEffect(clearStorage, [clearStorage]);
+
     return (
         <PageContainer>
             <CenteredContainer fillSpace>
