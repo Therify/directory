@@ -1,5 +1,5 @@
 import { Control, Controller } from 'react-hook-form';
-import { Input } from '@/components/ui';
+import { FormValidation, Input } from '@/components/ui';
 import { HandlePracticeOnboarding } from '@/lib/features/onboarding';
 
 interface WebsiteInputProps {
@@ -19,11 +19,32 @@ export const WebsiteInput = ({
         control={control}
         name="website"
         defaultValue={defaultValue}
-        render={({ field: { onChange, onBlur, value, name } }) => (
+        rules={{
+            validate: {
+                [FormValidation.Url.URLValidationType.ValidUrl]: (value) => {
+                    const shouldValidate = Boolean(value);
+                    return shouldValidate
+                        ? FormValidation.Url.isValidUrl(value ?? '')
+                        : true;
+                },
+            },
+        }}
+        render={({
+            field: { onChange, onBlur, value, name },
+            fieldState: { error, isTouched },
+        }) => (
             <Input
                 fullWidth
                 id="website"
                 label="Website"
+                errorMessage={
+                    isTouched
+                        ? FormValidation.Url.getUrlValidationErrorMessage(
+                              error?.type as FormValidation.Url.URLValidationType,
+                              'Website'
+                          )
+                        : undefined
+                }
                 onBlur={() => {
                     onBlur();
                     onInputBlur();

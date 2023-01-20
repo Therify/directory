@@ -1,5 +1,5 @@
 import { Control, Controller } from 'react-hook-form';
-import { Input } from '@/components/ui';
+import { FormValidation, Input } from '@/components/ui';
 import { HandlePracticeOnboarding } from '@/lib/features/onboarding';
 
 interface PhoneNumberInputProps {
@@ -19,12 +19,26 @@ export const PhoneNumberInput = ({
         control={control}
         name="phone"
         defaultValue={defaultValue}
-        // TODO: Add validation for phone number
-        // rules={{
-        //     nineDigits: (value: string) => {
-        //         return value.length === 9;
-        //     },
-        // }}
+        rules={{
+            validate: {
+                [FormValidation.Phone.PhoneValidationType.IsNumeric]: (
+                    value
+                ) => {
+                    const shouldValidate = Boolean(value);
+                    return shouldValidate
+                        ? FormValidation.Phone.isNumeric(value ?? '')
+                        : true;
+                },
+                [FormValidation.Phone.PhoneValidationType.ValidLength]: (
+                    value
+                ) => {
+                    const shouldValidate = Boolean(value);
+                    return shouldValidate
+                        ? FormValidation.Phone.isValidLength(value ?? '', 10)
+                        : true;
+                },
+            },
+        }}
         render={({
             field: { onChange, onBlur, value, name },
             fieldState: { error, isTouched },
@@ -35,8 +49,11 @@ export const PhoneNumberInput = ({
                 id="phone"
                 label="phone"
                 errorMessage={
-                    isTouched && error
-                        ? 'Phone Number must be 9 digits.'
+                    isTouched
+                        ? FormValidation.Phone.getPhoneValidationErrorMessage(
+                              error?.type as FormValidation.Phone.PhoneValidationType,
+                              { length: 10 }
+                          )
                         : undefined
                 }
                 onBlur={() => {
