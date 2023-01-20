@@ -25,7 +25,7 @@ export const AccountsService = {
     getVerificationEmailStatus:
         GetVerificationEmailStatus.factory(factoryParams),
     getPlanStatusByUserId: GetPlanStatusByUserId.factory(factoryParams),
-    GetPracticeByUserId: GetPracticeByUserId.factory(factoryParams),
+    getPracticeByUserId: GetPracticeByUserId.factory(factoryParams),
     handlePracticeOnboarding: HandlePracticeOnboarding.factory(factoryParams),
 };
 

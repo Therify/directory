@@ -11,7 +11,7 @@ export const resolve: ProcedureResolver<
     ctx,
 }): Promise<GetPracticeByUserId.Output> {
     try {
-        const { practice } = await ctx.accounts.GetPracticeByUserId(input);
+        const { practice } = await ctx.accounts.getPracticeByUserId(input);
         return {
             practice,
             errors: [],
