@@ -1,18 +1,13 @@
 import Stripe from 'stripe';
 import { StripeVendorFactoryParams } from '../types';
-import { Input } from './schema';
-// import { processStripeError } from '../../errors';
-// import { StripeIntent } from '../../intents';
+import { Input, Output } from './schema';
 
 export interface CreateCheckoutSessionFactoryParams
     extends StripeVendorFactoryParams {}
 
 export const factory =
     ({ stripe }: CreateCheckoutSessionFactoryParams) =>
-    async ({ sessionId }: Input): Promise<Stripe.Checkout.Session> => {
-        // try {
-        return await stripe.checkout.sessions.expire(sessionId);
-        // } catch (error) {
-        //     throw processStripeError(StripeIntent.CreateCheckoutSession, error);
-        // }
+    async ({ sessionId }: Input): Promise<Output> => {
+        const { id } = await stripe.checkout.sessions.expire(sessionId);
+        return { sessionId: id };
     };
