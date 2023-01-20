@@ -13,13 +13,12 @@ export const handleEventFactory =
         const eventHandlers = eventHandlersFactory(context);
         switch (type) {
             case 'invoice.payment_failed':
-                return eventHandlers.invoices.paymentFailed(
-                    object as Stripe.Invoice
-                );
+                return eventHandlers.invoices.paymentFailed(object);
             case 'invoice.paid':
                 return eventHandlers.invoices.paid(object);
             default:
                 // Unexpected event type
+                console.log(`Unexpected event type: ${type}`);
                 throw new UnknownStripeEventTypeError(type);
         }
     };

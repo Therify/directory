@@ -1,10 +1,8 @@
-import Stripe from 'stripe';
-// import { StripeUtils } from '@/lib/vendors/stripe';
 import { StripeWebhookParams } from '../../../webhookParams';
 
 export const handleInvoicePaymentFailedFactory =
     ({ prisma }: StripeWebhookParams) =>
-    async (rawInvoice: Stripe.Invoice) => {
+    async (rawInvoice: unknown) => {
         // const invoice = StripeUtils.adaptStripeInvoice(rawInvoice);
         // const subscription =
         //     await orm.subscriptionBillingProviderIdentifier.findFirst({

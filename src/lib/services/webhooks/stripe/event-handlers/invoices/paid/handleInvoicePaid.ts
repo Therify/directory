@@ -14,7 +14,7 @@ type HandlerResult = inferAsyncReturnType<
 export const handleInvoicePaidFactory =
     ({ accounts }: StripeWebhookParams) =>
     async (rawInvoice: unknown) => {
-        const invoice = Types.stripeInvoiceSchema.parse(rawInvoice);
+        // const invoice = Types.stripeInvoiceSchema.parse(rawInvoice);
         console.log('handleInvoicePaidFactory', rawInvoice);
         // const customerId = StripeUtils.extractIdFromExpandableField(
         //     rawInvoice,

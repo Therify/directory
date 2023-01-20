@@ -1,6 +1,5 @@
 import { vendorStripe as stripe } from '@/lib/vendors/stripe';
 import { AccountsService } from '@/lib/services/accounts';
-import { constructEventFactory, ConstructEventParams } from './construct-event';
 import { StripeWebhookParams } from './webhookParams';
 import { handleEventFactory } from './handle-event';
 import { PrismaClient } from '@prisma/client';
@@ -16,13 +15,19 @@ const webhookContext: StripeWebhookParams = {
     prisma,
     accounts: AccountsService,
 };
-export const stripeWebhookService = {
-    handleEvent: (eventParams: ConstructEventParams) => {
-        const constructEvent = constructEventFactory(webhookContext);
-        const handleEvent = handleEventFactory(webhookContext);
 
-        const constructedEvent = constructEvent(eventParams);
-        return handleEvent(constructedEvent);
+interface HandleEventParams {
+    rawBody: string | Buffer;
+    signature: string;
+    signingSecret: string;
+}
+
+export const stripeWebhookService = {
+    handleEvent: (eventParams: HandleEventParams) => {
+        const handleEvent = handleEventFactory(webhookContext);
+        const { data, type } = stripe.constructEvent(eventParams);
+
+        return handleEvent({ data, type });
     },
 };
 
