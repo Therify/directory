@@ -64,7 +64,7 @@ export function CreateOrUpdateProfile() {
                             id="pronouns"
                             label="Pronouns"
                             options={PRONOUNS_OPTIONS}
-                            selectedValue={pronouns}
+                            value={pronouns as Pronoun.Pronoun}
                             fullWidth
                             onChange={(value) =>
                                 setPronouns(value as Pronoun.Pronoun)
@@ -74,7 +74,7 @@ export function CreateOrUpdateProfile() {
                             id="state"
                             label="State"
                             options={STATE_OPTIONS}
-                            selectedValue={state}
+                            value={state as State.State}
                             fullWidth
                             onChange={(value) => setState(value as State.State)}
                         />
