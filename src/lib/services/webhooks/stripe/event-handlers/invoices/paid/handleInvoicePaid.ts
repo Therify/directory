@@ -5,11 +5,16 @@ import {
     handleGroupPracticePayment,
     handleSubscriptionChange,
 } from './handlers';
-import { isValidPriceId } from '@/lib/types';
+import { getProductByEnvironment, isValidPriceId, PRODUCTS } from '@/lib/types';
 
 type HandlerResult = inferAsyncReturnType<
     typeof handleGroupPracticePayment | typeof handleSubscriptionChange
 >;
+
+const GROUP_PRACTICE_PLAN = getProductByEnvironment(
+    PRODUCTS.GROUP_PRACTICE_PLAN,
+    process.env.NODE_ENV
+);
 
 export const handleInvoicePaidFactory =
     ({ accounts }: StripeWebhookParams) =>
@@ -39,7 +44,11 @@ export const handleInvoicePaidFactory =
                 customerId,
                 invoice,
             });
-        } else {
+        } else if (
+            Object.values(GROUP_PRACTICE_PLAN.PRICES).includes(
+                lineItem.price.id
+            )
+        ) {
             result = await handleGroupPracticePayment({
                 accounts,
                 customerId,
@@ -54,6 +63,12 @@ export const handleInvoicePaidFactory =
             });
         }
 
+        if (result === undefined) {
+            throw new Error(
+                `Could not handle invoice payment. Invoice id: ${invoice.id}}`
+            );
+        }
+
         // if (result?.isErr()) {
         //     let errorMessage = 'Could not handle invoice payment';
         //     result.mapErr(([errorStep, error]) => {
@@ -66,5 +81,5 @@ export const handleInvoicePaidFactory =
         //     throw new Error(errorMessage);
         // }
 
-        return { success: Boolean(result) };
+        return { success: true };
     };
