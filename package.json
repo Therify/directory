@@ -18,6 +18,7 @@
         "prisma:generate": "prisma generate",
         "prisma:dbpush": "doppler run --project=directory --config=dev --token=$DEV_DIRECTORY_DOPPLER_TOKEN -- yarn prisma db push",
         "prisma:studio": "prisma studio",
+        "prisma:migrate": "prisma migrate deploy",
         "vercel-build": "prisma generate && prisma migrate deploy && next build"
     },
     "dependencies": {
