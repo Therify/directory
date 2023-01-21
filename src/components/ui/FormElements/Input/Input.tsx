@@ -1,7 +1,9 @@
+import { ReactNode } from 'react';
 import {
     FormControl,
     Input as MuiInput,
-    InputLabel,
+    InputLabel as MuiInputLabel,
+    InputLabelProps,
     InputProps as MuiInputProps,
 } from '@mui/material';
 import { styled, useTheme, SxProps, Theme } from '@mui/material/styles';
@@ -53,21 +55,10 @@ export const Input = ({
             {label && (
                 <InputLabel
                     data-testid={TEST_IDS.LABEL}
-                    htmlFor={id}
-                    shrink
-                    style={{
-                        fontSize: '.875rem', // 14px
-                        position: 'relative',
-                        color: theme.palette.grey[600],
-                        transform: 'none',
-                    }}
+                    id={id}
+                    required={required}
                 >
-                    {label}{' '}
-                    {required && (
-                        <span style={{ color: theme.palette.error.main }}>
-                            *
-                        </span>
-                    )}
+                    {label}
                 </InputLabel>
             )}
             <StyledInput
@@ -100,6 +91,39 @@ export const Input = ({
         </FormControl>
     );
 };
+export const InputLabel = ({
+    id,
+    children,
+    required,
+    shrink = true,
+    ...props
+}: {
+    id?: string;
+    children: ReactNode;
+    required?: boolean;
+} & InputLabelProps) => {
+    const theme = useTheme();
+    return (
+        <MuiInputLabel
+            {...props}
+            data-testid={TEST_IDS.LABEL}
+            htmlFor={id}
+            shrink={shrink}
+            style={{
+                fontSize: theme.typography.caption.fontSize,
+                position: 'relative',
+                color: theme.palette.grey[600],
+                transform: 'none',
+            }}
+        >
+            {children}{' '}
+            {required && (
+                <span style={{ color: theme.palette.error.main }}>*</span>
+            )}
+        </MuiInputLabel>
+    );
+};
+
 const StyledInput = styled(MuiInput, {
     shouldForwardProp: (prop) =>
         'isSuccess' !== prop && 'isError' !== prop && 'whiteBg' !== prop,

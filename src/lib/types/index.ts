@@ -1,4 +1,5 @@
 export * as Notification from './notifications';
+export * from './products';
 export * from './roles';
 export * as Pronoun from './pronoun';
 export * as State from './state';
