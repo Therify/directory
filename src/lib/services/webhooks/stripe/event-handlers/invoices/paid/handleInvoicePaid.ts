@@ -1,7 +1,7 @@
 import Stripe from 'stripe';
 import { StripeWebhookParams } from '../../../webhookParams';
 import { inferAsyncReturnType } from '@trpc/server';
-import { Types } from '@/lib/vendors/stripe';
+import { StripeInvoice } from '@/lib/vendors/stripe';
 import {
     handleGroupPracticePayment,
     handleSubscriptionChange,
@@ -14,8 +14,8 @@ type HandlerResult = inferAsyncReturnType<
 export const handleInvoicePaidFactory =
     ({ accounts }: StripeWebhookParams) =>
     async (rawInvoice: unknown) => {
-        // const invoice = Types.stripeInvoiceSchema.parse(rawInvoice);
-        console.log('handleInvoicePaidFactory', rawInvoice);
+        const invoice = StripeInvoice.schema.parse(rawInvoice);
+        console.log('handleInvoicePaidFactory', invoice);
         // const customerId = StripeUtils.extractIdFromExpandableField(
         //     rawInvoice,
         //     'customer'
