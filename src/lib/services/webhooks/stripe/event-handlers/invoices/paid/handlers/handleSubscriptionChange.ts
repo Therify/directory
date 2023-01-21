@@ -1,8 +1,8 @@
-import { Types } from '@/lib/vendors/stripe';
+import { StripeInvoice } from '@/lib/vendors/stripe';
 import { AccountsService } from '@/lib/services/accounts';
 
 interface HandleSubscriptionChangeInput {
-    invoice: Types.StripeInvoice;
+    invoice: StripeInvoice.Type;
     accounts: AccountsService;
     customerId: string;
 }
@@ -11,6 +11,7 @@ export const handleSubscriptionChange = async ({
     accounts,
     customerId,
 }: HandleSubscriptionChangeInput) => {
+    console.log('handleSubscriptionChange...');
     // const [oldProduct, newProduct] = invoice.lineItems;
     // if (
     //     oldProduct.price?.therifyProductId === undefined ||

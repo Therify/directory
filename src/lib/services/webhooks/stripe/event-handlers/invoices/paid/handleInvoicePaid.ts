@@ -1,11 +1,11 @@
-import Stripe from 'stripe';
 import { StripeWebhookParams } from '../../../webhookParams';
 import { inferAsyncReturnType } from '@trpc/server';
-import { StripeInvoice } from '@/lib/vendors/stripe';
+import { StripeInvoice, StripeUtils } from '@/lib/vendors/stripe';
 import {
     handleGroupPracticePayment,
     handleSubscriptionChange,
 } from './handlers';
+import { isValidPriceId } from '@/lib/types';
 
 type HandlerResult = inferAsyncReturnType<
     typeof handleGroupPracticePayment | typeof handleSubscriptionChange
@@ -14,58 +14,47 @@ type HandlerResult = inferAsyncReturnType<
 export const handleInvoicePaidFactory =
     ({ accounts }: StripeWebhookParams) =>
     async (rawInvoice: unknown) => {
+        console.log('handleInvoicePaidFactory', rawInvoice);
         const invoice = StripeInvoice.schema.parse(rawInvoice);
-        console.log('handleInvoicePaidFactory', invoice);
-        // const customerId = StripeUtils.extractIdFromExpandableField(
-        //     rawInvoice,
-        //     'customer'
-        // );
-        // if (!customerId) {
-        //     throw new Error('No customer id found on invoice');
-        // }
-        // const billingReason = rawInvoice.billing_reason;
-        // if (!StripeUtils.isSupportedBillingReason(billingReason)) {
-        //     throw new Error(`Unexpected billing reason: ${billingReason}`);
-        // }
+        const { customer: customerId, billing_reason } = invoice;
+        if (!customerId) {
+            throw new Error('No customer id found on invoice');
+        }
 
-        // const [lineItem] = invoice.lineItems;
-        // // TODO: Handle multiple line items
-        // if (lineItem.price?.therifyProductId === undefined) {
-        //     throw new Error('No therify product id found in invoice line item');
-        // }
+        if (!StripeUtils.isSupportedBillingReason(billing_reason)) {
+            throw new Error(`Unexpected billing reason: ${billing_reason}`);
+        }
 
-        // const { therifyProductId } = lineItem.price;
-        // const isSubscriptionChange = billingReason === 'subscription_update';
-        // const isEnterpriseSubscription =
-        //     Product.Subscriptions.Types.isEnterpriseSubscriptionConfig(
-        //         Product.getSubscriptionConfig(therifyProductId)
-        //     );
-        // let result: HandlerResult;
-        // if (isSubscriptionChange) {
-        //     result = await handleSubscriptionChange({
-        //         accounts,
-        //         customerId,
-        //         invoice,
-        //     });
-        // } else if (isEnterpriseSubscription) {
-        //     result = await handleEnterpriseSubscriptionPayment({
-        //         accounts,
-        //         customerId,
-        //         invoice,
-        //         productId: therifyProductId,
-        //     });
-        // } else {
-        //     result = await handleIndividualSubscriptionPayment({
-        //         accounts,
-        //         customerId,
-        //         invoice,
-        //         productId: therifyProductId,
-        //         startDate: lineItem.periodStart,
-        //         endDate: lineItem.periodEnd,
-        //     });
-        // }
+        const [lineItem] = invoice.lines.data;
+        if (!isValidPriceId(lineItem.price.id, process.env.NODE_ENV)) {
+            throw new Error(`Unexpected price id: ${lineItem.price.id}`);
+        }
 
-        // if (result.isErr()) {
+        const isSubscriptionChange = billing_reason === 'subscription_update';
+
+        let result: HandlerResult | undefined = undefined;
+        if (isSubscriptionChange) {
+            result = await handleSubscriptionChange({
+                accounts,
+                customerId,
+                invoice,
+            });
+        } else {
+            result = await handleGroupPracticePayment({
+                accounts,
+                customerId,
+                invoice,
+                priceId: lineItem.price.id,
+                startDate: StripeUtils.getDateFromStripeTimestamp(
+                    lineItem.period.start
+                ).toISOString(),
+                endDate: StripeUtils.getDateFromStripeTimestamp(
+                    lineItem.period.end
+                ).toISOString(),
+            });
+        }
+
+        // if (result?.isErr()) {
         //     let errorMessage = 'Could not handle invoice payment';
         //     result.mapErr(([errorStep, error]) => {
         //         const message = (error as Error)?.message;
@@ -77,5 +66,5 @@ export const handleInvoicePaidFactory =
         //     throw new Error(errorMessage);
         // }
 
-        return { success: true };
+        return { success: Boolean(result) };
     };

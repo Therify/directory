@@ -39,17 +39,17 @@ export const schema = z.object({
             'subscription_threshold',
         ])
         .nullable(),
-    invoicePdf: z.string().nullable(),
+    invoicePdf: z.string().optional(),
     next_payment_attempt: z.number().nullable(),
 });
 
-export type Invoice = z.infer<typeof schema>;
+export type Type = z.infer<typeof schema>;
 
-export const validate = (value: unknown): Invoice => {
+export const validate = (value: unknown): Type => {
     return schema.parse(value);
 };
 
-export const isValid = (value: unknown): value is Invoice => {
+export const isValid = (value: unknown): value is Type => {
     try {
         validate(value);
         return true;

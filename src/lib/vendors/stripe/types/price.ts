@@ -30,7 +30,7 @@ export const schema = z.object({
         .nullable(),
     type: z.enum(['recurring', 'one_time']),
     unit_amount: z.number(),
-    unit_amount_decimal: z.number(),
+    unit_amount_decimal: z.string(),
 });
 
 export type Price = z.infer<typeof schema>;

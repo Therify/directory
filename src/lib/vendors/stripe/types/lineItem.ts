@@ -22,22 +22,26 @@ export const schema = z.object({
             discount: z.string(),
         })
     ),
-    invoice_item: z.string().nullable(),
+    invoice_item: z.string().optional(),
     livemode: z.boolean(),
-    unit_amount_excluding_tax: z.number(),
+    unit_amount_excluding_tax: z.string(),
     tax_amounts: z.array(
-        z.object({
-            amount: z.number(),
-            inclusive: z.boolean(),
-            tax_rate: z.string(),
-        })
+        z
+            .object({
+                amount: z.number(),
+                inclusive: z.boolean(),
+                tax_rate: z.string(),
+            })
+            .nullable()
     ),
     price: priceSchema,
     proration_details: z.object({
-        credited_items: z.object({
-            invoice: z.string(),
-            invoice_line_items: z.array(z.string()),
-        }),
+        credited_items: z
+            .object({
+                invoice: z.string(),
+                invoice_line_items: z.array(z.string()),
+            })
+            .nullable(),
     }),
     //  tax_rates: TODO: Add tax rates type if needed
 });

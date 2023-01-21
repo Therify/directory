@@ -1,13 +1,13 @@
-import { Types } from '@/lib/vendors/stripe';
+import { StripeInvoice } from '@/lib/vendors/stripe';
 import { AccountsService } from '@/lib/services/accounts';
 
 interface HandleGroupPracticePaymentInput {
-    invoice: Types.StripeInvoice;
+    invoice: StripeInvoice.Type;
     accounts: AccountsService;
     customerId: string;
     startDate: string;
     endDate: string;
-    productId: string;
+    priceId: string;
 }
 export const handleGroupPracticePayment = async ({
     invoice,
@@ -15,8 +15,9 @@ export const handleGroupPracticePayment = async ({
     customerId,
     startDate,
     endDate,
-    productId,
+    priceId,
 }: HandleGroupPracticePaymentInput) => {
+    console.log('handleGroupPracticePayment...');
     if (!invoice.id) {
         throw new Error('No subscription id found on invoice');
     }
@@ -25,7 +26,7 @@ export const handleGroupPracticePayment = async ({
     //     endDate,
     //     billingCustomerId: customerId,
     //     billingSubscriptionId: invoice.id,
-    //     productId,
+    //     priceId,
     //     invoiceStatus: invoice.status,
     //     invoiceId: invoice.id,
     //     invoiceTotal: invoice.total,
