@@ -2,27 +2,30 @@ import {
     Paragraph,
     PARAGRAPH_SIZE,
 } from '@/components/ui/Typography/Paragraph';
-import { HealthAndSafetyOutlined } from '@mui/icons-material';
+import {
+    AutoFixHighOutlined,
+    HealthAndSafetyOutlined,
+} from '@mui/icons-material';
 import { Avatar, Box, Stack } from '@mui/material';
 import { StackProps } from '@mui/material/Stack';
 import styled from '@mui/material/styles/styled';
 import useTheme from '@mui/material/styles/useTheme';
 
-const CRITERIA_CARD_TYPES = {
-    SECONDARY: 'secondary',
-    INFO: 'info',
+export const CRITERIA_CARD_TYPES = {
+    INSURANCE: 'insurance',
+    SPECIALTIES: 'specialties',
 } as const;
 
 export type CriteriaCardType =
     typeof CRITERIA_CARD_TYPES[keyof typeof CRITERIA_CARD_TYPES];
 
 const CRITERIA_CARD_BG_COLORS: Record<CriteriaCardType, string> = {
-    [CRITERIA_CARD_TYPES.SECONDARY]: '#E3EBED',
-    [CRITERIA_CARD_TYPES.INFO]: '#EEEDF9',
+    [CRITERIA_CARD_TYPES.INSURANCE]: '#EEEDF9',
+    [CRITERIA_CARD_TYPES.SPECIALTIES]: '#E3EBED',
 };
 const CRITERIA_CARD_AVATAR_COLORS: Record<CriteriaCardType, string> = {
-    [CRITERIA_CARD_TYPES.SECONDARY]: '#3B4D54',
-    [CRITERIA_CARD_TYPES.INFO]: '#565371',
+    [CRITERIA_CARD_TYPES.INSURANCE]: '#565371',
+    [CRITERIA_CARD_TYPES.SPECIALTIES]: '#3B4D54',
 };
 
 const getBackgroundColor = (type: CriteriaCardType) =>
@@ -35,13 +38,13 @@ type CriteriaCardProps = {
     items?: string[];
 } & StackProps;
 
-export function CriteriaCard({
-    type = 'info',
-    items,
-    ...props
-}: CriteriaCardProps) {
+export function CriteriaCard({ type, items, ...props }: CriteriaCardProps) {
     const { sx, ...rest } = props;
     const theme = useTheme();
+    const Icon =
+        type === CRITERIA_CARD_TYPES.INSURANCE
+            ? HealthAndSafetyOutlined
+            : AutoFixHighOutlined;
     return (
         <CriteriaCardContainer
             spacing={2}
@@ -62,9 +65,13 @@ export function CriteriaCard({
                         backgroundColor: getAvatarColor(type),
                     }}
                 >
-                    <HealthAndSafetyOutlined />
+                    <Icon />
                 </Avatar>
-                <Paragraph size={PARAGRAPH_SIZE.LARGE}>Criteria Card</Paragraph>
+                <Paragraph size={PARAGRAPH_SIZE.LARGE}>
+                    {type === CRITERIA_CARD_TYPES.INSURANCE
+                        ? 'In-network with'
+                        : 'Specializes in'}
+                </Paragraph>
             </CriteriaCardHeader>
             <CriteriaCardContent>
                 <Paragraph size={PARAGRAPH_SIZE.SMALL}>

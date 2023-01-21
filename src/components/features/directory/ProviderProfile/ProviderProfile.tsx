@@ -19,9 +19,10 @@ import {
 } from '@mui/icons-material';
 import { Box, Chip, Stack, Tab, Tabs, useMediaQuery } from '@mui/material';
 import { styled, Theme } from '@mui/material/styles';
-import { CriteriaCard } from './CriteriaCard';
+import { CriteriaCard, CRITERIA_CARD_TYPES } from './CriteriaCard';
 
 interface ProviderProfileProps {
+    profileImageUrl: string | null;
     givenName?: string;
     surname?: string;
     pronouns?: string;
@@ -29,9 +30,12 @@ interface ProviderProfileProps {
     acceptedInsurances?: string[];
     specialties?: string[];
     bio?: string;
+    offersInPerson?: boolean;
+    offersVirtual?: boolean;
 }
 
 export function ProviderProfile({
+    profileImageUrl = null,
     givenName = 'John',
     surname = 'Smith',
     pronouns = 'he/him',
@@ -39,6 +43,8 @@ export function ProviderProfile({
     acceptedInsurances = ['Aetna', 'Blue Cross Blue Shield'],
     specialties = ['Counseling', 'Psychotherapy'],
     bio = `Lorem ipsum dolor sit amet, consectetur adipiscing elit`,
+    offersInPerson = false,
+    offersVirtual = false,
 }: ProviderProfileProps) {
     const isSmallScreen = useMediaQuery((theme: Theme) =>
         theme.breakpoints.down('sm')
@@ -70,6 +76,7 @@ export function ProviderProfile({
                 />
                 <Avatar
                     size={ELEMENT_DIMENSIONS.avatar}
+                    src={profileImageUrl ?? undefined}
                     sx={{ position: 'absolute', top: '50%' }}
                 />
             </ProfileBanner>
@@ -99,25 +106,29 @@ export function ProviderProfile({
                     </ProviderState>
                 </ProviderTitle>
                 <ProviderModalities>
-                    <ModalityChip
-                        label="In-person"
-                        size="small"
-                        icon={<ChairOutlined />}
-                        variant="outlined"
-                        color="primary"
-                    />
-                    <ModalityChip
-                        label="Virtual"
-                        size="small"
-                        icon={<VideoCameraFrontOutlined />}
-                        variant="outlined"
-                        color="primary"
-                    />
+                    {offersInPerson && (
+                        <ModalityChip
+                            label="In-person"
+                            size="small"
+                            icon={<ChairOutlined />}
+                            variant="outlined"
+                            color="primary"
+                        />
+                    )}
+                    {offersVirtual && (
+                        <ModalityChip
+                            label="Virtual"
+                            size="small"
+                            icon={<VideoCameraFrontOutlined />}
+                            variant="outlined"
+                            color="primary"
+                        />
+                    )}
                 </ProviderModalities>
                 <ProviderVideo />
                 <ProviderMatchCriteria>
                     <CriteriaCard
-                        type="info"
+                        type={CRITERIA_CARD_TYPES.INSURANCE}
                         sx={{
                             minWidth: {
                                 xs: 235,
@@ -127,7 +138,7 @@ export function ProviderProfile({
                         items={acceptedInsurances}
                     />
                     <CriteriaCard
-                        type="secondary"
+                        type={CRITERIA_CARD_TYPES.SPECIALTIES}
                         sx={{
                             minWidth: {
                                 xs: 235,
@@ -148,11 +159,6 @@ export function ProviderProfile({
                             label="Intro"
                             sx={{ textTransform: 'none' }}
                         />
-                        <Tab
-                            value={'more'}
-                            label="More info"
-                            sx={{ textTransform: 'none' }}
-                        />
                     </Tabs>
                     <Paragraph
                         size={PARAGRAPH_SIZE.LARGE}
@@ -160,13 +166,13 @@ export function ProviderProfile({
                     >
                         About Me
                     </Paragraph>
-                    <Paragraph>{bio}</Paragraph>
+                    <Paragraph sx={{ whiteSpace: 'pre-line' }}>{bio}</Paragraph>
                     <Divider />
                     <Paragraph
                         size={PARAGRAPH_SIZE.LARGE}
                         sx={{ fontWeight: 'bold' }}
                     >
-                        More about Denise
+                        More about {givenName}
                     </Paragraph>
                     <ul>
                         <ProviderAttribute>
@@ -201,10 +207,7 @@ export function ProviderProfile({
                         <ProviderAttribute>
                             <AutoFixHighOutlined />
                             <Paragraph>
-                                Specialties: Stress, OCD, Trauma, Sleep
-                                disorder, Women&#39;s Issues, ADD/ADHD, Family
-                                Issues, Grief, Loss, Anger Management, Bipolar
-                                Disorder, and Relationship Issues
+                                Specialties: {specialties.join(', ')}
                             </Paragraph>
                         </ProviderAttribute>
                     </ul>

@@ -8,6 +8,9 @@ export const Textarea = ({
 }: InputProps) => (
     <Input
         multiline
+        sx={{
+            whiteSpace: 'pre-line',
+        }}
         {...(rows !== undefined
             ? { rows }
             : {
