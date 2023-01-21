@@ -32,9 +32,14 @@ const getAvatarColor = (type: CriteriaCardType) =>
 
 type CriteriaCardProps = {
     type: CriteriaCardType;
+    items?: string[];
 } & StackProps;
 
-export function CriteriaCard({ type = 'info', ...props }: CriteriaCardProps) {
+export function CriteriaCard({
+    type = 'info',
+    items,
+    ...props
+}: CriteriaCardProps) {
     const { sx, ...rest } = props;
     const theme = useTheme();
     return (
@@ -63,8 +68,7 @@ export function CriteriaCard({ type = 'info', ...props }: CriteriaCardProps) {
             </CriteriaCardHeader>
             <CriteriaCardContent>
                 <Paragraph size={PARAGRAPH_SIZE.SMALL}>
-                    Aetna, Blue Cross Blue Shield of Michigan, Cigna, Oscar
-                    Health, Oxford, and United Healthcare
+                    {items?.join(', ')}
                 </Paragraph>
             </CriteriaCardContent>
         </CriteriaCardContainer>

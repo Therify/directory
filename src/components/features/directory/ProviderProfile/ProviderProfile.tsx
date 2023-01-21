@@ -21,7 +21,25 @@ import { Box, Chip, Stack, Tab, Tabs, useMediaQuery } from '@mui/material';
 import { styled, Theme } from '@mui/material/styles';
 import { CriteriaCard } from './CriteriaCard';
 
-export function ProviderProfile() {
+interface ProviderProfileProps {
+    givenName?: string;
+    surname?: string;
+    pronouns?: string;
+    state?: string;
+    acceptedInsurances?: string[];
+    specialties?: string[];
+    bio?: string;
+}
+
+export function ProviderProfile({
+    givenName = 'John',
+    surname = 'Smith',
+    pronouns = 'he/him',
+    state = 'California',
+    acceptedInsurances = ['Aetna', 'Blue Cross Blue Shield'],
+    specialties = ['Counseling', 'Psychotherapy'],
+    bio = `Lorem ipsum dolor sit amet, consectetur adipiscing elit`,
+}: ProviderProfileProps) {
     const isSmallScreen = useMediaQuery((theme: Theme) =>
         theme.breakpoints.down('sm')
     );
@@ -68,14 +86,16 @@ export function ProviderProfile() {
                         alignItems="baseline"
                         spacing={2}
                     >
-                        <ProviderName>Denise Richards</ProviderName>
-                        <Paragraph size="small">(She/They)</Paragraph>
+                        <ProviderName>
+                            {givenName} {surname}
+                        </ProviderName>
+                        <Paragraph size="small">({pronouns})</Paragraph>
                     </ProviderNameContainer>
                     <ProviderCredentials>
                         <Paragraph>Licensed Professional Counselor</Paragraph>
                     </ProviderCredentials>
                     <ProviderState>
-                        <Paragraph>Nashville, Tennessee</Paragraph>
+                        <Paragraph>Nashville, {state}</Paragraph>
                     </ProviderState>
                 </ProviderTitle>
                 <ProviderModalities>
@@ -104,6 +124,7 @@ export function ProviderProfile() {
                                 md: 338,
                             },
                         }}
+                        items={acceptedInsurances}
                     />
                     <CriteriaCard
                         type="secondary"
@@ -113,6 +134,7 @@ export function ProviderProfile() {
                                 md: 338,
                             },
                         }}
+                        items={specialties}
                     />
                 </ProviderMatchCriteria>
                 <ProviderDetails spacing={8}>
@@ -138,27 +160,7 @@ export function ProviderProfile() {
                     >
                         About Me
                     </Paragraph>
-                    <Paragraph>
-                        It’s time right? We often suffer alone for too long;
-                        hoping, waiting for whatever torments us to just go
-                        away. I am glad you are taking proactive steps toward
-                        escorting your emotional turmoil out of the door. My
-                        approach is authentic, genuine, and nurturing which
-                        encourages clients to share openly and fully engage in
-                        the therapeutic process. I will assist you in committing
-                        to the work required to transition through tough times,
-                        learn to adapt to challenging situations and restructure
-                        your life in order to increase emotional comfort. It is
-                        time for you to experience life with an increased sense
-                        of joy and peace. <br />I have assisted clients from
-                        many cultures with a wide range of concerns for the past
-                        16 years. Together we have navigated life transitions
-                        that caused emotional discomfort to them and their loved
-                        ones. I am confident you and I can work together
-                        successfully as well. <br /> I know reaching out for
-                        help is often the most difficult step. I look forward to
-                        working with you!
-                    </Paragraph>
+                    <Paragraph>{bio}</Paragraph>
                     <Divider />
                     <Paragraph
                         size={PARAGRAPH_SIZE.LARGE}
@@ -217,7 +219,7 @@ const ProfileContainer = styled(Box)(({ theme }) => ({
     margin: '0 auto',
     overflowY: 'auto',
     background: 'white',
-    padding: theme.spacing(2),
+    padding: theme.spacing(4),
 }));
 
 const ProfileBanner = styled(Box)(({ theme }) => ({
@@ -228,7 +230,7 @@ const ProfileContent = styled(Box)(({ theme }) => ({
     maxWidth: theme.breakpoints.values.lg,
     display: 'grid',
     gridAutoFlow: 'row',
-    gridGap: theme.spacing(4),
+    gridGap: theme.spacing(6),
 }));
 
 const ProviderTitle = styled(Stack)(({ theme }) => ({}));
