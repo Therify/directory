@@ -22,9 +22,7 @@ export const step: HandlePlanChangeTransaction['invalidatePreviousPlans'] = {
                 status: PlanStatus.invalidated,
             },
         });
-        if (updateCount.count !== planIds.length) {
-            throw new Error('Failed to invalidate all plans');
-        }
+
         return { invalidatedPlanIds: planIds };
     },
     async rollback(
