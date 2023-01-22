@@ -4,13 +4,14 @@ import { AccountsServiceParams as Context } from '../../../params';
 
 export const handlePlanChangeTransactionDefinition = z.object({
     validatePriceId: z.unknown(),
-    getPlanDetails: z.object({
+    getTherifyUserDetails: z.object({
         therifyUserId: z.string(),
-        planId: z.string(),
-        seatCount: z.number(),
     }),
-    updatePlanEntity: z.object({
-        newSeatCount: z.number(),
+    invalidatePreviousPlans: z.object({
+        invalidatedPlanIds: z.array(z.string()),
+    }),
+    createNewPlanEntity: z.object({
+        planId: z.string(),
     }),
     createStripeInvoiceEntity: z.object({
         invoiceId: z.string(),

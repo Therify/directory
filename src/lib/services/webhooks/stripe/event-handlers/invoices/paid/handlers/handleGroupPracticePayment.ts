@@ -5,6 +5,7 @@ interface HandleGroupPracticePaymentInput {
     invoice: StripeInvoice.Type;
     accounts: AccountsService;
     customerId: string;
+    subscriptionId: string;
     startDate: string;
     endDate: string;
     priceId: string;
@@ -14,6 +15,7 @@ export const handleGroupPracticePayment = async ({
     invoice,
     accounts,
     customerId,
+    subscriptionId,
     startDate,
     endDate,
     priceId,
@@ -24,7 +26,7 @@ export const handleGroupPracticePayment = async ({
         startDate,
         endDate,
         stripeCustomerId: customerId,
-        stripeSubscriptionId: invoice.id,
+        stripeSubscriptionId: subscriptionId,
         priceId,
         invoiceStatus: invoice.status,
         invoiceId: invoice.id,

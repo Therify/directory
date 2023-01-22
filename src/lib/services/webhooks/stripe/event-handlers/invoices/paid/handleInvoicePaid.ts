@@ -18,9 +18,17 @@ export const handleInvoicePaidFactory =
     async (rawInvoice: unknown) => {
         console.log('handleInvoicePaidFactory', rawInvoice);
         const invoice = StripeInvoice.schema.parse(rawInvoice);
-        const { customer: customerId, billing_reason } = invoice;
+        const {
+            customer: customerId,
+            subscription: subscriptionId,
+            billing_reason,
+        } = invoice;
         if (!customerId) {
             throw new Error('No customer id found on invoice');
+        }
+
+        if (subscriptionId === null) {
+            throw new Error(`No Stripe subscription id found on invoice.`);
         }
 
         if (!StripeUtils.isSupportedBillingReason(billing_reason)) {
@@ -42,6 +50,7 @@ export const handleInvoicePaidFactory =
             result = await handlePlanChange({
                 accounts,
                 customerId,
+                subscriptionId,
                 invoice,
             });
         } else if (isGroupPracticePlanPriceId) {
@@ -49,6 +58,7 @@ export const handleInvoicePaidFactory =
                 seats: lineItem.quantity,
                 accounts,
                 customerId,
+                subscriptionId,
                 invoice,
                 priceId: lineItem.price.id,
                 startDate: StripeUtils.getDateFromStripeTimestamp(

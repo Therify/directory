@@ -1,12 +1,12 @@
 import { HandlePlanChange } from '@/lib/features/accounts/billing';
 import { TransactionV1 } from '@/lib/utils/transaction';
 import { AccountsServiceParams } from '../../params';
-
 import {
     handlePlanChangeTransactionDefinition,
     ValidatePriceId,
-    GetPlanDetails,
-    UpdatePlanEntity,
+    GetTherifyUserDetails,
+    InvalidatePreviousPlans,
+    CreateNewPlanEntity,
     CreateStripeInvoiceEntity,
 } from './transaction';
 
@@ -18,8 +18,9 @@ export const factory =
             { ...context },
             {
                 validatePriceId: ValidatePriceId.factory(params),
-                getPlanDetails: GetPlanDetails.factory(params),
-                updatePlanEntity: UpdatePlanEntity.factory(params),
+                getTherifyUserDetails: GetTherifyUserDetails.factory(params),
+                invalidatePreviousPlans: InvalidatePreviousPlans.step,
+                createNewPlanEntity: CreateNewPlanEntity.factory(params),
                 createStripeInvoiceEntity:
                     CreateStripeInvoiceEntity.factory(params),
             },

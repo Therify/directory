@@ -98,6 +98,7 @@ enum PlanStatus {
   active
   past_due
   canceled
+  invalidated // A plan that has been replaced by an updated plan (ie seat count increase)
   unpaid
 }
 
@@ -110,14 +111,14 @@ model Plan {
   endDate              DateTime        @map("end_date")
   // start This might not be needed. One subscription to many users. The invitations represent the seat usage
   accountId            String?         @map("account_id") // Missing account id means individual plan
-  userId               String          @unique @map("user_id") // Missing user id means unclaimed seat
+  userId               String          @map("user_id") // Missing user id means unclaimed seat
   // end
   billingUserId        String?         @map("billing_user_id")
   createdAt            DateTime        @default(now()) @map("created_at")
   updatedAt            DateTime        @updatedAt @map("updated_at")
   status               PlanStatus
   stripeCustomerId     String?         @map("stripe_customer_id")
-  stripeSubscriptionId String?         @unique @map("stripe_subscription_id")
+  stripeSubscriptionId String?         @map("stripe_subscription_id")
   stripePriceId        String?         @map("stripe_price_id")
   invoices             StripeInvoice[]
 
@@ -131,7 +132,7 @@ model StripeInvoice {
   planId          String?  @map("plan_id")
   invoiceId       String   @map("invoice_id") @db.VarChar(255)
   user            User?    @relation(fields: [userId], references: [id])
-  userId          String   @unique @map("user_id")
+  userId          String   @map("user_id")
   account         Account? @relation(fields: [accountId], references: [id])
   accountId       String?  @map("account_id")
   status          String

@@ -5,17 +5,16 @@ interface HandlePlanChangeInput {
     invoice: StripeInvoice.Type;
     accounts: AccountsService;
     customerId: string;
+    subscriptionId: string;
 }
 export const handlePlanChange = async ({
     invoice,
     accounts,
     customerId: stripeCustomerId,
+    subscriptionId: stripeSubscriptionId,
 }: HandlePlanChangeInput) => {
     console.log('handleSubscriptionChange...');
     const [oldProduct, newProduct] = invoice.lines.data;
-    if (invoice.subscription === null) {
-        throw new Error(`No Stripe subscription id found in invoice line item`);
-    }
     return await accounts.billing.handlePlanChange({
         startDate: StripeUtils.getDateFromStripeTimestamp(
             newProduct.period.start
@@ -23,7 +22,7 @@ export const handlePlanChange = async ({
         endDate: StripeUtils.getDateFromStripeTimestamp(
             newProduct.period.end
         ).toISOString(),
-        stripeSubscriptionId: invoice.subscription,
+        stripeSubscriptionId,
         stripeCustomerId,
         invoiceId: invoice.id,
         invoiceTotal: invoice.total,
