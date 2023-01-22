@@ -1,2 +1,2 @@
-export * from './handleSubscriptionChange';
+export * from './handlePlanChange';
 export * from './handleGroupPracticePayment';

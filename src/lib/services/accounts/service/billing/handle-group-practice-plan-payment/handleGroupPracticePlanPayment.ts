@@ -1,5 +1,5 @@
 import { HandleGroupPracticePlanPayment } from '@/lib/features/accounts/billing';
-import { executeTransaction } from '@/lib/utils/transaction/transaction.v1';
+import { TransactionV1 } from '@/lib/utils/transaction';
 import { AccountsServiceParams } from '../../params';
 import {
     GetTherifyIdentifiers,
@@ -11,7 +11,7 @@ import {
 export const factory =
     (context: AccountsServiceParams) =>
     async (params: HandleGroupPracticePlanPayment.Input) => {
-        return await executeTransaction(
+        return await TransactionV1.executeTransaction(
             handleGroupPracticePlanPaymentTransactionDefinition,
             { ...context },
             {
