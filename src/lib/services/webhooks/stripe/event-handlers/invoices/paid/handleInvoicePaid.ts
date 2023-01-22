@@ -50,6 +50,7 @@ export const handleInvoicePaidFactory =
             )
         ) {
             result = await handleGroupPracticePayment({
+                seats: lineItem.quantity,
                 accounts,
                 customerId,
                 invoice,

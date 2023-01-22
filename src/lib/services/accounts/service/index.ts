@@ -11,6 +11,7 @@ import { GetVerificationEmailStatus } from './get-verification-email-status';
 import { GetPlanStatusByUserId } from './get-plan-status-by-user-id';
 import { GetPracticeByUserId } from './get-practice-by-user-id';
 import { HandlePracticeOnboarding } from './handle-practice-onboarding';
+import { Billing } from './billing';
 
 const factoryParams: AccountsServiceParams = {
     prisma,
@@ -27,6 +28,7 @@ export const AccountsService = {
     getPlanStatusByUserId: GetPlanStatusByUserId.factory(factoryParams),
     getPracticeByUserId: GetPracticeByUserId.factory(factoryParams),
     handlePracticeOnboarding: HandlePracticeOnboarding.factory(factoryParams),
+    billing: Billing.factory(factoryParams),
 };
 
 export type AccountsService = typeof AccountsService;
