@@ -1,12 +1,15 @@
+import * as z from 'zod';
 import { PlanSchema } from '@/lib/schema';
 
-import * as z from 'zod';
-
 export const schema = z.object({
-    status: PlanSchema.shape.status.nullable(),
-    errors: z.array(z.string()),
+    subscription: z
+        .object({
+            status: PlanSchema.shape.status,
+            startDate: z.string(),
+            endDate: z.string(),
+        })
+        .optional(),
 });
-
 export type Output = z.infer<typeof schema>;
 
 export const validate = (value: unknown): Output => {

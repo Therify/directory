@@ -120,6 +120,7 @@ model Plan {
   stripeCustomerId     String?         @map("stripe_customer_id")
   stripeSubscriptionId String?         @map("stripe_subscription_id")
   stripePriceId        String?         @map("stripe_price_id")
+  renews               Boolean         @default(true)
   invoices             StripeInvoice[]
 
   @@index([stripeCustomerId, stripeSubscriptionId])

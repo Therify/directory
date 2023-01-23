@@ -9,16 +9,26 @@ interface HandleEventParams {
 }
 export const handleEventFactory =
     (context: StripeWebhookParams) =>
-    ({ type, data: { object } }: HandleEventParams) => {
+    ({ type, data: { object, previous_attributes } }: HandleEventParams) => {
         const eventHandlers = eventHandlersFactory(context);
         switch (type) {
             case 'invoice.payment_failed':
                 return eventHandlers.invoices.paymentFailed(object);
             case 'invoice.paid':
                 return eventHandlers.invoices.paid(object);
+            case 'customer.subscription.updated':
+                return eventHandlers.subscriptions.updated(
+                    object,
+                    previous_attributes
+                );
             default:
-                // Unexpected event type
-                console.log(`Unexpected event type: ${type}`);
-                throw new UnknownStripeEventTypeError(type);
+                handleUknownEvent(type);
         }
     };
+
+const handleUknownEvent = (type: string) => {
+    console.log(`Unexpected event type: ${type}`);
+    if (process.env.NODE_ENV !== 'development') {
+        throw new UnknownStripeEventTypeError(type);
+    }
+};
