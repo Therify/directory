@@ -40,6 +40,7 @@ model User {
   directoryListingInvitations DirectoryListingInvitation[]
   providerProfile             ProviderProfile?
   practice                    Practice?
+  memberProfile               MemberProfile?
 
   @@map("users")
 }
@@ -105,7 +106,7 @@ model Plan {
   id                   Int             @id @default(autoincrement()) @map("plan_id")
   seats                Int
   account              Account?        @relation(fields: [accountId], references: [id])
-  user                 User?           @relation(fields: [userId], references: [id])
+  user                 User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
   startDate            DateTime        @map("start_date")
   endDate              DateTime        @map("end_date")
   // start This might not be needed. One subscription to many users. The invitations represent the seat usage
@@ -246,4 +247,16 @@ model ProviderProfile {
   directoryListing       DirectoryListing[]
 
   @@map("provider_profiles")
+}
+
+model MemberProfile {
+  id        String   @id @default(cuid()) @map("member_profile_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  state     String
+  insurance String
+  userId    String   @unique @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("member_profiles")
 }

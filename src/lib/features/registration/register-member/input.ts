@@ -9,8 +9,11 @@ export const schema = z
         password: z.string(),
         confirmPassword: z.string(),
         dateOfBirth: z.string(),
+        state: z.string(),
+        insurance: z.string(),
         hasAcceptedTermsAndConditions: z.boolean().default(false),
         role: z.enum([ROLES.MEMBER]),
+        registrationCode: z.string().optional(),
     })
     .refine(
         (data) =>
