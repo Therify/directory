@@ -22,6 +22,11 @@ export const step: HandlePlanChangeTransaction['invalidatePreviousPlans'] = {
                 status: PlanStatus.invalidated,
             },
         });
+        if (updateCount.count !== planIds.length) {
+            throw new Error(
+                'Failed to invalidate all previously active plans.'
+            );
+        }
 
         return { invalidatedPlanIds: planIds };
     },
