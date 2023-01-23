@@ -12,12 +12,12 @@ export type TransactionStepDefinition<StepName, Input, Context, Result> = {
 };
 
 export type TransactionDefinition<
-    Input extends z.AnyZodObject,
-    Output extends { [key: string]: z.AnyZodObject },
+    Input extends z.ZodType,
+    Output extends { [key: string]: z.ZodType },
     Context,
     Result = {
         [StepName in keyof Output]: z.infer<
-            Output[StepName] extends z.AnyZodObject ? Output[StepName] : never
+            Output[StepName] extends z.ZodType ? Output[StepName] : never
         >;
     }
 > = {
@@ -30,13 +30,13 @@ export type TransactionDefinition<
 };
 
 export function generateTransaction<
-    InputSchema extends z.AnyZodObject,
-    Outputs extends { [StepName: string]: z.AnyZodObject },
+    InputSchema extends z.ZodType,
+    Outputs extends { [StepName: string]: z.ZodType },
     Context extends Record<string, unknown>,
     Input = z.infer<InputSchema>,
     Result = {
         [StepName in keyof Outputs]: z.infer<
-            Outputs[StepName] extends z.AnyZodObject ? Outputs[StepName] : never
+            Outputs[StepName] extends z.ZodType ? Outputs[StepName] : never
         >;
     },
     Transactions extends {

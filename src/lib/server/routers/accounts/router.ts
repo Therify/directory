@@ -3,11 +3,13 @@ import {
     RegisterProvider,
     SendEmailVerification,
     GetVerificationEmailStatus,
+    RegisterMember,
 } from '@/lib/features/registration';
 import { HandlePracticeOnboarding } from '@/lib/features/onboarding';
 import { GetPlanStatus, GetPracticeByUserId } from '@/lib/features/users';
 import {
     registerProviderResolver,
+    registerMemberResolver,
     sendEmailVerificationResolver,
     getVerificationEmailStatusResolver,
     getPlanStatusResolver,
@@ -42,6 +44,11 @@ export const router = trpc
         input: RegisterProvider.inputSchema,
         output: RegisterProvider.outputSchema,
         resolve: registerProviderResolver,
+    })
+    .mutation(RegisterMember.TRPC_ROUTE, {
+        input: RegisterMember.inputSchema,
+        output: RegisterMember.outputSchema,
+        resolve: registerMemberResolver,
     })
     .mutation(SendEmailVerification.TRPC_ROUTE, {
         input: SendEmailVerification.inputSchema,
