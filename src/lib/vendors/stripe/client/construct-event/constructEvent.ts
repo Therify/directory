@@ -1,4 +1,4 @@
-import { Stripe } from 'stripe';
+import Stripe from 'stripe';
 import { StripeVendorFactoryParams } from '../types';
 
 interface ConstructEventFactoryParams extends StripeVendorFactoryParams {}

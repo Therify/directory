@@ -29,7 +29,7 @@ model User {
   createdAt                     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt                     DateTime @default(now()) @map("updated_at") @db.Timestamp(6)
   roles                         Role[]
-  stripeCustomerId              String?  @map("stripe_customer_id")
+  stripeCustomerId              String?  @unique @map("stripe_customer_id")
   auth0Id                       String   @unique @map("auth0_id")
 
   account                     Account?                     @relation(fields: [accountId], references: [id])
@@ -98,11 +98,12 @@ enum PlanStatus {
   active
   past_due
   canceled
+  invalidated // A plan that has been replaced by an updated plan (ie seat count increase)
   unpaid
 }
 
 model Plan {
-  id                   Int             @id @default(autoincrement()) @map("plan_id")
+  id                   String          @id @default(cuid())
   seats                Int
   account              Account?        @relation(fields: [accountId], references: [id])
   user                 User?           @relation(fields: [userId], references: [id])
@@ -110,15 +111,15 @@ model Plan {
   endDate              DateTime        @map("end_date")
   // start This might not be needed. One subscription to many users. The invitations represent the seat usage
   accountId            String?         @map("account_id") // Missing account id means individual plan
-  userId               String          @unique @map("user_id") // Missing user id means unclaimed seat
+  userId               String          @map("user_id") // Missing user id means unclaimed seat
   // end
   billingUserId        String?         @map("billing_user_id")
   createdAt            DateTime        @default(now()) @map("created_at")
   updatedAt            DateTime        @updatedAt @map("updated_at")
   status               PlanStatus
   stripeCustomerId     String?         @map("stripe_customer_id")
-  stripeSubscriptionId String?         @unique @map("stripe_subscription_id")
-  product              ProductType
+  stripeSubscriptionId String?         @map("stripe_subscription_id")
+  stripePriceId        String?         @map("stripe_price_id")
   invoices             StripeInvoice[]
 
   @@index([stripeCustomerId, stripeSubscriptionId])
@@ -126,13 +127,12 @@ model Plan {
 }
 
 model StripeInvoice {
-  id              Int      @id @default(autoincrement())
-  stripeInvoiceId String   @map("stripe_invoice_id")
+  id              String   @id @default(cuid())
   plan            Plan?    @relation(fields: [planId], references: [id], onDelete: Cascade)
-  planId          Int?     @map("plan_id")
+  planId          String?  @map("plan_id")
   invoiceId       String   @map("invoice_id") @db.VarChar(255)
   user            User?    @relation(fields: [userId], references: [id])
-  userId          String   @unique @map("user_id")
+  userId          String   @map("user_id")
   account         Account? @relation(fields: [accountId], references: [id])
   accountId       String?  @map("account_id")
   status          String
