@@ -12,6 +12,7 @@ import { GetPlanStatusByUserId } from './get-plan-status-by-user-id';
 import { GetPracticeByUserId } from './get-practice-by-user-id';
 import { HandlePracticeOnboarding } from './handle-practice-onboarding';
 import { registerMember } from './register-member';
+import { Billing } from './billing';
 
 const factoryParams: AccountsServiceParams = {
     prisma,
@@ -29,6 +30,7 @@ export const AccountsService = {
     getPracticeByUserId: GetPracticeByUserId.factory(factoryParams),
     handlePracticeOnboarding: HandlePracticeOnboarding.factory(factoryParams),
     registerMember: registerMember,
+    billing: Billing.factory(factoryParams),
 };
 
 export type AccountsService = typeof AccountsService;

@@ -10,7 +10,7 @@ export const stripePlanTier = z.object({
 
 export const schema = z.object({
     active: z.boolean(),
-    aggregate_usage: z.string(),
+    aggregate_usage: z.string().nullable(),
     amount: z.number(),
     amount_decimal: z.string(),
     billing_scheme: z.string(),
@@ -21,16 +21,18 @@ export const schema = z.object({
     interval_count: z.number(),
     livemode: z.boolean(),
     metadata: z.object({}),
-    nickname: z.string(),
+    nickname: z.string().nullable(),
     object: z.literal('plan'),
     product: z.string(),
-    tiers: z.array(stripePlanTier),
-    tiers_mode: z.string(),
-    transform_usage: z.object({
-        divide_by: z.number(),
-        round: z.string(),
-    }),
-    trial_period_days: z.number(),
+    tiers: z.array(stripePlanTier).optional(),
+    tiers_mode: z.string().nullable(),
+    transform_usage: z
+        .object({
+            divide_by: z.number(),
+            round: z.string(),
+        })
+        .nullable(),
+    trial_period_days: z.number().nullable(),
     usage_type: z.string(),
 });
 
