@@ -43,17 +43,37 @@ export const PRODUCTS_BY_ENVIRONMENT: Record<
     production: PRODUCTION_PRODUCT_IDS,
 } as const;
 
+const getProductsByEnvironment = (environment: NodeEnvironment) => {
+    if (environment !== 'production')
+        return PRODUCTS_BY_ENVIRONMENT['development'];
+    return PRODUCTS_BY_ENVIRONMENT['production'];
+};
+
 /**
  * Get the product ID and price IDs for a given product and environment
  * @param product - The product to get the IDs for
  * @param environment - The environment to get the IDs for
- * @returns
+ * @returns ProductIds map
  */
 export function getProductByEnvironment(
     product: Product,
     environment: NodeEnvironment = 'development'
 ) {
     if (environment !== 'production')
-        return PRODUCTS_BY_ENVIRONMENT['development'][product];
-    return PRODUCTS_BY_ENVIRONMENT['production'][product];
+        return getProductsByEnvironment('development')[product];
+    return getProductsByEnvironment('production')[product];
+}
+
+/**
+ * Determine if given price IDs is supported for a given environment
+ * @param id - The price id to check
+ * @param environment - The environment products to check against
+ * @returns boolean
+ */
+export function isValidPriceId(id: string, environment: NodeEnvironment) {
+    const products = getProductsByEnvironment(environment);
+    const prices = Object.values(products).flatMap(({ PRICES }) => {
+        return Object.values(PRICES);
+    });
+    return prices.includes(id);
 }

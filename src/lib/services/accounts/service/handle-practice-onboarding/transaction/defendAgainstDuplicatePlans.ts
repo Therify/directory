@@ -6,7 +6,7 @@ export const factory = ({
     auth0UserId,
 }: HandlePracticeOnboarding.Input): HandlePracticeOnboardingTransaction['defendAgainstDuplicatePlans'] => ({
     async commit({ prisma }, { getUserDetails: { userId } }) {
-        const plan = await prisma.plan.findUnique({
+        const plan = await prisma.plan.findFirst({
             where: {
                 userId,
             },

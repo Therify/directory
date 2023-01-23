@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { URL_PATHS } from '@/lib/sitemap';
 import { trpc } from '@/lib/utils/trpc';
+import Link from 'next/link';
 
 const ABSTRACT_SHAPE_URL =
     'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673455675/app.therify.co/shapes/abstract-shape_fbvcil.svg' as const;
@@ -82,7 +83,7 @@ export default function Home() {
                     <CenteredContainer fillSpace>
                         {/*
                         eslint-disable-next-line jsx-a11y/alt-text
-            */}
+                        */}
                         <Image fillSpace imageUrl={randomLoginImage} />
                     </CenteredContainer>
                 }
@@ -120,7 +121,18 @@ export default function Home() {
                                     marginTop: theme.spacing(8),
                                 }}
                             >
-                                Dont have an account?{' '}
+                                Dont have an account? <br />
+                                <Link href="/members/register">
+                                    Register to Find a Provider
+                                </Link>
+                                <br />
+                                <Link href="/providers/therapist/register">
+                                    Register as a Therapist
+                                </Link>
+                                <br />
+                                <Link href="/providers/coach/register">
+                                    Register as a Coach
+                                </Link>
                             </Caption>
                         </Box>
                         <AbstractShape

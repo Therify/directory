@@ -1,18 +1,9 @@
-import { PlanStatus } from '@prisma/client';
+import { PlanSchema } from '@/lib/schema';
+
 import * as z from 'zod';
 
 export const schema = z.object({
-    status: z
-        .enum([
-            PlanStatus.active,
-            PlanStatus.canceled,
-            PlanStatus.incomplete,
-            PlanStatus.incomplete_expired,
-            PlanStatus.trialing,
-            PlanStatus.unpaid,
-            PlanStatus.past_due,
-        ])
-        .nullable(),
+    status: PlanSchema.shape.status.nullable(),
     errors: z.array(z.string()),
 });
 

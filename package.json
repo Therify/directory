@@ -19,7 +19,8 @@
         "prisma:dbpush": "doppler run --project=directory --config=dev --token=$DEV_DIRECTORY_DOPPLER_TOKEN -- yarn prisma db push",
         "prisma:studio": "prisma studio",
         "prisma:migrate": "prisma migrate deploy",
-        "vercel-build": "prisma generate && prisma migrate deploy && next build"
+        "vercel-build": "prisma generate && prisma migrate deploy && next build",
+        "stripe-cli:listen": "stripe listen --forward-to localhost:3000/api/webhooks/stripe"
     },
     "dependencies": {
         "@auth0/nextjs-auth0": "^2.1.0",
