@@ -42,9 +42,9 @@ export default function Home() {
             LOGIN_IMAGES[Math.floor(Math.random() * LOGIN_IMAGES.length)]
         );
     }, []);
-    const { data: planStatus } = trpc.useQuery(
+    const { data: userData, error: queryError } = trpc.useQuery(
         [
-            'accounts.users.get-plan-status-by-user-id',
+            'accounts.users.get-user-details-by-auth0-id',
             {
                 auth0Id: user?.sub ?? '',
             },
@@ -54,16 +54,22 @@ export default function Home() {
             enabled: Boolean(user?.sub),
         }
     );
-    if (user) {
-        if (planStatus?.status === null) {
+    const [error] = userData?.errors ?? [];
+
+    useEffect(() => {
+        if (queryError) console.error(queryError);
+        if (error) console.error(error);
+    }, [queryError, error]);
+
+    if (user && userData?.details) {
+        const { plan, user } = userData.details;
+        if (plan === null) {
             router.push(URL_PATHS.PROVIDERS.ONBOARDING.BILLING);
         }
         return (
             <CenteredContainer fillSpace padding={8}>
-                <Paragraph>
-                    {JSON.stringify({ planStatus: planStatus?.status })}
-                </Paragraph>
-                <Paragraph>{JSON.stringify(user)}</Paragraph>
+                <Paragraph>{JSON.stringify({ plan, user })}</Paragraph>
+                <Paragraph>{JSON.stringify({ auth0User: user })}</Paragraph>
                 <Button
                     fullWidth
                     onClick={() => router.push(URL_PATHS.AUTH.LOGOUT)}

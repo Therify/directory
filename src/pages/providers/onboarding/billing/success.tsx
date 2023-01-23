@@ -8,6 +8,8 @@ import {
     H1,
     Caption,
     Paragraph,
+    Button,
+    CenteredContainer,
 } from '@/components/ui';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { usePracticeOnboardingStorage } from '@/components/features/onboarding';
@@ -20,7 +22,7 @@ import { URL_PATHS } from '@/lib/sitemap';
 export const getServerSideProps = withPageAuthRequired();
 
 const REGISTRATION_STEPS = ['Registration', 'Payment', 'Onboarding'] as const;
-const THIRTY_SECONDS = 1000 * 30;
+const SIXTY_SECONDS = 1000 * 60;
 
 export default function BillingSuccessPage() {
     const { isLoading: isLoadingUser, user } = useUser();
@@ -34,20 +36,20 @@ export default function BillingSuccessPage() {
     useEffect(() => {
         timeoutRef.current = window.setTimeout(() => {
             setAllowRefetch(false);
-        }, THIRTY_SECONDS);
+        }, SIXTY_SECONDS);
         return () => {
             window.clearTimeout(timeoutRef.current);
         };
     }, []);
 
     const {
-        data: planStatus,
+        data: userData,
         error: queryError,
         isLoading: isLoadingPlan,
         isRefetching,
     } = trpc.useQuery(
         [
-            'accounts.users.get-plan-status-by-user-id',
+            'accounts.users.get-user-details-by-auth0-id',
             {
                 auth0Id: user?.sub ?? '',
             },
@@ -55,9 +57,7 @@ export default function BillingSuccessPage() {
         {
             refetchInterval: allowRefetch
                 ? (data) => {
-                      console.log({ data });
-                      if (data && data.status !== null) {
-                          console.log('received status...');
+                      if (data?.details?.plan) {
                           window.clearTimeout(timeoutRef.current);
                           return false;
                       }
@@ -68,30 +68,35 @@ export default function BillingSuccessPage() {
         }
     );
 
-    useEffect(() => {
-        if (planStatus?.status === PlanStatus.active) {
-            router.push(URL_PATHS.PROVIDERS.ONBOARDING.INVITATIONS);
-        }
-    }, [planStatus?.status, router]);
+    const { plan } = userData?.details ?? { plan: null };
+    const [planError] = userData?.errors ?? [];
 
-    const [planError] = planStatus?.errors ?? [];
-    const isPlanInctive =
-        typeof planStatus?.status === 'string' &&
-        planStatus.status !== PlanStatus.active;
+    useEffect(() => {
+        if (plan?.status === PlanStatus.active) {
+            router.push(
+                // TODO: Determine where next step are
+                plan.seats > 1
+                    ? URL_PATHS.PROVIDERS.ONBOARDING.INVITATIONS
+                    : '/'
+            );
+        }
+    }, [plan, router]);
+
+    const isPlanFound = Boolean(userData?.details?.plan);
+    const isPlanInctive = isPlanFound && plan?.status !== PlanStatus.active;
     const planStatusMessage = isPlanInctive
         ? `Your plan is not active. Please contact support.`
         : undefined;
     const errorMessage = planError ?? queryError?.message ?? planStatusMessage;
+    const timedOut = !allowRefetch && !isPlanFound;
     const isLoading =
-        isLoadingUser ||
-        isLoadingPlan ||
-        isRefetching ||
-        planStatus?.status === null;
+        (isLoadingUser || isLoadingPlan || isRefetching || !isPlanFound) &&
+        !timedOut;
     return (
         <PageContainer>
             <InnerContent>
                 <StepperContainer
-                    currentStepIndex={1}
+                    currentStepIndex={2}
                     steps={REGISTRATION_STEPS as unknown as string[]}
                 >
                     <FormContainer errorMessage={errorMessage}>
@@ -106,15 +111,40 @@ export default function BillingSuccessPage() {
                                 </Disclaimer>
                             }
                         >
-                            {errorMessage ? (
-                                <Header>There seems to be an issue...</Header>
+                            {timedOut ? (
+                                <CenteredContainer fillSpace>
+                                    <Header>
+                                        It&apos;s taking a little longer than
+                                        expected...
+                                    </Header>
+                                    <Paragraph>
+                                        If you&apos;re still there, would you
+                                        like to try again?
+                                    </Paragraph>
+                                    <Button
+                                        onClick={() => {
+                                            router.reload();
+                                        }}
+                                    >
+                                        Try again
+                                    </Button>
+                                </CenteredContainer>
                             ) : (
-                                <Header>Setup complete!</Header>
-                            )}
-                            {isPlanInctive && (
-                                <Paragraph>
-                                    Your plan&apos;s status: {planStatus.status}
-                                </Paragraph>
+                                <>
+                                    {errorMessage ? (
+                                        <Header>
+                                            There seems to be an issue...
+                                        </Header>
+                                    ) : (
+                                        <Header>Setup complete!</Header>
+                                    )}
+                                    {isPlanInctive && (
+                                        <Paragraph>
+                                            Your plan&apos;s status:{' '}
+                                            {plan?.status}
+                                        </Paragraph>
+                                    )}
+                                </>
                             )}
                         </LoadingContainer>
                     </FormContainer>
