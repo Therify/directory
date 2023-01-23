@@ -9,11 +9,6 @@ export const handleSubscriptionUpdatedFactory =
         previousAttributes?: Stripe.Event.Data.PreviousAttributes
     ) => {
         const subscription = StripeSubsctiption.schema.parse(rawSubscription);
-        const subscriptionId = subscription.id;
-
-        if (!subscriptionId) {
-            throw new Error('Subscription ID not found');
-        }
 
         const isCanceling =
             subscription.cancel_at_period_end ||
@@ -29,7 +24,7 @@ export const handleSubscriptionUpdatedFactory =
                 ? accounts.billing.cancelPlan
                 : accounts.billing.renewPlan;
             const result = await handlerFn({
-                stripeSubscriptionId: subscriptionId,
+                stripeSubscriptionId: subscription.id,
             });
 
             if (result.isErr()) {
