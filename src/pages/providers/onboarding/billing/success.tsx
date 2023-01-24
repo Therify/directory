@@ -13,11 +13,11 @@ import {
 } from '@/components/ui';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { usePracticeOnboardingStorage } from '@/components/features/onboarding';
-import { trpc } from '@/lib/utils/trpc';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { PlanStatus } from '@prisma/client';
 import { useRouter } from 'next/router';
 import { URL_PATHS } from '@/lib/sitemap';
+import { useTherifyUser } from '@/lib/hooks';
 
 export const getServerSideProps = withPageAuthRequired();
 
@@ -25,16 +25,18 @@ const REGISTRATION_STEPS = ['Registration', 'Payment', 'Onboarding'] as const;
 const SIXTY_SECONDS = 1000 * 60;
 
 export default function BillingSuccessPage() {
-    const { isLoading: isLoadingUser, user } = useUser();
+    const { isLoading: isLoadingAuth0User, user: auth0User } = useUser();
     const router = useRouter();
     const { clearStorage } = usePracticeOnboardingStorage();
     const [allowRefetch, setAllowRefetch] = useState(true);
+    const [userLoaded, setUserLoaded] = useState(false);
     useEffect(clearStorage, [clearStorage]);
     const timeoutRef = useRef<number>();
 
     useEffect(() => {
         timeoutRef.current = window.setTimeout(() => {
             setAllowRefetch(false);
+            return () => window.clearTimeout(timeoutRef.current);
         }, SIXTY_SECONDS);
         return () => {
             window.clearTimeout(timeoutRef.current);
@@ -42,62 +44,54 @@ export default function BillingSuccessPage() {
     }, []);
 
     const {
-        data: userData,
-        error: queryError,
-        isLoading: isLoadingPlan,
+        user,
+        errorMessage: getTherifyUserError,
+        isLoading: isLoadingTherifyUser,
         isRefetching,
-    } = trpc.useQuery(
-        [
-            'accounts.users.get-user-details-by-auth0-id',
-            {
-                auth0Id: user?.sub ?? '',
-            },
-        ],
-        {
-            refetchInterval: allowRefetch
-                ? (data) => {
-                      if (data?.details?.plan) {
-                          window.clearTimeout(timeoutRef.current);
-                          return false;
-                      }
-                      return 2000;
-                  }
-                : false,
-            enabled: Boolean(user?.sub),
-        }
-    );
+    } = useTherifyUser(auth0User?.sub, {
+        refetchInterval: Boolean(allowRefetch && !userLoaded)
+            ? 2000
+            : undefined,
+    });
 
-    const { plan } = userData?.details ?? { plan: null };
-    const [planError] = userData?.errors ?? [];
+    useEffect(() => {
+        if (user) {
+            setUserLoaded(true);
+            window.clearTimeout(timeoutRef.current);
+        }
+    }, [user]);
 
     useEffect(() => {
         if (
-            plan?.status === PlanStatus.active ||
-            plan?.status === PlanStatus.trialing
+            user?.plan?.status === PlanStatus.active ||
+            user?.plan?.status === PlanStatus.trialing
         ) {
             router.push(
                 // TODO: Determine where next step are
-                plan.seats > 1
+                user.plan.seats > 1
                     ? URL_PATHS.PROVIDERS.ONBOARDING.INVITATIONS
                     : '/'
             );
         }
-    }, [plan, router]);
+    }, [user?.plan, router]);
 
-    const isPlanFound = Boolean(userData?.details?.plan);
+    const isPlanFound = Boolean(user?.plan);
     const isPlanInctive =
         isPlanFound &&
-        plan?.status &&
+        user?.plan?.status &&
         !([PlanStatus.active, PlanStatus.trialing] as string[]).includes(
-            plan.status
+            user?.plan.status
         );
     const planStatusMessage = isPlanInctive
         ? `Your plan is not active. Please contact support.`
         : undefined;
-    const errorMessage = planError ?? queryError?.message ?? planStatusMessage;
+    const errorMessage = getTherifyUserError ?? planStatusMessage;
     const timedOut = !allowRefetch && !isPlanFound;
     const isLoading =
-        (isLoadingUser || isLoadingPlan || isRefetching || !isPlanFound) &&
+        (isLoadingAuth0User ||
+            isLoadingTherifyUser ||
+            isRefetching ||
+            !isPlanFound) &&
         !timedOut;
     return (
         <PageContainer>
@@ -148,7 +142,7 @@ export default function BillingSuccessPage() {
                                     {isPlanInctive && (
                                         <Paragraph>
                                             Your plan&apos;s status:{' '}
-                                            {plan?.status}
+                                            {user?.plan?.status}
                                         </Paragraph>
                                     )}
                                 </>

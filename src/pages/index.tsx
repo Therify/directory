@@ -9,8 +9,9 @@ import { default as NextImage } from 'next/image';
 import { useRouter } from 'next/router';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { URL_PATHS } from '@/lib/sitemap';
-import { trpc } from '@/lib/utils/trpc';
 import Link from 'next/link';
+import { Role } from '@prisma/client';
+import { useTherifyUser } from '@/lib/hooks';
 
 const ABSTRACT_SHAPE_URL =
     'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673455675/app.therify.co/shapes/abstract-shape_fbvcil.svg' as const;
@@ -34,7 +35,7 @@ const LOGIN_IMAGES = [
 export default function Home() {
     const theme = useTheme();
     const router = useRouter();
-    const { isLoading, user } = useUser();
+    const { isLoading: isLoadingAuth0User, user: auth0User } = useUser();
     const [randomLoginImage, setRandomLoginImage] = useState<string | null>(
         null
     );
@@ -43,33 +44,25 @@ export default function Home() {
             LOGIN_IMAGES[Math.floor(Math.random() * LOGIN_IMAGES.length)]
         );
     }, []);
-    const { data: userData, error: queryError } = trpc.useQuery(
-        [
-            'accounts.users.get-user-details-by-auth0-id',
-            {
-                auth0Id: user?.sub ?? '',
-            },
-        ],
-        {
-            refetchOnWindowFocus: false,
-            enabled: Boolean(user?.sub),
-        }
+    const { isLoading: isLoadingTherifyUser, user } = useTherifyUser(
+        auth0User?.sub ?? undefined
     );
-    const [error] = userData?.errors ?? [];
 
-    useEffect(() => {
-        if (queryError) console.error(queryError);
-        if (error) console.error(error);
-    }, [queryError, error]);
+    const isLoading = isLoadingAuth0User || isLoadingTherifyUser;
 
-    if (user && userData?.details) {
-        const { plan, user } = userData.details;
-        if (plan === null) {
+    if (auth0User && user) {
+        const [role] = user.roles;
+        if (user.plan === null) {
             router.push(URL_PATHS.PROVIDERS.ONBOARDING.BILLING);
+        }
+        if (role === Role.provider_therapist) {
+            router.push(URL_PATHS.PROVIDERS.THERAPIST.DASHBOARD);
+        } else if (role === Role.provider_coach) {
+            router.push(URL_PATHS.PROVIDERS.COACH.DASHBOARD);
         }
         return (
             <CenteredContainer fillSpace padding={8}>
-                <Paragraph>{JSON.stringify({ plan, user })}</Paragraph>
+                <Paragraph>{JSON.stringify({ user })}</Paragraph>
                 <Paragraph>{JSON.stringify({ auth0User: user })}</Paragraph>
                 <Button
                     fullWidth
