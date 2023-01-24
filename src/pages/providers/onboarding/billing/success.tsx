@@ -30,7 +30,6 @@ export default function BillingSuccessPage() {
     const { clearStorage } = usePracticeOnboardingStorage();
     const [allowRefetch, setAllowRefetch] = useState(true);
     useEffect(clearStorage, [clearStorage]);
-    console.log('render');
     const timeoutRef = useRef<number>();
 
     useEffect(() => {
