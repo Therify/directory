@@ -6,10 +6,9 @@ import * as GetUserDetailsByAuth0Id from './getUserDetailsByAuth0Id';
 
 const mockUserResult = {
     id: 'test-user-id',
-    email: 'test@therify.co',
+    emailAddress: 'test@therify.co',
     roles: [],
     accountId: 'test',
-
     plans: [
         {
             createdAt: new Date('2021-03-01'),
@@ -54,6 +53,7 @@ describe('GetUserDetailsByAuth0Id', function () {
 
     it('returns null plan if no plans exist', async function () {
         prismaMock.user.findUniqueOrThrow.mockResolvedValue({
+            ...mockUserResult,
             plans: [],
         } as unknown as User);
         const getUserDetailsByAuth0Id = GetUserDetailsByAuth0Id.factory({
@@ -76,7 +76,6 @@ describe('GetUserDetailsByAuth0Id', function () {
                     accountId: mockUserResult.accountId,
                 },
             },
-            status: null,
         });
     });
 });
