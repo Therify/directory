@@ -1,28 +1,28 @@
 import { Context } from '@/lib/server/context';
-import { GetPlanStatus } from '@/lib/features/users';
+import { GetUserDetailsByAuth0Id } from '@/lib/features/users';
 import { ProcedureResolver } from '@trpc/server/dist/declarations/src/internals/procedure';
 
 export const resolve: ProcedureResolver<
     Context,
-    GetPlanStatus.Input,
-    GetPlanStatus.Output
-> = async function resolveGetPlanStatus({
+    GetUserDetailsByAuth0Id.Input,
+    GetUserDetailsByAuth0Id.Output
+> = async function resolveGetUserDetailsByAuth0Id({
     input,
     ctx,
-}): Promise<GetPlanStatus.Output> {
+}): Promise<GetUserDetailsByAuth0Id.Output> {
     try {
-        const result = await ctx.accounts.getPlanStatusByUserId(input);
+        const result = await ctx.accounts.getUserDetailsByAuth0Id(input);
         return {
             ...result,
             errors: [],
         };
     } catch (error) {
-        let errorMessage = 'Plan status could not be checked.';
+        let errorMessage = 'User details could not be fetched.';
         if (error instanceof Error) {
             errorMessage = error.message;
         }
         return {
-            status: null,
+            details: null,
             errors: [errorMessage],
         };
     }

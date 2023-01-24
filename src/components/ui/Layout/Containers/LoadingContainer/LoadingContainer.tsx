@@ -4,6 +4,8 @@ import { CenteredContainer } from '../CenteredContainer';
 interface LoadingContainerProps {
     isLoading?: boolean;
     sx?: SxProps<Theme>;
+    loadingTopSlot?: React.ReactNode;
+    loadingBottomSlot?: React.ReactNode;
     children?: React.ReactNode;
     loaderColor?:
         | 'primary'
@@ -19,10 +21,20 @@ export const LoadingContainer = ({
     sx,
     children,
     loaderColor,
+    loadingTopSlot,
+    loadingBottomSlot,
 }: LoadingContainerProps) => {
     return (
         <CenteredContainer fillSpace sx={sx}>
-            {isLoading ? <CircularProgress color={loaderColor} /> : children}
+            {isLoading ? (
+                <>
+                    {loadingTopSlot}
+                    <CircularProgress color={loaderColor} />
+                    {loadingBottomSlot}
+                </>
+            ) : (
+                children
+            )}
         </CenteredContainer>
     );
 };

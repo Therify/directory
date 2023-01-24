@@ -6,13 +6,16 @@ import {
     RegisterMember,
 } from '@/lib/features/registration';
 import { HandlePracticeOnboarding } from '@/lib/features/onboarding';
-import { GetPlanStatus, GetPracticeByUserId } from '@/lib/features/users';
+import {
+    GetUserDetailsByAuth0Id,
+    GetPracticeByUserId,
+} from '@/lib/features/users';
 import {
     registerProviderResolver,
     registerMemberResolver,
     sendEmailVerificationResolver,
     getVerificationEmailStatusResolver,
-    getPlanStatusResolver,
+    getUserDetailsByAuth0IdResolver,
     handlePracticeOnboardingResolver,
     getPracticeByUserIdResolver,
 } from './resolvers';
@@ -25,10 +28,10 @@ export const router = trpc
         output: GetVerificationEmailStatus.outputSchema,
         resolve: getVerificationEmailStatusResolver,
     })
-    .query(GetPlanStatus.TRPC_ROUTE, {
-        input: GetPlanStatus.inputSchema,
-        output: GetPlanStatus.outputSchema,
-        resolve: getPlanStatusResolver,
+    .query(GetUserDetailsByAuth0Id.TRPC_ROUTE, {
+        input: GetUserDetailsByAuth0Id.inputSchema,
+        output: GetUserDetailsByAuth0Id.outputSchema,
+        resolve: getUserDetailsByAuth0IdResolver,
     })
     .query(GetPracticeByUserId.TRPC_ROUTE, {
         input: GetPracticeByUserId.inputSchema,
