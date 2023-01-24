@@ -83,7 +83,12 @@ export default function BillingSuccessPage() {
     }, [plan, router]);
 
     const isPlanFound = Boolean(userData?.details?.plan);
-    const isPlanInctive = isPlanFound && plan?.status !== PlanStatus.active;
+    const isPlanInctive =
+        isPlanFound &&
+        plan?.status &&
+        !([PlanStatus.active, PlanStatus.trialing] as string[]).includes(
+            plan.status
+        );
     const planStatusMessage = isPlanInctive
         ? `Your plan is not active. Please contact support.`
         : undefined;
