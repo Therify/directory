@@ -72,7 +72,10 @@ export default function BillingSuccessPage() {
     const [planError] = userData?.errors ?? [];
 
     useEffect(() => {
-        if (plan?.status === PlanStatus.active) {
+        if (
+            plan?.status === PlanStatus.active ||
+            plan?.status === PlanStatus.trialing
+        ) {
             router.push(
                 // TODO: Determine where next step are
                 plan.seats > 1
