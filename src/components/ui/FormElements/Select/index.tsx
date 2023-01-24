@@ -21,7 +21,7 @@ interface BaseSelectProps {
     id: string;
     options: SelectOption[];
     onChange?: (value: string) => void;
-    selectedValue?: string;
+    value?: string;
     helperText?: string;
     errorMessage?: string;
 }
@@ -43,7 +43,7 @@ export const Select = ({
     onChange,
     errorMessage,
     helperText,
-    selectedValue = '',
+    value = '',
     options,
     MenuProps,
     label,
@@ -89,9 +89,9 @@ export const Select = ({
                     )}
                 </InputLabel>
             )}
-            <Box position="relative" marginTop={label ? theme.spacing(3) : 0}>
+            <Box position="relative" marginTop={label ? theme.spacing(4) : 0}>
                 <StyledSelect
-                    className={selectedValue ? '' : 'unselected'}
+                    className={value ? '' : 'unselected'}
                     native={native}
                     data-testid={TEST_IDS.SELECT}
                     isError={Boolean(errorMessage)}
@@ -99,7 +99,7 @@ export const Select = ({
                     id={id}
                     color="info"
                     fullWidth={fullWidth}
-                    value={selectedValue}
+                    value={value}
                     label={placeholder}
                     placeholder={placeholder}
                     onChange={handleChange}
@@ -120,7 +120,7 @@ export const Select = ({
                         ...options,
                     ])}
                 </StyledSelect>
-                {!native && placeholder && selectedValue === '' && (
+                {!native && placeholder && value === '' && (
                     <SelectPlaceholder data-testid={TEST_IDS.PLACEHOLDER}>
                         {placeholder}
                     </SelectPlaceholder>

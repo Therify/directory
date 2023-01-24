@@ -1,4 +1,4 @@
-export { Input, TEST_IDS } from './Input';
+export { Input, TEST_IDS, InputLabel } from './Input';
 export type { InputProps } from './Input';
 export {
     PasswordInput,

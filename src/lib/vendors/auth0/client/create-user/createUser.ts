@@ -20,7 +20,10 @@ export async function createUser(input: Input): Promise<Output> {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${accessToken.access_token}`,
         },
-        body: JSON.stringify(input),
+        body: JSON.stringify({
+            ...input,
+            connection: input.connection ?? 'Username-Password-Authentication',
+        }),
     });
 
     if (!response.ok) {

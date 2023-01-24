@@ -137,7 +137,7 @@ describe('Select', () => {
                 <Select
                     id="test"
                     options={mockOptions}
-                    selectedValue={mockOptions[0].value}
+                    value={mockOptions[0].value}
                 />
             );
             expect(getByText(mockOptions[0].displayText)).toBeVisible();
@@ -161,7 +161,7 @@ describe('Select', () => {
                     <Select
                         id="test"
                         options={mockOptions}
-                        selectedValue={mockOptions[0].value}
+                        value={mockOptions[0].value}
                         placeholder="Hello"
                     />
                 );
@@ -257,7 +257,7 @@ describe('Select', () => {
                     id="test"
                     native
                     options={mockOptions}
-                    selectedValue={mockOptions[0].value}
+                    value={mockOptions[0].value}
                 />
             );
             expect(getByText(mockOptions[0].displayText)).toBeVisible();

@@ -3,8 +3,11 @@ import * as z from 'zod';
 export const schema = z.object({
     email: z.string().email(),
     password: z.string().min(8),
-    connection: z.string(),
     verify_email: z.boolean().default(false),
+    connection: z.string().optional(),
+    user_metadata: z
+        .record(z.string(), z.union([z.string(), z.number()]))
+        .optional(),
 });
 
 export type Input = z.infer<typeof schema>;

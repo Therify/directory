@@ -1,13 +1,19 @@
 import Stripe from 'stripe';
+import { CreateCheckoutSession } from './client/create-checkout-session';
 import { CreateCustomer } from './client/create-customer';
 import { CreateProduct } from './client/create-product';
 import { DeleteCustomer } from './client/delete-customer';
 import { DeleteProduct } from './client/delete-product';
+import { ExpireCheckoutSession } from './client/expire-checkout-session';
 import { RetrieveCustomer } from './client/retrieve-customer';
 import { SearchProduct } from './client/search-product';
+import { ConstructEvent } from './client/construct-event';
 import { withStripeConfiguration } from './configuration';
 
-export const VendorStripe = withStripeConfiguration((CONFIG) => {
+export * from './types';
+export * as StripeUtils from './utils';
+
+export const vendorStripe = withStripeConfiguration((CONFIG) => {
     const stripe = new Stripe(CONFIG.STRIPE_SECRET_KEY, {
         apiVersion: '2022-11-15',
     });
@@ -30,7 +36,14 @@ export const VendorStripe = withStripeConfiguration((CONFIG) => {
         deleteProduct: DeleteProduct.factory({
             stripe,
         }),
+        createCheckoutSession: CreateCheckoutSession.factory({
+            stripe,
+        }),
+        expireCheckoutSession: ExpireCheckoutSession.factory({ stripe }),
+        constructEvent: ConstructEvent.factory({
+            stripe,
+        }),
     };
 });
 
-export type VendorStripe = typeof VendorStripe;
+export type VendorStripe = typeof vendorStripe;

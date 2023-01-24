@@ -1,11 +1,16 @@
 import { useEffect, useState } from 'react';
 import { TwoColumnGrid } from '@/components/ui/Grids/TwoColumnGrid';
 import { Button } from '@/components/ui/Button';
-import { Caption, H1 } from '@/components/ui/Typography';
+import { Caption, H1, Paragraph, LoadingContainer } from '@/components/ui';
 import { CenteredContainer } from '@/components/ui/Layout/Containers/CenteredContainer';
 import Box from '@mui/material/Box';
 import { styled, useTheme } from '@mui/material/styles';
 import { default as NextImage } from 'next/image';
+import { useRouter } from 'next/router';
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { URL_PATHS } from '@/lib/sitemap';
+import { trpc } from '@/lib/utils/trpc';
+import Link from 'next/link';
 
 const ABSTRACT_SHAPE_URL =
     'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673455675/app.therify.co/shapes/abstract-shape_fbvcil.svg' as const;
@@ -28,6 +33,8 @@ const LOGIN_IMAGES = [
 
 export default function Home() {
     const theme = useTheme();
+    const router = useRouter();
+    const { isLoading, user } = useUser();
     const [randomLoginImage, setRandomLoginImage] = useState<string | null>(
         null
     );
@@ -36,57 +43,114 @@ export default function Home() {
             LOGIN_IMAGES[Math.floor(Math.random() * LOGIN_IMAGES.length)]
         );
     }, []);
+    const { data: userData, error: queryError } = trpc.useQuery(
+        [
+            'accounts.users.get-user-details-by-auth0-id',
+            {
+                auth0Id: user?.sub ?? '',
+            },
+        ],
+        {
+            refetchOnWindowFocus: false,
+            enabled: Boolean(user?.sub),
+        }
+    );
+    const [error] = userData?.errors ?? [];
+
+    useEffect(() => {
+        if (queryError) console.error(queryError);
+        if (error) console.error(error);
+    }, [queryError, error]);
+
+    if (user && userData?.details) {
+        const { plan, user } = userData.details;
+        if (plan === null) {
+            router.push(URL_PATHS.PROVIDERS.ONBOARDING.BILLING);
+        }
+        return (
+            <CenteredContainer fillSpace padding={8}>
+                <Paragraph>{JSON.stringify({ plan, user })}</Paragraph>
+                <Paragraph>{JSON.stringify({ auth0User: user })}</Paragraph>
+                <Button
+                    fullWidth
+                    onClick={() => router.push(URL_PATHS.AUTH.LOGOUT)}
+                >
+                    Logout
+                </Button>
+            </CenteredContainer>
+        );
+    }
     return (
-        <TwoColumnGrid
-            fillSpace
-            leftColumnSize={6}
-            rightSlot={
-                <CenteredContainer fillSpace>
-                    {/*
+        <LoadingContainer isLoading={isLoading}>
+            <TwoColumnGrid
+                fillSpace
+                leftColumnSize={6}
+                rightSlot={
+                    <CenteredContainer fillSpace>
+                        {/*
                         eslint-disable-next-line jsx-a11y/alt-text
-            */}
-                    <Image fillSpace imageUrl={randomLoginImage} />
-                </CenteredContainer>
-            }
-            rightSlotSx={{
-                [theme.breakpoints.down('md')]: {
-                    display: 'none',
-                },
-            }}
-            leftSlot={
-                <LoginContainer fillSpace>
-                    <Box maxWidth={480}>
-                        <TherifyLogo
-                            alt="The Official logo of Therify Inc."
-                            src={THERIFY_LOGO_URL}
-                            data-cy="logo"
-                            width={279}
-                            height={96}
+                        */}
+                        <Image fillSpace imageUrl={randomLoginImage} />
+                    </CenteredContainer>
+                }
+                rightSlotSx={{
+                    [theme.breakpoints.down('md')]: {
+                        display: 'none',
+                    },
+                }}
+                leftSlot={
+                    <LoginContainer fillSpace>
+                        <Box maxWidth={480}>
+                            <TherifyLogo
+                                alt="The Official logo of Therify Inc."
+                                src={THERIFY_LOGO_URL}
+                                data-cy="logo"
+                                width={279}
+                                height={96}
+                            />
+                            <Header>
+                                The new standard for inclusive mental healthcare
+                            </Header>
+
+                            <Button
+                                fullWidth
+                                onClick={() =>
+                                    router.push(URL_PATHS.AUTH.LOGIN)
+                                }
+                            >
+                                Login
+                            </Button>
+
+                            <Caption
+                                color="info"
+                                style={{
+                                    marginTop: theme.spacing(8),
+                                }}
+                            >
+                                Dont have an account? <br />
+                                <Link href="/members/register">
+                                    Register to Find a Provider
+                                </Link>
+                                <br />
+                                <Link href="/providers/therapist/register">
+                                    Register as a Therapist
+                                </Link>
+                                <br />
+                                <Link href="/providers/coach/register">
+                                    Register as a Coach
+                                </Link>
+                            </Caption>
+                        </Box>
+                        <AbstractShape
+                            height={260}
+                            width={260}
+                            alt="Abstract shape"
+                            src={ABSTRACT_SHAPE_URL}
                         />
-                        <Header>
-                            The new standard for inclusive mental healthcare
-                        </Header>
-
-                        <Button fullWidth>Login</Button>
-
-                        <Caption
-                            color="info"
-                            style={{
-                                marginTop: theme.spacing(8),
-                            }}
-                        >
-                            Dont have an account?{' '}
-                        </Caption>
-                    </Box>
-                    <AbstractShape
-                        height={260}
-                        width={260}
-                        alt="Abstract shape"
-                        src={ABSTRACT_SHAPE_URL}
-                    />
-                </LoginContainer>
-            }
-        />
+                    </LoginContainer>
+                }
+            />
+        </LoadingContainer>
     );
 }
 

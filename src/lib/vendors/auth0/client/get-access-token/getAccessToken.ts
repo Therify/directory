@@ -36,14 +36,15 @@ export const generateGetAccessToken = (CONFIG: Auth0Configuration) => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    client_id: CONFIG.AUTH0_CLIENT_ID,
-                    client_secret: CONFIG.AUTH0_CLIENT_SECRET,
-                    audience: `https://${CONFIG.AUTH0_DOMAIN}/api/v2/`,
+                    client_id: CONFIG.AUTH0_BACKEND_CLIENT_ID,
+                    client_secret: CONFIG.AUTH0_BACKEND_CLIENT_SECRET,
+                    audience: `https://${CONFIG.AUTH0_BACKEND_DOMAIN}/api/v2/`,
                     grant_type: 'client_credentials',
                 }),
             });
 
             if (!response.ok) {
+                console.log('response', response);
                 throw new Error(
                     `Failed to get access token: ${response.statusText}`
                 );

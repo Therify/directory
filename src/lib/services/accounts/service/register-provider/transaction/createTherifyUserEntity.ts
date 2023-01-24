@@ -1,0 +1,51 @@
+import { RegisterProvider } from '@/lib/features/registration';
+import type { RegisterProviderTransaction } from './definition';
+
+interface CreateTherifyUserEntityFactory {
+    (
+        params: RegisterProvider.Input
+    ): RegisterProviderTransaction['createTherifyUserEntity'];
+}
+
+export const factory: CreateTherifyUserEntityFactory = ({
+    emailAddress,
+    givenName,
+    surname,
+    dateOfBirth,
+    hasAcceptedTermsAndConditions,
+    role,
+}) => {
+    return {
+        async commit(
+            { prisma },
+            { createAuth0User: { auth0UserId: auth0Id } }
+        ) {
+            if (hasAcceptedTermsAndConditions !== true)
+                throw new Error(
+                    'Terms and conditions must be accepted to register a user.'
+                );
+
+            const createdUser = await prisma.user.create({
+                data: {
+                    emailAddress,
+                    givenName,
+                    surname,
+                    dateOfBirth,
+                    hasAcceptedTermsAndConditions,
+                    auth0Id,
+                    roles: [role],
+                },
+            });
+            return {
+                therifyUserId: createdUser.id,
+            };
+        },
+        rollback({ prisma }, { createTherifyUserEntity: { therifyUserId } }) {
+            return prisma.user.delete({
+                where: {
+                    id: therifyUserId,
+                },
+            });
+        },
+    };
+};
