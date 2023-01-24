@@ -149,17 +149,6 @@ export function ProviderProfile({
                     />
                 </ProviderMatchCriteria>
                 <ProviderDetails spacing={8}>
-                    <Tabs
-                        value="intro"
-                        indicatorColor="primary"
-                        textColor="primary"
-                    >
-                        <Tab
-                            value={'intro'}
-                            label="Intro"
-                            sx={{ textTransform: 'none' }}
-                        />
-                    </Tabs>
                     <Paragraph
                         size={PARAGRAPH_SIZE.LARGE}
                         sx={{ fontWeight: 'bold' }}

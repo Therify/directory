@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/Button';
 import { Input, Select, Textarea } from '@/components/ui/FormElements';
 import { Switch } from '@/components/ui/FormElements/Toggle/Switch';
 import { H1 } from '@/components/ui/Typography';
@@ -48,6 +49,7 @@ export function CreateOrUpdateProfile() {
     const [preview, setPreview] = useState<string | null>(null);
     const [offersInPerson, setOffersInPerson] = useState(false);
     const [offersVirtual, setOffersVirtual] = useState(false);
+    const [education, setEducation] = useState('');
     useEffect(() => {
         if (!selectedFile) {
             setPreview(null);
@@ -157,6 +159,12 @@ export function CreateOrUpdateProfile() {
                             value={bio}
                             onChange={(e) => setBio(e.target.value)}
                         />
+                        <Input
+                            label="Education"
+                            value={education}
+                            onChange={(e) => setEducation(e.target.value)}
+                        />
+                        <Button type="contained">Save</Button>
                     </EditorForm>
                 </EditorContainer>
             }
