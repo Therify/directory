@@ -11,7 +11,7 @@ GetUserDetailsByAuth0Id.outputSchema.shape.details.parse;
 export interface TopNavigationBarProps {
     navigationLinks: NavigationLink[];
     currentPath: string;
-    user: TherifyUser;
+    user?: TherifyUser;
 }
 export const TopNavigationBar = ({
     currentPath,

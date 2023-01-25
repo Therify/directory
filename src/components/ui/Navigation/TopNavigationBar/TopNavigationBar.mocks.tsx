@@ -1,15 +1,18 @@
 import { TopNavigationBarProps } from './TopNavigationBar';
 
-const topNavigationBarProps: TopNavigationBarProps = {
+export const mockTopNavigationBarProps: TopNavigationBarProps = {
     currentPath: '/',
     navigationLinks: [
         { displayName: 'Home', path: '/' },
         { displayName: 'About', path: '/about' },
         { displayName: 'FAQ', path: '/faq' },
     ],
-    user: {},
-};
-
-export const mockTopNavigationBarProps = {
-    topNavigationBarProps,
+    user: {
+        accountId: 'test-id',
+        avatarUrl: undefined,
+        userId: 'test-id',
+        roles: ['provider_therapist'],
+        email: 'test@therify.co',
+        plan: null,
+    },
 };

@@ -19,5 +19,5 @@ const Template: ComponentStory<typeof TopNavigationBar> = (args) => (
 export const Base = Template.bind({});
 
 Base.args = {
-    ...mockTopNavigationBarProps.topNavigationBarProps,
+    ...mockTopNavigationBarProps,
 };
