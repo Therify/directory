@@ -1,21 +1,21 @@
 import { render } from '@testing-library/react';
-import { TopNavWebPage } from './index';
+import { TopNavigationLayout } from './index';
 
-describe('TopNavWebPage', () => {
+describe('TopNavigationLayout', () => {
     it('renders navigation content', () => {
         const { getByText } = render(
-            <TopNavWebPage
+            <TopNavigationLayout
                 navigationSlot={<div>Navigation</div>}
-            ></TopNavWebPage>
+            ></TopNavigationLayout>
         );
         expect(getByText('Navigation')).toBeInTheDocument();
     });
 
     it('renders children content', () => {
         const { getByText } = render(
-            <TopNavWebPage navigationSlot={<div>Navigation</div>}>
+            <TopNavigationLayout navigationSlot={<div>Navigation</div>}>
                 Content goes here!
-            </TopNavWebPage>
+            </TopNavigationLayout>
         );
         expect(getByText('Content goes here!')).toBeInTheDocument();
     });

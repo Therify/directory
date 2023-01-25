@@ -1,13 +1,13 @@
 import { Box } from '@mui/material';
 import React, { PropsWithChildren } from 'react';
 
-interface TopNavWebPageProps {
+interface TopNavigationLayoutProps {
     navigationSlot: React.ReactNode;
 }
-export const TopNavWebPage = ({
+export const TopNavigationLayout = ({
     navigationSlot,
     children,
-}: PropsWithChildren<TopNavWebPageProps>) => {
+}: PropsWithChildren<TopNavigationLayoutProps>) => {
     return (
         <Box
             width="100%"

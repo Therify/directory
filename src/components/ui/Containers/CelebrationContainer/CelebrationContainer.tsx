@@ -6,7 +6,7 @@ import {
     SxProps,
     Theme,
 } from '@mui/material/styles';
-import { colors } from '../../../../themes/therify-design-system';
+import { colors } from '@/components/themes/therify-design-system';
 
 const gradientColors = [
     colors.secondary.purple[200],

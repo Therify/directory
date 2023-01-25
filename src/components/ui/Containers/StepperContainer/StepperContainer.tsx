@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import { styled, SxProps, Theme } from '@mui/material/styles';
-import { TherifyLogo } from '../../../Logo';
-import { Stepper } from '../../../Stepper';
+import { TherifyLogo } from '../../Logo';
+import { Stepper } from '../../Stepper';
 
 interface StepperContainerProps {
     currentStepIndex: number;

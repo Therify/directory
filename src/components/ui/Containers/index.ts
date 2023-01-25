@@ -9,3 +9,4 @@ export {
 } from './CelebrationContainer';
 export { FormContainer } from './FormContainer';
 export { StepperContainer } from './StepperContainer';
+export * from './Pages';
