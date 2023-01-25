@@ -1,8 +1,13 @@
 import { useEffect, useState } from 'react';
 import { TwoColumnGrid } from '@/components/ui/Grids/TwoColumnGrid';
-import { Button } from '@/components/ui/Button';
-import { Caption, H1, Paragraph, LoadingContainer } from '@/components/ui';
-import { CenteredContainer } from '@/components/ui/Layout/Containers/CenteredContainer';
+import {
+    Caption,
+    Button,
+    H1,
+    Paragraph,
+    LoadingContainer,
+    CenteredContainer,
+} from '@/components/ui';
 import Box from '@mui/material/Box';
 import { styled, useTheme } from '@mui/material/styles';
 import { default as NextImage } from 'next/image';
@@ -121,15 +126,19 @@ export default function Home() {
                                 }}
                             >
                                 Dont have an account? <br />
-                                <Link href="/members/register">
+                                <Link href={URL_PATHS.MEMBERS.REGISTER}>
                                     Register to Find a Provider
                                 </Link>
                                 <br />
-                                <Link href="/providers/therapist/register">
+                                <Link
+                                    href={
+                                        URL_PATHS.PROVIDERS.THERAPIST.REGISTER
+                                    }
+                                >
                                     Register as a Therapist
                                 </Link>
                                 <br />
-                                <Link href="/providers/coach/register">
+                                <Link href={URL_PATHS.PROVIDERS.COACH.REGISTER}>
                                     Register as a Coach
                                 </Link>
                             </Caption>
