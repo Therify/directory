@@ -9,12 +9,12 @@ import {
     BUTTON_TYPE,
 } from '@/components/ui';
 import { NavigationLink } from '@/lib/sitemap';
-import { useTherifyUser } from '@/lib/hooks';
+import { TherifyUser } from '@/lib/hooks';
 import { NavigationMenu } from '../NavigationMenu';
 
 interface NavigationDrawerProps {
     currentPath: string;
-    user?: ReturnType<typeof useTherifyUser>['user'];
+    user?: TherifyUser;
     navigationMenu: NavigationLink[];
     notificationsMap: Record<string, number>;
     isOpen: boolean;

@@ -1,7 +1,6 @@
 import { GetUserDetailsByAuth0Id } from '@/lib/features/users';
-import { useTherifyUser } from '@/lib/hooks';
+import { TherifyUser } from '@/lib/hooks';
 import { NavigationLink } from '@/lib/sitemap';
-import { Role } from '@/lib/types';
 import { Box, Container, Toolbar } from '@mui/material';
 import { useState } from 'react';
 import { TherifyLogo } from '../../Logo';
@@ -12,7 +11,7 @@ GetUserDetailsByAuth0Id.outputSchema.shape.details.parse;
 export interface TopNavigationBarProps {
     navigationLinks: NavigationLink[];
     currentPath: string;
-    user: ReturnType<typeof useTherifyUser>['user'];
+    user: TherifyUser;
 }
 export const TopNavigationBar = ({
     currentPath,

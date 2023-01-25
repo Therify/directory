@@ -1,4 +1,4 @@
-import { useTherifyUser } from '@/lib/hooks';
+import { TherifyUser } from '@/lib/hooks';
 import { NavigationLink } from '@/lib/sitemap';
 import { Menu as MenuIcon } from '@mui/icons-material';
 import { Box, IconButton, Menu, MenuItem } from '@mui/material';
@@ -9,7 +9,7 @@ interface MobileMenuProps {
     anchorElNav: HTMLElement | null;
     handleCloseNavMenu: () => void;
     navigationLinks: NavigationLink[];
-    user?: ReturnType<typeof useTherifyUser>['user'];
+    user?: TherifyUser;
 }
 
 export const MobileMenu = ({

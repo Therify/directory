@@ -48,3 +48,5 @@ export const useTherifyUser = (
             : undefined,
     };
 };
+
+export type TherifyUser = ReturnType<typeof useTherifyUser>['user'];

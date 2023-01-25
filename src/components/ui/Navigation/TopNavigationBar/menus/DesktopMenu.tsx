@@ -1,4 +1,4 @@
-import { useTherifyUser } from '@/lib/hooks';
+import { TherifyUser } from '@/lib/hooks';
 import { NavigationLink } from '@/lib/sitemap';
 import { Box, Button } from '@mui/material';
 import Link from 'next/link';
@@ -8,7 +8,7 @@ interface DestopMenuProps {
     currentPath: string;
     navigationLinks: NavigationLink[];
     handleCloseNavMenu: () => void;
-    user: ReturnType<typeof useTherifyUser>['user'];
+    user: TherifyUser;
 }
 
 export const DesktopMenu = ({

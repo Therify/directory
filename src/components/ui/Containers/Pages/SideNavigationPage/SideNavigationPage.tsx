@@ -4,7 +4,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import { Button, BUTTON_TYPE } from '@/components/ui';
 import { ActionNavListItem } from '@/components/ui/Navigation/NavigationMenu';
 import { NavigationLink, URL_PATHS } from '@/lib/sitemap';
-import { useTherifyUser } from '@/lib/hooks';
+import { TherifyUser } from '@/lib/hooks';
 import { SideNavigationLayout } from '../../../Layout';
 import {
     NavigationDrawer,
@@ -19,7 +19,7 @@ interface SideNavigationPageProps {
     currentPath: string;
     onNavigate: (path: string) => void;
     onShowNotifications?: () => void;
-    user?: ReturnType<typeof useTherifyUser>['user'];
+    user?: TherifyUser;
     notificationCount?: number;
     notificationPaths: Record<string, number>;
     actionLink?: NavigationLink;

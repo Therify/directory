@@ -11,7 +11,7 @@ import { BUTTON_TYPE, IconButton } from '../../Button';
 import { FloatingMenu } from '../FloatingMenu';
 import { Avatar } from '../../Avatar';
 import { NavigationLink } from '@/lib/sitemap';
-import { useTherifyUser } from '@/lib/hooks';
+import { TherifyUser } from '@/lib/hooks';
 
 export const SecondaryTopBar = ({
     currentPath,
@@ -22,7 +22,7 @@ export const SecondaryTopBar = ({
     notificationCount,
     toggleMobileMenu,
 }: {
-    user?: ReturnType<typeof useTherifyUser>['user'];
+    user?: TherifyUser;
     currentPath: string;
     menu: NavigationLink[];
     notificationCount?: number;
