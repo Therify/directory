@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { trpc } from '@/lib/utils/trpc';
-import { Output } from './schema';
 
 interface QueryOptions {
     refetchOnWindowFocus?: boolean;
@@ -10,12 +9,13 @@ interface QueryOptions {
 export const useTherifyUser = (
     auth0Id: string | null | undefined,
     queryOptions?: QueryOptions
-): Output => {
+) => {
     const {
         data: userData,
         error: queryError,
         isLoading,
         isRefetching,
+        refetch,
     } = trpc.useQuery(
         [
             'accounts.users.get-user-details-by-auth0-id',
@@ -39,11 +39,13 @@ export const useTherifyUser = (
     return {
         isLoading,
         isRefetching,
+        refetch,
         errorMessage: (error ?? queryError?.message) as string | undefined,
         user: userData?.details?.user
             ? {
                   ...userData?.details?.user,
                   plan: userData?.details?.plan,
+                  auth0Id,
               }
             : undefined,
     };

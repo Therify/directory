@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { TwoColumnGrid } from '@/components/ui/Grids/TwoColumnGrid';
 import {
     Caption,
@@ -12,11 +12,10 @@ import Box from '@mui/material/Box';
 import { styled, useTheme } from '@mui/material/styles';
 import { default as NextImage } from 'next/image';
 import { useRouter } from 'next/router';
-import { useUser } from '@auth0/nextjs-auth0/client';
 import { URL_PATHS } from '@/lib/sitemap';
 import Link from 'next/link';
 import { Role } from '@prisma/client';
-import { useTherifyUser } from '@/lib/hooks';
+import { TherifyUser } from '@/lib/context';
 
 const ABSTRACT_SHAPE_URL =
     'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673455675/app.therify.co/shapes/abstract-shape_fbvcil.svg' as const;
@@ -40,7 +39,7 @@ const LOGIN_IMAGES = [
 export default function Home() {
     const theme = useTheme();
     const router = useRouter();
-    const { isLoading: isLoadingAuth0User, user: auth0User } = useUser();
+    const { user, isLoading } = useContext(TherifyUser.Context);
     const [randomLoginImage, setRandomLoginImage] = useState<string | null>(
         null
     );
@@ -49,13 +48,8 @@ export default function Home() {
             LOGIN_IMAGES[Math.floor(Math.random() * LOGIN_IMAGES.length)]
         );
     }, []);
-    const { isLoading: isLoadingTherifyUser, user } = useTherifyUser(
-        auth0User?.sub ?? undefined
-    );
 
-    const isLoading = isLoadingAuth0User || isLoadingTherifyUser;
-
-    if (auth0User && user) {
+    if (user) {
         const [role] = user.roles;
         if (user.plan === null) {
             router.push(URL_PATHS.PROVIDERS.ONBOARDING.BILLING);

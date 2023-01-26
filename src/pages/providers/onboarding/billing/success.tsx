@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import {
@@ -13,11 +13,10 @@ import {
 } from '@/components/ui';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { usePracticeOnboardingStorage } from '@/components/features/onboarding';
-import { useUser } from '@auth0/nextjs-auth0/client';
-import { PlanStatus } from '@prisma/client';
+import { PlanStatus, Role } from '@prisma/client';
 import { useRouter } from 'next/router';
 import { URL_PATHS } from '@/lib/sitemap';
-import { useTherifyUser } from '@/lib/hooks';
+import { TherifyUser } from '@/lib/context';
 
 export const getServerSideProps = withPageAuthRequired();
 
@@ -25,41 +24,43 @@ const REGISTRATION_STEPS = ['Registration', 'Payment', 'Onboarding'] as const;
 const SIXTY_SECONDS = 1000 * 60;
 
 export default function BillingSuccessPage() {
-    const { isLoading: isLoadingAuth0User, user: auth0User } = useUser();
     const router = useRouter();
     const { clearStorage } = usePracticeOnboardingStorage();
-    const [allowRefetch, setAllowRefetch] = useState(true);
-    const [userLoaded, setUserLoaded] = useState(false);
-    useEffect(clearStorage, [clearStorage]);
-    const timeoutRef = useRef<number>();
+    const {
+        user,
+        isLoading: isLoadingUser,
+        isRefetching,
+        refetch,
+        errorMessage: userError,
+    } = useContext(TherifyUser.Context);
 
+    const [allowRefetch, setAllowRefetch] = useState(true);
+    const timeoutRef = useRef<number>();
+    const refetchRef = useRef<number>();
+
+    useEffect(clearStorage, [clearStorage]);
     useEffect(() => {
         timeoutRef.current = window.setTimeout(() => {
             setAllowRefetch(false);
-            return () => window.clearTimeout(timeoutRef.current);
+            window.clearInterval(refetchRef.current);
         }, SIXTY_SECONDS);
         return () => {
             window.clearTimeout(timeoutRef.current);
         };
     }, []);
 
-    const {
-        user,
-        errorMessage: getTherifyUserError,
-        isLoading: isLoadingTherifyUser,
-        isRefetching,
-    } = useTherifyUser(auth0User?.sub, {
-        refetchInterval: Boolean(allowRefetch && !userLoaded)
-            ? 2000
-            : undefined,
-    });
-
     useEffect(() => {
-        if (user) {
-            setUserLoaded(true);
-            window.clearTimeout(timeoutRef.current);
-        }
-    }, [user]);
+        refetchRef.current = window.setInterval(() => {
+            if (!user?.plan) {
+                refetch?.();
+            } else {
+                window.clearInterval(refetchRef.current);
+            }
+        }, 2000);
+        return () => {
+            window.clearInterval(refetchRef.current);
+        };
+    }, [refetch, user?.plan]);
 
     useEffect(() => {
         if (
@@ -67,13 +68,12 @@ export default function BillingSuccessPage() {
             user?.plan?.status === PlanStatus.trialing
         ) {
             router.push(
-                // TODO: Determine where next step are
-                user.plan.seats > 1
-                    ? URL_PATHS.PROVIDERS.ONBOARDING.INVITATIONS
-                    : '/'
+                user.roles.includes(Role.provider_therapist)
+                    ? URL_PATHS.PROVIDERS.THERAPIST.DASHBOARD
+                    : URL_PATHS.PROVIDERS.COACH.DASHBOARD
             );
         }
-    }, [user?.plan, router]);
+    }, [user?.plan, router, user?.roles]);
 
     const isPlanFound = Boolean(user?.plan);
     const isPlanInctive =
@@ -85,14 +85,10 @@ export default function BillingSuccessPage() {
     const planStatusMessage = isPlanInctive
         ? `Your plan is not active. Please contact support.`
         : undefined;
-    const errorMessage = getTherifyUserError ?? planStatusMessage;
+    const errorMessage = userError ?? planStatusMessage;
     const timedOut = !allowRefetch && !isPlanFound;
     const isLoading =
-        (isLoadingAuth0User ||
-            isLoadingTherifyUser ||
-            isRefetching ||
-            !isPlanFound) &&
-        !timedOut;
+        (isLoadingUser || isRefetching || !isPlanFound) && !timedOut;
     return (
         <PageContainer>
             <InnerContent>
