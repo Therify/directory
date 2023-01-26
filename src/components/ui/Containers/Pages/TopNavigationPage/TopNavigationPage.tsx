@@ -56,6 +56,7 @@ export const TopNavigationPage = ({
                     }
                     user={user}
                     isLoadingUser={isLoadingUser}
+                    withTherifyWebsiteLink
                 />
             }
         >

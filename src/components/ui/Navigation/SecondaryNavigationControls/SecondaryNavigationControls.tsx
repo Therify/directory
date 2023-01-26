@@ -21,6 +21,7 @@ interface SecondaryNavigationControlsProps {
     onNavigate: (path: string) => void;
     user: TherifyUser;
     isLoadingUser: boolean;
+    withTherifyWebsiteLink?: boolean;
 }
 export const TEST_IDS = {
     MENU_ICON: 'menu-icon',
@@ -39,6 +40,7 @@ export const SecondaryNavigationControls = ({
     onNavigate,
     user,
     isLoadingUser,
+    withTherifyWebsiteLink,
 }: SecondaryNavigationControlsProps) => {
     const theme = useTheme();
     if (isLoadingUser) {
@@ -46,6 +48,18 @@ export const SecondaryNavigationControls = ({
     }
     return (
         <Box display="flex">
+            {!isMobileWidth && user && withTherifyWebsiteLink && (
+                <Button
+                    type={BUTTON_TYPE.TEXT}
+                    onClick={() =>
+                        onNavigate(URL_PATHS.EXTERNAL.THERIFY_CO.HOME)
+                    }
+                    style={{ color: theme.palette.text.primary }}
+                >
+                    Therify Website
+                </Button>
+            )}
+
             {user && (
                 <IconWithBadge
                     data-testid={TEST_IDS.NOTIFICATIONS_ICON}

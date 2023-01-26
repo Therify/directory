@@ -20,6 +20,7 @@ export interface TopNavigationBarProps {
     onNavigate: (path: string) => void;
     user: TherifyUser;
     isLoadingUser: boolean;
+    withTherifyWebsiteLink?: boolean;
 }
 export const TEST_IDS = {
     DESKTOP_MENU: 'desktop-menu',
@@ -36,6 +37,7 @@ export const TopNavigationBar = ({
     onNavigate,
     user,
     isLoadingUser,
+    withTherifyWebsiteLink,
 }: TopNavigationBarProps) => {
     const theme = useTheme();
     const isMobileWidth = useMediaQuery(theme.breakpoints.down('md'));
@@ -75,6 +77,7 @@ export const TopNavigationBar = ({
                     onNavigate={onNavigate}
                     user={user}
                     isLoadingUser={isLoadingUser}
+                    withTherifyWebsiteLink={withTherifyWebsiteLink}
                 />
             }
         />
