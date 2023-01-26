@@ -1,19 +1,22 @@
 import '../styles/globals.css';
 import type { AppProps, AppType } from 'next/app';
 import { ThemeProvider } from '@mui/material/styles';
-import { therifyDesignSystem } from '../components/themes/therify-design-system';
 import { ApplicationContainer } from '@/components/ui';
 import { withTRPC } from '@trpc/next';
 import { UserProvider } from '@auth0/nextjs-auth0/client';
 import { AppRouter } from '@/lib/server/routers/app';
+import { TherifyUser } from '@/lib/context';
+import { therifyDesignSystem } from '../components/themes/therify-design-system';
 
 const App: AppType = ({ Component, pageProps }: AppProps) => {
     return (
         <ThemeProvider theme={therifyDesignSystem}>
             <UserProvider>
-                <ApplicationContainer>
-                    <Component {...pageProps} />
-                </ApplicationContainer>
+                <TherifyUser.Provider>
+                    <ApplicationContainer>
+                        <Component {...pageProps} />
+                    </ApplicationContainer>
+                </TherifyUser.Provider>
             </UserProvider>
         </ThemeProvider>
     );

@@ -1,19 +1,16 @@
 import { useRouter } from 'next/router';
 import { H1, SideNavigationPage } from '@/components/ui';
-import { useTherifyUser } from '@/lib/hooks';
 import {
     COACH_MAIN_MENU,
     COACH_SECONDARY_MENU,
     COACH_MOBILE_MENU,
     URL_PATHS,
 } from '@/lib/sitemap';
-import { useUser } from '@auth0/nextjs-auth0/client';
+import { useContext } from 'react';
+import { TherifyUser } from '@/lib/context';
 
 export default function TherapistDashboardPage() {
-    const { user: auth0User, isLoading: isLoadingAuth0User } = useUser();
-    const { user, isLoading: isLoadingTherifyUser } = useTherifyUser(
-        auth0User?.sub
-    );
+    const { user, isLoading } = useContext(TherifyUser.Context);
     const router = useRouter();
     return (
         <SideNavigationPage
@@ -26,7 +23,7 @@ export default function TherapistDashboardPage() {
             mobileMenu={[...COACH_MOBILE_MENU]}
             notificationCount={0}
             notificationPaths={{}}
-            isLoadingUser={isLoadingAuth0User || isLoadingTherifyUser}
+            isLoadingUser={isLoading}
         >
             <H1>Coach Dashboard</H1>
         </SideNavigationPage>

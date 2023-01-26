@@ -1,19 +1,16 @@
 import { useRouter } from 'next/router';
 import { H1, TopNavigationPage } from '@/components/ui';
-import { useTherifyUser } from '@/lib/hooks';
 import {
     MEMBER_MAIN_MENU,
     MEMBER_SECONDARY_MENU,
     MEMBER_MOBILE_MENU,
     URL_PATHS,
 } from '@/lib/sitemap';
-import { useUser } from '@auth0/nextjs-auth0/client';
+import { TherifyUser } from '@/lib/context';
+import { useContext } from 'react';
 
 export default function MemberHomePage() {
-    const { user: auth0User, isLoading: isLoadingAuth0User } = useUser();
-    const { user, isLoading: isLoadingTherifyUser } = useTherifyUser(
-        auth0User?.sub
-    );
+    const { user, isLoading } = useContext(TherifyUser.Context);
     const router = useRouter();
     return (
         <TopNavigationPage
@@ -26,7 +23,7 @@ export default function MemberHomePage() {
             mobileMenu={[...MEMBER_MOBILE_MENU]}
             notificationCount={0}
             notificationPaths={{}}
-            isLoadingUser={isLoadingAuth0User || isLoadingTherifyUser}
+            isLoadingUser={isLoading}
         >
             <H1>Member Home</H1>
         </TopNavigationPage>
