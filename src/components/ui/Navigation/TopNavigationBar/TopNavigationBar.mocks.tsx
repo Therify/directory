@@ -2,17 +2,19 @@ import { TopNavigationBarProps } from './TopNavigationBar';
 
 export const mockTopNavigationBarProps: TopNavigationBarProps = {
     currentPath: '/',
-    navigationLinks: [
+    primaryMenu: [
         { displayName: 'Home', path: '/' },
         { displayName: 'About', path: '/about' },
         { displayName: 'FAQ', path: '/faq' },
     ],
-    user: {
-        accountId: 'test-id',
-        avatarUrl: undefined,
-        userId: 'test-id',
-        roles: ['provider_therapist'],
-        email: 'test@therify.co',
-        plan: null,
-    },
+    secondaryMenu: [
+        { displayName: 'Settings', path: '/settings' },
+        { displayName: 'Billing', path: '/billing' },
+    ],
+    onShowNotifications: () => console.log('show notifications'),
+    notificationCount: 0,
+    toggleMobileMenu: () => console.log('toggle mobile menu'),
+    onNavigate: (path: string) => console.log('Navigate to: ', path),
+    user: undefined,
+    isLoadingUser: false,
 };

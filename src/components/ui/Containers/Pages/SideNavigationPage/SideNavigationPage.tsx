@@ -23,6 +23,7 @@ interface SideNavigationPageProps {
     notificationCount?: number;
     notificationPaths: Record<string, number>;
     actionLink?: NavigationLink;
+    isLoadingUser: boolean;
     children?: React.ReactNode;
 }
 export const SideNavigationPage = ({
@@ -36,6 +37,7 @@ export const SideNavigationPage = ({
     notificationCount,
     notificationPaths,
     actionLink,
+    isLoadingUser,
     children,
 }: SideNavigationPageProps) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -50,6 +52,7 @@ export const SideNavigationPage = ({
                     notificationCount={notificationCount}
                     onShowNotifications={onShowNotifications}
                     user={user}
+                    isLoadingUser={isLoadingUser}
                     toggleMobileMenu={() =>
                         setIsMobileMenuOpen(!isMobileMenuOpen)
                     }

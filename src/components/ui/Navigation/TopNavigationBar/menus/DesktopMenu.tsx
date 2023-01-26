@@ -37,17 +37,16 @@ export const DesktopMenu = ({
                         display: 'block',
                     }}
                 >
-                    <Link href={path} passHref>
-                        <a
-                            style={{
-                                textUnderlineOffset: '4px',
-                                textDecoration: isActivePath(path, currentPath)
-                                    ? 'underline'
-                                    : 'none',
-                            }}
-                        >
-                            {displayName}
-                        </a>
+                    <Link
+                        href={path}
+                        style={{
+                            textUnderlineOffset: '4px',
+                            textDecoration: isActivePath(path, currentPath)
+                                ? 'underline'
+                                : 'none',
+                        }}
+                    >
+                        {displayName}
                     </Link>
                 </Button>
             ))}

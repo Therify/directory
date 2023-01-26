@@ -10,8 +10,10 @@ import {
 import { useUser } from '@auth0/nextjs-auth0/client';
 
 export default function TherapistDashboardPage() {
-    const { user: auth0User } = useUser();
-    const { user } = useTherifyUser(auth0User?.sub);
+    const { user: auth0User, isLoading: isLoadingAuth0User } = useUser();
+    const { user, isLoading: isLoadingTherifyUser } = useTherifyUser(
+        auth0User?.sub
+    );
     const router = useRouter();
     return (
         <SideNavigationPage
@@ -24,6 +26,7 @@ export default function TherapistDashboardPage() {
             mobileMenu={[...THERAPIST_MOBILE_MENU]}
             notificationCount={0}
             notificationPaths={{}}
+            isLoadingUser={isLoadingAuth0User || isLoadingTherifyUser}
         >
             <H1>Therapist Dashboard</H1>
         </SideNavigationPage>

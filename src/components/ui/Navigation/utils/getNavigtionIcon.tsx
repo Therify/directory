@@ -14,6 +14,8 @@ import {
     DashboardRounded,
     PeopleOutlineRounded,
     MonetizationOnRounded,
+    FavoriteBorderRounded,
+    PersonSearchOutlined,
 } from '@mui/icons-material';
 
 export const getNavigationIcon = (iconName?: NavigationIcon) => {
@@ -44,6 +46,10 @@ export const getNavigationIcon = (iconName?: NavigationIcon) => {
             return MonetizationOnRounded;
         case NAVIGATION_ICON.PROFILE_EDITOR:
             return AccountCircleRounded;
+        case NAVIGATION_ICON.FAVORITES:
+            return FavoriteBorderRounded;
+        case NAVIGATION_ICON.DIRECTORY:
+            return PersonSearchOutlined;
         default:
             return null;
     }

@@ -1,62 +1,125 @@
 import { GetUserDetailsByAuth0Id } from '@/lib/features/users';
 import { TherifyUser } from '@/lib/hooks';
 import { NavigationLink } from '@/lib/sitemap';
-import { Box, Container, Toolbar } from '@mui/material';
-import { useState } from 'react';
-import { TherifyLogo } from '../../Logo';
-import { DesktopMenu, MobileMenu } from './menus';
+import { useMediaQuery } from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
+import Link from 'next/link';
+import { TopBar } from '../../TopBar';
+import { SecondaryNavigationControls } from '../SecondaryNavigationControls';
+import { isActivePath } from '../utils';
 
 GetUserDetailsByAuth0Id.outputSchema.shape.details.parse;
 
 export interface TopNavigationBarProps {
-    navigationLinks: NavigationLink[];
+    primaryMenu: NavigationLink[];
+    secondaryMenu: NavigationLink[];
     currentPath: string;
-    user?: TherifyUser;
+    onShowNotifications?: () => void;
+    notificationCount?: number;
+    toggleMobileMenu: () => void;
+    onNavigate: (path: string) => void;
+    user: TherifyUser;
+    isLoadingUser: boolean;
 }
+export const TEST_IDS = {
+    DESKTOP_MENU: 'desktop-menu',
+    ACTIVE_TAB: 'active-tab',
+};
+
 export const TopNavigationBar = ({
     currentPath,
-    navigationLinks,
+    primaryMenu,
+    secondaryMenu,
+    onShowNotifications,
+    notificationCount,
+    toggleMobileMenu,
+    onNavigate,
     user,
+    isLoadingUser,
 }: TopNavigationBarProps) => {
-    const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
-
-    const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorElNav(event.currentTarget);
-    };
-
-    const handleCloseNavMenu = () => {
-        setAnchorElNav(null);
-    };
+    const theme = useTheme();
+    const isMobileWidth = useMediaQuery(theme.breakpoints.down('md'));
 
     return (
-        <Box position="static" color="transparent">
-            <Container maxWidth="xl">
-                <Toolbar disableGutters>
-                    <TherifyLogo />
-                    <Box
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'flex-end',
-                            flexGrow: 1,
-                        }}
-                    >
-                        <MobileMenu
-                            navigationLinks={navigationLinks}
-                            handleCloseNavMenu={handleCloseNavMenu}
-                            handleOpenNavMenu={handleOpenNavMenu}
-                            anchorElNav={anchorElNav}
-                            user={user}
-                        />
-                        <DesktopMenu
-                            user={user}
-                            currentPath={currentPath}
-                            navigationLinks={navigationLinks}
-                            handleCloseNavMenu={handleCloseNavMenu}
-                        />
-                    </Box>
-                </Toolbar>
-            </Container>
-        </Box>
+        <TopBar
+            leftSlot={
+                <DesktopLinkContainer data-testid={TEST_IDS.DESKTOP_MENU}>
+                    {primaryMenu.map((link) => {
+                        const isPathActive = isActivePath(
+                            link.path,
+                            currentPath
+                        );
+                        return (
+                            <LinkItem key={link.path}>
+                                <Link href={link.path}>
+                                    {link.displayName}
+                                    {isPathActive && (
+                                        <ActiveTab
+                                            data-testid={TEST_IDS.ACTIVE_TAB}
+                                        />
+                                    )}
+                                </Link>
+                            </LinkItem>
+                        );
+                    })}
+                </DesktopLinkContainer>
+            }
+            rightSlot={
+                <SecondaryNavigationControls
+                    onShowNotifications={onShowNotifications}
+                    notificationCount={notificationCount}
+                    isMobileWidth={isMobileWidth}
+                    toggleMobileMenu={toggleMobileMenu}
+                    currentPath={currentPath}
+                    menu={secondaryMenu}
+                    onNavigate={onNavigate}
+                    user={user}
+                    isLoadingUser={isLoadingUser}
+                />
+            }
+        />
     );
 };
+
+const DesktopLinkContainer = styled('ul')(({ theme }) => ({
+    display: 'none',
+    flex: 1,
+    listStyle: 'none',
+    paddingLeft: theme.spacing(6),
+    [theme.breakpoints.up('md')]: {
+        display: 'flex',
+    },
+}));
+
+const LinkItem = styled('li')(({ theme }) => ({
+    '& a': {
+        position: 'relative',
+        ...theme.typography.body1,
+        fontWeight: 500,
+        margin: 0,
+        padding: theme.spacing(4, 5),
+        color: theme.palette.text.primary,
+        textDecoration: 'none',
+        borderRadius: theme.shape.borderRadius,
+        '&:hover': {
+            backgroundColor: theme.palette.action.hover,
+            '& span': {
+                width: '100%',
+                left: 0,
+            },
+        },
+    },
+}));
+
+const ActiveTab = styled('span')(({ theme }) => ({
+    position: 'absolute',
+    display: 'block',
+    backgroundColor: theme.palette.primary.main,
+    borderRadius: '2px',
+    bottom: 0,
+    left: theme.spacing(4),
+    height: '4px',
+    width: `calc(100% - ${theme.spacing(8)})`,
+    transition: '0.2s ease-in-out',
+    margin: 'auto',
+}));

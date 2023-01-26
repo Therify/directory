@@ -1,10 +1,9 @@
 import { NavigationLink } from '@/lib/sitemap';
 import { render, screen, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { TopNavigationBar } from './TopNavigationBar';
+import { TopNavigationBar, TEST_IDS } from './TopNavigationBar';
 import { mockTopNavigationBarProps } from './TopNavigationBar.mocks';
 
-const { navigationLinks, user } = mockTopNavigationBarProps;
+const { primaryMenu, currentPath, ...mockProps } = mockTopNavigationBarProps;
 
 describe('TopNavigationBar', function () {
     describe('Desktop Menu', () => {
@@ -14,30 +13,32 @@ describe('TopNavigationBar', function () {
                 render(
                     <TopNavigationBar
                         currentPath="/"
-                        navigationLinks={navigationLinks}
+                        primaryMenu={primaryMenu}
+                        {...mockProps}
                     />
                 );
-                desktopMenu = screen.getByTestId('desktop-menu');
+                desktopMenu = screen.getByTestId(TEST_IDS.DESKTOP_MENU);
             });
 
-            it.each(navigationLinks)(
+            it.each(primaryMenu)(
                 'finds link: $displayName',
                 ({ displayName, path }) => {
                     const link = within(desktopMenu).getByText(displayName);
-                    expect(link.parentElement).toHaveAttribute('href', path);
+                    expect(link).toHaveAttribute('href', path);
                 }
             );
         });
 
         it('only selects the active path', () => {
-            const [selectedRoute, ...unselectedRoutes] = navigationLinks;
+            const [selectedRoute, ...unselectedRoutes] = primaryMenu;
             render(
                 <TopNavigationBar
                     currentPath={selectedRoute.path}
-                    navigationLinks={navigationLinks}
+                    primaryMenu={primaryMenu}
+                    {...mockProps}
                 />
             );
-            const desktopMenu = screen.getByTestId('desktop-menu');
+            const desktopMenu = screen.getByTestId(TEST_IDS.DESKTOP_MENU);
             const selectedEl = within(desktopMenu).getByText(
                 selectedRoute.displayName
             );
@@ -45,9 +46,11 @@ describe('TopNavigationBar', function () {
                 within(desktopMenu).getByText(displayName)
             );
 
-            expect(selectedEl).toHaveStyle('text-decoration: underline');
+            expect(
+                within(selectedEl).getByTestId(TEST_IDS.ACTIVE_TAB)
+            ).toBeInTheDocument();
             unselectedEls.forEach((el) =>
-                expect(el).toHaveStyle('text-decoration: none')
+                expect(within(el).queryByTestId(TEST_IDS.ACTIVE_TAB)).toBeNull()
             );
         });
 
@@ -59,101 +62,29 @@ describe('TopNavigationBar', function () {
             render(
                 <TopNavigationBar
                     currentPath={`${baseRoute.path}/nested`}
-                    navigationLinks={[...navigationLinks, baseRoute]}
+                    primaryMenu={[...primaryMenu, baseRoute]}
+                    {...mockProps}
                 />
             );
-            const desktopMenu = screen.getByTestId('desktop-menu');
+            const desktopMenu = screen.getByTestId(TEST_IDS.DESKTOP_MENU);
             const selectedEl = within(desktopMenu).getByText(
                 baseRoute.displayName
             );
+            const tabEl = within(selectedEl).getByTestId(TEST_IDS.ACTIVE_TAB);
 
-            expect(selectedEl).toHaveStyle('text-decoration: underline');
+            expect(tabEl).toBeInTheDocument();
         });
 
         it('does not render logout button when user is not present', () => {
             render(
                 <TopNavigationBar
                     currentPath="/"
-                    navigationLinks={navigationLinks}
+                    primaryMenu={primaryMenu}
+                    {...mockProps}
                 />
             );
             const logoutButton = screen.queryByText('Logout');
             expect(logoutButton).toBeNull();
-        });
-
-        it('renders logout button user is present', async () => {
-            render(
-                <TopNavigationBar
-                    currentPath="/"
-                    navigationLinks={navigationLinks}
-                    user={user}
-                />
-            );
-            const desktopMenu = screen.getByTestId('desktop-menu');
-            const logoutButton = within(desktopMenu).getByText('Logout');
-            expect(logoutButton).toBeInTheDocument();
-            expect(logoutButton).toHaveAttribute('href', '/api/auth/logout');
-        });
-    });
-
-    describe('Mobile Menu', () => {
-        describe('Rendering mobile navigation links', () => {
-            let mobileMenu: HTMLElement;
-            beforeAll(async () => {
-                const user = userEvent.setup();
-                render(
-                    <TopNavigationBar
-                        currentPath="/"
-                        navigationLinks={navigationLinks}
-                    />
-                );
-                const menuButton =
-                    screen.getByTestId('mobile-menu').firstElementChild!;
-                await user.click(menuButton);
-                mobileMenu = screen.getByTestId('mobile-menu-links');
-            });
-
-            it.each(navigationLinks)(
-                'finds link: $displayName',
-                ({ displayName, path }) => {
-                    const link = within(mobileMenu).getByText(displayName);
-                    expect(link).toHaveAttribute('href', path);
-                }
-            );
-        });
-
-        it('does not render logout menu item when user is not present', async () => {
-            const userAction = userEvent.setup();
-            render(
-                <TopNavigationBar
-                    currentPath="/"
-                    navigationLinks={navigationLinks}
-                />
-            );
-            const menuButton =
-                screen.getByTestId('mobile-menu').firstElementChild!;
-            await userAction.click(menuButton);
-            const mobileMenu = screen.getByTestId('mobile-menu-links');
-            const logoutButton = within(mobileMenu).queryByText('Logout');
-            expect(logoutButton).toBeNull();
-        });
-
-        it('renders logout menu item user is present', async () => {
-            const userAction = userEvent.setup();
-            render(
-                <TopNavigationBar
-                    currentPath="/"
-                    navigationLinks={navigationLinks}
-                    user={user}
-                />
-            );
-            const menuButton =
-                screen.getByTestId('mobile-menu').firstElementChild!;
-            await userAction.click(menuButton);
-            const mobileMenu = screen.getByTestId('mobile-menu-links');
-            const logoutButton = within(mobileMenu).getByText('Logout');
-            expect(logoutButton).toBeInTheDocument();
-            expect(logoutButton).toHaveAttribute('href', '/api/auth/logout');
         });
     });
 });

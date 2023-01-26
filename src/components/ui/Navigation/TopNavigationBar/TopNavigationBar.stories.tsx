@@ -1,23 +1,29 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
-import { TopNavigationBar } from './TopNavigationBar';
+import { Meta, StoryFn } from '@storybook/react';
+import { TopNavigationBar as TopNavigationBarUi } from './TopNavigationBar';
 import { mockTopNavigationBarProps } from './TopNavigationBar.mocks';
 
 export default {
-    title: 'Navigation/SiteNavigation',
-    component: TopNavigationBar,
+    title: 'Navigation/TopNavigationBar',
+    component: TopNavigationBarUi,
     argTypes: {},
-} as ComponentMeta<typeof TopNavigationBar>;
+} as Meta;
 
-const Template: ComponentStory<typeof TopNavigationBar> = (args) => (
-    <TopNavigationBar
-        currentPath={args.navigationLinks[0].path}
-        navigationLinks={args.navigationLinks}
-        user={args.user}
-    />
-);
-
-export const Base = Template.bind({});
-
-Base.args = {
-    ...mockTopNavigationBarProps,
+export const TopNavigationBar: StoryFn = () => {
+    return <TopNavigationBarUi {...mockTopNavigationBarProps} />;
+};
+export const TopNavigationBarLoggedIn: StoryFn = () => {
+    return (
+        <TopNavigationBarUi
+            {...mockTopNavigationBarProps}
+            user={{
+                roles: ['provider_therapist'],
+                userId: 'test-user-id',
+                email: 'test@therify.co',
+                plan: null,
+            }}
+        />
+    );
+};
+export const TopNavigationBarLoadingUser: StoryFn = () => {
+    return <TopNavigationBarUi {...mockTopNavigationBarProps} isLoadingUser />;
 };

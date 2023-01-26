@@ -16,3 +16,8 @@ export const LOGOUT: NavigationLink = {
     displayName: 'Logout',
     path: URL_PATHS.AUTH.LOGOUT,
 } as const;
+
+export const LOGIN: NavigationLink = {
+    displayName: 'Login',
+    path: URL_PATHS.AUTH.LOGIN,
+} as const;

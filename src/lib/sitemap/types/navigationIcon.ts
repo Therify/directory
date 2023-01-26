@@ -4,15 +4,17 @@ export const NAVIGATION_ICON = {
     CHAT: 'chat',
     CLIENTS: 'clients',
     DASHBOARD: 'dashboard',
+    DIRECTORY: 'directory',
+    FAVORITES: 'favorites',
     HOME: 'home',
     JOURNEY: 'journey',
     LIBRARY: 'library',
     MESSAGING: 'messaging',
     NOTIFICATION: 'notification',
     PAYMENTS: 'payments',
+    PROFILE_EDITOR: 'profile-editor',
     REFERRAL: 'referral',
     THERAPY: 'therapy',
-    PROFILE_EDITOR: 'profile-editor',
 } as const;
 
 export type NavigationIcon =
