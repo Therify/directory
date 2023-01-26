@@ -2,7 +2,7 @@ import '../styles/globals.css';
 import type { AppProps, AppType } from 'next/app';
 import { ThemeProvider } from '@mui/material/styles';
 import { therifyDesignSystem } from '../components/themes/therify-design-system';
-import { ApplicationContainer } from '@/components/ui/Layout/Containers/ApplicationContainer';
+import { ApplicationContainer } from '@/components/ui';
 import { withTRPC } from '@trpc/next';
 import { UserProvider } from '@auth0/nextjs-auth0/client';
 import { AppRouter } from '@/lib/server/routers/app';

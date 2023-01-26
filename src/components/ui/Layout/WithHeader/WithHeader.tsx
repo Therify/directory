@@ -6,7 +6,7 @@ import Container from '@mui/material/Container';
 
 import { colors } from '../../../themes/therify-design-system';
 import { H2 } from '../../Typography';
-import { HeaderContainer } from '../Containers/HeaderContainer';
+import { HeaderContainer } from '../../Containers/HeaderContainer';
 
 interface WithHeaderProps {
     title: string;
