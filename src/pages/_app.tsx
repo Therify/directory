@@ -5,7 +5,7 @@ import { ApplicationContainer } from '@/components/ui';
 import { withTRPC } from '@trpc/next';
 import { UserProvider } from '@auth0/nextjs-auth0/client';
 import { AppRouter } from '@/lib/server/routers/app';
-import { TherifyUser } from '@/lib/context';
+import { TherifyUser, FirebaseClient } from '@/lib/context';
 import { therifyDesignSystem } from '../components/themes/therify-design-system';
 
 const App: AppType = ({ Component, pageProps }: AppProps) => {
@@ -13,9 +13,11 @@ const App: AppType = ({ Component, pageProps }: AppProps) => {
         <ThemeProvider theme={therifyDesignSystem}>
             <UserProvider>
                 <TherifyUser.Provider>
-                    <ApplicationContainer>
-                        <Component {...pageProps} />
-                    </ApplicationContainer>
+                    <FirebaseClient.Provider>
+                        <ApplicationContainer>
+                            <Component {...pageProps} />
+                        </ApplicationContainer>
+                    </FirebaseClient.Provider>
                 </TherifyUser.Provider>
             </UserProvider>
         </ThemeProvider>
