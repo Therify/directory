@@ -1,2 +1,2 @@
 export * as TherifyUser from './therify-user';
-export * as FirebaseClient from './therify-user';
+export * as FirebaseClient from './firebase';

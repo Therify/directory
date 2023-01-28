@@ -1,14 +1,25 @@
-import { Box, Drawer as MuiDrawer, useMediaQuery } from '@mui/material';
-import { styled, useTheme } from '@mui/material/styles';
+import {
+    Box,
+    Drawer as MuiDrawer,
+    styled,
+    useMediaQuery,
+    useTheme,
+} from '@mui/material';
 import { Notification } from '@/lib/types';
 import { CloseRounded as CloseRoundedIcon } from '@mui/icons-material';
-import { IconButton, BUTTON_TYPE, Button } from '../Button';
-import { List } from '../List';
-import { ListItem } from '../ListItem';
-import { CenteredContainer } from '../Layout';
-import { Divider } from '../Divider';
-import { Avatar } from '../Avatar';
-import { H6, Paragraph, PARAGRAPH_SIZE } from '../Typography';
+import {
+    IconButton,
+    BUTTON_TYPE,
+    Button,
+    List,
+    ListItem,
+    CenteredContainer,
+    Divider,
+    Avatar,
+    H6,
+    Paragraph,
+    PARAGRAPH_SIZE,
+} from '@/components/ui';
 
 interface NotificationDrawerProps {
     notifications: Notification.InApp.PersitedType[];
