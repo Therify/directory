@@ -1,7 +1,7 @@
 import { ReactNode, useContext, useEffect, useState } from 'react';
 import { FirebaseClient, TherifyUser } from '@/lib/context';
 import { Notification } from '@/lib/types';
-import { handleNotificationsChangeFactory } from './handle-notifications-change';
+import { handleNotifications } from './handle-notifications-change';
 import { Context } from './Context';
 
 export const Provider = ({ children }: { children: ReactNode }) => {
@@ -22,18 +22,18 @@ export const Provider = ({ children }: { children: ReactNode }) => {
     }, [user?.userId, isFirebaseAuthenticated]);
 
     useEffect(() => {
-        if (!shouldListenToNotifications || !firebase) {
-            return;
+        if (shouldListenToNotifications && !!firebase) {
+            const unsubscribe = firebase.addListener(
+                notificationsPath,
+                (value) => {
+                    const notifications = handleNotifications(value);
+                    setNotifications(notifications);
+                }
+            );
+            return () => {
+                unsubscribe();
+            };
         }
-        const unsubscribe = firebase.addListener(
-            notificationsPath,
-            handleNotificationsChangeFactory({
-                setNotifications,
-            })
-        );
-        return () => {
-            unsubscribe();
-        };
     }, [
         shouldListenToNotifications,
         notificationsPath,

@@ -12,8 +12,19 @@ export const resolve: ProcedureResolver<
 }): Promise<GetUserDetailsByAuth0Id.Output> {
     try {
         const result = await ctx.accounts.getUserDetailsByAuth0Id(input);
+        let firebaseToken: string | undefined;
+        if (result.details?.user)
+            firebaseToken = await ctx.accounts.createFirebaseAuthToken({
+                userId: result.details.user.userId,
+                email: result.details.user.email,
+            });
         return {
-            ...result,
+            details: result.details
+                ? {
+                      ...result.details,
+                      firebaseToken,
+                  }
+                : null,
             errors: [],
         };
     } catch (error) {

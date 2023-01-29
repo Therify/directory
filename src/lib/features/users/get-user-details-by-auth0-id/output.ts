@@ -20,6 +20,7 @@ export const schema = z.object({
                 roles: UserSchema.shape.roles,
                 accountId: UserSchema.shape.accountId,
             }),
+            firebaseToken: z.string().optional(),
         })
         .nullable(),
     errors: z.array(z.string()),

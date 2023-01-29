@@ -6,7 +6,8 @@ import { withTRPC } from '@trpc/next';
 import { UserProvider } from '@auth0/nextjs-auth0/client';
 import { AppRouter } from '@/lib/server/routers/app';
 import { TherifyUser, FirebaseClient } from '@/lib/context';
-import { therifyDesignSystem } from '../components/themes/therify-design-system';
+import { therifyDesignSystem } from '@/components/themes/therify-design-system';
+import { InAppNotificationsContext } from '@/components/features/in-app-notifications/context';
 
 const App: AppType = ({ Component, pageProps }: AppProps) => {
     return (
@@ -14,9 +15,11 @@ const App: AppType = ({ Component, pageProps }: AppProps) => {
             <UserProvider>
                 <TherifyUser.Provider>
                     <FirebaseClient.Provider>
-                        <ApplicationContainer>
-                            <Component {...pageProps} />
-                        </ApplicationContainer>
+                        <InAppNotificationsContext.Provider>
+                            <ApplicationContainer>
+                                <Component {...pageProps} />
+                            </ApplicationContainer>
+                        </InAppNotificationsContext.Provider>
                     </FirebaseClient.Provider>
                 </TherifyUser.Provider>
             </UserProvider>

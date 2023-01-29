@@ -1,10 +1,5 @@
-import {
-    Box,
-    Drawer as MuiDrawer,
-    styled,
-    useMediaQuery,
-    useTheme,
-} from '@mui/material';
+import { Box, Drawer as MuiDrawer, useMediaQuery } from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
 import { Notification } from '@/lib/types';
 import { CloseRounded as CloseRoundedIcon } from '@mui/icons-material';
 import {

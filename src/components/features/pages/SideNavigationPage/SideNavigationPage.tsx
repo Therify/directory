@@ -81,7 +81,7 @@ export const SideNavigationPage = ({
                 isOpen={isMobileMenuOpen}
                 onClose={() => setIsMobileMenuOpen(false)}
                 navigationMenu={mobileMenu}
-                notificationsMap={notificationPaths}
+                notificationsMap={getNotificationsMapForMenu(mobileMenu)}
                 onNavigate={(path) => {
                     onNavigate(path);
                     setIsMobileMenuOpen(false);

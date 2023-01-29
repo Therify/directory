@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase/app';
+import { FirebaseOptions, initializeApp } from 'firebase/app';
 import { getDatabase } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
 import { withFirebaseConfiguration } from './configuration';
@@ -12,39 +12,36 @@ import {
     signOutFactory,
 } from './methods';
 
-export const getFirebaseVendor = (instanceName: string) =>
-    withFirebaseConfiguration((CONFIG) => {
-        const firebaseApp = initializeApp(
-            {
-                apiKey: CONFIG.FIREBASE_API_KEY,
-                authDomain: CONFIG.FIREBASE_AUTH_DOMAIN,
-                projectId: CONFIG.FIREBASE_PROJECT_ID,
-                storageBucket: CONFIG.FIREBASE_STORAGE_BUCKET,
-                messagingSenderId: CONFIG.FIREBASE_MESSAGING_SENDER_ID,
-                appId: CONFIG.FIREBASE_APP_ID,
-                databaseURL: CONFIG.FIREBASE_DATABASE_URL,
-                measurementId: CONFIG.FIREBASE_MEASUREMENT_ID,
-            },
-            instanceName
-        );
+export const getFirebaseVendor = (instanceName: string) => {
+    const options: FirebaseOptions = {
+        apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+        authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+        storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+        messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+        appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+        databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
+        measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+    };
 
-        const auth = getAuth(firebaseApp);
-        const database = getDatabase(firebaseApp);
+    const firebaseApp = initializeApp(options, instanceName);
+    const auth = getAuth(firebaseApp);
+    const database = getDatabase(firebaseApp);
 
-        return {
-            isAuthenticated: () => Boolean(auth.currentUser),
-            setData: setDataFactory({ database }),
-            pushData: pushDataFactory({ database }),
-            readData: readDataFactory({ database }),
-            addListener: addListenerFactory({ database }),
-            updateData: updateDataFactory({ database }),
-            authenticateWithCustomToken: authenticateWithCustomTokenFactory({
-                auth,
-            }),
-            signOut: signOutFactory({
-                auth,
-            }),
-        };
-    });
+    return {
+        isAuthenticated: () => Boolean(auth.currentUser),
+        setData: setDataFactory({ database }),
+        pushData: pushDataFactory({ database }),
+        readData: readDataFactory({ database }),
+        addListener: addListenerFactory({ database }),
+        updateData: updateDataFactory({ database }),
+        authenticateWithCustomToken: authenticateWithCustomTokenFactory({
+            auth,
+        }),
+        signOut: signOutFactory({
+            auth,
+        }),
+    };
+};
 
 export type FirebaseVendor = ReturnType<typeof getFirebaseVendor>;

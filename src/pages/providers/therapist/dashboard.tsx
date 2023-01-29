@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { useRouter } from 'next/router';
-import { H1, SideNavigationPage } from '@/components/ui';
+import { H1 } from '@/components/ui';
+import { SideNavigationPage } from '@/components/features/pages';
 import {
     THERAPIST_MAIN_MENU,
     THERAPIST_SECONDARY_MENU,
@@ -17,12 +18,9 @@ export default function TherapistDashboardPage() {
             currentPath={URL_PATHS.PROVIDERS.THERAPIST.DASHBOARD}
             onNavigate={router.push}
             user={user}
-            onShowNotifications={() => console.log('Show notifications...')}
             primaryMenu={[...THERAPIST_MAIN_MENU]}
             secondaryMenu={[...THERAPIST_SECONDARY_MENU]}
             mobileMenu={[...THERAPIST_MOBILE_MENU]}
-            notificationCount={0}
-            notificationPaths={{}}
             isLoadingUser={isLoading}
         >
             <H1>Therapist Dashboard</H1>
