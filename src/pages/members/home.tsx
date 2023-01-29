@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
-import { H1, TopNavigationPage } from '@/components/ui';
+import { H1 } from '@/components/ui';
+import { TopNavigationPage } from '@/components/features/pages';
 import {
     MEMBER_MAIN_MENU,
     MEMBER_SECONDARY_MENU,
@@ -17,12 +18,9 @@ export default function MemberHomePage() {
             currentPath={URL_PATHS.MEMBERS.HOME}
             onNavigate={router.push}
             user={user}
-            onShowNotifications={() => console.log('Show notifications...')}
             primaryMenu={[...MEMBER_MAIN_MENU]}
             secondaryMenu={[...MEMBER_SECONDARY_MENU]}
             mobileMenu={[...MEMBER_MOBILE_MENU]}
-            notificationCount={0}
-            notificationPaths={{}}
             isLoadingUser={isLoading}
         >
             <H1>Member Home</H1>

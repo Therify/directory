@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box } from '@mui/material';
+import { Box, drawerClasses } from '@mui/material';
 import { LogoutRounded as LogoutIcon } from '@mui/icons-material';
 import { styled, useTheme } from '@mui/material/styles';
 import { NavigationLink, URL_PATHS } from '@/lib/sitemap';
@@ -12,7 +12,8 @@ import {
     MarketingSiteDrawer,
     TopNavigationBar,
 } from '@/components/ui';
-import { NotificationDrawer } from '../../notifications/ui';
+import { NotificationDrawer } from '../../in-app-notifications/ui';
+import { useInAppNotifications } from '../../in-app-notifications/hooks';
 
 interface TopNavigationPageProps {
     primaryMenu: NavigationLink[];
@@ -20,11 +21,8 @@ interface TopNavigationPageProps {
     mobileMenu: NavigationLink[];
     currentPath: string;
     onNavigate: (path: string) => void;
-    onShowNotifications?: () => void;
     user?: TherifyUser;
     isLoadingUser: boolean;
-    notificationCount?: number;
-    notificationPaths: Record<string, number>;
     children?: React.ReactNode;
 }
 export const TopNavigationPage = ({
@@ -33,15 +31,20 @@ export const TopNavigationPage = ({
     mobileMenu,
     currentPath,
     onNavigate,
-    onShowNotifications,
     user,
     isLoadingUser,
-    notificationCount,
-    notificationPaths,
     children,
 }: TopNavigationPageProps) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const theme = useTheme();
+    const {
+        drawer: notificationDrawer,
+        notifications,
+        unreadCount,
+        clearActionlessNotifications,
+        handleAction,
+        getNotificationsMapForMenu,
+    } = useInAppNotifications();
 
     return (
         <TopNavigationLayout
@@ -51,8 +54,8 @@ export const TopNavigationPage = ({
                     primaryMenu={primaryMenu}
                     secondaryMenu={secondaryMenu}
                     onNavigate={onNavigate}
-                    onShowNotifications={onShowNotifications}
-                    notificationCount={notificationCount}
+                    onShowNotifications={notificationDrawer.open}
+                    notificationCount={unreadCount}
                     toggleMobileMenu={() =>
                         setIsMobileMenuOpen(!isMobileMenuOpen)
                     }
@@ -70,7 +73,7 @@ export const TopNavigationPage = ({
                     isOpen={isMobileMenuOpen}
                     onClose={() => setIsMobileMenuOpen(false)}
                     navigationMenu={mobileMenu}
-                    notificationsMap={notificationPaths}
+                    notificationsMap={getNotificationsMapForMenu(mobileMenu)}
                     onNavigate={(path) => {
                         onNavigate(path);
                         setIsMobileMenuOpen(false);
@@ -119,18 +122,21 @@ export const TopNavigationPage = ({
                     </Box>
                 </MarketingSiteDrawer>
             )}
-            {/* {user && (
+            {user && (
                 <NotificationDrawer
-                    isOpen={isNotificationDrawerOpen}
+                    isOpen={notificationDrawer.isOpen}
                     notifications={notifications}
                     onClose={() => {
-                        setIsNotificationDrawerOpen(false);
+                        notificationDrawer.close();
                         clearActionlessNotifications();
                     }}
                     onNotificationClicked={handleAction}
-                    onClearNotifications={clearNotifications}
+                    onClearNotifications={() => {
+                        //TODO: clear notifications
+                        console.log('clearing notifications');
+                    }}
                 />
-            )} */}
+            )}
         </TopNavigationLayout>
     );
 };
