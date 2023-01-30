@@ -5,15 +5,12 @@ export const markNotificationAsViewedFactory =
         notificationsPath,
     }: {
         firebase: FirebaseVendor | null;
-        notificationsPath?: string;
+        notificationsPath: string;
     }) =>
     async (notificationId: string) => {
         if (!firebase) {
             console.error('Firebase not initialized');
             return;
-        }
-        if (!notificationsPath) {
-            return console.error('Notifications path not initialized');
         }
         try {
             return firebase.updateData(

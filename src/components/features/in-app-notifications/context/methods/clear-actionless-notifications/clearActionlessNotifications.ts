@@ -7,7 +7,7 @@ export const clearActionlessNotificationsFactory =
         firebase,
         notificationsPath,
     }: {
-        notificationsPath?: string;
+        notificationsPath: string;
         notifications: Notification.InApp.PersitedType[];
         firebase: FirebaseVendor | null;
     }) =>
@@ -15,9 +15,6 @@ export const clearActionlessNotificationsFactory =
         if (!firebase) {
             console.error('Firebase not initialized');
             return;
-        }
-        if (!notificationsPath) {
-            return console.error('Notifications path not initialized');
         }
         const updatePayload = notifications.reduce(
             (acc, { id, action, isViewed }) => {
