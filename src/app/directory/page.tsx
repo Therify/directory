@@ -27,7 +27,7 @@ export default function Directory() {
                                 displayText: state,
                                 value: state,
                             }))}
-                            selectedValue="New York"
+                            value="New York"
                             id="state"
                         />
                     </FormControl>
