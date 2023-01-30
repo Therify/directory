@@ -13,7 +13,6 @@ const mockUserResult = {
     createdAt: new Date('2021-03-01'),
     plans: [
         {
-            createdAt: new Date('2021-03-01'),
             status: PlanStatus.active,
             renews: true,
             startDate: new Date('2021-03-01'),
@@ -36,24 +35,22 @@ describe('GetUserDetailsByAuth0Id', function () {
                 auth0Id,
             })
         ).resolves.toEqual({
-            details: {
-                user: {
-                    plan: {
-                        status: mockUserResult.plans[0].status,
-                        endDate: mockUserResult.plans[0].endDate,
-                        startDate: mockUserResult.plans[0].startDate,
-                        renews: mockUserResult.plans[0].renews,
-                        seats: mockUserResult.plans[0].seats,
-                    },
-                    userId: mockUserResult.id,
-                    emailAddress: mockUserResult.emailAddress,
-                    roles: mockUserResult.roles,
-                    accountId: mockUserResult.accountId,
-                    givenName: mockUserResult.givenName,
-                    surname: mockUserResult.surname,
-                    createdAt: mockUserResult.createdAt,
-                    auth0Id,
+            user: {
+                plan: {
+                    status: mockUserResult.plans[0].status,
+                    endDate: mockUserResult.plans[0].endDate,
+                    startDate: mockUserResult.plans[0].startDate,
+                    renews: mockUserResult.plans[0].renews,
+                    seats: mockUserResult.plans[0].seats,
                 },
+                userId: mockUserResult.id,
+                emailAddress: mockUserResult.emailAddress,
+                roles: mockUserResult.roles,
+                accountId: mockUserResult.accountId,
+                givenName: mockUserResult.givenName,
+                surname: mockUserResult.surname,
+                createdAt: mockUserResult.createdAt,
+                auth0Id,
             },
         });
     });
@@ -72,18 +69,16 @@ describe('GetUserDetailsByAuth0Id', function () {
                 auth0Id,
             })
         ).resolves.toEqual({
-            details: {
-                user: {
-                    plan: null,
-                    userId: mockUserResult.id,
-                    emailAddress: mockUserResult.emailAddress,
-                    roles: mockUserResult.roles,
-                    accountId: mockUserResult.accountId,
-                    givenName: mockUserResult.givenName,
-                    surname: mockUserResult.surname,
-                    createdAt: mockUserResult.createdAt,
-                    auth0Id,
-                },
+            user: {
+                plan: null,
+                userId: mockUserResult.id,
+                emailAddress: mockUserResult.emailAddress,
+                roles: mockUserResult.roles,
+                accountId: mockUserResult.accountId,
+                givenName: mockUserResult.givenName,
+                surname: mockUserResult.surname,
+                createdAt: mockUserResult.createdAt,
+                auth0Id,
             },
         });
     });
