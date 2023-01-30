@@ -1,13 +1,14 @@
+import { useContext } from 'react';
 import { useRouter } from 'next/router';
-import { H1, SideNavigationPage } from '@/components/ui';
+import { H1 } from '@/components/ui';
 import {
     COACH_MAIN_MENU,
     COACH_SECONDARY_MENU,
     COACH_MOBILE_MENU,
     URL_PATHS,
 } from '@/lib/sitemap';
-import { useContext } from 'react';
 import { TherifyUser } from '@/lib/context';
+import { SideNavigationPage } from '@/components/features/pages';
 
 export default function TherapistDashboardPage() {
     const { user, isLoading } = useContext(TherifyUser.Context);
@@ -17,12 +18,9 @@ export default function TherapistDashboardPage() {
             currentPath={URL_PATHS.PROVIDERS.COACH.DASHBOARD}
             onNavigate={router.push}
             user={user}
-            onShowNotifications={() => console.log('Show notifications...')}
             primaryMenu={[...COACH_MAIN_MENU]}
             secondaryMenu={[...COACH_SECONDARY_MENU]}
             mobileMenu={[...COACH_MOBILE_MENU]}
-            notificationCount={0}
-            notificationPaths={{}}
             isLoadingUser={isLoading}
         >
             <H1>Coach Dashboard</H1>
