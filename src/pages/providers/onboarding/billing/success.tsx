@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import {
@@ -13,11 +13,10 @@ import {
 } from '@/components/ui';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { usePracticeOnboardingStorage } from '@/components/features/onboarding';
-import { trpc } from '@/lib/utils/trpc';
-import { useUser } from '@auth0/nextjs-auth0/client';
-import { PlanStatus } from '@prisma/client';
+import { PlanStatus, Role } from '@prisma/client';
 import { useRouter } from 'next/router';
 import { URL_PATHS } from '@/lib/sitemap';
+import { TherifyUser } from '@/lib/context';
 
 export const getServerSideProps = withPageAuthRequired();
 
@@ -25,80 +24,71 @@ const REGISTRATION_STEPS = ['Registration', 'Payment', 'Onboarding'] as const;
 const SIXTY_SECONDS = 1000 * 60;
 
 export default function BillingSuccessPage() {
-    const { isLoading: isLoadingUser, user } = useUser();
     const router = useRouter();
     const { clearStorage } = usePracticeOnboardingStorage();
-    const [allowRefetch, setAllowRefetch] = useState(true);
-    useEffect(clearStorage, [clearStorage]);
-    const timeoutRef = useRef<number>();
+    const {
+        user,
+        isLoading: isLoadingUser,
+        isRefetching,
+        refetch,
+        errorMessage: userError,
+    } = useContext(TherifyUser.Context);
 
+    const [allowRefetch, setAllowRefetch] = useState(true);
+    const timeoutRef = useRef<number>();
+    const refetchRef = useRef<number>();
+
+    useEffect(clearStorage, [clearStorage]);
     useEffect(() => {
         timeoutRef.current = window.setTimeout(() => {
             setAllowRefetch(false);
+            window.clearInterval(refetchRef.current);
         }, SIXTY_SECONDS);
         return () => {
             window.clearTimeout(timeoutRef.current);
         };
     }, []);
 
-    const {
-        data: userData,
-        error: queryError,
-        isLoading: isLoadingPlan,
-        isRefetching,
-    } = trpc.useQuery(
-        [
-            'accounts.users.get-user-details-by-auth0-id',
-            {
-                auth0Id: user?.sub ?? '',
-            },
-        ],
-        {
-            refetchInterval: allowRefetch
-                ? (data) => {
-                      if (data?.details?.plan) {
-                          window.clearTimeout(timeoutRef.current);
-                          return false;
-                      }
-                      return 2000;
-                  }
-                : false,
-            enabled: Boolean(user?.sub),
-        }
-    );
-
-    const { plan } = userData?.details ?? { plan: null };
-    const [planError] = userData?.errors ?? [];
+    useEffect(() => {
+        refetchRef.current = window.setInterval(() => {
+            if (!user?.plan) {
+                refetch?.();
+            } else {
+                window.clearInterval(refetchRef.current);
+            }
+        }, 2000);
+        return () => {
+            window.clearInterval(refetchRef.current);
+        };
+    }, [refetch, user?.plan]);
 
     useEffect(() => {
         if (
-            plan?.status === PlanStatus.active ||
-            plan?.status === PlanStatus.trialing
+            user?.plan?.status === PlanStatus.active ||
+            user?.plan?.status === PlanStatus.trialing
         ) {
             router.push(
-                // TODO: Determine where next step are
-                plan.seats > 1
-                    ? URL_PATHS.PROVIDERS.ONBOARDING.INVITATIONS
-                    : '/'
+                user.roles.includes(Role.provider_therapist)
+                    ? URL_PATHS.PROVIDERS.THERAPIST.DASHBOARD
+                    : URL_PATHS.PROVIDERS.COACH.DASHBOARD
             );
         }
-    }, [plan, router]);
+    }, [user?.plan, router, user?.roles]);
 
-    const isPlanFound = Boolean(userData?.details?.plan);
+    const isPlanFound = Boolean(user?.plan);
     const isPlanInctive =
         isPlanFound &&
-        plan?.status &&
+        user?.plan?.status &&
         !([PlanStatus.active, PlanStatus.trialing] as string[]).includes(
-            plan.status
+            user?.plan.status
         );
     const planStatusMessage = isPlanInctive
         ? `Your plan is not active. Please contact support.`
         : undefined;
-    const errorMessage = planError ?? queryError?.message ?? planStatusMessage;
+    const errorMessage = userError ?? planStatusMessage;
     const timedOut = !allowRefetch && !isPlanFound;
     const isLoading =
-        (isLoadingUser || isLoadingPlan || isRefetching || !isPlanFound) &&
-        !timedOut;
+        (isLoadingUser || isRefetching || !isPlanFound) && !timedOut;
     return (
         <PageContainer>
             <InnerContent>
@@ -148,7 +138,7 @@ export default function BillingSuccessPage() {
                                     {isPlanInctive && (
                                         <Paragraph>
                                             Your plan&apos;s status:{' '}
-                                            {plan?.status}
+                                            {user?.plan?.status}
                                         </Paragraph>
                                     )}
                                 </>

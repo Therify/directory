@@ -13,11 +13,14 @@ import { HandlePracticeOnboarding } from './handle-practice-onboarding';
 import { registerMember } from './register-member';
 import { Billing } from './billing';
 import { GetUserDetailsByAuth0Id } from './get-user-details-by-auth0-id';
+import { CreateFirebaseAuthToken } from './create-firebase-auth-token';
+import { firebaseAdminVendor } from '@/lib/vendors/firebase-admin';
 
 const factoryParams: AccountsServiceParams = {
     prisma,
     stripe: vendorStripe,
     auth0: vendorAuth0,
+    firebaseAdmin: firebaseAdminVendor,
 };
 export const AccountsService = {
     createUser: CreateUser.factory(factoryParams),
@@ -30,6 +33,7 @@ export const AccountsService = {
     getPracticeByUserId: GetPracticeByUserId.factory(factoryParams),
     handlePracticeOnboarding: HandlePracticeOnboarding.factory(factoryParams),
     registerMember: registerMember,
+    createFirebaseAuthToken: CreateFirebaseAuthToken.factory(factoryParams),
     billing: Billing.factory(factoryParams),
 };
 

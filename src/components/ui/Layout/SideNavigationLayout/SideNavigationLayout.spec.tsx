@@ -6,8 +6,8 @@ describe('SideNavigationLayout', () => {
     it('renders topbar content', () => {
         const { getByText } = render(
             <SideNavigationLayout
-                topbar={<div>Topbar</div>}
-                navigation={<div />}
+                topbarSlot={<div>Topbar</div>}
+                navigationSlot={<div />}
             ></SideNavigationLayout>
         );
         expect(getByText('Topbar')).toBeVisible();
@@ -16,8 +16,8 @@ describe('SideNavigationLayout', () => {
     it('renders navigation content', () => {
         const { getByText } = render(
             <SideNavigationLayout
-                topbar={<div />}
-                navigation={<div>Navigation</div>}
+                topbarSlot={<div />}
+                navigationSlot={<div>Navigation</div>}
             ></SideNavigationLayout>
         );
         expect(getByText('Navigation')).not.toBeVisible();
@@ -25,7 +25,7 @@ describe('SideNavigationLayout', () => {
 
     it('renders children content', () => {
         const { getByText } = render(
-            <SideNavigationLayout navigation={<div />} topbar={<div />}>
+            <SideNavigationLayout navigationSlot={<div />} topbarSlot={<div />}>
                 Content goes here!
             </SideNavigationLayout>
         );

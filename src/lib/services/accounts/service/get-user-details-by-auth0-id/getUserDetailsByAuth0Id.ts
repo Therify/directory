@@ -5,7 +5,9 @@ export const factory =
     ({ prisma }: AccountsServiceParams) =>
     async (
         input: GetUserDetailsByAuth0Id.Input
-    ): Promise<Omit<GetUserDetailsByAuth0Id.Output, 'errors'>> => {
+    ): Promise<
+        Omit<GetUserDetailsByAuth0Id.Output, 'firebaseToken' | 'errors'>
+    > => {
         const {
             plans,
             id: userId,
