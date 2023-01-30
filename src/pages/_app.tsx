@@ -3,7 +3,7 @@ import type { AppProps, AppType } from 'next/app';
 import { ThemeProvider } from '@mui/material/styles';
 import { ApplicationContainer } from '@/components/ui';
 import { withTRPC } from '@trpc/next';
-import { UserProvider } from '@auth0/nextjs-auth0/client';
+import { UserProvider as Auth0UserProvider } from '@auth0/nextjs-auth0/client';
 import { AppRouter } from '@/lib/server/routers/app';
 import { TherifyUser, FirebaseClient } from '@/lib/context';
 import { therifyDesignSystem } from '@/components/themes/therify-design-system';
@@ -12,7 +12,7 @@ import { InAppNotificationsContext } from '@/components/features/in-app-notifica
 const App: AppType = ({ Component, pageProps }: AppProps) => {
     return (
         <ThemeProvider theme={therifyDesignSystem}>
-            <UserProvider>
+            <Auth0UserProvider>
                 <TherifyUser.Provider>
                     <FirebaseClient.Provider>
                         <InAppNotificationsContext.Provider>
@@ -22,7 +22,7 @@ const App: AppType = ({ Component, pageProps }: AppProps) => {
                         </InAppNotificationsContext.Provider>
                     </FirebaseClient.Provider>
                 </TherifyUser.Provider>
-            </UserProvider>
+            </Auth0UserProvider>
         </ThemeProvider>
     );
 };

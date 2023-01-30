@@ -1,12 +1,10 @@
-import { ReactNode, useContext, useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { Context } from './Context';
-import { FirebaseClient } from '@/lib/context';
 import { trpc } from '@/lib/utils/trpc';
 
 export const Provider = ({ children }: { children: ReactNode }) => {
     const { user: auth0User, isLoading: isLoadingAuth0User } = useUser();
-    const { firebase } = useContext(FirebaseClient.Context);
     const {
         data: userData,
         error: queryError,
@@ -34,16 +32,6 @@ export const Provider = ({ children }: { children: ReactNode }) => {
         if (queryError) console.error(queryError);
         if (error) console.error(error);
     }, [queryError, error]);
-
-    // TODO: Move to firebase provider
-    useEffect(() => {
-        if (
-            therifyUser?.firebaseToken &&
-            firebase?.isAuthenticated() === false
-        ) {
-            firebase.authenticateWithCustomToken(therifyUser.firebaseToken);
-        }
-    }, [therifyUser?.firebaseToken, firebase]);
 
     return (
         <Context.Provider
