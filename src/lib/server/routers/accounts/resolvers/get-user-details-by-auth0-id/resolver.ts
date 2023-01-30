@@ -11,17 +11,17 @@ export const resolve: ProcedureResolver<
     ctx,
 }): Promise<GetUserDetailsByAuth0Id.Output> {
     try {
-        const result = await ctx.accounts.getUserDetailsByAuth0Id(input);
+        const { user } = await ctx.accounts.getUserDetailsByAuth0Id(input);
         let firebaseToken: string | undefined;
-        if (result.details?.user)
+        if (user)
             firebaseToken = await ctx.accounts.createFirebaseAuthToken({
-                userId: result.details.user.userId,
-                email: result.details.user.email,
+                userId: user.userId,
+                email: user.emailAddress,
             });
         return {
-            details: result.details
+            user: user
                 ? {
-                      ...result.details,
+                      ...user,
                       firebaseToken,
                   }
                 : null,
@@ -33,7 +33,7 @@ export const resolve: ProcedureResolver<
             errorMessage = error.message;
         }
         return {
-            details: null,
+            user: null,
             errors: [errorMessage],
         };
     }
