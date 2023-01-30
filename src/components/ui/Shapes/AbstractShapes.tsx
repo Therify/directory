@@ -3,24 +3,19 @@ type AbstractShapeProps = Omit<
     'src' | 'alt'
 >;
 
+const SHAPE_ONE =
+    'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673455675/app.therify.co/shapes/abstract-shape_fbvcil.svg';
+const SHAPE_TWO =
+    'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673780841/app.therify.co/shapes/abstract-shape-2_gpsoo3.svg';
+const SHAPE_THREE =
+    'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673780841/app.therify.co/shapes/abstract-shape-3_ti6ibj.svg';
+
 export const AbstractShape1 = (props: AbstractShapeProps) => (
-    <img
-        src="/assets/abstract-shape-1.svg"
-        alt="Abstract shape #1"
-        {...props}
-    />
+    <img src={SHAPE_ONE} alt="Abstract shape #1" {...props} />
 );
 export const AbstractShape2 = (props: AbstractShapeProps) => (
-    <img
-        src="/assets/abstract-shape-2.svg"
-        alt="Abstract shape #2"
-        {...props}
-    />
+    <img src={SHAPE_TWO} alt="Abstract shape #2" {...props} />
 );
 export const AbstractShape3 = (props: AbstractShapeProps) => (
-    <img
-        src="/assets/abstract-shape-3.svg"
-        alt="Abstract shape #3"
-        {...props}
-    />
+    <img src={SHAPE_THREE} alt="Abstract shape #3" {...props} />
 );
