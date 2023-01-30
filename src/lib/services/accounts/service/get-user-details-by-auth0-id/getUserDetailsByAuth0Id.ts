@@ -3,26 +3,27 @@ import { AccountsServiceParams } from '../params';
 
 export const factory =
     ({ prisma }: AccountsServiceParams) =>
-    async (
-        input: GetUserDetailsByAuth0Id.Input
-    ): Promise<
+    async ({
+        auth0Id,
+    }: GetUserDetailsByAuth0Id.Input): Promise<
         Omit<GetUserDetailsByAuth0Id.Output, 'firebaseToken' | 'errors'>
     > => {
         const {
             plans,
             id: userId,
-            emailAddress,
-            roles,
-            accountId,
+            ...user
         } = await prisma.user.findUniqueOrThrow({
             where: {
-                auth0Id: input.auth0Id,
+                auth0Id,
             },
             select: {
                 id: true,
                 emailAddress: true,
                 roles: true,
                 accountId: true,
+                createdAt: true,
+                givenName: true,
+                surname: true,
                 plans: {
                     orderBy: {
                         createdAt: 'desc',
@@ -31,6 +32,7 @@ export const factory =
                     select: {
                         seats: true,
                         status: true,
+                        startDate: true,
                         endDate: true,
                         renews: true,
                     },
@@ -40,21 +42,11 @@ export const factory =
         const [newestPlan] = plans;
 
         return {
-            details: {
-                plan: newestPlan
-                    ? {
-                          status: newestPlan?.status,
-                          endDate: newestPlan.endDate,
-                          renews: newestPlan.renews,
-                          seats: newestPlan.seats,
-                      }
-                    : null,
-                user: {
-                    userId,
-                    email: emailAddress,
-                    roles,
-                    accountId,
-                },
+            user: {
+                ...user,
+                userId,
+                auth0Id,
+                plan: newestPlan ?? null,
             },
         };
     };

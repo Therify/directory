@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import { useRouter } from 'next/router';
 import { H1 } from '@/components/ui';
 import {
@@ -7,11 +6,11 @@ import {
     COACH_MOBILE_MENU,
     URL_PATHS,
 } from '@/lib/sitemap';
-import { TherifyUser } from '@/lib/context';
 import { SideNavigationPage } from '@/components/features/pages';
+import { useTherifyUser } from '@/lib/hooks';
 
 export default function TherapistDashboardPage() {
-    const { user, isLoading } = useContext(TherifyUser.Context);
+    const { user, isLoading } = useTherifyUser();
     const router = useRouter();
     return (
         <SideNavigationPage

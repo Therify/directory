@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import {
@@ -16,7 +16,7 @@ import { usePracticeOnboardingStorage } from '@/components/features/onboarding';
 import { PlanStatus, Role } from '@prisma/client';
 import { useRouter } from 'next/router';
 import { URL_PATHS } from '@/lib/sitemap';
-import { TherifyUser } from '@/lib/context';
+import { useTherifyUser } from '@/lib/hooks';
 
 export const getServerSideProps = withPageAuthRequired();
 
@@ -32,7 +32,7 @@ export default function BillingSuccessPage() {
         isRefetching,
         refetch,
         errorMessage: userError,
-    } = useContext(TherifyUser.Context);
+    } = useTherifyUser();
 
     const [allowRefetch, setAllowRefetch] = useState(true);
     const timeoutRef = useRef<number>();
@@ -55,6 +55,7 @@ export default function BillingSuccessPage() {
                 refetch?.();
             } else {
                 window.clearInterval(refetchRef.current);
+                window.clearTimeout(timeoutRef.current);
             }
         }, 2000);
         return () => {
