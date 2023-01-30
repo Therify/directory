@@ -7,11 +7,10 @@ import {
     MEMBER_MOBILE_MENU,
     URL_PATHS,
 } from '@/lib/sitemap';
-import { TherifyUser } from '@/lib/context';
-import { useContext } from 'react';
+import { useTherifyUser } from '@/lib/hooks';
 
 export default function MemberHomePage() {
-    const { user, isLoading } = useContext(TherifyUser.Context);
+    const { user, isLoading } = useTherifyUser();
     const router = useRouter();
     return (
         <TopNavigationPage

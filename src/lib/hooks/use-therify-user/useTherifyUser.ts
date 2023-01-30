@@ -1,55 +1,18 @@
-import { useEffect } from 'react';
-import { trpc } from '@/lib/utils/trpc';
+import { useContext } from 'react';
+import { GetUserDetailsByAuth0Id } from '@/lib/features/users';
+import { TherifyUser } from '@/lib/context';
 
-interface QueryOptions {
-    refetchOnWindowFocus?: boolean;
-    refetchInterval?: number;
-}
-
-export const useTherifyUser = (
-    auth0Id: string | null | undefined,
-    queryOptions?: QueryOptions
-) => {
-    const {
-        data: userData,
-        error: queryError,
-        isLoading,
-        isRefetching,
-        refetch,
-    } = trpc.useQuery(
-        [
-            'accounts.users.get-user-details-by-auth0-id',
-            {
-                auth0Id: auth0Id ?? '',
-            },
-        ],
-        {
-            ...queryOptions,
-            refetchOnWindowFocus: Boolean(queryOptions?.refetchOnWindowFocus),
-            enabled: Boolean(auth0Id),
-        }
+export const useTherifyUser = () => {
+    const { user, isLoading, isRefetching, refetch, errorMessage } = useContext(
+        TherifyUser.Context
     );
-    const [error] = userData?.errors ?? [];
-
-    useEffect(() => {
-        if (queryError) console.error(queryError);
-        if (error) console.error(error);
-    }, [queryError, error]);
-
     return {
+        user,
         isLoading,
         isRefetching,
         refetch,
-        errorMessage: (error ?? queryError?.message) as string | undefined,
-        user: userData?.details?.user
-            ? {
-                  ...userData?.details?.user,
-                  plan: userData?.details?.plan,
-                  auth0Id,
-                  firebaseToken: userData?.details?.firebaseToken,
-              }
-            : undefined,
+        errorMessage,
     };
 };
 
-export type TherifyUser = ReturnType<typeof useTherifyUser>['user'];
+export type TherifyUser = GetUserDetailsByAuth0Id.Output['user'];

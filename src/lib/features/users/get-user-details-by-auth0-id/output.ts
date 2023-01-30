@@ -3,23 +3,26 @@ import { PlanSchema, UserSchema } from '@/lib/schema';
 import * as z from 'zod';
 
 export const schema = z.object({
-    details: z
+    user: z
         .object({
+            userId: UserSchema.shape.id,
+            auth0Id: UserSchema.shape.auth0Id,
+            emailAddress: UserSchema.shape.emailAddress,
+            avatarUrl: z.string().optional(),
+            givenName: UserSchema.shape.givenName,
+            surname: UserSchema.shape.surname,
+            createdAt: UserSchema.shape.createdAt,
+            roles: UserSchema.shape.roles,
+            accountId: UserSchema.shape.accountId,
             plan: z
                 .object({
                     status: PlanSchema.shape.status,
+                    startDate: PlanSchema.shape.startDate,
                     endDate: PlanSchema.shape.endDate,
                     renews: PlanSchema.shape.renews,
                     seats: PlanSchema.shape.seats,
                 })
                 .nullable(),
-            user: z.object({
-                userId: UserSchema.shape.id,
-                email: UserSchema.shape.emailAddress,
-                avatarUrl: z.string().optional(),
-                roles: UserSchema.shape.roles,
-                accountId: UserSchema.shape.accountId,
-            }),
             firebaseToken: z.string().optional(),
         })
         .nullable(),

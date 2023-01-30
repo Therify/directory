@@ -15,7 +15,7 @@ import { useRouter } from 'next/router';
 import { URL_PATHS } from '@/lib/sitemap';
 import Link from 'next/link';
 import { Role } from '@prisma/client';
-import { TherifyUser } from '@/lib/context';
+import { useTherifyUser } from '@/lib/hooks';
 
 const ABSTRACT_SHAPE_URL =
     'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673455675/app.therify.co/shapes/abstract-shape_fbvcil.svg' as const;
@@ -39,7 +39,7 @@ const LOGIN_IMAGES = [
 export default function Home() {
     const theme = useTheme();
     const router = useRouter();
-    const { user, isLoading } = useContext(TherifyUser.Context);
+    const { user, isLoading } = useTherifyUser();
     const [randomLoginImage, setRandomLoginImage] = useState<string | null>(
         null
     );

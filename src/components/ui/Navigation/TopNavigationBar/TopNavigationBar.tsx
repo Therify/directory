@@ -1,4 +1,3 @@
-import { GetUserDetailsByAuth0Id } from '@/lib/features/users';
 import { TherifyUser } from '@/lib/hooks';
 import { NavigationLink } from '@/lib/sitemap';
 import { useMediaQuery } from '@mui/material';
@@ -7,8 +6,6 @@ import Link from 'next/link';
 import { TopBar } from '../../TopBar';
 import { SecondaryNavigationControls } from '../SecondaryNavigationControls';
 import { isActivePath } from '../utils';
-
-GetUserDetailsByAuth0Id.outputSchema.shape.details.parse;
 
 export interface TopNavigationBarProps {
     primaryMenu: NavigationLink[];
