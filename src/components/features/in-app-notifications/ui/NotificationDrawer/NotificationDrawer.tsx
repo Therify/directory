@@ -12,6 +12,7 @@ import {
     Divider,
     Avatar,
     H6,
+    Caption,
     Paragraph,
     PARAGRAPH_SIZE,
 } from '@/components/ui';
@@ -85,6 +86,13 @@ export const NotificationDrawer = ({
                         >
                             {notification.title}
                         </Paragraph>
+                        {notification.body && (
+                            <Caption
+                                style={{ color: theme.palette.text.secondary }}
+                            >
+                                {notification.body}
+                            </Caption>
+                        )}
                     </ListItem>
                 ))}
                 {notifications.length === 0 && (
