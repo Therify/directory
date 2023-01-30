@@ -4,7 +4,7 @@ import { URL_PATHS } from '../../urlPaths';
 export const HOME: NavigationLink = {
     icon: NAVIGATION_ICON.HOME,
     displayName: 'Home',
-    path: URL_PATHS.MEMBERS.FAVORITES,
+    path: URL_PATHS.MEMBERS.HOME,
 } as const;
 
 export const FAVORITES: NavigationLink = {

@@ -46,6 +46,7 @@ export const useTherifyUser = (
                   ...userData?.details?.user,
                   plan: userData?.details?.plan,
                   auth0Id,
+                  firebaseToken: userData?.details?.firebaseToken,
               }
             : undefined,
     };

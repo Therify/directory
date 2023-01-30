@@ -32,7 +32,6 @@ export { List, TEST_IDS as LIST_TEST_IDS } from './List';
 export { ListItem } from './ListItem';
 export { Modal, TEST_IDS as MODAL_TEST_IDS } from './Modal';
 export * from './Navigation';
-export * from './Notification';
 export { PricingTable } from './PricingTable';
 export type { PricingTableFeature } from './PricingTable';
 export * from './Shapes';

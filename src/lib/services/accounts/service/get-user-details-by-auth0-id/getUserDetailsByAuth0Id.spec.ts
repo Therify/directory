@@ -3,6 +3,7 @@ import { VendorAuth0 } from '@/lib/vendors/auth0';
 import { Plan, PlanStatus, User } from '@prisma/client';
 import { prismaMock } from '@/lib/prisma/__mock__';
 import * as GetUserDetailsByAuth0Id from './getUserDetailsByAuth0Id';
+import { FirebaseAdminVendor } from '@/lib/vendors/firebase-admin';
 
 const mockUserResult = {
     id: 'test-user-id',
@@ -27,6 +28,7 @@ describe('GetUserDetailsByAuth0Id', function () {
             prisma: prismaMock,
             auth0: {} as VendorAuth0,
             stripe: {} as VendorStripe,
+            firebaseAdmin: {} as FirebaseAdminVendor,
         });
 
         await expect(
@@ -60,6 +62,7 @@ describe('GetUserDetailsByAuth0Id', function () {
             prisma: prismaMock,
             auth0: {} as VendorAuth0,
             stripe: {} as VendorStripe,
+            firebaseAdmin: {} as FirebaseAdminVendor,
         });
 
         await expect(
