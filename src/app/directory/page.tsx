@@ -1,5 +1,6 @@
 'use client';
 import { Select } from '@/components/ui/FormElements/Select';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { H3 } from '@/components/ui/Typography/Headers';
 import { Paragraph } from '@/components/ui/Typography/Paragraph';
 import Box from '@mui/material/Box';
@@ -11,28 +12,28 @@ const STATES = ['New York', 'New Jersey'] as const;
 export default function Directory() {
     return (
         <Container>
-            <Header>
-                <H3>Find a provider that sees & understands you</H3>
-                <Paragraph>
-                    Our providers are licensed and ready to provide the care you
-                    deserve
-                </Paragraph>
-                <FilterSection>
-                    <FormControl fullWidth>
-                        <Select
-                            fullWidth
-                            sx={{ backgroundColor: 'white' }}
-                            options={STATES.map((state) => ({
-                                label: state,
-                                displayText: state,
-                                value: state,
-                            }))}
-                            value="New York"
-                            id="state"
-                        />
-                    </FormControl>
-                </FilterSection>
-            </Header>
+            <PageHeader
+                type="secondary"
+                title="Find a provider that sees & understands you"
+                subtitle="Our providers are licensed and ready to provide the care you deserve"
+                actionSlot={
+                    <FilterSection>
+                        <FormControl fullWidth>
+                            <Select
+                                fullWidth
+                                sx={{ backgroundColor: 'white' }}
+                                options={STATES.map((state) => ({
+                                    label: state,
+                                    displayText: state,
+                                    value: state,
+                                }))}
+                                value="New York"
+                                id="state"
+                            />
+                        </FormControl>
+                    </FilterSection>
+                }
+            />
         </Container>
     );
 }
