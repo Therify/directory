@@ -5,7 +5,10 @@ export const getNotificationCountForPath = (
     notifications: Notification.InApp.PersitedType[]
 ): number => {
     return notifications.reduce((acc, notification) => {
-        if (notification.action?.target.startsWith(path)) {
+        if (
+            !notification.isViewed &&
+            notification.action?.target.startsWith(path)
+        ) {
             return acc + 1;
         }
         return acc;
