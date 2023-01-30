@@ -13,7 +13,7 @@ import {
     TopNavigationBar,
 } from '@/components/ui';
 import { NotificationDrawer } from '../../in-app-notifications/ui';
-import { useInAppNotifications } from '../../in-app-notifications/hooks';
+import { useInAppNotificationDrawer } from '../../in-app-notifications/hooks';
 
 interface TopNavigationPageProps {
     primaryMenu: NavigationLink[];
@@ -44,7 +44,7 @@ export const TopNavigationPage = ({
         clearActionlessNotifications,
         handleAction,
         getNotificationsMapForMenu,
-    } = useInAppNotifications();
+    } = useInAppNotificationDrawer();
 
     return (
         <TopNavigationLayout

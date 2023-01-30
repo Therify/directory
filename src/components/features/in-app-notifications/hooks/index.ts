@@ -1,1 +1,1 @@
-export { useInAppNotifications } from './use-in-app-notifications';
+export { useInAppNotificationDrawer } from './use-in-app-notification-drawer';

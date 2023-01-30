@@ -1,46 +1,25 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Notification } from '@/lib/types';
 import { InAppNotificationsContext } from '../../context';
-import {
-    clearNotificationsFactory,
-    getNotificationCountForPath,
-    markNotificationAsViewedFactory,
-    clearActionlessNotificationsFactory,
-} from './methods';
+import { getNotificationCountForPath } from './methods';
 import { handleActionFactory } from './methods/handle-action/handleAction';
 import { FirebaseClient } from '@/lib/context';
 import { NavigationLink } from '@/lib/sitemap';
 
-export const useInAppNotifications = () => {
-    const { notificationsPath, notifications } = useContext(
-        InAppNotificationsContext.Context
-    );
-    // Should this happen in the notification context?
-    const { firebase } = useContext(FirebaseClient.Context);
+export const useInAppNotificationDrawer = () => {
+    const {
+        notifications,
+        clearNotifications,
+        markNotificationAsViewed,
+        clearActionlessNotifications,
+    } = useContext(InAppNotificationsContext.Context);
     const router = useRouter();
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-    const markNotificationAsViewed = markNotificationAsViewedFactory({
-        firebase,
-        notificationsPath,
-    });
-
-    // const clearNotifications = clearNotificationsFactory({
-    //     firebase,
-    //     notificationsPath,
-    //     notifications,
-    //     clearLocalNotifications: () => setNotifications([]),
-    // });
-
     return {
         notifications,
-        // clearNotifications,
-        clearActionlessNotifications: clearActionlessNotificationsFactory({
-            firebase,
-            notificationsPath,
-            notifications,
-        }),
+        clearNotifications,
+        clearActionlessNotifications,
         drawer: {
             isOpen: isDrawerOpen,
             close: () => setIsDrawerOpen(false),

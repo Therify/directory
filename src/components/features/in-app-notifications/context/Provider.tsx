@@ -3,6 +3,11 @@ import { FirebaseClient, TherifyUser } from '@/lib/context';
 import { Notification } from '@/lib/types';
 import { handleNotifications } from './handle-notifications-change';
 import { Context } from './Context';
+import {
+    clearNotificationsFactory,
+    clearActionlessNotificationsFactory,
+    markNotificationAsViewedFactory,
+} from './methods';
 
 export const Provider = ({ children }: { children: ReactNode }) => {
     const { user } = useContext(TherifyUser.Context);
@@ -14,6 +19,24 @@ export const Provider = ({ children }: { children: ReactNode }) => {
     const isFirebaseAuthenticated = Boolean(firebase?.isAuthenticated());
     const [shouldListenToNotifications, setShouldListenToNotifications] =
         useState(Boolean(firebase?.isAuthenticated() && user?.userId));
+
+    const clearNotifications = clearNotificationsFactory({
+        firebase,
+        notificationsPath,
+        notifications,
+        clearLocalNotifications: () => setNotifications([]),
+    });
+
+    const clearActionlessNotifications = clearActionlessNotificationsFactory({
+        firebase,
+        notificationsPath,
+        notifications,
+    });
+
+    const markNotificationAsViewed = markNotificationAsViewedFactory({
+        firebase,
+        notificationsPath,
+    });
 
     useEffect(() => {
         setShouldListenToNotifications(
@@ -43,8 +66,10 @@ export const Provider = ({ children }: { children: ReactNode }) => {
     return (
         <Context.Provider
             value={{
+                clearNotifications,
+                clearActionlessNotifications,
+                markNotificationAsViewed,
                 notifications,
-                notificationsPath: user?.userId ? notificationsPath : undefined,
             }}
         >
             {children}

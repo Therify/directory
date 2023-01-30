@@ -13,7 +13,7 @@ import {
 } from '@/components/ui';
 
 import { NotificationDrawer } from '@/components/features/in-app-notifications/ui';
-import { useInAppNotifications } from '@/components/features/in-app-notifications/hooks';
+import { useInAppNotificationDrawer } from '@/components/features/in-app-notifications/hooks';
 
 interface SideNavigationPageProps {
     primaryMenu: NavigationLink[];
@@ -47,7 +47,7 @@ export const SideNavigationPage = ({
         clearActionlessNotifications,
         handleAction,
         getNotificationsMapForMenu,
-    } = useInAppNotifications();
+    } = useInAppNotificationDrawer();
     return (
         <SideNavigationLayout
             topbarSlot={
