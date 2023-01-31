@@ -15,6 +15,7 @@ import { Billing } from './billing';
 import { GetUserDetailsByAuth0Id } from './get-user-details-by-auth0-id';
 import { CreateFirebaseAuthToken } from './create-firebase-auth-token';
 import { firebaseAdminVendor } from '@/lib/vendors/firebase-admin';
+import { GetProviderProfileByUserId } from './get-provider-profile-by-user-id';
 
 const factoryParams: AccountsServiceParams = {
     prisma,
@@ -34,6 +35,8 @@ export const AccountsService = {
     handlePracticeOnboarding: HandlePracticeOnboarding.factory(factoryParams),
     registerMember: registerMember,
     createFirebaseAuthToken: CreateFirebaseAuthToken.factory(factoryParams),
+    GetProviderProfileByUserId:
+        GetProviderProfileByUserId.factory(factoryParams),
     billing: Billing.factory(factoryParams),
 };
 
