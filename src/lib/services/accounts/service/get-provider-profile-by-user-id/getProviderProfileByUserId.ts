@@ -22,7 +22,7 @@ export const factory =
             !user.roles.includes(Role.provider_coach) &&
             !user.roles.includes(Role.provider_therapist)
         ) {
-            throw new Error('User is not a provider');
+            throw new Error('User is not a provider.');
         }
 
         return { profile: user.providerProfile };
