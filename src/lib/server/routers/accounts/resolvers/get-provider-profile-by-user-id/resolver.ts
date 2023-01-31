@@ -11,7 +11,7 @@ export const resolve: ProcedureResolver<
     ctx,
 }): Promise<GetProviderProfileByUserId.Output> {
     try {
-        const { profile } = await ctx.accounts.GetProviderProfileByUserId(
+        const { profile } = await ctx.accounts.getProviderProfileByUserId(
             input
         );
         return {

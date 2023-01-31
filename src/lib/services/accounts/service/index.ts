@@ -35,7 +35,7 @@ export const AccountsService = {
     handlePracticeOnboarding: HandlePracticeOnboarding.factory(factoryParams),
     registerMember: registerMember,
     createFirebaseAuthToken: CreateFirebaseAuthToken.factory(factoryParams),
-    GetProviderProfileByUserId:
+    getProviderProfileByUserId:
         GetProviderProfileByUserId.factory(factoryParams),
     billing: Billing.factory(factoryParams),
 };

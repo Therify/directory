@@ -1,6 +1,6 @@
 import { trpc } from '@/lib/utils/trpc';
 
-export const useProviderProfile = (userId: string) => {
+export const useProviderProfile = (userId?: string) => {
     const {
         data,
         error: queryError,
@@ -11,11 +11,12 @@ export const useProviderProfile = (userId: string) => {
         [
             'accounts.users.get-provider-profile-by-user-id',
             {
-                userId,
+                userId: userId ?? '',
             },
         ],
         {
             refetchOnWindowFocus: false,
+            enabled: !!userId,
         }
     );
     const [error] = data?.errors ?? [];
