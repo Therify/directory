@@ -1,8 +1,8 @@
-import { URL_PATHS } from '@/lib/sitemap';
 import { GetServerSideProps } from 'next';
 import { parseCookies } from 'nookies';
 import { RBACOptions } from '../rbacOptions';
 import { isCoach } from '../role-validators';
+import { defaultRedirect } from './constants';
 
 export const requireCoachAuth =
     (
@@ -13,10 +13,7 @@ export const requireCoachAuth =
         const { userRoles } = parseCookies(context);
         if (!isCoach(userRoles)) {
             return {
-                redirect: options?.redirect ?? {
-                    destination: URL_PATHS[404],
-                    permanent: false,
-                },
+                redirect: options?.redirect ?? defaultRedirect,
             };
         }
         return authCallback(context);

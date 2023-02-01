@@ -1,8 +1,8 @@
-import { URL_PATHS } from '@/lib/sitemap';
 import { GetServerSideProps } from 'next';
 import { parseCookies } from 'nookies';
 import { RBACOptions } from '../rbacOptions';
 import { isMember } from '../role-validators';
+import { defaultRedirect } from './constants';
 
 export const requireMemberAuth =
     (
@@ -13,10 +13,7 @@ export const requireMemberAuth =
         const { userRoles } = parseCookies(context);
         if (!isMember(userRoles)) {
             return {
-                redirect: options?.redirect ?? {
-                    destination: URL_PATHS[404],
-                    permanent: false,
-                },
+                redirect: options?.redirect ?? defaultRedirect,
             };
         }
         return authCallback(context);
