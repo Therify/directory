@@ -82,7 +82,7 @@
         "husky": "^8.0.3",
         "lint-staged": "^13.1.0",
         "prisma": "^4.9.0",
-        "storybook": "^7.0.0-beta.19",
+        "storybook": "^7.0.0-beta.39",
         "ts-jest": "^29.0.3",
         "ts-node": "^10.9.1",
         "zod-prisma": "^0.5.4"
