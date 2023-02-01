@@ -2,7 +2,7 @@ import { Control } from 'react-hook-form';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { RegisterMember } from '@/lib/features/registration';
-import { H1 } from '@/components/ui';
+import { Badge, H1, Paragraph } from '@/components/ui';
 
 import {
     DateOfBirthInput,
@@ -17,6 +17,7 @@ import {
 } from './inputs';
 import { ROLES } from '@/lib/types/roles';
 import { InsuranceInput } from './inputs/Insurance';
+import { Account } from '@prisma/client';
 
 export interface MemberRegistrationFormProps {
     defaultValues?: Partial<
@@ -31,6 +32,7 @@ export interface MemberRegistrationFormProps {
     isEmailDisabled?: boolean;
     emailHelperText?: string;
     role: typeof ROLES.MEMBER;
+    account?: Account;
 }
 
 export const MemberRegistrationForm = ({
@@ -40,6 +42,7 @@ export const MemberRegistrationForm = ({
     isEmailUnique,
     isEmailDisabled,
     emailHelperText,
+    account,
 }: MemberRegistrationFormProps) => {
     if (!control) throw new Error('control is required');
     return (
@@ -49,6 +52,11 @@ export const MemberRegistrationForm = ({
                 <br />
                 To start, let&#39;s get you registered.
             </Header>
+            {account && (
+                <Paragraph>
+                    You are joining <Badge>{account.name}</Badge>
+                </Paragraph>
+            )}
             <Form
                 data-testid={TEST_IDS.FORM}
                 onSubmit={(e) => e.preventDefault()}
