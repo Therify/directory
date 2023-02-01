@@ -38,9 +38,6 @@ export const Provider = ({ children }: { children: ReactNode }) => {
 
     useEffect(() => {
         if (therifyUser?.roles) {
-            const cookies = parseCookies();
-            console.log({ cookies });
-            // Set
             setCookie(
                 null,
                 USER_ROLES_COOKIE_KEY,

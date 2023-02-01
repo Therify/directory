@@ -9,10 +9,9 @@ import {
     URL_PATHS,
 } from '@/lib/sitemap';
 import { useTherifyUser } from '@/lib/hooks';
-import { GetServerSideProps } from 'next';
 import { RBAC } from '@/lib/utils';
 
-export const getServerSideProps: GetServerSideProps = RBAC.requireTherapistAuth(
+export const getServerSideProps = RBAC.requireTherapistAuth(
     withPageAuthRequired()
 );
 
