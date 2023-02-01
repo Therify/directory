@@ -1,7 +1,10 @@
 import { ReactNode, useEffect } from 'react';
+import { parseCookies, setCookie, destroyCookie } from 'nookies';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { Context } from './Context';
 import { trpc } from '@/lib/utils/trpc';
+
+const USER_ROLES_COOKIE_KEY = 'userRoles' as const;
 
 export const Provider = ({ children }: { children: ReactNode }) => {
     const { user: auth0User, isLoading: isLoadingAuth0User } = useUser();
@@ -33,6 +36,25 @@ export const Provider = ({ children }: { children: ReactNode }) => {
         if (error) console.error(error);
     }, [queryError, error]);
 
+    useEffect(() => {
+        if (therifyUser?.roles) {
+            setCookie(
+                null,
+                USER_ROLES_COOKIE_KEY,
+                therifyUser.roles.join(','),
+                {
+                    maxAge: 30 * 24 * 60 * 60,
+                    path: '/',
+                }
+            );
+        }
+    }, [therifyUser]);
+
+    const clearCookies = () => {
+        destroyCookie(null, USER_ROLES_COOKIE_KEY, {
+            path: '/',
+        });
+    };
     return (
         <Context.Provider
             value={{
@@ -41,6 +63,7 @@ export const Provider = ({ children }: { children: ReactNode }) => {
                 isRefetching,
                 errorMessage,
                 refetch,
+                clearCookies,
             }}
         >
             {children}
