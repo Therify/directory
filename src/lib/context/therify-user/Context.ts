@@ -7,6 +7,7 @@ interface TherifyUserContext {
     isLoading: boolean;
     errorMessage?: string;
     isRefetching: boolean;
+    clearCookies: () => void;
     refetch?: ReturnType<typeof trpc.useQuery>['refetch'];
 }
 export const Context = createContext<TherifyUserContext>({
@@ -14,4 +15,5 @@ export const Context = createContext<TherifyUserContext>({
     isLoading: false,
     errorMessage: undefined,
     isRefetching: false,
+    clearCookies: () => {},
 });

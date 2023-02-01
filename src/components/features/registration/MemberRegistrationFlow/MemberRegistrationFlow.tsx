@@ -23,6 +23,7 @@ import { ALERT_TYPE } from '@/components/ui/Alert';
 import { ROLES } from '@/lib/types/roles';
 import { MemberRegistrationForm } from './ui';
 import { useRegistrationStorage } from './hooks';
+import { Account } from '@prisma/client';
 
 const REGISTRATION_STEPS = ['Registration', 'Onboarding'] as const;
 
@@ -34,6 +35,7 @@ interface MemberRegistrationFlowProps {
     emailValidationUrl: string;
     isRegistrationComplete: boolean;
     role: typeof ROLES.MEMBER;
+    account?: Account;
 }
 
 export const MemberRegistrationFlow = ({
@@ -44,6 +46,7 @@ export const MemberRegistrationFlow = ({
     emailValidationUrl,
     clearErrorMessage,
     role,
+    account,
 }: MemberRegistrationFlowProps) => {
     const [emailsCheckedForUniqueness, setEmailsCheckedForUniqueness] =
         useState<Record<string, boolean>>({});
@@ -122,6 +125,7 @@ export const MemberRegistrationFlow = ({
                         control={memberDetailsForm.control}
                         password={memberDetailsForm.watch('password')}
                         role={role}
+                        account={account}
                     />
                 )}
 

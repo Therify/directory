@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { H1 } from '@/components/ui';
 import { TopNavigationPage } from '@/components/features/pages';
 import {
@@ -8,6 +9,11 @@ import {
     URL_PATHS,
 } from '@/lib/sitemap';
 import { useTherifyUser } from '@/lib/hooks';
+import { RBAC } from '@/lib/utils';
+
+export const getServerSideProps = RBAC.requireMemberAuth(
+    withPageAuthRequired()
+);
 
 export default function MemberHomePage() {
     const { user, isLoading } = useTherifyUser();
