@@ -1,15 +1,28 @@
 import { useState } from 'react';
-import { useRouter } from 'next/router';
 import { Box } from '@mui/material';
+import { useRouter } from 'next/router';
+import { Account } from '@prisma/client';
+import { GetServerSideProps } from 'next';
 import { styled } from '@mui/material/styles';
-import { useRegistrationStorage } from '@/components/features/registration/MemberRegistrationFlow/hooks';
+
+import { trpc } from '@/lib/utils/trpc';
+import { URL_PATHS } from '@/lib/sitemap';
+import { ROLES } from '@/lib/types/roles';
+import { AccountsService } from '@/lib/services/accounts';
 import { RegisterMember } from '@/lib/features/registration';
 import { MemberRegistrationFlow } from '@/components/features/registration';
-import { trpc } from '@/lib/utils/trpc';
-import { ROLES } from '@/lib/types/roles';
-import { URL_PATHS } from '@/lib/sitemap';
+import { useRegistrationStorage } from '@/components/features/registration/MemberRegistrationFlow/hooks';
 
-export default function MemberRegistrationPage() {
+interface Props {
+    hasRegistrationCode: boolean;
+    registrationCode?: string;
+    account?: Account & {
+        createdAt: string;
+    };
+}
+
+export default function MemberRegistrationPage(props: Props) {
+    const { hasRegistrationCode, registrationCode, account } = props;
     const router = useRouter();
     const [registrationError, setRegistrationError] = useState<string>();
     const { clearRegistrationStorage } = useRegistrationStorage();
@@ -43,7 +56,10 @@ export default function MemberRegistrationPage() {
     const registerMember = async function (input: RegisterMember.Input) {
         setRegistrationError(undefined);
 
-        mutation.mutate(input);
+        mutation.mutate({
+            ...input,
+            registrationCode,
+        });
     };
 
     return (
@@ -57,6 +73,7 @@ export default function MemberRegistrationPage() {
                     isRegisteringMember={mutation.isLoading}
                     isRegistrationComplete={mutation.isSuccess}
                     role={ROLES.MEMBER}
+                    account={account}
                 />
             </InnerContent>
         </PageContainer>
@@ -76,3 +93,40 @@ const InnerContent = styled(Box)(({ theme }) => ({
     padding: theme.spacing(12, 4.5),
     margin: '0 auto',
 }));
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+    const { registrationCode } = ctx.query;
+    if (!registrationCode) {
+        return {
+            props: {
+                hasRegistrationCode: false,
+            },
+        };
+    }
+    try {
+        const { account } = await AccountsService.getAccountByRegistrationCode({
+            registrationCode: registrationCode as string,
+        });
+        if (account) {
+            return {
+                props: {
+                    hasRegistrationCode: true,
+                    registrationCode: registrationCode as string,
+                    account,
+                },
+            };
+        }
+        return {
+            props: {
+                hasRegistrationCode: false,
+            },
+        };
+    } catch (error) {
+        console.error('Member Registration Error:', error);
+        return {
+            props: {
+                hasRegistrationCode: false,
+            },
+        };
+    }
+};
