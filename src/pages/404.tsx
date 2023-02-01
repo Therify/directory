@@ -8,7 +8,7 @@ import {
 import { URL_PATHS } from '@/lib/sitemap';
 import { useRouter } from 'next/router';
 
-export default function Page() {
+export default function NotFoundPage() {
     const router = useRouter();
     return (
         <CenteredContainer fillSpace padding={6} textAlign="center">
