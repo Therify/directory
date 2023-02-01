@@ -17,8 +17,11 @@ import { PlanStatus, Role } from '@prisma/client';
 import { useRouter } from 'next/router';
 import { URL_PATHS } from '@/lib/sitemap';
 import { useTherifyUser } from '@/lib/hooks';
+import { RBAC } from '@/lib/utils';
 
-export const getServerSideProps = withPageAuthRequired();
+export const getServerSideProps = RBAC.requireProviderAuth(
+    withPageAuthRequired()
+);
 
 const REGISTRATION_STEPS = ['Registration', 'Payment', 'Onboarding'] as const;
 const SIXTY_SECONDS = 1000 * 60;

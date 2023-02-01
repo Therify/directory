@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { H1 } from '@/components/ui';
 import {
     COACH_MAIN_MENU,
@@ -8,6 +9,9 @@ import {
 } from '@/lib/sitemap';
 import { SideNavigationPage } from '@/components/features/pages';
 import { useTherifyUser } from '@/lib/hooks';
+import { RBAC } from '@/lib/utils';
+
+export const getServerSideProps = RBAC.requireCoachAuth(withPageAuthRequired());
 
 export default function TherapistDashboardPage() {
     const { user, isLoading } = useTherifyUser();
