@@ -15,4 +15,5 @@ export const URL_PATHS = {
     CONTENT: CONTENT_PATHS,
     EXTERNAL: EXTERNAL_URLS,
     404: '/404',
+    ROOT: '/',
 } as const;
