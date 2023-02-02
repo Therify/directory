@@ -32,16 +32,16 @@ model User {
   stripeCustomerId              String?  @unique @map("stripe_customer_id")
   auth0Id                       String   @unique @map("auth0_id")
 
-  account                     Account?                     @relation(fields: [accountId], references: [id])
-  accountId                   String?                      @unique
-  plans                       Plan[]
-  stripeInvoices              StripeInvoice[]
-  practiceProviders           PracticeProvider[]
-  directoryListingInvitations DirectoryListingInvitation[]
-  providerProfile             ProviderProfile?
-  practice                    Practice?
-  memberProfile               MemberProfile?
-  selfAssessments             SelfAssessment[]
+  account                    Account?                     @relation(fields: [accountId], references: [id])
+  accountId                  String?                      @unique
+  plans                      Plan[]
+  stripeInvoices             StripeInvoice[]
+  practiceProviders          PracticeProvider[]
+  practiceProviderInvitation PracticeProviderInvitation[]
+  providerProfile            ProviderProfile?
+  practice                   Practice?
+  memberProfile              MemberProfile?
+  selfAssessments            SelfAssessment[]
 
   @@map("users")
 }
@@ -72,16 +72,17 @@ model RegistrationCode {
 enum ListingStatus {
   listed
   unlisted
+  // TODO: Do we want to validate profiles prior to listing?
+  pending
 }
 
 model DirectoryListing {
-  id                Int             @id @default(autoincrement())
-  practice          Practice        @relation(fields: [practiceId], references: [id])
-  practiceId        String          @map("practice_id")
-  profile           ProviderProfile @relation(fields: [profileId], references: [id])
-  profileId         String          @map("profile_id")
-  status            ListingStatus
-  providerProfileId Int
+  id         String          @id @default(cuid())
+  practice   Practice        @relation(fields: [practiceId], references: [id])
+  practiceId String          @map("practice_id")
+  profile    ProviderProfile @relation(fields: [profileId], references: [id])
+  profileId  String          @map("profile_id")
+  status     ListingStatus
 
   @@map("directory_listings")
 }
@@ -172,7 +173,7 @@ model Practice {
   createdAt                  DateTime                     @default(now()) @map("created_at")
   updatedAt                  DateTime                     @updatedAt @map("updated_at")
   practiceProvider           PracticeProvider[]
-  directoryListingInvitation DirectoryListingInvitation[]
+  practiceProviderInvitation PracticeProviderInvitation[]
 
   @@map("practices")
 }
@@ -197,7 +198,7 @@ enum InvitationStatus {
   expired
 }
 
-model DirectoryListingInvitation {
+model PracticeProviderInvitation {
   id             String           @id @default(cuid())
   status         InvitationStatus
   practice       Practice         @relation(fields: [practiceId], references: [id])
@@ -205,28 +206,30 @@ model DirectoryListingInvitation {
   recipientEmail String           @map("recipient_email")
   sender         User             @relation(fields: [senderId], references: [id])
   senderId       String           @map("sender_id")
+  profile        ProviderProfile? @relation(fields: [profileId], references: [id])
+  profileId      String?          @map("profile_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@map("directory_listing_invitations")
+  @@map("practice_provider_invitations")
 }
 
 //credentialing,
 //license/npi numbers and types
 model ProviderProfile {
-  id                     String             @id @default(cuid()) @map("provider_profile_id")
-  createdAt              DateTime           @default(now()) @map("created_at")
-  updatedAt              DateTime?          @updatedAt @map("updated_at")
-  user                   User?              @relation(fields: [userId], references: [id])
-  userId                 String?            @unique @map("user_id")
-  bio                    String?            @db.Text
-  profileImageUrl        String?            @map("profile_image_url")
-  yearsOfExperience      String             @map("years_of_experience")
-  minimumRate            Int                @map("minimum_rate")
-  maximumRate            Int?               @map("maximum_rate")
-  idealClientDescription String?            @map("ideal_client_description") @db.Text
-  practiceNotes          String?            @map("practice_notes")
+  id                         String                       @id @default(cuid()) @map("provider_profile_id")
+  createdAt                  DateTime                     @default(now()) @map("created_at")
+  updatedAt                  DateTime?                    @updatedAt @map("updated_at")
+  user                       User?                        @relation(fields: [userId], references: [id])
+  userId                     String?                      @unique @map("user_id")
+  bio                        String?                      @db.Text
+  profileImageUrl            String?                      @map("profile_image_url")
+  yearsOfExperience          String                       @map("years_of_experience")
+  minimumRate                Int                          @map("minimum_rate")
+  maximumRate                Int?                         @map("maximum_rate")
+  idealClientDescription     String?                      @map("ideal_client_description") @db.Text
+  practiceNotes              String?                      @map("practice_notes")
   // gender                 Gender                          @relation(fields: [genderId], references: [id])
   // genderId               String                          @map("gender_id")
   // sessionTypes           ProviderSessionType[]
@@ -246,7 +249,8 @@ model ProviderProfile {
   // bookings               Booking[]
   // schedule               ProviderSchedule?
   // stripeAccount          ProviderStripeAccount?
-  directoryListing       DirectoryListing[]
+  directoryListing           DirectoryListing[]
+  PracticeProviderInvitation PracticeProviderInvitation[]
 
   @@map("provider_profiles")
 }
