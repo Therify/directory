@@ -19,6 +19,7 @@ const mockUserResult = {
             startDate: new Date('2021-03-01'),
             endDate: new Date('2021-04-01'),
             seats: 1,
+            billingUserId: 'test-user-id',
         } as Plan,
     ],
 } as unknown as User & { plans: Plan[] };
@@ -60,7 +61,6 @@ describe('GetUserDetailsByAuth0Id', function () {
     it('returns null plan if no plans exist', async function () {
         prismaMock.user.findUniqueOrThrow.mockResolvedValue({
             ...mockUserResult,
-            isPracticeAdmin: false,
             plans: [],
         } as unknown as User);
         const getUserDetailsByAuth0Id = GetUserDetailsByAuth0Id.factory({

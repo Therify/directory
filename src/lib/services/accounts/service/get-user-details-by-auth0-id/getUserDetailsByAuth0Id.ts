@@ -48,7 +48,15 @@ export const factory =
                 userId,
                 auth0Id,
                 isPracticeAdmin: userId === newestPlan?.billingUserId,
-                plan: newestPlan ?? null,
+                plan: newestPlan
+                    ? {
+                          seats: newestPlan.seats,
+                          status: newestPlan.status,
+                          startDate: newestPlan.startDate,
+                          endDate: newestPlan.endDate,
+                          renews: newestPlan.renews,
+                      }
+                    : null,
             },
         };
     };
