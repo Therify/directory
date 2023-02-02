@@ -11,6 +11,7 @@ const mockUserResult = {
     givenName: 'Test',
     surname: 'Jackson',
     createdAt: new Date('2021-03-01'),
+    isPracticeAdmin: true,
     plans: [
         {
             status: PlanStatus.active,
@@ -18,6 +19,7 @@ const mockUserResult = {
             startDate: new Date('2021-03-01'),
             endDate: new Date('2021-04-01'),
             seats: 1,
+            billingUserId: 'test-user-id',
         } as Plan,
     ],
 } as unknown as User & { plans: Plan[] };
@@ -43,6 +45,7 @@ describe('GetUserDetailsByAuth0Id', function () {
                     renews: mockUserResult.plans[0].renews,
                     seats: mockUserResult.plans[0].seats,
                 },
+                isPracticeAdmin: true,
                 userId: mockUserResult.id,
                 emailAddress: mockUserResult.emailAddress,
                 roles: mockUserResult.roles,
@@ -78,6 +81,7 @@ describe('GetUserDetailsByAuth0Id', function () {
                 givenName: mockUserResult.givenName,
                 surname: mockUserResult.surname,
                 createdAt: mockUserResult.createdAt,
+                isPracticeAdmin: false,
                 auth0Id,
             },
         });

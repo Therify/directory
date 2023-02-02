@@ -14,6 +14,7 @@ export const schema = z.object({
             createdAt: UserSchema.shape.createdAt,
             roles: UserSchema.shape.roles,
             accountId: UserSchema.shape.accountId,
+            isPracticeAdmin: z.boolean(),
             plan: z
                 .object({
                     status: PlanSchema.shape.status,

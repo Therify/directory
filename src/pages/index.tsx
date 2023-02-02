@@ -55,6 +55,8 @@ export default function Home() {
             router.push(URL_PATHS.MEMBERS.HOME);
         } else if (user.plan === null) {
             router.push(URL_PATHS.PROVIDERS.ONBOARDING.BILLING);
+        } else if (user.isPracticeAdmin) {
+            router.push(URL_PATHS.PROVIDERS.PRACTICE.DASHBOARD);
         } else if (role === Role.provider_therapist) {
             router.push(URL_PATHS.PROVIDERS.THERAPIST.DASHBOARD);
         } else if (role === Role.provider_coach) {

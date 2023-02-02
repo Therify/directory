@@ -30,6 +30,7 @@ export const factory =
                     },
                     take: 1,
                     select: {
+                        billingUserId: true,
                         seats: true,
                         status: true,
                         startDate: true,
@@ -46,7 +47,16 @@ export const factory =
                 ...user,
                 userId,
                 auth0Id,
-                plan: newestPlan ?? null,
+                isPracticeAdmin: userId === newestPlan?.billingUserId,
+                plan: newestPlan
+                    ? {
+                          seats: newestPlan.seats,
+                          status: newestPlan.status,
+                          startDate: newestPlan.startDate,
+                          endDate: newestPlan.endDate,
+                          renews: newestPlan.renews,
+                      }
+                    : null,
             },
         };
     };
