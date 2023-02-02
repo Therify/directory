@@ -262,7 +262,7 @@ const ModalityChip = styled(Chip)(({ theme }) => ({
 
 const ProviderAttribute = styled('li')(({ theme }) => ({
     display: 'flex',
-    [`& > *:first-child`]: {
+    [`& > *:first-of-type`]: {
         marginRight: theme.spacing(4),
     },
 }));

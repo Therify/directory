@@ -4,10 +4,6 @@ import { Box, Chip } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 import {
-    Collections,
-    Spa,
-    Stream,
-    Map,
     CollectionsOutlined,
     SpaOutlined,
     StreamOutlined,

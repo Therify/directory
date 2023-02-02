@@ -86,6 +86,8 @@ interface CardIconProps extends IconProps {
     isFavorite?: boolean;
 }
 
-const CardIcon = styled(Icon)<CardIconProps>(({ theme, isFavorite }) => ({
+const CardIcon = styled(Icon, {
+    shouldForwardProp: (prop) => prop !== 'isFavorite',
+})<CardIconProps>(({ theme, isFavorite }) => ({
     color: isFavorite ? theme.palette.error.main : theme.palette.grey[500],
 }));

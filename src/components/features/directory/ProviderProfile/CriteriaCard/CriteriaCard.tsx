@@ -8,8 +8,8 @@ import {
 } from '@mui/icons-material';
 import { Avatar, Box, Stack } from '@mui/material';
 import { StackProps } from '@mui/material/Stack';
-import styled from '@mui/material/styles/styled';
-import useTheme from '@mui/material/styles/useTheme';
+import { styled } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 
 export const CRITERIA_CARD_TYPES = {
     INSURANCE: 'insurance',
