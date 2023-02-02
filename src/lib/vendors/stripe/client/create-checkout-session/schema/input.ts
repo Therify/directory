@@ -1,6 +1,4 @@
-import Stripe from 'stripe';
 import * as z from 'zod';
-import { stripeAddressSchema } from '../../../types';
 
 export const schema = z.object({
     priceId: z.string(),

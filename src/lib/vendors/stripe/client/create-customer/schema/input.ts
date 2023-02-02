@@ -1,16 +1,16 @@
 import Stripe from 'stripe';
 import * as z from 'zod';
-import { stripeAddressSchema } from '../../../types';
+import { StripeAddress } from '../../../types';
 
 export const shippingSchema: z.ZodType<Stripe.CustomerCreateParams.Shipping> =
     z.object({
-        address: stripeAddressSchema,
+        address: StripeAddress.schema,
         name: z.string(),
         phone: z.string(),
     });
 
 export const schema: z.ZodType<Stripe.CustomerCreateParams> = z.object({
-    address: stripeAddressSchema.optional(),
+    address: StripeAddress.schema.optional(),
     description: z.string().optional(),
     email: z.string().optional(),
     name: z.string().optional(),
