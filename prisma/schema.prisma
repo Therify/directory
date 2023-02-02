@@ -75,14 +75,15 @@ enum ListingStatus {
 }
 
 model DirectoryListing {
-  id                Int             @id @default(autoincrement())
   practice          Practice        @relation(fields: [practiceId], references: [id])
   practiceId        String          @map("practice_id")
-  profile           ProviderProfile @relation(fields: [profileId], references: [id])
-  profileId         String          @map("profile_id")
+  profile           ProviderProfile @relation(fields: [providerProfileId], references: [id])
+  providerProfileId String          @unique @map("provider_profile_id")
   status            ListingStatus
-  providerProfileId Int
+  createdAt         DateTime        @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt         DateTime        @updatedAt @map("updated_at")
 
+  @@index([practiceId, providerProfileId])
   @@map("directory_listings")
 }
 
@@ -111,10 +112,8 @@ model Plan {
   user                 User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
   startDate            DateTime        @map("start_date")
   endDate              DateTime        @map("end_date")
-  // start This might not be needed. One subscription to many users. The invitations represent the seat usage
   accountId            String?         @map("account_id") // Missing account id means individual plan
-  userId               String          @map("user_id") // Missing user id means unclaimed seat
-  // end
+  userId               String          @unique @map("user_id") // Missing user id means unclaimed seat
   billingUserId        String?         @map("billing_user_id")
   createdAt            DateTime        @default(now()) @map("created_at")
   updatedAt            DateTime        @updatedAt @map("updated_at")
@@ -212,41 +211,47 @@ model DirectoryListingInvitation {
   @@map("directory_listing_invitations")
 }
 
+enum ProfileType {
+  coach
+  therapist
+}
+
 //credentialing,
 //license/npi numbers and types
 model ProviderProfile {
-  id                     String             @id @default(cuid()) @map("provider_profile_id")
-  createdAt              DateTime           @default(now()) @map("created_at")
-  updatedAt              DateTime?          @updatedAt @map("updated_at")
-  user                   User?              @relation(fields: [userId], references: [id])
-  userId                 String?            @unique @map("user_id")
-  bio                    String?            @db.Text
-  profileImageUrl        String?            @map("profile_image_url")
-  yearsOfExperience      String             @map("years_of_experience")
-  minimumRate            Int                @map("minimum_rate")
-  maximumRate            Int?               @map("maximum_rate")
-  idealClientDescription String?            @map("ideal_client_description") @db.Text
-  practiceNotes          String?            @map("practice_notes")
-  // gender                 Gender                          @relation(fields: [genderId], references: [id])
-  // genderId               String                          @map("gender_id")
-  // sessionTypes           ProviderSessionType[]
-  // licensedStates         ProviderStates[]
-  // specialties            ProviderSpecialties[]
-  // ethnicity              ProviderEthnicities[]
-  // communitiesServed      ProviderCommunities[]
-  // religions              ProviderReligions[]
-  // acceptedInsurances     ProviderInsurancePanels[]
-  // evidenceBasedPractices ProviderEvidenceBasedPractice[]
-  // modalities             ProviderModalities[]
-  // languagesSpoken        ProviderLanguages[]
-  // pronouns               Pronoun                         @relation(fields: [pronounId], references: [id])
-  // pronounId              String                          @map("pronoun_id")
-  // // Todo: Remove in favor of `schedule` property
-  // availability           Availability[]
-  // bookings               Booking[]
-  // schedule               ProviderSchedule?
-  // stripeAccount          ProviderStripeAccount?
-  directoryListing       DirectoryListing[]
+  id                         String            @id @default(cuid()) @map("provider_profile_id")
+  createdAt                  DateTime          @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt                  DateTime          @updatedAt @map("updated_at") @db.Timestamp(6)
+  user                       User?             @relation(fields: [userId], references: [id])
+  userId                     String?           @unique @map("user_id")
+  bio                        String?           @db.Text
+  licenses                   String[]
+  npiNumber                  String            @map("npi_number")
+  offersSlidingScale         Boolean           @map("offers_sliding_scale")
+  profileImageUrl            String?           @map("profile_image_url")
+  yearsOfExperience          String            @map("years_of_experience")
+  minimumRate                Int               @map("minimum_rate")
+  maximumRate                Int?              @map("maximum_rate")
+  idealClientDescription     String?           @map("ideal_client_description") @db.Text
+  practiceNotes              String?           @map("practice_notes")
+  gender                     String
+  acceptedInsurances         String[]          @map("accepted_insurances")
+  licensedStates             String[]          @map("licensed_states")
+  specialties                String[]
+  ethnicity                  String[]
+  communitiesServed          String[]          @map("communities_served")
+  religions                  String[]
+  evidenceBasedPractices     String[]          @map("evidence_based_practices")
+  modalities                 String[]
+  languagesSpoken            String[]          @map("languages_spoken")
+  pronouns                   String
+  ageGroups                  String[]          @map("age_groups")
+  offersInPerson             Boolean           @map("offers_in_person")
+  offersMedicationManagement Boolean           @map("offers_medication_management")
+  offersPhoneConsultations   Boolean           @map("offers_phone_consultations")
+  offersVirtual              Boolean           @default(true) @map("offers_virtual")
+  profileType                ProfileType       @map("profile_type")
+  directoryListing           DirectoryListing?
 
   @@map("provider_profiles")
 }

@@ -14,7 +14,7 @@ export type PageHeaderProps = {
     /**
      * The title to display.
      */
-    title: string;
+    title?: string;
     /**
      * The subtitle to display under the title.
      * @default undefined
@@ -31,6 +31,7 @@ export type PageHeaderProps = {
      */
     subtitleElement?: ElementType;
     actionSlot?: React.ReactNode;
+    containerProps?: BoxProps;
 } & Omit<TypographyProps, 'variant'>;
 
 export function PageHeader({
@@ -40,14 +41,17 @@ export function PageHeader({
     subtitleElement = 'h2',
     type = 'primary',
     actionSlot,
+    containerProps,
 }: PageHeaderProps) {
     return (
-        <StyledHeader as={'header'} type={type}>
+        <StyledHeader as={'header'} type={type} {...containerProps}>
             {type === 'abstract1' && <PrimaryAbstractImage />}
             {type === 'abstract2' && <SecondaryAbstractImage />}
             <Stack spacing={4}>
                 <Box zIndex={2}>
-                    <StyledTitle as={titleElement}>{title}</StyledTitle>
+                    {title && (
+                        <StyledTitle as={titleElement}>{title}</StyledTitle>
+                    )}
                     {subtitle && (
                         <StyledSubtitle as={subtitleElement}>
                             {subtitle}

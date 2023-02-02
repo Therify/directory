@@ -34,20 +34,10 @@ export function ProviderSearchControls() {
                             display: 'flex',
                         }}
                     >
-                        <StyledAutoComplete
-                            options={[]}
-                            renderInput={() => (
-                                <TextField label="Your city of Zip" />
-                            )}
-                        />
-                        <StyledSelect label="State" sx={{ minWidth: 102 }} />
+                        State
                     </Box>
-                    <Box sx={{ bgColor: 'white' }}>
-                        <StyledSelect label="In-Person" fullWidth />
-                    </Box>
-                    <Box sx={{ bgColor: 'white' }}>
-                        <StyledSelect label="Availability" />
-                    </Box>
+                    <Box sx={{ bgColor: 'white' }}>Modality</Box>
+                    <Box sx={{ bgColor: 'white' }}>Availability</Box>
                     <Box
                         sx={{
                             bgColor: 'white',
@@ -57,10 +47,7 @@ export function ProviderSearchControls() {
                             },
                         }}
                     >
-                        <StyledSelect
-                            label="Pricing"
-                            fullWidth={isSmallScreen}
-                        />
+                        Pricing
                     </Box>
                     <Box
                         sx={{
@@ -71,10 +58,7 @@ export function ProviderSearchControls() {
                             },
                         }}
                     >
-                        <StyledSelect
-                            label="Gender"
-                            fullWidth={isSmallScreen}
-                        />
+                        Gender
                     </Box>
                     <Box
                         sx={{
@@ -85,10 +69,7 @@ export function ProviderSearchControls() {
                             },
                         }}
                     >
-                        <StyledSelect
-                            label="Ethnicity"
-                            fullWidth={isSmallScreen}
-                        />
+                        Ethnicity
                     </Box>
                     <Box
                         sx={{
@@ -99,12 +80,7 @@ export function ProviderSearchControls() {
                             },
                         }}
                     >
-                        <MoreFiltersButton
-                            fullWidth={isSmallScreen}
-                            endIcon={<FilterList />}
-                        >
-                            More filters
-                        </MoreFiltersButton>
+                        More filters
                     </Box>
                 </Box>
             }
