@@ -12,7 +12,7 @@ export const resolve: ProcedureResolver<
 }): Promise<ListSelfAssessmentsByUserId.Output> {
     try {
         const { selfAssessments } =
-            await ctx.members.selfAssessments.getByUserId(input);
+            await ctx.members.selfAssessments.listByUserId(input);
         return {
             selfAssessments,
             errors: [],
