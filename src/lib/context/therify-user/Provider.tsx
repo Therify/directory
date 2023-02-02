@@ -1,5 +1,5 @@
 import { ReactNode, useEffect } from 'react';
-import { parseCookies, setCookie, destroyCookie } from 'nookies';
+import { setCookie, destroyCookie } from 'nookies';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { Context } from './Context';
 import { trpc } from '@/lib/utils/trpc';
