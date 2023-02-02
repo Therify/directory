@@ -13,7 +13,7 @@ export const useSelfAssessments = (
         refetch,
     } = trpc.useQuery(
         [
-            'members.get-self-assessments-by-user-id',
+            'members.list-self-assessments-by-user-id',
             {
                 userId: userId ?? '',
                 options,
