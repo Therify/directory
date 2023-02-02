@@ -30,7 +30,7 @@ export function DirectoryCard({
     onClick = () => {},
 }: DirectoryCardProps) {
     return (
-        <Card sx={{ maxWidth: 338 }}>
+        <Card>
             <CardMedia
                 component="img"
                 height={50}

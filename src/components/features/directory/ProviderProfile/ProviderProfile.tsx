@@ -22,7 +22,7 @@ import { styled, Theme } from '@mui/material/styles';
 import { CriteriaCard, CRITERIA_CARD_TYPES } from './CriteriaCard';
 
 interface ProviderProfileProps {
-    profileImageUrl: string | null;
+    profileImageUrl?: string | null;
     givenName?: string;
     surname?: string;
     pronouns?: string;
