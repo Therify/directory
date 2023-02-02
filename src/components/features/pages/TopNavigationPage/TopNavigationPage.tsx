@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, drawerClasses } from '@mui/material';
+import { Box } from '@mui/material';
 import { LogoutRounded as LogoutIcon } from '@mui/icons-material';
 import { styled, useTheme } from '@mui/material/styles';
 import { NavigationLink, URL_PATHS } from '@/lib/sitemap';
@@ -49,20 +49,22 @@ export const TopNavigationPage = ({
     return (
         <TopNavigationLayout
             navigationSlot={
-                <TopNavigationBar
-                    currentPath={currentPath}
-                    primaryMenu={primaryMenu}
-                    secondaryMenu={secondaryMenu}
-                    onNavigate={onNavigate}
-                    onShowNotifications={notificationDrawer.open}
-                    notificationCount={unreadCount}
-                    toggleMobileMenu={() =>
-                        setIsMobileMenuOpen(!isMobileMenuOpen)
-                    }
-                    user={user}
-                    isLoadingUser={isLoadingUser}
-                    withTherifyWebsiteLink
-                />
+                user && (
+                    <TopNavigationBar
+                        currentPath={currentPath}
+                        primaryMenu={primaryMenu}
+                        secondaryMenu={secondaryMenu}
+                        onNavigate={onNavigate}
+                        onShowNotifications={notificationDrawer.open}
+                        notificationCount={unreadCount}
+                        toggleMobileMenu={() =>
+                            setIsMobileMenuOpen(!isMobileMenuOpen)
+                        }
+                        user={user}
+                        isLoadingUser={isLoadingUser}
+                        withTherifyWebsiteLink
+                    />
+                )
             }
         >
             {children}

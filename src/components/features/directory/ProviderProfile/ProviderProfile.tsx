@@ -17,7 +17,7 @@ import {
     TranslateOutlined,
     VideoCameraFrontOutlined,
 } from '@mui/icons-material';
-import { Box, Chip, Stack, Tab, Tabs, useMediaQuery } from '@mui/material';
+import { Box, Chip, Stack, useMediaQuery } from '@mui/material';
 import { styled, Theme } from '@mui/material/styles';
 import { CriteriaCard, CRITERIA_CARD_TYPES } from './CriteriaCard';
 

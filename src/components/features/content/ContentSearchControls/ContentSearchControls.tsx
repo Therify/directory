@@ -74,7 +74,7 @@ export function ContentSearchControls() {
                             id="All content"
                             placeholder="Filter by"
                             fullWidth
-                            selectedValue={selectedContentFilter}
+                            value={selectedContentFilter}
                             onChange={(value) => {
                                 setSelectedContentFilter(
                                     value as typeof CONTENT_FILTER[keyof typeof CONTENT_FILTER]

@@ -15,7 +15,7 @@ export interface TopNavigationBarProps {
     notificationCount?: number;
     toggleMobileMenu: () => void;
     onNavigate: (path: string) => void;
-    user: TherifyUser;
+    user?: TherifyUser;
     isLoadingUser: boolean;
     withTherifyWebsiteLink?: boolean;
 }
