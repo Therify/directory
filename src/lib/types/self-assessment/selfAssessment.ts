@@ -5,6 +5,7 @@ import { Gender } from '../gender';
 import { Goal } from '../goals';
 import { Issue } from '../issues';
 import { Relgion } from '../religion';
+import { Language } from '../language';
 
 const basePreference = z.object({
     selection: z.string(),
@@ -26,10 +27,16 @@ const religiousPreference = basePreference.extend({
     selection: Relgion.schema,
 });
 
+const languagePreference = basePreference.extend({
+    type: z.literal('language'),
+    selection: Language.schema.default('English'),
+});
+
 const preferenceSchema = z.union([
     genderPreference,
     ethnicPreference,
     religiousPreference,
+    languagePreference,
 ]);
 
 export const schema = z.object({
@@ -40,6 +47,7 @@ export const schema = z.object({
         religious: preferenceSchema,
         ethnicity: preferenceSchema,
         gender: preferenceSchema,
+        language: preferenceSchema,
         lgbtq: boolean().default(false),
     }),
 });
