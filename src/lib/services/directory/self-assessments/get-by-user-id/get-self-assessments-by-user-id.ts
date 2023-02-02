@@ -1,4 +1,5 @@
 import { GetSelfAssessmentsByUserId } from '@/lib/features/members';
+import { Role } from '@prisma/client';
 import { DirectoryServiceParams } from '../../params';
 
 export const factory =
@@ -8,14 +9,18 @@ export const factory =
     }: GetSelfAssessmentsByUserId.Input): Promise<{
         selfAssessments: GetSelfAssessmentsByUserId.Output['selfAssessments'];
     }> => {
-        const selfAssessments = await prisma.selfAssessment.findMany({
+        const { roles, selfAssessments } = await prisma.user.findUniqueOrThrow({
             where: {
-                userId,
+                id: userId,
             },
-            orderBy: {
-                createdAt: 'desc',
+            select: {
+                roles: true,
+                selfAssessments: true,
             },
         });
+        if (!roles.includes(Role.member)) {
+            throw new Error('User is not a member.');
+        }
 
         return {
             selfAssessments:
