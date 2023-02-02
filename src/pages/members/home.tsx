@@ -10,6 +10,7 @@ import {
 } from '@/lib/sitemap';
 import { useTherifyUser } from '@/lib/hooks';
 import { RBAC } from '@/lib/utils';
+import { useSelfAssessments } from '@/lib/hooks/use-self-assessments';
 
 export const getServerSideProps = RBAC.requireMemberAuth(
     withPageAuthRequired()
@@ -17,7 +18,10 @@ export const getServerSideProps = RBAC.requireMemberAuth(
 
 export default function MemberHomePage() {
     const { user, isLoading } = useTherifyUser();
+    const { selfAssessments, isLoading: isLoadingAssessments } =
+        useSelfAssessments(user?.userId);
     const router = useRouter();
+    console.log({ selfAssessments });
     return (
         <TopNavigationPage
             currentPath={URL_PATHS.MEMBERS.HOME}

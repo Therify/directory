@@ -23,7 +23,7 @@ export const useSelfAssessments = (userId?: string) => {
     const errorMessage: string | undefined = queryError?.message ?? error;
 
     return {
-        profile: data?.selfAssessments ?? [],
+        selfAssessments: data?.selfAssessments ?? null,
         isLoading,
         isRefetching,
         refetch,
