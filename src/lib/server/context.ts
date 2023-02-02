@@ -1,6 +1,6 @@
 import { AccountsService } from '@/lib/services/accounts';
-import * as trpc from '@trpc/server';
 import * as trpcNext from '@trpc/server/adapters/next';
+import { MembersService } from '../services/members';
 import {
     notificationsService,
     NotificationsService,
@@ -9,6 +9,7 @@ import {
 // The app's context - is generated for each incoming request
 export interface Context {
     accounts: AccountsService;
+    members: MembersService;
     notifications: NotificationsService;
 }
 export async function createContext(
@@ -31,5 +32,6 @@ export async function createContext(
         // user,
         notifications: notificationsService,
         accounts: AccountsService,
+        members: MembersService,
     };
 }
