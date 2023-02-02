@@ -11,6 +11,7 @@ const mockUserResult = {
     givenName: 'Test',
     surname: 'Jackson',
     createdAt: new Date('2021-03-01'),
+    isPracticeAdmin: true,
     plans: [
         {
             status: PlanStatus.active,
@@ -43,6 +44,7 @@ describe('GetUserDetailsByAuth0Id', function () {
                     renews: mockUserResult.plans[0].renews,
                     seats: mockUserResult.plans[0].seats,
                 },
+                isPracticeAdmin: true,
                 userId: mockUserResult.id,
                 emailAddress: mockUserResult.emailAddress,
                 roles: mockUserResult.roles,
@@ -58,6 +60,7 @@ describe('GetUserDetailsByAuth0Id', function () {
     it('returns null plan if no plans exist', async function () {
         prismaMock.user.findUniqueOrThrow.mockResolvedValue({
             ...mockUserResult,
+            isPracticeAdmin: false,
             plans: [],
         } as unknown as User);
         const getUserDetailsByAuth0Id = GetUserDetailsByAuth0Id.factory({
@@ -78,6 +81,7 @@ describe('GetUserDetailsByAuth0Id', function () {
                 givenName: mockUserResult.givenName,
                 surname: mockUserResult.surname,
                 createdAt: mockUserResult.createdAt,
+                isPracticeAdmin: false,
                 auth0Id,
             },
         });
