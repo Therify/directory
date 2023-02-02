@@ -1,18 +1,18 @@
 import { Context } from '@/lib/server/context';
-import { GetSelfAssessmentsByUserId } from '@/lib/features/members';
+import { ListSelfAssessmentsByUserId } from '@/lib/features/members';
 import { ProcedureResolver } from '@trpc/server/dist/declarations/src/internals/procedure';
 
 export const resolve: ProcedureResolver<
     Context,
-    GetSelfAssessmentsByUserId.Input,
-    GetSelfAssessmentsByUserId.Output
-> = async function resolveGetSelfAssessmentsByUserId({
+    ListSelfAssessmentsByUserId.Input,
+    ListSelfAssessmentsByUserId.Output
+> = async function resolveListSelfAssessmentsByUserId({
     input,
     ctx,
-}): Promise<GetSelfAssessmentsByUserId.Output> {
+}): Promise<ListSelfAssessmentsByUserId.Output> {
     try {
         const { selfAssessments } =
-            await ctx.directory.selfAssessments.getByUserId(input);
+            await ctx.members.selfAssessments.getByUserId(input);
         return {
             selfAssessments,
             errors: [],

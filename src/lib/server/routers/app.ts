@@ -1,9 +1,9 @@
 import { createRouter } from '../createRouter';
 import { accountsRouter } from './accounts';
-import { directoryRouter } from './directory';
+import { memberRouter } from './members';
 
 export const appRouter = createRouter()
     .merge('accounts.', accountsRouter)
-    .merge('directory.', directoryRouter);
+    .merge('members.', memberRouter);
 
 export type AppRouter = typeof appRouter;

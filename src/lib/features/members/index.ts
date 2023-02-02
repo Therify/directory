@@ -1,1 +1,1 @@
-export * as GetSelfAssessmentsByUserId from './get-self-assessments-by-user-id';
+export * as ListSelfAssessmentsByUserId from './list-self-assessments-by-user-id';

@@ -1,9 +1,9 @@
-import { GetSelfAssessmentsByUserId } from '@/lib/features/members';
+import { ListSelfAssessmentsByUserId } from '@/lib/features/members';
 import { trpc } from '@/lib/utils/trpc';
 
 export const useSelfAssessments = (
     userId: string | undefined,
-    options?: GetSelfAssessmentsByUserId.Input['options']
+    options?: ListSelfAssessmentsByUserId.Input['options']
 ) => {
     const {
         data,
@@ -13,7 +13,7 @@ export const useSelfAssessments = (
         refetch,
     } = trpc.useQuery(
         [
-            'directory.members.get-self-assessments-by-user-id',
+            'members.get-self-assessments-by-user-id',
             {
                 userId: userId ?? '',
                 options,

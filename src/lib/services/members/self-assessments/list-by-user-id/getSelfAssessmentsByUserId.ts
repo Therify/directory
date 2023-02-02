@@ -1,15 +1,15 @@
-import { GetSelfAssessmentsByUserId } from '@/lib/features/members';
+import { ListSelfAssessmentsByUserId } from '@/lib/features/members';
 import { SelfAssessment } from '@/lib/types';
 import { Role } from '@prisma/client';
-import { DirectoryServiceParams } from '../../params';
+import { MembersServiceParams } from '../../params';
 
 export const factory =
-    ({ prisma }: DirectoryServiceParams) =>
+    ({ prisma }: MembersServiceParams) =>
     async ({
         userId,
         options,
-    }: GetSelfAssessmentsByUserId.Input): Promise<{
-        selfAssessments: GetSelfAssessmentsByUserId.Output['selfAssessments'];
+    }: ListSelfAssessmentsByUserId.Input): Promise<{
+        selfAssessments: ListSelfAssessmentsByUserId.Output['selfAssessments'];
     }> => {
         const { roles, selfAssessments } = await prisma.user.findUniqueOrThrow({
             where: {
