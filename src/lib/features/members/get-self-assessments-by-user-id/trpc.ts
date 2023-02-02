@@ -1,1 +1,1 @@
-export const ROUTE = 'users.get-self-assessments-by-user-id' as const;
+export const ROUTE = 'members.get-self-assessments-by-user-id' as const;
