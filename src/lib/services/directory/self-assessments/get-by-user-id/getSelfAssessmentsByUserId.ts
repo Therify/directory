@@ -6,6 +6,7 @@ export const factory =
     ({ prisma }: DirectoryServiceParams) =>
     async ({
         userId,
+        options,
     }: GetSelfAssessmentsByUserId.Input): Promise<{
         selfAssessments: GetSelfAssessmentsByUserId.Output['selfAssessments'];
     }> => {
@@ -15,7 +16,10 @@ export const factory =
             },
             select: {
                 roles: true,
-                selfAssessments: true,
+                selfAssessments: {
+                    skip: options?.skip,
+                    take: options?.take ?? 10,
+                },
             },
         });
         if (!roles.includes(Role.member)) {

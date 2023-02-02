@@ -1,6 +1,10 @@
+import { GetSelfAssessmentsByUserId } from '@/lib/features/members';
 import { trpc } from '@/lib/utils/trpc';
 
-export const useSelfAssessments = (userId?: string) => {
+export const useSelfAssessments = (
+    userId: string | undefined,
+    options?: GetSelfAssessmentsByUserId.Input['options']
+) => {
     const {
         data,
         error: queryError,
@@ -12,6 +16,7 @@ export const useSelfAssessments = (userId?: string) => {
             'directory.members.get-self-assessments-by-user-id',
             {
                 userId: userId ?? '',
+                options,
             },
         ],
         {

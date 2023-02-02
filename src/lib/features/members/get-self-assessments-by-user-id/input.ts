@@ -2,6 +2,12 @@ import * as z from 'zod';
 
 export const schema = z.object({
     userId: z.string(),
+    options: z
+        .object({
+            skip: z.number().optional(),
+            take: z.number().optional(),
+        })
+        .optional(),
 });
 
 export type Input = z.infer<typeof schema>;
