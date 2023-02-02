@@ -11,8 +11,8 @@ const factoryParams: DirectoryServiceParams = {
     auth0: vendorAuth0,
     firebaseAdmin: firebaseAdminVendor,
 };
-export const directoryService = {
+export const DirectoryService = {
     selfAssessments: selfAssessmentsFactory(factoryParams),
 };
 
-export type DirectoryService = typeof directoryService;
+export type DirectoryService = typeof DirectoryService;
