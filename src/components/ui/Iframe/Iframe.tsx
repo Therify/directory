@@ -1,5 +1,6 @@
 import { SxProps, Theme } from '@mui/material';
-import { CenteredContainer } from '../Layout';
+import { CenteredContainer } from '../Containers/CenteredContainer';
+
 interface IframeProps {
     src: string;
     title?: string;

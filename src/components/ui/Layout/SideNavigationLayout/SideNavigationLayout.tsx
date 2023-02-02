@@ -1,30 +1,29 @@
 import React, { PropsWithChildren } from 'react';
-
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 interface SideNavigationLayoutProps {
-    topbar: React.ReactNode;
-    navigation: React.ReactNode;
+    topbarSlot: React.ReactNode;
+    navigationSlot: React.ReactNode;
 }
 export const SideNavigationLayout = ({
-    topbar,
-    navigation,
+    topbarSlot,
+    navigationSlot,
     children,
 }: PropsWithChildren<SideNavigationLayoutProps>) => {
     return (
-        <Page>
-            {topbar}
+        <LayoutContainer>
+            {topbarSlot}
             <ContentContainer>
                 <SideBarContainer component="nav">
-                    {navigation}
+                    {navigationSlot}
                 </SideBarContainer>
                 <PageContents component="main">{children}</PageContents>
             </ContentContainer>
-        </Page>
+        </LayoutContainer>
     );
 };
-const Page = styled(Box)(({ theme }) => ({
+const LayoutContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     width: '100%',

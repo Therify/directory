@@ -1,16 +1,21 @@
 import { useEffect, useState } from 'react';
 import { TwoColumnGrid } from '@/components/ui/Grids/TwoColumnGrid';
-import { Button } from '@/components/ui/Button';
-import { Caption, H1, Paragraph, LoadingContainer } from '@/components/ui';
-import { CenteredContainer } from '@/components/ui/Layout/Containers/CenteredContainer';
+import {
+    Caption,
+    Button,
+    H1,
+    Paragraph,
+    LoadingContainer,
+    CenteredContainer,
+} from '@/components/ui';
 import Box from '@mui/material/Box';
 import { styled, useTheme } from '@mui/material/styles';
 import { default as NextImage } from 'next/image';
 import { useRouter } from 'next/router';
-import { useUser } from '@auth0/nextjs-auth0/client';
 import { URL_PATHS } from '@/lib/sitemap';
-import { trpc } from '@/lib/utils/trpc';
 import Link from 'next/link';
+import { Role } from '@prisma/client';
+import { useTherifyUser } from '@/lib/hooks';
 
 const ABSTRACT_SHAPE_URL =
     'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673455675/app.therify.co/shapes/abstract-shape_fbvcil.svg' as const;
@@ -34,7 +39,7 @@ const LOGIN_IMAGES = [
 export default function Home() {
     const theme = useTheme();
     const router = useRouter();
-    const { isLoading, user } = useUser();
+    const { user, isLoading } = useTherifyUser();
     const [randomLoginImage, setRandomLoginImage] = useState<string | null>(
         null
     );
@@ -43,39 +48,22 @@ export default function Home() {
             LOGIN_IMAGES[Math.floor(Math.random() * LOGIN_IMAGES.length)]
         );
     }, []);
-    const { data: planStatus } = trpc.useQuery(
-        [
-            'accounts.users.get-plan-status-by-user-id',
-            {
-                auth0Id: user?.sub ?? '',
-            },
-        ],
-        {
-            refetchOnWindowFocus: false,
-            enabled: Boolean(user?.sub),
-        }
-    );
+
     if (user) {
-        if (planStatus?.status === null) {
+        const [role] = user.roles;
+        if (role === Role.member) {
+            router.push(URL_PATHS.MEMBERS.HOME);
+        } else if (user.plan === null) {
             router.push(URL_PATHS.PROVIDERS.ONBOARDING.BILLING);
+        } else if (role === Role.provider_therapist) {
+            router.push(URL_PATHS.PROVIDERS.THERAPIST.DASHBOARD);
+        } else if (role === Role.provider_coach) {
+            router.push(URL_PATHS.PROVIDERS.COACH.DASHBOARD);
         }
-        return (
-            <CenteredContainer fillSpace padding={8}>
-                <Paragraph>
-                    {JSON.stringify({ planStatus: planStatus?.status })}
-                </Paragraph>
-                <Paragraph>{JSON.stringify(user)}</Paragraph>
-                <Button
-                    fullWidth
-                    onClick={() => router.push(URL_PATHS.AUTH.LOGOUT)}
-                >
-                    Logout
-                </Button>
-            </CenteredContainer>
-        );
     }
+
     return (
-        <LoadingContainer isLoading={isLoading}>
+        <LoadingContainer isLoading={isLoading || Boolean(user)}>
             <TwoColumnGrid
                 fillSpace
                 leftColumnSize={6}
@@ -122,15 +110,19 @@ export default function Home() {
                                 }}
                             >
                                 Dont have an account? <br />
-                                <Link href="/members/register">
+                                <Link href={URL_PATHS.MEMBERS.REGISTER}>
                                     Register to Find a Provider
                                 </Link>
                                 <br />
-                                <Link href="/providers/therapist/register">
+                                <Link
+                                    href={
+                                        URL_PATHS.PROVIDERS.THERAPIST.REGISTER
+                                    }
+                                >
                                     Register as a Therapist
                                 </Link>
                                 <br />
-                                <Link href="/providers/coach/register">
+                                <Link href={URL_PATHS.PROVIDERS.COACH.REGISTER}>
                                     Register as a Coach
                                 </Link>
                             </Caption>

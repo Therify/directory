@@ -5,7 +5,6 @@ import { Box, CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import {
     ReportProblemRounded,
-    CheckCircle,
     ArrowForwardRounded as NextIcon,
 } from '@mui/icons-material';
 import {
@@ -15,7 +14,6 @@ import {
     TherifyLogo,
     H3,
     FormValidation,
-    Paragraph,
     Button,
 } from '@/components/ui';
 import { RegisterProvider } from '@/lib/features/registration';
@@ -45,6 +43,8 @@ export const ProviderRegistrationFlow = ({
     clearErrorMessage,
     role,
 }: ProviderRegistrationFlowProps) => {
+    const isRegistrationSuccessful = isRegistrationComplete && !errorMessage;
+    const isRegistering = isRegisteringProvider || isRegistrationSuccessful;
     const [emailsCheckedForUniqueness, setEmailsCheckedForUniqueness] =
         useState<Record<string, boolean>>({});
     const { getStoredProviderDetails, storeProviderDetails } =
@@ -82,23 +82,6 @@ export const ProviderRegistrationFlow = ({
         }
     }, [emailAddress, emailValidationUrl, emailsCheckedForUniqueness]);
 
-    if (isRegistrationComplete && errorMessage === undefined) {
-        return (
-            <FormContainer isError={false}>
-                <CenteredContainer>
-                    <CheckCircle
-                        color="success"
-                        style={{ width: 40, height: 40 }}
-                    />
-                    <H3>
-                        Welcome, {providerDetailsForm.getValues('givenName')}!
-                    </H3>
-                    <Paragraph>Registration successful</Paragraph>
-                </CenteredContainer>
-            </FormContainer>
-        );
-    }
-
     return (
         <Box height="100%" width="100%">
             <HeaderContainer>
@@ -111,7 +94,7 @@ export const ProviderRegistrationFlow = ({
                 </StepperContainer>
             </HeaderContainer>
             <FormContainer isError={Boolean(errorMessage)}>
-                {isRegisteringProvider ? (
+                {isRegistering ? (
                     <CenteredContainer>
                         <H3>Creating your account...</H3>
                         <CircularProgress />
@@ -145,7 +128,7 @@ export const ProviderRegistrationFlow = ({
 
             <ButtonContainer>
                 <Button
-                    isLoading={isRegisteringProvider}
+                    isLoading={isRegistering}
                     disabled={!providerDetailsForm.formState.isValid}
                     endIcon={<NextIcon />}
                     onClick={handleSubmit}

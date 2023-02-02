@@ -41,6 +41,7 @@ model User {
   providerProfile             ProviderProfile?
   practice                    Practice?
   memberProfile               MemberProfile?
+  selfAssessments             SelfAssessment[]
 
   @@map("users")
 }
@@ -265,4 +266,20 @@ model MemberProfile {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("member_profiles")
+}
+
+model SelfAssessment {
+  id        String   @id @default(cuid()) @map("self_assessment_id")
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @map("user_id")
+  concerns  String[]
+  goals     String[]
+  notes     String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+
+  // /* ------------------------------- Preferences ------------------------------ */
+  // Example Preference `{"religion": {"selection": "Religion", "isDealbreaker": false}}`
+  preferences Json @default("{}") @db.Json
+
+  @@map("self_assessments")
 }

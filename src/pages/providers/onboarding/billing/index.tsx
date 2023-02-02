@@ -21,6 +21,7 @@ import { getProductByEnvironment, PRODUCTS } from '@/lib/types';
 import { TRPCClientError } from '@trpc/client';
 import Link from 'next/link';
 import { URL_PATHS } from '@/lib/sitemap';
+import { RBAC } from '@/lib/utils';
 
 const REGISTRATION_STEPS = ['Registration', 'Payment', 'Onboarding'] as const;
 
@@ -28,7 +29,9 @@ const PRODUCT = getProductByEnvironment(
     PRODUCTS.GROUP_PRACTICE_PLAN,
     process.env.NODE_ENV
 );
-export const getServerSideProps = withPageAuthRequired();
+export const getServerSideProps = RBAC.requireProviderAuth(
+    withPageAuthRequired()
+);
 
 export default function PracticeOnboardingPage() {
     const theme = useTheme();

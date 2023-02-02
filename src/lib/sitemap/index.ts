@@ -1,11 +1,4 @@
-import { API_PATHS } from './api';
-import { AUTHENTICATION_PATHS } from './authentication';
-import { MEMBER_PATHS } from './members';
-import { PROVIDERS_PATHS } from './providers';
+export * from './types';
+export * from './menus';
 
-export const URL_PATHS = {
-    API: API_PATHS,
-    AUTH: AUTHENTICATION_PATHS,
-    PROVIDERS: PROVIDERS_PATHS,
-    MEMBERS: MEMBER_PATHS,
-} as const;
+export { URL_PATHS } from './urlPaths';

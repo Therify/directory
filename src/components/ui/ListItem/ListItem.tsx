@@ -5,7 +5,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { PropsWithChildren } from 'react';
-import { CenteredContainer } from '../Layout';
+import { CenteredContainer } from '@/components/ui/Containers';
 
 interface ListItemProps {
     leftSlot?: React.ReactNode;

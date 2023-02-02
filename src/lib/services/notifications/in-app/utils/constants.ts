@@ -1,0 +1,4 @@
+export const IN_APP_NOTIFICATIONS_NODE_NAME = 'in-app-notifications' as const;
+
+export const IN_APP_NOTIFICATIONS_SERVICE_IDENTIFIER =
+    'IN_APP_NOTIFICATIONS_SERVICE';

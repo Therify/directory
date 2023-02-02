@@ -1,23 +1,19 @@
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
-
-const therifyLogo =
-    'https://images.squarespace-cdn.com/content/v1/602b3b78aeefe23588afe66b/1659721869760-NCD7RXK5GCDMC3DZMELG/therify-logo.png?format=2500w';
+import { TherifyLogo } from '../Logo';
 
 interface TopBarProps {
+    logoHeight?: string;
     leftSlot?: React.ReactNode;
     rightSlot?: React.ReactNode;
 }
 
-export const TopBar = ({ leftSlot, rightSlot }: TopBarProps) => {
+export const TopBar = ({ leftSlot, rightSlot, logoHeight }: TopBarProps) => {
     return (
         <TopBarContainer component="header">
             <SlotContainer>
+                <TherifyLogo style={{ height: logoHeight ?? '52px' }} />
                 {leftSlot}
-                <TherifyLogo
-                    src={therifyLogo}
-                    alt="The Official logo of Therify Inc."
-                />
             </SlotContainer>
             <SlotContainer>{rightSlot}</SlotContainer>
         </TopBarContainer>
@@ -25,7 +21,11 @@ export const TopBar = ({ leftSlot, rightSlot }: TopBarProps) => {
 };
 const SlotContainer = styled(Box)(() => ({
     display: 'flex',
+    flex: 1,
     alignItems: 'center',
+    '&:last-of-type': {
+        justifyContent: 'flex-end',
+    },
 }));
 
 const TopBarContainer = styled(Box)(({ theme }) => ({
@@ -36,8 +36,4 @@ const TopBarContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-}));
-
-const TherifyLogo = styled('img')(() => ({
-    height: '52px',
 }));

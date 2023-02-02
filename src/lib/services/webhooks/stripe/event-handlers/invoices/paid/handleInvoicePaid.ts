@@ -16,7 +16,6 @@ const GROUP_PRACTICE_PLAN = getProductByEnvironment(
 export const handleInvoicePaidFactory =
     ({ accounts }: StripeWebhookParams) =>
     async (rawInvoice: unknown) => {
-        console.log('handleInvoicePaidFactory', rawInvoice);
         const invoice = StripeInvoice.schema.parse(rawInvoice);
         const {
             customer: customerId,
