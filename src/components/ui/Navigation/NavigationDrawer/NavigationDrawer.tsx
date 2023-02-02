@@ -46,7 +46,7 @@ export const NavigationDrawer = ({
                     sx={{ marginBottom: 4 }}
                 />
                 {/* TODO: Get Name */}
-                <H5 style={{ marginBottom: 2 }}>{user?.email}</H5>
+                <H5 style={{ marginBottom: 2 }}>{user?.emailAddress}</H5>
             </MenuHeader>
             <NavigationMenu
                 menu={navigationMenu}
