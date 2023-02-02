@@ -15,10 +15,10 @@
     "@jridgewell/gen-mapping" "^0.1.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@anatine/zod-mock@^3.8.1":
-  version "3.8.1"
-  resolved "https://registry.yarnpkg.com/@anatine/zod-mock/-/zod-mock-3.8.1.tgz#5a4b3794e1712c5240fb4a45f29bca39f56e0aa7"
-  integrity sha512-3YPoPGJdeQ0tTuy326FOdffiiCHobhAEUDKe4RRgE/jPMUXMY3mvhkiUP/DpHpr07UpN3FrPmf/FJ4dVcQ0ubg==
+"@anatine/zod-mock@^3.8.3":
+  version "3.8.3"
+  resolved "https://registry.yarnpkg.com/@anatine/zod-mock/-/zod-mock-3.8.3.tgz#35e5a0b886a9a659d7fe95ca4cb5a2d70b1293ad"
+  integrity sha512-4PahKRxoyiz/xZulb0E/uzC2D6dD133l1XdIoW1B7HDFc++he+miOAIbEa+FRS2d3K7/S1ZI7KHaP4bTbIBozQ==
   dependencies:
     randexp "^0.5.3"
 
