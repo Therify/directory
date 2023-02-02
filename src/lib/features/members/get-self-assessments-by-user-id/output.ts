@@ -1,8 +1,8 @@
-import { SelfAssessmentSchema } from '@/lib/schema';
+import { SelfAssessment } from '@/lib/types';
 import * as z from 'zod';
 
 export const schema = z.object({
-    selfAssessments: z.array(SelfAssessmentSchema),
+    selfAssessments: SelfAssessment.schema.array(),
     errors: z.array(z.string()),
 });
 

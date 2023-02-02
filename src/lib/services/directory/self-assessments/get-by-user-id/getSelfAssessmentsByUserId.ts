@@ -1,4 +1,5 @@
 import { GetSelfAssessmentsByUserId } from '@/lib/features/members';
+import { SelfAssessment } from '@/lib/types';
 import { Role } from '@prisma/client';
 import { DirectoryServiceParams } from '../../params';
 
@@ -17,8 +18,11 @@ export const factory =
             select: {
                 roles: true,
                 selfAssessments: {
+                    orderBy: {
+                        createdAt: 'desc',
+                    },
                     skip: options?.skip,
-                    take: options?.take ?? 10,
+                    take: options?.take ?? 1,
                 },
             },
         });
@@ -27,8 +31,6 @@ export const factory =
         }
 
         return {
-            selfAssessments:
-                // TODO: FIX THIS
-                selfAssessments as GetSelfAssessmentsByUserId.Output['selfAssessments'],
+            selfAssessments: selfAssessments.map(SelfAssessment.validate),
         };
     };

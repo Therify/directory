@@ -29,6 +29,7 @@ export const useSelfAssessments = (
 
     return {
         selfAssessments: data?.selfAssessments ?? null,
+        mostRecentSelfAssessment: data?.selfAssessments?.[0] ?? null,
         isLoading,
         isRefetching,
         refetch,

@@ -6,6 +6,7 @@ export const schema = z.object({
         .object({
             skip: z.number().optional(),
             take: z.number().optional(),
+            getMostRecent: z.boolean().optional(),
         })
         .optional(),
 });
