@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TwoColumnGrid } from '@/components/ui/Grids/TwoColumnGrid';
 import {
     Caption,
@@ -51,29 +51,19 @@ export default function Home() {
 
     if (user) {
         const [role] = user.roles;
-        if (user.plan === null) {
+        if (role === Role.member) {
+            router.push(URL_PATHS.MEMBERS.HOME);
+        } else if (user.plan === null) {
             router.push(URL_PATHS.PROVIDERS.ONBOARDING.BILLING);
-        }
-        if (role === Role.provider_therapist) {
+        } else if (role === Role.provider_therapist) {
             router.push(URL_PATHS.PROVIDERS.THERAPIST.DASHBOARD);
         } else if (role === Role.provider_coach) {
             router.push(URL_PATHS.PROVIDERS.COACH.DASHBOARD);
         }
-        return (
-            <CenteredContainer fillSpace padding={8}>
-                <Paragraph>{JSON.stringify({ user })}</Paragraph>
-                <Paragraph>{JSON.stringify({ auth0User: user })}</Paragraph>
-                <Button
-                    fullWidth
-                    onClick={() => router.push(URL_PATHS.AUTH.LOGOUT)}
-                >
-                    Logout
-                </Button>
-            </CenteredContainer>
-        );
     }
+
     return (
-        <LoadingContainer isLoading={isLoading}>
+        <LoadingContainer isLoading={isLoading || Boolean(user)}>
             <TwoColumnGrid
                 fillSpace
                 leftColumnSize={6}
