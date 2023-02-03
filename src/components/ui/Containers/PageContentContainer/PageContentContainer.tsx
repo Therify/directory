@@ -15,8 +15,9 @@ const fullWidthStyles = {
 
 export const PageContentContainer = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'fillContentSpace',
-})<{ fillContentSpace?: boolean }>(({ theme, fillContentSpace }) => ({
+})<{ fillContentSpace?: boolean }>(({ fillContentSpace }) => ({
     display: 'flex',
     flexGrow: 1,
+    flexDirection: 'column',
     ...(fillContentSpace ? fullWidthStyles : maxWidthStyles),
 }));

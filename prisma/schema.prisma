@@ -219,6 +219,10 @@ model PracticeProviderInvitation {
 //license/npi numbers and types
 model ProviderProfile {
   id                         String                       @id @default(cuid()) @map("provider_profile_id")
+  givenName                  String                       @map("given_name")
+  surname                    String                       @map("surname")
+  contactEmail               String                       @map("contact_email")
+  slug                       String
   createdAt                  DateTime                     @default(now()) @map("created_at")
   updatedAt                  DateTime?                    @updatedAt @map("updated_at")
   user                       User?                        @relation(fields: [userId], references: [id])
