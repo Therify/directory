@@ -13,7 +13,7 @@ import { GetPracticeByUserId } from './get-practice-by-user-id';
 import { HandlePracticeOnboarding } from './handle-practice-onboarding';
 import { registerMember } from './register-member';
 import { Billing } from './billing';
-import { GetUserDetailsByAuth0Id } from './get-user-details-by-auth0-id';
+import { GetUserDetailsById } from './get-user-details-by-id';
 import { CreateFirebaseAuthToken } from './create-firebase-auth-token';
 import { GetProviderProfileByUserId } from './get-provider-profile-by-user-id';
 import { GetAccountByRegistrationCode } from './get-account-by-registration-code';
@@ -31,7 +31,7 @@ export const AccountsService = {
     sendEmailVerification: SendEmailVerification.factory(factoryParams),
     getVerificationEmailStatus:
         GetVerificationEmailStatus.factory(factoryParams),
-    getUserDetailsByAuth0Id: GetUserDetailsByAuth0Id.factory(factoryParams),
+    getUserDetailsById: GetUserDetailsById.factory(factoryParams),
     getPracticeByUserId: GetPracticeByUserId.factory(factoryParams),
     handlePracticeOnboarding: HandlePracticeOnboarding.factory(factoryParams),
     registerMember: registerMember,

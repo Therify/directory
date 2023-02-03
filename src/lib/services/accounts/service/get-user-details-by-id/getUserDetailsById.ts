@@ -1,12 +1,12 @@
-import { GetUserDetailsByAuth0Id } from '@/lib/features/users';
+import { GetUserDetailsById } from '@/lib/features/users';
 import { AccountsServiceParams } from '../params';
 
 export const factory =
     ({ prisma }: AccountsServiceParams) =>
     async ({
         userId,
-    }: GetUserDetailsByAuth0Id.Input): Promise<
-        Omit<GetUserDetailsByAuth0Id.Output, 'firebaseToken' | 'errors'>
+    }: GetUserDetailsById.Input): Promise<
+        Omit<GetUserDetailsById.Output, 'firebaseToken' | 'errors'>
     > => {
         const { plans, ...user } = await prisma.user.findUniqueOrThrow({
             where: {

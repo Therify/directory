@@ -1,17 +1,17 @@
 import { Context } from '@/lib/server/context';
-import { GetUserDetailsByAuth0Id } from '@/lib/features/users';
+import { GetUserDetailsById } from '@/lib/features/users';
 import { ProcedureResolver } from '@trpc/server/dist/declarations/src/internals/procedure';
 
 export const resolve: ProcedureResolver<
     Context,
-    GetUserDetailsByAuth0Id.Input,
-    GetUserDetailsByAuth0Id.Output
-> = async function resolveGetUserDetailsByAuth0Id({
+    GetUserDetailsById.Input,
+    GetUserDetailsById.Output
+> = async function resolveGetUserDetailsById({
     input,
     ctx,
-}): Promise<GetUserDetailsByAuth0Id.Output> {
+}): Promise<GetUserDetailsById.Output> {
     try {
-        const { user } = await ctx.accounts.getUserDetailsByAuth0Id(input);
+        const { user } = await ctx.accounts.getUserDetailsById(input);
         let firebaseToken: string | undefined;
         if (user)
             firebaseToken = await ctx.accounts.createFirebaseAuthToken({

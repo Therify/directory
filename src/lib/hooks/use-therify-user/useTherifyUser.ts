@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { GetUserDetailsByAuth0Id } from '@/lib/features/users';
+import { GetUserDetailsById } from '@/lib/features/users';
 import { TherifyUser } from '@/lib/context';
 
 export const useTherifyUser = () => {
@@ -15,4 +15,4 @@ export const useTherifyUser = () => {
     };
 };
 
-export type TherifyUser = GetUserDetailsByAuth0Id.Output['user'];
+export type TherifyUser = GetUserDetailsById.Output['user'];

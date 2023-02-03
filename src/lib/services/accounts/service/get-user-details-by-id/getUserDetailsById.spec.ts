@@ -1,6 +1,6 @@
 import { Plan, PlanStatus, User } from '@prisma/client';
 import { prismaMock } from '@/lib/prisma/__mock__';
-import * as GetUserDetailsByAuth0Id from './getUserDetailsByAuth0Id';
+import * as GetUserDetailsById from './getUserDetailsById';
 import { AccountsServiceParams } from '../params';
 
 const mockUserResult = {
@@ -24,16 +24,16 @@ const mockUserResult = {
     ],
 } as unknown as User & { plans: Plan[] };
 
-describe('GetUserDetailsByAuth0Id', function () {
+describe('GetUserDetailsById', function () {
     const userId = 'auth0|123';
     it('references newest plan', async function () {
         prismaMock.user.findUniqueOrThrow.mockResolvedValue(mockUserResult);
-        const getUserDetailsByAuth0Id = GetUserDetailsByAuth0Id.factory({
+        const getUserDetailsById = GetUserDetailsById.factory({
             prisma: prismaMock,
         } as unknown as AccountsServiceParams);
 
         await expect(
-            getUserDetailsByAuth0Id({
+            getUserDetailsById({
                 userId,
             })
         ).resolves.toEqual({
@@ -63,12 +63,12 @@ describe('GetUserDetailsByAuth0Id', function () {
             ...mockUserResult,
             plans: [],
         } as unknown as User);
-        const getUserDetailsByAuth0Id = GetUserDetailsByAuth0Id.factory({
+        const getUserDetailsById = GetUserDetailsById.factory({
             prisma: prismaMock,
         } as unknown as AccountsServiceParams);
 
         await expect(
-            getUserDetailsByAuth0Id({
+            getUserDetailsById({
                 userId,
             })
         ).resolves.toEqual({

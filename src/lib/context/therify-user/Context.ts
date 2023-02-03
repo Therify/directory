@@ -1,9 +1,9 @@
-import { GetUserDetailsByAuth0Id } from '@/lib/features/users';
+import { GetUserDetailsById } from '@/lib/features/users';
 import { trpc } from '@/lib/utils/trpc';
 import { createContext } from 'react';
 
 interface TherifyUserContext {
-    user: GetUserDetailsByAuth0Id.Output['user'];
+    user: GetUserDetailsById.Output['user'];
     isLoading: boolean;
     errorMessage?: string;
     isRefetching: boolean;
