@@ -1,8 +1,7 @@
-import Stripe from 'stripe';
 import * as z from 'zod';
-import { stripeCustomerSchema } from '../../../types';
+import { StripeCustomer } from '../../../types';
 
-export const schema = stripeCustomerSchema;
+export const schema = StripeCustomer.schema;
 
 export type Output = z.infer<typeof schema>;
 

@@ -1,7 +1,7 @@
 import * as z from 'zod';
-import { stripeProductSchema } from '../../../types';
+import { StripeProduct } from '../../../types';
 
-export const schema = stripeProductSchema
+export const schema = StripeProduct.schema
     .extend({
         name: z.string(),
     })

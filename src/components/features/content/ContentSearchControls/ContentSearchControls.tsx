@@ -4,10 +4,6 @@ import { Box, Chip } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 import {
-    Collections,
-    Spa,
-    Stream,
-    Map,
     CollectionsOutlined,
     SpaOutlined,
     StreamOutlined,
@@ -74,7 +70,7 @@ export function ContentSearchControls() {
                             id="All content"
                             placeholder="Filter by"
                             fullWidth
-                            selectedValue={selectedContentFilter}
+                            value={selectedContentFilter}
                             onChange={(value) => {
                                 setSelectedContentFilter(
                                     value as typeof CONTENT_FILTER[keyof typeof CONTENT_FILTER]

@@ -27,12 +27,12 @@ export const factory: CreateTherifyUserEntityFactory = ({
 
             const createdUser = await prisma.user.create({
                 data: {
+                    id: auth0Id,
                     emailAddress,
                     givenName,
                     surname,
                     dateOfBirth,
                     hasAcceptedTermsAndConditions,
-                    auth0Id,
                     roles: [role],
                 },
             });

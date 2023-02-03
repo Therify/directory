@@ -29,17 +29,19 @@ export const SecondaryTopBar = ({
     return (
         <TopBar
             rightSlot={
-                <SecondaryNavigationControls
-                    onShowNotifications={onShowNotifications}
-                    notificationCount={notificationCount}
-                    isMobileWidth={isMobileWidth}
-                    toggleMobileMenu={toggleMobileMenu}
-                    currentPath={currentPath}
-                    menu={menu}
-                    onNavigate={onNavigate}
-                    user={user}
-                    isLoadingUser={isLoadingUser}
-                />
+                user && (
+                    <SecondaryNavigationControls
+                        onShowNotifications={onShowNotifications}
+                        notificationCount={notificationCount}
+                        isMobileWidth={isMobileWidth}
+                        toggleMobileMenu={toggleMobileMenu}
+                        currentPath={currentPath}
+                        menu={menu}
+                        onNavigate={onNavigate}
+                        user={user}
+                        isLoadingUser={isLoadingUser}
+                    />
+                )
             }
         />
     );

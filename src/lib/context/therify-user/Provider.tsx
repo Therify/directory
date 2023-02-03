@@ -16,9 +16,9 @@ export const Provider = ({ children }: { children: ReactNode }) => {
         refetch,
     } = trpc.useQuery(
         [
-            'accounts.users.get-user-details-by-auth0-id',
+            'accounts.users.get-user-details-by-user-id',
             {
-                auth0Id: auth0User?.sub ?? '',
+                userId: auth0User?.sub ?? '',
             },
         ],
         {

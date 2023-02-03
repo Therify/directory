@@ -18,6 +18,7 @@ export interface DirectoryCardProps {
     providerImageURL: string;
     providerRate: string;
     isFavorite: boolean;
+    onClick?: () => void;
 }
 
 export function DirectoryCard({
@@ -26,9 +27,10 @@ export function DirectoryCard({
     providerImageURL,
     providerRate,
     isFavorite,
+    onClick = () => {},
 }: DirectoryCardProps) {
     return (
-        <Card sx={{ maxWidth: 338 }}>
+        <Card>
             <CardMedia
                 component="img"
                 height={50}
@@ -59,7 +61,9 @@ export function DirectoryCard({
                     </Stack>
                 </CardContent>
                 <CardActions>
-                    <Button fullWidth>View</Button>
+                    <Button fullWidth onClick={onClick}>
+                        View
+                    </Button>
                 </CardActions>
             </Box>
         </Card>
@@ -82,6 +86,8 @@ interface CardIconProps extends IconProps {
     isFavorite?: boolean;
 }
 
-const CardIcon = styled(Icon)<CardIconProps>(({ theme, isFavorite }) => ({
+const CardIcon = styled(Icon, {
+    shouldForwardProp: (prop) => prop !== 'isFavorite',
+})<CardIconProps>(({ theme, isFavorite }) => ({
     color: isFavorite ? theme.palette.error.main : theme.palette.grey[500],
 }));

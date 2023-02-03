@@ -6,7 +6,6 @@ export const schema = z.object({
     user: z
         .object({
             userId: UserSchema.shape.id,
-            auth0Id: UserSchema.shape.auth0Id,
             emailAddress: UserSchema.shape.emailAddress,
             avatarUrl: z.string().optional(),
             givenName: UserSchema.shape.givenName,

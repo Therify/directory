@@ -1,3 +1,7 @@
+import {
+    DirectoryCard,
+    MockDirectoryCardProps,
+} from '@/components/features/directory/DirectoryCard';
 import { Select } from '@/components/ui/FormElements/Select';
 import { TopNavigationLayout } from '@/components/ui/Layout';
 import { PageHeader } from '@/components/ui/PageHeader';
@@ -6,6 +10,7 @@ import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import { styled } from '@mui/material/styles';
 import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/navigation';
 
 const STATES = ['New York', 'New Jersey'] as const;
 
@@ -14,6 +19,7 @@ interface Props {
 }
 
 function Directory({ results }: Props) {
+    const router = useRouter();
     return (
         <TopNavigationLayout navigationSlot={<TopBar />}>
             <Container>
@@ -39,7 +45,17 @@ function Directory({ results }: Props) {
                         </FilterSection>
                     }
                 />
-                <ResultsSection></ResultsSection>
+                <ResultsSection>
+                    {Array.from({ length: 10 }).map((_, i) => (
+                        <DirectoryCard
+                            key={i}
+                            onClick={() => {
+                                router.push(`/directory/${i}`);
+                            }}
+                            {...MockDirectoryCardProps}
+                        />
+                    ))}
+                </ResultsSection>
             </Container>
         </TopNavigationLayout>
     );
@@ -47,12 +63,20 @@ function Directory({ results }: Props) {
 
 const FilterSection = styled(Box)(({ theme }) => ({}));
 
-const ResultsSection = styled(Box)(({ theme }) => ({}));
+const ResultsSection = styled(Box)(({ theme }) => ({
+    display: 'grid',
+    gridGap: theme.spacing(4),
+    width: '100%',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+    padding: theme.spacing(4),
+}));
 
 const Container = styled(Box)(({ theme }) => ({
     maxWidth: theme.breakpoints.values.lg,
+    height: '100%',
     margin: '0 auto',
     padding: theme.spacing(4),
+    overflowY: 'auto',
 }));
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {

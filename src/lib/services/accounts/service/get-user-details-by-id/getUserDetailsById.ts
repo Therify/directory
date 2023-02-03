@@ -1,20 +1,16 @@
-import { GetUserDetailsByAuth0Id } from '@/lib/features/users';
+import { GetUserDetailsById } from '@/lib/features/users';
 import { AccountsServiceParams } from '../params';
 
 export const factory =
     ({ prisma }: AccountsServiceParams) =>
     async ({
-        auth0Id,
-    }: GetUserDetailsByAuth0Id.Input): Promise<
-        Omit<GetUserDetailsByAuth0Id.Output, 'firebaseToken' | 'errors'>
+        userId,
+    }: GetUserDetailsById.Input): Promise<
+        Omit<GetUserDetailsById.Output, 'firebaseToken' | 'errors'>
     > => {
-        const {
-            plans,
-            id: userId,
-            ...user
-        } = await prisma.user.findUniqueOrThrow({
+        const { plans, ...user } = await prisma.user.findUniqueOrThrow({
             where: {
-                auth0Id,
+                id: userId,
             },
             select: {
                 id: true,
@@ -46,7 +42,6 @@ export const factory =
             user: {
                 ...user,
                 userId,
-                auth0Id,
                 isPracticeAdmin: userId === newestPlan?.billingUserId,
                 plan: newestPlan
                     ? {

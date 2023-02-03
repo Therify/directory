@@ -19,7 +19,7 @@ interface SecondaryNavigationControlsProps {
     currentPath: string;
     menu: NavigationLink[];
     onNavigate: (path: string) => void;
-    user: TherifyUser;
+    user?: TherifyUser;
     isLoadingUser: boolean;
     withTherifyWebsiteLink?: boolean;
 }
@@ -43,7 +43,7 @@ export const SecondaryNavigationControls = ({
     withTherifyWebsiteLink,
 }: SecondaryNavigationControlsProps) => {
     const theme = useTheme();
-    if (isLoadingUser) {
+    if (isLoadingUser || !user) {
         return null;
     }
     return (

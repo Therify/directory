@@ -12,17 +12,7 @@ export const TopNavigationBar: StoryFn = () => {
     return <TopNavigationBarUi {...mockTopNavigationBarProps} />;
 };
 export const TopNavigationBarLoggedIn: StoryFn = () => {
-    return (
-        <TopNavigationBarUi
-            {...mockTopNavigationBarProps}
-            user={{
-                roles: ['provider_therapist'],
-                userId: 'test-user-id',
-                email: 'test@therify.co',
-                plan: null,
-            }}
-        />
-    );
+    return <TopNavigationBarUi {...mockTopNavigationBarProps} />;
 };
 export const TopNavigationBarLoadingUser: StoryFn = () => {
     return <TopNavigationBarUi {...mockTopNavigationBarProps} isLoadingUser />;
