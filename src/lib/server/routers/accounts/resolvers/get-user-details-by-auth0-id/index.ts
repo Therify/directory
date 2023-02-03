@@ -1,1 +1,1 @@
-export { resolve as getUserDetailsByAuth0IdResolver } from './resolver';
+export { resolve as getUserDetailsByIdResolver } from './resolver';
