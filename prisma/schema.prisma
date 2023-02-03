@@ -76,14 +76,6 @@ enum ListingStatus {
 }
 
 model DirectoryListing {
-  <<<<<<< HEAD
-  id                String          @id @default(cuid())
-  practice          Practice        @relation(fields: [practiceId], references: [id])
-  practiceId        String          @map("practice_id")
-  profile           ProviderProfile @relation(fields: [profileId], references: [id])
-  profileId         String          @map("profile_id")
-  status            ListingStatus
-  =======
   practice          Practice        @relation(fields: [practiceId], references: [id])
   practiceId        String          @map("practice_id")
   profile           ProviderProfile @relation(fields: [providerProfileId], references: [id])
@@ -91,7 +83,6 @@ model DirectoryListing {
   status            ListingStatus
   createdAt         DateTime        @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt         DateTime        @updatedAt @map("updated_at")
-  >>>>>>> 7b33ea1dccb1739db73a26d18451cae30a60a48d
 
   @@index([practiceId, providerProfileId])
   @@map("directory_listings")
@@ -231,43 +222,44 @@ enum ProfileType {
 //credentialing,
 //license/npi numbers and types
 model ProviderProfile {
-  id                         String            @id @default(cuid()) @map("provider_profile_id")
-  givenName                  String            @map("given_name")
-  surname                    String            @map("surname")
-  contactEmail               String            @map("contact_email")
+  id                         String                       @id @default(cuid()) @map("provider_profile_id")
+  givenName                  String                       @map("given_name")
+  surname                    String                       @map("surname")
+  contactEmail               String                       @map("contact_email")
   slug                       String
-  createdAt                  DateTime          @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt                  DateTime          @updatedAt @map("updated_at") @db.Timestamp(6)
-  user                       User?             @relation(fields: [userId], references: [id])
-  userId                     String?           @unique @map("user_id")
-  bio                        String?           @db.Text
+  createdAt                  DateTime                     @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt                  DateTime                     @updatedAt @map("updated_at") @db.Timestamp(6)
+  user                       User?                        @relation(fields: [userId], references: [id])
+  userId                     String?                      @unique @map("user_id")
+  bio                        String?                      @db.Text
   licenses                   String[]
-  npiNumber                  String            @map("npi_number")
-  offersSlidingScale         Boolean           @map("offers_sliding_scale")
-  profileImageUrl            String?           @map("profile_image_url")
-  yearsOfExperience          String            @map("years_of_experience")
-  minimumRate                Int               @map("minimum_rate")
-  maximumRate                Int?              @map("maximum_rate")
-  idealClientDescription     String?           @map("ideal_client_description") @db.Text
-  practiceNotes              String?           @map("practice_notes")
+  npiNumber                  String?                      @map("npi_number")
+  offersSlidingScale         Boolean                      @map("offers_sliding_scale")
+  profileImageUrl            String?                      @map("profile_image_url")
+  yearsOfExperience          String                       @map("years_of_experience")
+  minimumRate                Int                          @map("minimum_rate")
+  maximumRate                Int?                         @map("maximum_rate")
+  idealClientDescription     String?                      @map("ideal_client_description") @db.Text
+  practiceNotes              String?                      @map("practice_notes")
   gender                     String
-  acceptedInsurances         String[]          @map("accepted_insurances")
-  licensedStates             String[]          @map("licensed_states")
+  acceptedInsurances         String[]                     @map("accepted_insurances")
+  licensedStates             String[]                     @map("licensed_states")
   specialties                String[]
   ethnicity                  String[]
-  communitiesServed          String[]          @map("communities_served")
+  communitiesServed          String[]                     @map("communities_served")
   religions                  String[]
-  evidenceBasedPractices     String[]          @map("evidence_based_practices")
+  evidenceBasedPractices     String[]                     @map("evidence_based_practices")
   modalities                 String[]
-  languagesSpoken            String[]          @map("languages_spoken")
+  languagesSpoken            String[]                     @map("languages_spoken")
   pronouns                   String
-  ageGroups                  String[]          @map("age_groups")
-  offersInPerson             Boolean           @map("offers_in_person")
-  offersMedicationManagement Boolean           @map("offers_medication_management")
-  offersPhoneConsultations   Boolean           @map("offers_phone_consultations")
-  offersVirtual              Boolean           @default(true) @map("offers_virtual")
-  profileType                ProfileType       @map("profile_type")
+  ageGroups                  String[]                     @map("age_groups")
+  offersInPerson             Boolean                      @map("offers_in_person")
+  offersMedicationManagement Boolean                      @map("offers_medication_management")
+  offersPhoneConsultations   Boolean                      @map("offers_phone_consultations")
+  offersVirtual              Boolean                      @default(true) @map("offers_virtual")
+  profileType                ProfileType                  @map("profile_type")
   directoryListing           DirectoryListing?
+  PracticeProviderInvitation PracticeProviderInvitation[]
 
   @@map("provider_profiles")
 }
