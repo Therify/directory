@@ -20,12 +20,12 @@ export const createTherifyUserEntity: RegisterMemberTransaction['CREATE_THERIFY_
                 });
                 const newUser = await orm.user.create({
                     data: {
+                        id: auth0UserId,
                         emailAddress: input.emailAddress,
                         givenName: input.givenName,
                         surname: input.surname,
                         dateOfBirth: input.dateOfBirth,
                         hasAcceptedTermsAndConditions: true,
-                        auth0Id: auth0UserId,
                         accountId: account.id,
                         roles: [input.role],
                         memberProfile: {
@@ -42,12 +42,12 @@ export const createTherifyUserEntity: RegisterMemberTransaction['CREATE_THERIFY_
             }
             const newUser = await orm.user.create({
                 data: {
+                    id: auth0UserId,
                     emailAddress: input.emailAddress,
                     givenName: input.givenName,
                     surname: input.surname,
                     dateOfBirth: input.dateOfBirth,
                     hasAcceptedTermsAndConditions: true,
-                    auth0Id: auth0UserId,
                     roles: [input.role],
                     memberProfile: {
                         create: {

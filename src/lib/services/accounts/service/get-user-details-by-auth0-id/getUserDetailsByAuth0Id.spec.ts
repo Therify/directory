@@ -4,7 +4,7 @@ import * as GetUserDetailsByAuth0Id from './getUserDetailsByAuth0Id';
 import { AccountsServiceParams } from '../params';
 
 const mockUserResult = {
-    id: 'test-user-id',
+    id: 'auth0|123',
     emailAddress: 'test@therify.co',
     roles: [],
     accountId: 'test',
@@ -19,13 +19,13 @@ const mockUserResult = {
             startDate: new Date('2021-03-01'),
             endDate: new Date('2021-04-01'),
             seats: 1,
-            billingUserId: 'test-user-id',
+            billingUserId: 'auth0|123',
         } as Plan,
     ],
 } as unknown as User & { plans: Plan[] };
 
 describe('GetUserDetailsByAuth0Id', function () {
-    const auth0Id = 'auth0|123';
+    const userId = 'auth0|123';
     it('references newest plan', async function () {
         prismaMock.user.findUniqueOrThrow.mockResolvedValue(mockUserResult);
         const getUserDetailsByAuth0Id = GetUserDetailsByAuth0Id.factory({
@@ -34,7 +34,7 @@ describe('GetUserDetailsByAuth0Id', function () {
 
         await expect(
             getUserDetailsByAuth0Id({
-                auth0Id,
+                userId,
             })
         ).resolves.toEqual({
             user: {
@@ -53,7 +53,7 @@ describe('GetUserDetailsByAuth0Id', function () {
                 givenName: mockUserResult.givenName,
                 surname: mockUserResult.surname,
                 createdAt: mockUserResult.createdAt,
-                auth0Id,
+                id: mockUserResult.id,
             },
         });
     });
@@ -69,10 +69,11 @@ describe('GetUserDetailsByAuth0Id', function () {
 
         await expect(
             getUserDetailsByAuth0Id({
-                auth0Id,
+                userId,
             })
         ).resolves.toEqual({
             user: {
+                id: mockUserResult.id,
                 plan: null,
                 userId: mockUserResult.id,
                 emailAddress: mockUserResult.emailAddress,
@@ -82,7 +83,6 @@ describe('GetUserDetailsByAuth0Id', function () {
                 surname: mockUserResult.surname,
                 createdAt: mockUserResult.createdAt,
                 isPracticeAdmin: false,
-                auth0Id,
             },
         });
     });
