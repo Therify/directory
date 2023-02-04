@@ -6,19 +6,28 @@ import { Select } from '@/components/ui/FormElements/Select';
 import { TopNavigationLayout } from '@/components/ui/Layout';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { TopBar } from '@/components/ui/TopBar';
+import { prisma } from '@/lib/prisma';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import { styled } from '@mui/material/styles';
+import { ProviderProfile } from '@prisma/client';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/navigation';
 
 const STATES = ['New York', 'New Jersey'] as const;
 
+type JSONSafeProviderProfile = Omit<
+    ProviderProfile,
+    'createdAt' | 'updatedAt'
+> & {
+    createdAt: string;
+    updatedAt: string;
+};
 interface Props {
-    results: Record<string, unknown>[];
+    results: JSONSafeProviderProfile[];
 }
 
-function Directory({ results }: Props) {
+function Directory({ results = [] }: Props) {
     const router = useRouter();
     return (
         <TopNavigationLayout navigationSlot={<TopBar />}>
@@ -46,13 +55,17 @@ function Directory({ results }: Props) {
                     }
                 />
                 <ResultsSection>
-                    {Array.from({ length: 10 }).map((_, i) => (
+                    {results.map((profile) => (
                         <DirectoryCard
-                            key={i}
+                            key={profile.id}
                             onClick={() => {
-                                router.push(`/directory/${i}`);
+                                router.push(`/directory/${profile.id}`);
                             }}
-                            {...MockDirectoryCardProps}
+                            providerName={`${profile.givenName} ${profile.surname}`}
+                            providerCredentials={''}
+                            providerImageURL={profile.profileImageUrl}
+                            providerRate={profile.minimumRate}
+                            isFavorite={false}
                         />
                     ))}
                 </ResultsSection>
@@ -80,9 +93,15 @@ const Container = styled(Box)(({ theme }) => ({
 }));
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
+    const providerProfile = await prisma.providerProfile.findMany();
+    const results = providerProfile.map((profile) => ({
+        ...profile,
+        createdAt: profile.createdAt.toISOString(),
+        updatedAt: profile.updatedAt.toISOString(),
+    }));
     return {
         props: {
-            results: [],
+            results,
         },
     };
 };
