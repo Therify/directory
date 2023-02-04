@@ -2,9 +2,9 @@ import { HandlePracticeOnboarding } from '@/lib/features/onboarding';
 
 import { HandlePracticeOnboardingTransaction } from './definition';
 
-export const factory = ({
-    auth0UserId,
-}: HandlePracticeOnboarding.Input): HandlePracticeOnboardingTransaction['defendAgainstDuplicatePlans'] => ({
+export const factory = (
+    input: HandlePracticeOnboarding.Input
+): HandlePracticeOnboardingTransaction['defendAgainstDuplicatePlans'] => ({
     async commit({ prisma }, { getUserDetails: { userId } }) {
         const plan = await prisma.plan.findFirst({
             where: {
