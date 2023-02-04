@@ -51,7 +51,7 @@ export default function PracticeOnboardingPage() {
         [
             'accounts.users.get-practice-by-user-id',
             {
-                auth0Id: user?.sub ?? '',
+                userId: user?.sub ?? '',
             },
         ],
         {
@@ -89,7 +89,7 @@ export default function PracticeOnboardingPage() {
 
     useEffect(() => {
         if (user?.sub) {
-            practiceDetailsForm.setValue('auth0UserId', user.sub);
+            practiceDetailsForm.setValue('id', user.sub);
         }
     }, [practiceDetailsForm, user?.sub]);
 

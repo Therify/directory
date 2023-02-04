@@ -6,14 +6,12 @@ export const step: RegisterProviderTransaction['updateUserEntity'] = {
         {
             createStripeCustomer: { customerId: stripeCustomerId },
             createTherifyUserEntity: { therifyUserId: id },
-            createAuth0User: { auth0UserId: auth0Id },
         }
     ) {
         const { id: userBillingProviderEntityId } = await prisma.user.update({
             where: { id },
             data: {
                 stripeCustomerId,
-                auth0Id,
             },
         });
         return {

@@ -3,13 +3,13 @@ import { HandlePracticeOnboarding } from '@/lib/features/onboarding';
 import { HandlePracticeOnboardingTransaction } from './definition';
 
 export const factory = ({
-    auth0UserId,
+    id,
 }: HandlePracticeOnboarding.Input): HandlePracticeOnboardingTransaction['getUserDetails'] => ({
     async commit({ prisma }) {
         const { stripeCustomerId, id: userId } =
             await prisma.user.findUniqueOrThrow({
                 where: {
-                    auth0Id: auth0UserId,
+                    id,
                 },
                 select: {
                     stripeCustomerId: true,

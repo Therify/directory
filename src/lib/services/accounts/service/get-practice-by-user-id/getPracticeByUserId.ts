@@ -4,13 +4,13 @@ import { AccountsServiceParams } from '../params';
 export const factory =
     ({ prisma }: AccountsServiceParams) =>
     async ({
-        auth0Id,
+        userId,
     }: GetPracticeByUserId.Input): Promise<{
         practice: GetPracticeByUserId.Output['practice'];
     }> => {
         const { practice } = await prisma.user.findUniqueOrThrow({
             where: {
-                auth0Id,
+                id: userId,
             },
             select: {
                 practice: true,
