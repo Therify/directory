@@ -219,16 +219,19 @@ enum ProfileType {
 //license/npi numbers and types
 model ProviderProfile {
   id                         String            @id @default(cuid()) @map("provider_profile_id")
+  givenName                  String            @map("given_name")
+  surname                    String            @map("surname")
+  contactEmail               String            @map("contact_email")
   createdAt                  DateTime          @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt                  DateTime          @updatedAt @map("updated_at") @db.Timestamp(6)
   user                       User?             @relation(fields: [userId], references: [id])
   userId                     String?           @unique @map("user_id")
   bio                        String?           @db.Text
   licenses                   String[]
-  npiNumber                  String            @map("npi_number")
-  offersSlidingScale         Boolean           @map("offers_sliding_scale")
+  npiNumber                  String?           @map("npi_number")
+  offersSlidingScale         Boolean           @default(false) @map("offers_sliding_scale")
   profileImageUrl            String?           @map("profile_image_url")
-  yearsOfExperience          String            @map("years_of_experience")
+  yearsOfExperience          String?           @map("years_of_experience")
   minimumRate                Int               @map("minimum_rate")
   maximumRate                Int?              @map("maximum_rate")
   idealClientDescription     String?           @map("ideal_client_description") @db.Text
@@ -245,12 +248,13 @@ model ProviderProfile {
   languagesSpoken            String[]          @map("languages_spoken")
   pronouns                   String
   ageGroups                  String[]          @map("age_groups")
-  offersInPerson             Boolean           @map("offers_in_person")
-  offersMedicationManagement Boolean           @map("offers_medication_management")
-  offersPhoneConsultations   Boolean           @map("offers_phone_consultations")
+  offersInPerson             Boolean           @default(false) @map("offers_in_person")
+  offersMedicationManagement Boolean           @default(false) @map("offers_medication_management")
+  offersPhoneConsultations   Boolean           @default(false) @map("offers_phone_consultations")
   offersVirtual              Boolean           @default(true) @map("offers_virtual")
-  profileType                ProfileType       @map("profile_type")
+  designation                ProfileType       @map("profile_type")
   directoryListing           DirectoryListing?
+  practiceStartDate          DateTime?         @map("practice_start_date") @db.Timestamp(6)
 
   @@map("provider_profiles")
 }
