@@ -12,12 +12,14 @@ import { H4 } from '@/components/ui/Typography/Headers';
 import { Subhead } from '@/components/ui/Typography/Subhead';
 import { Button } from '@/components/ui/Button';
 
+export const DEFAULT_PROFILE_IMAGE_URL =
+    'https://res.cloudinary.com/dbrkfldqn/image/upload/v1675367176/app.therify.co/placeholders/profile_placeholder_aacskl.png' as const;
 export interface DirectoryCardProps {
     providerName: string;
     providerCredentials: string;
-    providerImageURL: string;
-    providerRate: string;
-    isFavorite: boolean;
+    providerImageURL: string | null;
+    providerRate: number;
+    isFavorite?: boolean;
     onClick?: () => void;
 }
 
@@ -26,7 +28,7 @@ export function DirectoryCard({
     providerCredentials,
     providerImageURL,
     providerRate,
-    isFavorite,
+    isFavorite = false,
     onClick = () => {},
 }: DirectoryCardProps) {
     return (
@@ -35,7 +37,7 @@ export function DirectoryCard({
                 component="img"
                 height={50}
                 sx={{ objectFit: 'cover', maxHeight: 236 }}
-                image={providerImageURL}
+                image={providerImageURL ?? DEFAULT_PROFILE_IMAGE_URL}
             />
             <Box sx={{ padding: 2 }}>
                 <CardContent>

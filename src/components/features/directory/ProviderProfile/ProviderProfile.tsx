@@ -12,7 +12,6 @@ import {
     ChairOutlined,
     PeopleOutlined,
     PublicOutlined,
-    SchoolOutlined,
     TransgenderOutlined,
     TranslateOutlined,
     VideoCameraFrontOutlined,
@@ -29,9 +28,12 @@ interface ProviderProfileProps {
     state?: string;
     acceptedInsurances?: string[];
     specialties?: string[];
-    bio?: string;
+    bio?: string | null;
     offersInPerson?: boolean;
     offersVirtual?: boolean;
+    gender?: string;
+    ethnicity?: string[];
+    languages?: string[];
 }
 
 export function ProviderProfile({
@@ -45,6 +47,9 @@ export function ProviderProfile({
     bio = `Lorem ipsum dolor sit amet, consectetur adipiscing elit`,
     offersInPerson = false,
     offersVirtual = false,
+    gender = 'Undisclosed',
+    ethnicity = [],
+    languages = ['English'],
 }: ProviderProfileProps) {
     const isSmallScreen = useMediaQuery((theme: Theme) =>
         theme.breakpoints.down('sm')
@@ -155,7 +160,9 @@ export function ProviderProfile({
                     >
                         About Me
                     </Paragraph>
-                    <Paragraph sx={{ whiteSpace: 'pre-line' }}>{bio}</Paragraph>
+                    <AttributeText sx={{ whiteSpace: 'pre-line' }}>
+                        {bio}
+                    </AttributeText>
                     <Divider />
                     <Paragraph
                         size={PARAGRAPH_SIZE.LARGE}
@@ -164,40 +171,47 @@ export function ProviderProfile({
                         More about {givenName}
                     </Paragraph>
                     <ul>
-                        <ProviderAttribute>
+                        {/* Todo! We don't currently capture this information */}
+                        {/* <ProviderAttribute>
                             <SchoolOutlined />
                             <Paragraph>
                                 Education: MA (Master of Arts) at Oakland
                                 University
                             </Paragraph>
-                        </ProviderAttribute>
+                        </ProviderAttribute> */}
                         <ProviderAttribute>
                             <BadgeOutlined />
-                            <Paragraph>License type: LPC</Paragraph>
+                            <AttributeText>License type: LPC</AttributeText>
                         </ProviderAttribute>
                         <ProviderAttribute>
                             <TransgenderOutlined />
-                            <Paragraph>Gender: Female</Paragraph>
+                            <AttributeText>Gender: {gender}</AttributeText>
                         </ProviderAttribute>
-                        <ProviderAttribute>
-                            <PublicOutlined />
-                            <Paragraph>Ethnicity: Caucasian</Paragraph>
-                        </ProviderAttribute>
+                        {ethnicity.length && (
+                            <ProviderAttribute>
+                                <PublicOutlined />
+                                <AttributeText>
+                                    Ethnicity: {ethnicity.join(', ')}
+                                </AttributeText>
+                            </ProviderAttribute>
+                        )}
                         <ProviderAttribute>
                             <TranslateOutlined />
-                            <Paragraph>Languages: English</Paragraph>
+                            <AttributeText>
+                                Languages: {languages.join(', ')}
+                            </AttributeText>
                         </ProviderAttribute>
                         <ProviderAttribute>
                             <PeopleOutlined />
-                            <Paragraph>
+                            <AttributeText>
                                 Works with: Adolescents, Adults, and Seniors
-                            </Paragraph>
+                            </AttributeText>
                         </ProviderAttribute>
                         <ProviderAttribute>
                             <AutoFixHighOutlined />
-                            <Paragraph>
+                            <AttributeText>
                                 Specialties: {specialties.join(', ')}
-                            </Paragraph>
+                            </AttributeText>
                         </ProviderAttribute>
                     </ul>
                 </ProviderDetails>
@@ -265,4 +279,8 @@ const ProviderAttribute = styled('li')(({ theme }) => ({
     [`& > *:first-of-type`]: {
         marginRight: theme.spacing(4),
     },
+}));
+
+const AttributeText = styled(Paragraph)(({ theme }) => ({
+    maxWidth: '65ch',
 }));
