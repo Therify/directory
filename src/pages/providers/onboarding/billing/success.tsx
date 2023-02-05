@@ -71,11 +71,7 @@ export default function BillingSuccessPage() {
             user?.plan?.status === PlanStatus.active ||
             user?.plan?.status === PlanStatus.trialing
         ) {
-            router.push(
-                user.roles.includes(Role.provider_therapist)
-                    ? URL_PATHS.PROVIDERS.THERAPIST.DASHBOARD
-                    : URL_PATHS.PROVIDERS.COACH.DASHBOARD
-            );
+            router.push(URL_PATHS.ROOT);
         }
     }, [user?.plan, router, user?.roles]);
 
