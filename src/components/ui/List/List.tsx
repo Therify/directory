@@ -22,7 +22,6 @@ export const List = ({ withItemSeparator, ...props }: ListProps) => {
 const ListWrapper = styled(MuiList, {
     shouldForwardProp: (prop) => prop !== 'withItemSeparator',
 })<{ withItemSeparator?: boolean }>(({ theme, withItemSeparator }) => ({
-    padding: theme.spacing(0, 4.5),
     ...(withItemSeparator
         ? {
               '& li': {
