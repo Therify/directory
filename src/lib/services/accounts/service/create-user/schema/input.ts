@@ -4,7 +4,6 @@ import * as z from 'zod';
 export const schema = UserSchema.omit({
     createdAt: true,
     updatedAt: true,
-    id: true,
 })
     .extend({
         password: z.string().min(8),
