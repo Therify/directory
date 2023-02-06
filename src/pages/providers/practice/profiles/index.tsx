@@ -379,7 +379,7 @@ const TitleContainer = styled(Box)(({ theme }) => ({
     alignItems: 'flex-start',
     justifyContent: 'space-between',
     width: '100%',
-    marginBottom: theme.spacing(4),
+    marginBottom: theme.spacing(10),
     '& div:first-child': {
         flex: 1,
     },
