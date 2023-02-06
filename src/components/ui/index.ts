@@ -15,6 +15,7 @@ export {
     TEST_IDS as BADGE_TEST_IDS,
 } from './Badge';
 export { BlockQuote, BLOCK_QUOTE_SIZE } from './BlockQuote';
+export { CallToActionCard } from './CallToActionCard';
 export { Carousel } from './Carousel';
 export { IconWithBadge } from './IconWithBadge';
 export { Button, BUTTON_SIZE, BUTTON_TYPE, IconButton } from './Button';
