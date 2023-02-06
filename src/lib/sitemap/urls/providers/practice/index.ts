@@ -3,5 +3,5 @@ export const PRACTICE_PATHS = {
     CLIENTS: '/providers/practice/clients',
     PROFILES: '/providers/practice/profiles',
     PROFILES_CREATE: '/providers/practice/profiles/create',
-    PROFILE_EDITOR: '/providers/practice/profile/editor',
+    PROFILE_EDITOR: '/providers/practice/profiles/editor',
 } as const;
