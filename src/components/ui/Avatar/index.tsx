@@ -57,7 +57,6 @@ export const Avatar = ({
             src={src}
             alt={alt ?? 'user avatar'}
             sx={{
-                marginTop: theme.spacing(2),
                 width: theme.spacing(size),
                 height: theme.spacing(size),
                 backgroundColor: palette[50],

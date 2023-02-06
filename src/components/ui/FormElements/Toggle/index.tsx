@@ -1,11 +1,11 @@
 import {
-    Checkbox,
+    Checkbox as MuiCheckbox,
     FormControlLabel,
     FormControlLabelProps as MuiFormControlLabelProps,
-    Radio,
+    Radio as MuiRadio,
 } from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
-import { Switch } from './Switch';
+import { Switch as SwitchUi } from './Switch';
 import { MuiColor } from './types';
 
 export const TEST_IDS = {
@@ -18,7 +18,7 @@ export const enum ToggleType {
     Switch = 'switch',
 }
 
-export interface ToggleProps {
+interface BaseToggleProps {
     displayText?: React.ReactNode;
     uncheckedColor?: MuiColor;
     checkedColor?: MuiColor;
@@ -26,17 +26,20 @@ export interface ToggleProps {
     switchSize?: { trackHeight?: number; borderSize?: number };
 }
 
+export type ToggleProps = BaseToggleProps &
+    Omit<MuiFormControlLabelProps, 'label' | 'control'>;
+
 const getControlElement = (type: ToggleType) => {
     switch (type) {
         case ToggleType.Radio:
-            return Radio;
+            return MuiRadio;
 
         case ToggleType.Switch:
-            return Switch;
+            return SwitchUi;
 
         case ToggleType.Checkbox:
         default:
-            return Checkbox;
+            return MuiCheckbox;
     }
 };
 
@@ -47,7 +50,7 @@ export const Toggle = ({
     checkedColor,
     switchSize,
     ...formControlLabelProps
-}: ToggleProps & Omit<MuiFormControlLabelProps, 'label' | 'control'>) => {
+}: ToggleProps) => {
     const ControlEl = getControlElement(type);
     return (
         <StyledFormControlLabel
@@ -72,6 +75,17 @@ export const Toggle = ({
     );
 };
 
+export const Switch = (props: Omit<ToggleProps, 'type'>) => (
+    <Toggle type={ToggleType.Switch} {...props} />
+);
+export const Checkbox = (props: Omit<ToggleProps, 'type'>) => (
+    <Toggle type={ToggleType.Checkbox} {...props} />
+);
+
+export const Radio = (props: Omit<ToggleProps, 'type'>) => (
+    <Toggle type={ToggleType.Radio} {...props} />
+);
+
 const StyledFormControlLabel = styled(FormControlLabel, {
     shouldForwardProp: (prop) =>
         'uncheckedColor' !== prop && 'checkedColor' !== prop,
@@ -95,8 +109,13 @@ const StyledFormControlLabel = styled(FormControlLabel, {
         ? theme.palette[uncheckedColor].main
         : theme.palette.primary.main;
     return {
+        '&.MuiFormControlLabel-root': {
+            marginLeft: 0,
+            marginRight: 0,
+        },
         '& .MuiCheckbox-root, & .MuiRadio-root': {
             borderRadius: theme.shape.borderRadius,
+            margin: 0,
             '&:hover': {
                 backgroundColor: alpha(
                     checked ? checkedFill : uncheckedHoverColor,
