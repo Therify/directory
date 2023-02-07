@@ -8,26 +8,29 @@ import {
     PRACTICE_ADMIN_MOBILE_MENU,
     URL_PATHS,
 } from '@/lib/sitemap';
-import { useTherifyUser } from '@/lib/hooks';
 import { RBAC } from '@/lib/utils';
 import { useEffect } from 'react';
 import { Role } from '@prisma/client';
+import { ProvidersService } from '@/lib/services/providers';
+import { ProviderDashboardProps } from '@/lib/services/providers/dashboard/get-dashboard-props/getDashboardProps';
 
 export const getServerSideProps = RBAC.requireProviderAuth(
-    withPageAuthRequired()
+    withPageAuthRequired({
+        getServerSideProps: ProvidersService.getDashboardProps,
+    })
 );
 
-export default function PracticeDashboardPage() {
-    const { user, isLoading } = useTherifyUser();
+export default function PracticeDashboardPage(props: ProviderDashboardProps) {
+    console.log('props', props);
     const router = useRouter();
     useEffect(() => {
-        if (user?.isPracticeAdmin === false) {
+        if (user.isPracticeAdmin === false) {
             const isTherapist = user.roles.includes(Role.provider_therapist);
             isTherapist
                 ? router.push(URL_PATHS.PROVIDERS.THERAPIST.DASHBOARD)
                 : router.push(URL_PATHS.PROVIDERS.COACH.DASHBOARD);
         }
-    }, [router, user?.isPracticeAdmin, user?.roles]);
+    }, [router, user.isPracticeAdmin, user.roles]);
     return (
         <SideNavigationPage
             currentPath={URL_PATHS.PROVIDERS.PRACTICE.DASHBOARD}
@@ -36,7 +39,7 @@ export default function PracticeDashboardPage() {
             primaryMenu={[...PRACTICE_ADMIN_MAIN_MENU]}
             secondaryMenu={[...PRACTICE_ADMIN_SECONDARY_MENU]}
             mobileMenu={[...PRACTICE_ADMIN_MOBILE_MENU]}
-            isLoadingUser={isLoading}
+            isLoadingUser={false}
         >
             <H1>Practice Dashboard</H1>
         </SideNavigationPage>

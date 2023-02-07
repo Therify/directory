@@ -1,4 +1,4 @@
-import { GetServerSideProps, GetServerSidePropsResult } from 'next';
+import { GetServerSideProps } from 'next';
 import { SelfAssessment } from '@prisma/client';
 import { TherifyUser } from '@/lib/types/therify-user';
 import { MembersServiceParams } from '../params';
@@ -31,7 +31,6 @@ export function factory({ prisma, accountService }: GetHomePageFactoryParams) {
                 },
             }),
         ]);
-        console.info('user', user);
         return {
             props: { selfAssessments, user: JSON.parse(JSON.stringify(user)) },
         };
