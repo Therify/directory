@@ -30,7 +30,11 @@ export const getServerSideProps = RBAC.requireMemberAuth(
     })
 );
 
-function Directory({ providerProfiles = [], user }: DirectoryPageProps) {
+function Directory({
+    providerProfiles = [],
+    user,
+    favoriteProfiles,
+}: DirectoryPageProps) {
     const router = useRouter();
     return (
         <MemberNavigationPage
@@ -54,7 +58,7 @@ function Directory({ providerProfiles = [], user }: DirectoryPageProps) {
                             providerCredentials={''}
                             providerImageURL={profile.profileImageUrl}
                             providerRate={profile.minimumRate}
-                            isFavorite={false}
+                            isFavorite={favoriteProfiles[profile.id] ?? false}
                         />
                     ))}
                 </ResultsSection>

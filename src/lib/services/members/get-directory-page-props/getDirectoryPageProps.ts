@@ -12,6 +12,9 @@ interface GetDirectoryPageProps extends MembersServiceParams {
 export interface DirectoryPageProps {
     providerProfiles: ProviderProfile[];
     user: TherifyUser.TherifyUser;
+    favoriteProfiles: {
+        [profileId: string]: boolean;
+    };
 }
 
 export function factory({ prisma, accountService }: GetDirectoryPageProps) {
@@ -21,16 +24,30 @@ export function factory({ prisma, accountService }: GetDirectoryPageProps) {
         const session = await getSession(context.req, context.res);
         if (!session)
             throw Error('Failed fetching Home Page Props, session not found');
-        const [{ user }, providerProfiles] = await Promise.all([
-            accountService.getUserDetailsById({
-                userId: session.user.sub,
-            }),
-            prisma.providerProfile.findMany(),
-        ]);
+        const [{ user }, providerProfiles, memberFavorites] = await Promise.all(
+            [
+                accountService.getUserDetailsById({
+                    userId: session.user.sub,
+                }),
+                prisma.providerProfile.findMany(),
+                prisma.memberFavorites.findMany({
+                    where: {
+                        memberId: session.user.sub,
+                    },
+                }),
+            ]
+        );
         return {
             props: {
                 providerProfiles: JSON.parse(JSON.stringify(providerProfiles)),
                 user: JSON.parse(JSON.stringify(user)),
+                favoriteProfiles: memberFavorites.reduce(
+                    (acc, profile) => ({
+                        ...acc,
+                        [profile.profileId]: true,
+                    }),
+                    {}
+                ),
             },
         };
     };
