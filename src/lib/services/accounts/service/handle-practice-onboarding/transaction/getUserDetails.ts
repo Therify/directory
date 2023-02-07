@@ -3,7 +3,7 @@ import { HandlePracticeOnboarding } from '@/lib/features/onboarding';
 import { HandlePracticeOnboardingTransaction } from './definition';
 
 export const factory = ({
-    id,
+    userId: id,
 }: HandlePracticeOnboarding.Input): HandlePracticeOnboardingTransaction['getUserDetails'] => ({
     async commit({ prisma }) {
         const { stripeCustomerId, id: userId } =

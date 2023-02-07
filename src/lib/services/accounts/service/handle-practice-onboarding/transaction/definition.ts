@@ -12,6 +12,7 @@ export const transactionDefinition = z.object({
     }),
     handlePracticeEntity: z.object({
         practiceId: z.string(),
+        created: z.boolean(),
     }),
     createStripeCheckoutSession: z.object({
         checkoutSessionId: z.string(),
