@@ -4,7 +4,7 @@ import { Ethnicity } from '../ethnicity';
 import { Gender } from '../gender';
 import { Goal } from '../goals';
 import { Issue } from '../issues';
-import { Relgion } from '../religion';
+import { Religion } from '../religion';
 import { Language } from '../language';
 
 const basePreference = z.object({
@@ -24,7 +24,7 @@ const ethnicPreference = basePreference.extend({
 
 const religiousPreference = basePreference.extend({
     type: z.literal('religious'),
-    selection: Relgion.schema,
+    selection: Religion.schema,
 });
 
 const languagePreference = basePreference.extend({

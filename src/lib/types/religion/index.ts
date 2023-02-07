@@ -1,1 +1,1 @@
-export * as Relgion from './religion';
+export * as Religion from './religion';
