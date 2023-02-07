@@ -11,62 +11,107 @@ import Icon, { IconProps } from '@mui/material/Icon';
 import { H4 } from '@/components/ui/Typography/Headers';
 import { Subhead } from '@/components/ui/Typography/Subhead';
 import { Button } from '@/components/ui/Button';
+import { ProviderProfile } from '@prisma/client';
+import React from 'react';
 
 export const DEFAULT_PROFILE_IMAGE_URL =
     'https://res.cloudinary.com/dbrkfldqn/image/upload/v1675367176/app.therify.co/placeholders/profile_placeholder_aacskl.png' as const;
-export interface DirectoryCardProps {
-    providerName: string;
-    providerCredentials: string;
-    providerImageURL: string | null;
-    providerRate: number;
+
+type onFavoriteActionResult = (result: boolean) => void;
+export type DirectoryCardProps = {
     isFavorite?: boolean;
+    handleFavoriteClicked?: (
+        callback: React.Dispatch<React.SetStateAction<boolean>>
+    ) => () => void;
     onClick?: () => void;
+} & ProviderProfile;
+
+function formatProviderName({
+    givenName,
+    surname,
+}: Pick<ProviderProfile, 'givenName' | 'surname'>) {
+    return `${givenName} ${surname}`;
+}
+
+function formatProviderRate({
+    minimumRate,
+    maximumRate,
+}: Pick<ProviderProfile, 'minimumRate' | 'maximumRate'>) {
+    return maximumRate ? `${minimumRate} - ${maximumRate}` : minimumRate;
 }
 
 export function DirectoryCard({
-    providerName,
-    providerCredentials,
-    providerImageURL,
-    providerRate,
+    givenName,
+    surname,
+    profileImageUrl,
+    licenses,
+    minimumRate,
+    maximumRate,
     isFavorite = false,
-    onClick = () => {},
+    handleFavoriteClicked,
+    onClick,
 }: DirectoryCardProps) {
+    const [isProviderFavorite, setIsProviderFavorite] =
+        React.useState(isFavorite);
     return (
         <Card>
             <CardMedia
                 component="img"
                 height={50}
                 sx={{ objectFit: 'cover', maxHeight: 236 }}
-                image={providerImageURL ?? DEFAULT_PROFILE_IMAGE_URL}
+                image={profileImageUrl ?? DEFAULT_PROFILE_IMAGE_URL}
+                alt="Profile Image"
             />
             <Box sx={{ padding: 2 }}>
                 <CardContent>
                     <Stack direction="column">
                         <Stack direction="row" justifyContent={'space-between'}>
-                            <Box>${providerRate}</Box>
                             <Box>
-                                <CardIcon isFavorite={isFavorite}>
-                                    {isFavorite ? (
-                                        <Favorite />
-                                    ) : (
-                                        <FavoriteBorder />
-                                    )}
-                                </CardIcon>
+                                $
+                                {formatProviderRate({
+                                    minimumRate,
+                                    maximumRate,
+                                })}
                             </Box>
+                            {handleFavoriteClicked && (
+                                <Box>
+                                    <CardIcon
+                                        isFavorite={isProviderFavorite}
+                                        onClick={handleFavoriteClicked(
+                                            setIsProviderFavorite
+                                        )}
+                                    >
+                                        {isFavorite ? (
+                                            <Favorite />
+                                        ) : (
+                                            <FavoriteBorder />
+                                        )}
+                                    </CardIcon>
+                                </Box>
+                            )}
                         </Stack>
                         <Stack>
-                            <ProviderName>{providerName}</ProviderName>
-                            <ProviderCredentials>
-                                {providerCredentials}
-                            </ProviderCredentials>
+                            <ProviderName>
+                                {formatProviderName({
+                                    givenName,
+                                    surname,
+                                })}
+                            </ProviderName>
+                            {licenses && (
+                                <ProviderCredentials>
+                                    {licenses}
+                                </ProviderCredentials>
+                            )}
                         </Stack>
                     </Stack>
                 </CardContent>
-                <CardActions>
-                    <Button fullWidth onClick={onClick}>
-                        View
-                    </Button>
-                </CardActions>
+                {onClick && (
+                    <CardActions>
+                        <Button fullWidth onClick={onClick}>
+                            View
+                        </Button>
+                    </CardActions>
+                )}
             </Box>
         </Card>
     );
@@ -91,5 +136,10 @@ interface CardIconProps extends IconProps {
 const CardIcon = styled(Icon, {
     shouldForwardProp: (prop) => prop !== 'isFavorite',
 })<CardIconProps>(({ theme, isFavorite }) => ({
+    transition: 'transform 0.2s',
     color: isFavorite ? theme.palette.error.main : theme.palette.grey[500],
+    '&:hover': {
+        transform: 'scale(1.1)',
+        cursor: 'pointer',
+    },
 }));

@@ -7,6 +7,7 @@ import { AccountsService } from '../accounts';
 import { GetDirectoryPageProps } from './get-directory-page-props';
 import { GetDirectoryProfilePageProps } from './get-directory-profile-props';
 import { FavoriteProfile } from './favorite-profile';
+import { GetFavoritesPageProps } from './get-favorites-page-props';
 
 const factoryParams: MembersServiceParams = {
     prisma,
@@ -25,6 +26,10 @@ export const membersService = {
     getDirectoryProfilePageProps: GetDirectoryProfilePageProps.factory({
         ...factoryParams,
         accountService: AccountsService,
+    }),
+    getFavoritesPageProps: GetFavoritesPageProps.factory({
+        ...factoryParams,
+        accountsService: AccountsService,
     }),
     favoriteProfile: FavoriteProfile.factory(factoryParams),
 };

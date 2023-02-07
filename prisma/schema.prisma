@@ -260,6 +260,7 @@ model ProviderProfile {
   directoryListing           DirectoryListing?
   practiceStartDate          DateTime?                    @map("practice_start_date") @db.Timestamp(6)
   PracticeProviderInvitation PracticeProviderInvitation[]
+  memberFavorites            MemberFavorites[]
 
   @@map("provider_profiles")
 }
@@ -293,9 +294,10 @@ model SelfAssessment {
 }
 
 model MemberFavorites {
-  memberId  String   @map("member_id")
-  profileId String   @map("profile_id")
-  createdAt DateTime @default(now()) @map("created_at")
+  memberId        String          @map("member_id")
+  profileId       String          @map("profile_id")
+  providerProfile ProviderProfile @relation(fields: [profileId], references: [id])
+  createdAt       DateTime        @default(now()) @map("created_at")
 
   @@id([memberId, profileId])
   @@map("member_favorites")

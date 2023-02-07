@@ -2,6 +2,7 @@ import * as z from 'zod';
 
 export const schema = z.object({
     success: z.boolean(),
+    isFavorite: z.boolean(),
     error: z.string().optional(),
 });
 

@@ -12,9 +12,7 @@ interface GetDirectoryPageProps extends MembersServiceParams {
 export interface DirectoryPageProps {
     providerProfiles: ProviderProfile[];
     user: TherifyUser.TherifyUser;
-    favoriteProfiles: {
-        [profileId: string]: boolean;
-    };
+    favoriteProfiles: ProviderProfile[];
 }
 
 export function factory({ prisma, accountService }: GetDirectoryPageProps) {
@@ -34,6 +32,9 @@ export function factory({ prisma, accountService }: GetDirectoryPageProps) {
                     where: {
                         memberId: session.user.sub,
                     },
+                    include: {
+                        providerProfile: true,
+                    },
                 }),
             ]
         );
@@ -41,12 +42,12 @@ export function factory({ prisma, accountService }: GetDirectoryPageProps) {
             props: {
                 providerProfiles: JSON.parse(JSON.stringify(providerProfiles)),
                 user: JSON.parse(JSON.stringify(user)),
-                favoriteProfiles: memberFavorites.reduce(
-                    (acc, profile) => ({
-                        ...acc,
-                        [profile.profileId]: true,
-                    }),
-                    {}
+                favoriteProfiles: JSON.parse(
+                    JSON.stringify(
+                        memberFavorites.map(
+                            (favorite) => favorite.providerProfile
+                        )
+                    )
                 ),
             },
         };

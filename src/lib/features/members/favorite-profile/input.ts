@@ -3,6 +3,7 @@ import * as z from 'zod';
 export const schema = z.object({
     memberId: z.string(),
     profileId: z.string(),
+    isFavorite: z.boolean(),
 });
 
 export type Input = z.infer<typeof schema>;
