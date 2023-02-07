@@ -291,3 +291,12 @@ model SelfAssessment {
 
   @@map("self_assessments")
 }
+
+model MemberFavorites {
+  memberId  String   @map("member_id")
+  profileId String   @map("profile_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@id([memberId, profileId])
+  @@map("member_favorites")
+}
