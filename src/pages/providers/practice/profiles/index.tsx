@@ -380,7 +380,7 @@ const TitleContainer = styled(Box)(({ theme }) => ({
     justifyContent: 'space-between',
     width: '100%',
     marginBottom: theme.spacing(10),
-    '& div:first-child': {
+    '& div:first-of-type': {
         flex: 1,
     },
     '& div.admin-controls': {
