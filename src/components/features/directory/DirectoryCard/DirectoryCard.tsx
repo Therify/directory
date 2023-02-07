@@ -43,7 +43,7 @@ export function DirectoryCard({
                 <CardContent>
                     <Stack direction="column">
                         <Stack direction="row" justifyContent={'space-between'}>
-                            <Box>{providerRate}</Box>
+                            <Box>${providerRate}</Box>
                             <Box>
                                 <CardIcon isFavorite={isFavorite}>
                                     {isFavorite ? (

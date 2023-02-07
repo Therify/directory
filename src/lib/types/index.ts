@@ -13,3 +13,4 @@ export * from './issues';
 export * from './ethnicity';
 export * from './goals';
 export * from './language';
+export * from './therify-user';

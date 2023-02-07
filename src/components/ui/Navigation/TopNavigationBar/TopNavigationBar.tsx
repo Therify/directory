@@ -1,4 +1,4 @@
-import { TherifyUser } from '@/lib/hooks';
+import { TherifyUser } from '@/lib/types/therify-user';
 import { NavigationLink } from '@/lib/sitemap';
 import { useMediaQuery } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
@@ -15,7 +15,7 @@ export interface TopNavigationBarProps {
     notificationCount?: number;
     toggleMobileMenu: () => void;
     onNavigate: (path: string) => void;
-    user?: TherifyUser;
+    user?: TherifyUser.TherifyUser;
     isLoadingUser: boolean;
     withTherifyWebsiteLink?: boolean;
 }
