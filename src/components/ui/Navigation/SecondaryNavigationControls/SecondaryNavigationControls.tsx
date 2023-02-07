@@ -9,7 +9,7 @@ import { BUTTON_TYPE, IconButton, Button } from '../../Button';
 import { FloatingMenu } from '../FloatingMenu';
 import { Avatar } from '../../Avatar';
 import { NavigationLink, URL_PATHS } from '@/lib/sitemap';
-import { TherifyUser } from '@/lib/hooks';
+import { TherifyUser } from '@/lib/types/therify-user';
 
 interface SecondaryNavigationControlsProps {
     onShowNotifications?: () => void;
@@ -19,7 +19,7 @@ interface SecondaryNavigationControlsProps {
     currentPath: string;
     menu: NavigationLink[];
     onNavigate: (path: string) => void;
-    user?: TherifyUser;
+    user?: TherifyUser.TherifyUser;
     isLoadingUser: boolean;
     withTherifyWebsiteLink?: boolean;
 }

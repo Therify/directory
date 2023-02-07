@@ -16,7 +16,7 @@ export const FAVORITES: NavigationLink = {
 export const DIRECTORY: NavigationLink = {
     icon: NAVIGATION_ICON.CLIENTS,
     displayName: 'Directory',
-    path: URL_PATHS.DIRECTORY.ROOT,
+    path: URL_PATHS.DIRECTORY.MEMBER_DIRECTORY,
 } as const;
 
 export const CONTENT_LIBRARY: NavigationLink = {

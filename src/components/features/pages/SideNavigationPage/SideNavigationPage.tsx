@@ -76,7 +76,7 @@ export const SideNavigationPage = ({
         >
             {children}
             <NavigationDrawer
-                user={user}
+                user={user!}
                 currentPath={currentPath}
                 isOpen={isMobileMenuOpen}
                 onClose={() => setIsMobileMenuOpen(false)}

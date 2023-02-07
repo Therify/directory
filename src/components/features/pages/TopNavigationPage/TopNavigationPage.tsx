@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import { LogoutRounded as LogoutIcon } from '@mui/icons-material';
 import { styled, useTheme } from '@mui/material/styles';
 import { NavigationLink, URL_PATHS } from '@/lib/sitemap';
-import { TherifyUser } from '@/lib/hooks';
+import { TherifyUser } from '@/lib/types';
 import {
     Button,
     BUTTON_TYPE,
@@ -15,13 +15,13 @@ import {
 import { NotificationDrawer } from '../../in-app-notifications/ui';
 import { useInAppNotificationDrawer } from '../../in-app-notifications/hooks';
 
-interface TopNavigationPageProps {
+export interface TopNavigationPageProps {
     primaryMenu: NavigationLink[];
     secondaryMenu: NavigationLink[];
     mobileMenu: NavigationLink[];
     currentPath: string;
     onNavigate: (path: string) => void;
-    user?: TherifyUser;
+    user: TherifyUser.TherifyUser | null;
     isLoadingUser: boolean;
     children?: React.ReactNode;
 }
