@@ -28,6 +28,9 @@ export const BADGE_COLOR = {
     PRIMARY_LIGHT: 'primary-light',
     NEUTRAL: 'neutral',
     NEUTRAL_LIGHT: 'neutral-light',
+    SUCCESS: 'success',
+    WARNING: 'warning',
+    ERROR: 'error',
 } as const;
 
 export type BadgeColor = typeof BADGE_COLOR[keyof typeof BADGE_COLOR];
@@ -109,6 +112,43 @@ const getBadgeColor = ({
                     type === BADGE_TYPE.CONTAINED
                         ? colors.shades[0]
                         : colors.shades[100],
+            };
+
+        case BADGE_COLOR.SUCCESS:
+            return {
+                border: `1px solid ${colors.success[50]}`,
+                background:
+                    type === BADGE_TYPE.CONTAINED
+                        ? colors.success[50]
+                        : 'transparent',
+                color:
+                    type === BADGE_TYPE.CONTAINED
+                        ? colors.success[800]
+                        : colors.success[50],
+            };
+        case BADGE_COLOR.WARNING:
+            return {
+                border: `1px solid ${colors.warning[50]}`,
+                background:
+                    type === BADGE_TYPE.CONTAINED
+                        ? colors.warning[50]
+                        : 'transparent',
+                color:
+                    type === BADGE_TYPE.CONTAINED
+                        ? colors.warning[800]
+                        : colors.warning[50],
+            };
+        case BADGE_COLOR.ERROR:
+            return {
+                border: `1px solid ${colors.error[50]}`,
+                background:
+                    type === BADGE_TYPE.CONTAINED
+                        ? colors.error[50]
+                        : 'transparent',
+                color:
+                    type === BADGE_TYPE.CONTAINED
+                        ? colors.error[800]
+                        : colors.error[50],
             };
         case BADGE_COLOR.NEUTRAL_LIGHT:
         default:

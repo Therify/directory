@@ -15,14 +15,16 @@ export {
     TEST_IDS as BADGE_TEST_IDS,
 } from './Badge';
 export { BlockQuote, BLOCK_QUOTE_SIZE } from './BlockQuote';
+export { CallToActionCard } from './CallToActionCard';
 export { Carousel } from './Carousel';
 export { IconWithBadge } from './IconWithBadge';
 export { Button, BUTTON_SIZE, BUTTON_TYPE, IconButton } from './Button';
 export type { ButtonProps } from './Button';
 export { Card, TEST_IDS as CARD_TEST_IDS } from './Card';
-export { DataTable } from './DataTable';
+export { DataTable, DATA_TABLE_TYPE } from './DataTable';
 export type { DataTableHeader } from './DataTable';
 export { Divider } from './Divider';
+export { FloatingList } from './FloatingList';
 export * from './FormElements';
 export * from './Grids';
 export { Iframe } from './Iframe';
