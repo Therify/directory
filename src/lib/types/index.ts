@@ -12,3 +12,4 @@ export * from './gender';
 export * from './issues';
 export * from './ethnicity';
 export * from './goals';
+export * from './therify-user';

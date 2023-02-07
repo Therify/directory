@@ -2,13 +2,9 @@ import { vendorStripe as stripe } from '@/lib/vendors/stripe';
 import { AccountsService } from '@/lib/services/accounts';
 import { StripeWebhookParams } from './webhookParams';
 import { handleEventFactory } from './handle-event';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 
 export const STRIPE_WEBHOOK_IDENTIFIER = 'STRIPE_WEBHOOK';
-
-const prisma = new PrismaClient({
-    log: [{ level: 'query', emit: 'stdout' }],
-});
 
 const webhookContext: StripeWebhookParams = {
     stripe,
