@@ -13,15 +13,16 @@ import { Subhead } from '@/components/ui/Typography/Subhead';
 import { Button } from '@/components/ui/Button';
 import { ProviderProfile } from '@prisma/client';
 import React from 'react';
+import Lottie from 'react-lottie';
+import ANIMATION_DATA from './favoriteAnimation.json';
 
 export const DEFAULT_PROFILE_IMAGE_URL =
     'https://res.cloudinary.com/dbrkfldqn/image/upload/v1675367176/app.therify.co/placeholders/profile_placeholder_aacskl.png' as const;
 
-type onFavoriteActionResult = (result: boolean) => void;
 export type DirectoryCardProps = {
     isFavorite?: boolean;
     handleFavoriteClicked?: (
-        callback: React.Dispatch<React.SetStateAction<boolean>>
+        callback: (isFavorite: boolean) => void
     ) => () => void;
     onClick?: () => void;
 } & ProviderProfile;
@@ -40,6 +41,68 @@ function formatProviderRate({
     return maximumRate ? `${minimumRate} - ${maximumRate}` : minimumRate;
 }
 
+const DEFAULT_ANIMATION_OPTIONS = {
+    loop: false,
+    animationData: ANIMATION_DATA,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice',
+        overflow: 'visible',
+    },
+};
+
+interface RenderFavoriteAnimationProps {
+    isStopped: boolean;
+    isPaused: boolean;
+    callback: () => void;
+}
+function renderFavoriteAnimation({
+    isStopped,
+    isPaused,
+    callback,
+}: RenderFavoriteAnimationProps) {
+    return (
+        <Lottie
+            options={DEFAULT_ANIMATION_OPTIONS}
+            isStopped={isStopped}
+            isPaused={isPaused}
+            eventListeners={[
+                {
+                    eventName: 'complete',
+                    callback,
+                },
+            ]}
+        />
+    );
+}
+
+interface RenderFavoriteIconProps {
+    isFavorite: boolean;
+    isStopped: boolean;
+    isPaused: boolean;
+    callback: () => void;
+    isAnimating: boolean;
+}
+
+function renderFavoriteIcon({
+    isFavorite,
+    isPaused,
+    isStopped,
+    callback,
+    isAnimating,
+}: RenderFavoriteIconProps) {
+    if (isAnimating) {
+        return renderFavoriteAnimation({
+            isStopped,
+            isPaused,
+            callback,
+        });
+    }
+    if (isFavorite) {
+        return <Favorite />;
+    }
+    return <FavoriteBorder />;
+}
+
 export function DirectoryCard({
     givenName,
     surname,
@@ -53,6 +116,9 @@ export function DirectoryCard({
 }: DirectoryCardProps) {
     const [isProviderFavorite, setIsProviderFavorite] =
         React.useState(isFavorite);
+    const [isStopped, setIsStopped] = React.useState(false);
+    const [isPaused, setIsPaused] = React.useState(false);
+    const [isAnimating, setIsAnimating] = React.useState(false);
     return (
         <Card>
             <CardMedia
@@ -78,14 +144,31 @@ export function DirectoryCard({
                                     <CardIcon
                                         isFavorite={isProviderFavorite}
                                         onClick={handleFavoriteClicked(
-                                            setIsProviderFavorite
+                                            (isNowFavorited) => {
+                                                if (isNowFavorited) {
+                                                    setIsProviderFavorite(true);
+                                                    setIsStopped(false);
+                                                    setIsPaused(false);
+                                                    setIsAnimating(true);
+                                                }
+                                                setIsProviderFavorite(
+                                                    isNowFavorited
+                                                );
+                                            }
                                         )}
                                     >
-                                        {isFavorite ? (
-                                            <Favorite />
-                                        ) : (
-                                            <FavoriteBorder />
-                                        )}
+                                        {renderFavoriteIcon({
+                                            isFavorite: isProviderFavorite,
+                                            isStopped,
+                                            isPaused,
+                                            isAnimating,
+                                            callback: () => {
+                                                console.log('complete');
+                                                setIsAnimating(false);
+                                                setIsStopped(true);
+                                                setIsPaused(true);
+                                            },
+                                        })}
                                     </CardIcon>
                                 </Box>
                             )}
@@ -137,9 +220,23 @@ const CardIcon = styled(Icon, {
     shouldForwardProp: (prop) => prop !== 'isFavorite',
 })<CardIconProps>(({ theme, isFavorite }) => ({
     transition: 'transform 0.2s',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'visible',
     color: isFavorite ? theme.palette.error.main : theme.palette.grey[500],
     '&:hover': {
         transform: 'scale(1.1)',
         cursor: 'pointer',
+    },
+    '& > div[aria-label="animation"]': {
+        overflow: 'visible !important',
+        '& > svg': {
+            overflow: 'visible !important',
+            width: '75px !important',
+            height: '75px !important',
+            position: 'relative',
+            top: '-25px',
+        },
     },
 }));
