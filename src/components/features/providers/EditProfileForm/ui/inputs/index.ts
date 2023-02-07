@@ -16,5 +16,8 @@ export * from './Ethnicities';
 export * from './Religions';
 export * from './EvidenceBasedApproach';
 export * from './LanguagesSpoken';
+export * from './AgeGroupsServed';
+export * from './Modalities';
+export * from './CommunitiesServed';
 export { PricingInputs } from './Pricing';
 export * from './testIds';
