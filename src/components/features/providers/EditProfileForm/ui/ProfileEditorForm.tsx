@@ -26,6 +26,9 @@ import {
     ReligionsInput,
     EvidenceBasedApproachInput,
     LanguagesSpokenInput,
+    AgeGroupsServedServedInput,
+    ModalititesServedInput,
+    CommunitiesServedInput,
 } from './inputs';
 
 interface EditorFormProps {
@@ -141,14 +144,23 @@ export const ProfileEditorForm = ({
                     control={control}
                     defaultValue={defaultValues?.languagesSpoken}
                 />
+                <AgeGroupsServedServedInput
+                    control={control}
+                    defaultValue={defaultValues?.ageGroups}
+                />
+                <ModalititesServedInput
+                    control={control}
+                    defaultValue={defaultValues?.modalities}
+                />
+                <CommunitiesServedInput
+                    control={control}
+                    defaultValue={defaultValues?.communitiesServed}
+                />
                 {/*
                 TODO: Add these fields
                 licenses
                 yearsOfExperience
-                communitiesServed
-                modalities
-                ageGroups
-    practiceStartDate
+                practiceStartDate
     */}
 
                 {/* 
