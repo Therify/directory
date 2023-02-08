@@ -30,6 +30,7 @@ import {
     ModalititesServedInput,
     CommunitiesServedInput,
 } from './inputs';
+import { MediaUploadWidget } from '@/components/features/media';
 
 interface EditorFormProps {
     onSelectFile: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -48,7 +49,10 @@ export const ProfileEditorForm = ({
             <EditorForm>
                 <H1>Edit Profile</H1>
                 <Divider sx={{ mb: 4 }} />
-                <input type="file" onChange={onSelectFile} />
+                <MediaUploadWidget
+                    onUploadError={console.error}
+                    onUploadSuccess={console.log}
+                />
                 <DesignationInput
                     control={control}
                     defaultValue={defaultValues?.designation}

@@ -35,7 +35,7 @@ export function MediaUploadWidget({
     });
     return (
         <Box>
-            <Button ref={buttonRef} startIcon={<UploadFile />}>
+            <Button ref={buttonRef} startIcon={<UploadFile />} size="small">
                 Upload Image
             </Button>
         </Box>
