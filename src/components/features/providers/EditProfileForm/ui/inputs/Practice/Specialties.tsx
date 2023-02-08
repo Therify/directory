@@ -13,7 +13,7 @@ interface SpecialtiesInputProps {
 
 export const SpecialtiesInput = ({
     control,
-    defaultValue,
+    defaultValue = [],
     disabled,
 }: SpecialtiesInputProps) => (
     <Controller
@@ -27,8 +27,8 @@ export const SpecialtiesInput = ({
             <Autocomplete
                 multiple
                 options={AreaOfFocus.ENTRIES}
+                onChange={(_, value) => onChange(value)}
                 {...{
-                    onChange,
                     onBlur,
                     name,
                     disabled,

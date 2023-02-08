@@ -13,7 +13,7 @@ interface ReligionsInputProps {
 
 export const ReligionsInput = ({
     control,
-    defaultValue,
+    defaultValue = [],
     disabled,
 }: ReligionsInputProps) => (
     <Controller
@@ -27,8 +27,8 @@ export const ReligionsInput = ({
             <Autocomplete
                 multiple
                 options={Religion.ENTRIES}
+                onChange={(_, value) => onChange(value)}
                 {...{
-                    onChange,
                     onBlur,
                     name,
                     disabled,

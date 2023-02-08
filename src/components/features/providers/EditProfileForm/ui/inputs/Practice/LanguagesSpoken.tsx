@@ -13,7 +13,7 @@ interface LanguagesInputProps {
 
 export const LanguagesSpokenInput = ({
     control,
-    defaultValue,
+    defaultValue = [],
     disabled,
 }: LanguagesInputProps) => (
     <Controller
@@ -27,8 +27,8 @@ export const LanguagesSpokenInput = ({
             <Autocomplete
                 multiple
                 options={Language.ENTRIES}
+                onChange={(_, value) => onChange(value)}
                 {...{
-                    onChange,
                     onBlur,
                     name,
                     disabled,

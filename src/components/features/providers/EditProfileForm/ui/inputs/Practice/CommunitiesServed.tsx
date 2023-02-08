@@ -13,7 +13,7 @@ interface CommunitiesServedInputProps {
 
 export const CommunitiesServedInput = ({
     control,
-    defaultValue,
+    defaultValue = [],
     disabled,
 }: CommunitiesServedInputProps) => (
     <Controller
@@ -27,8 +27,8 @@ export const CommunitiesServedInput = ({
             <Autocomplete
                 multiple
                 options={CommunitiesServed.ENTRIES}
+                onChange={(_, value) => onChange(value)}
                 {...{
-                    onChange,
                     onBlur,
                     name,
                     disabled,

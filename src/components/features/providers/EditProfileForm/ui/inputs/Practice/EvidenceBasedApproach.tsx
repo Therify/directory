@@ -13,7 +13,7 @@ interface EvidenceBasedApproachInputProps {
 
 export const EvidenceBasedApproachInput = ({
     control,
-    defaultValue,
+    defaultValue = [],
     disabled,
 }: EvidenceBasedApproachInputProps) => (
     <Controller
@@ -27,8 +27,8 @@ export const EvidenceBasedApproachInput = ({
             <Autocomplete
                 multiple
                 options={EvidenceBasedApproach.ENTRIES}
+                onChange={(_, value) => onChange(value)}
                 {...{
-                    onChange,
                     onBlur,
                     name,
                     disabled,

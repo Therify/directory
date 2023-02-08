@@ -27,8 +27,8 @@ export const ModalititesServedInput = ({
             <Autocomplete
                 multiple
                 options={Modality.ENTRIES}
+                onChange={(_, value) => onChange(value)}
                 {...{
-                    onChange,
                     onBlur,
                     name,
                     disabled,

@@ -27,8 +27,8 @@ export const LicensedStatesInput = ({
             <Autocomplete
                 multiple
                 options={State.ENTRIES}
+                onChange={(_, value) => onChange(value)}
                 {...{
-                    onChange,
                     onBlur,
                     name,
                     disabled,

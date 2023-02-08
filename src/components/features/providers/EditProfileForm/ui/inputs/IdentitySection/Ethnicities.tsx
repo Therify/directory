@@ -13,31 +13,33 @@ interface EthnicitiesInputProps {
 
 export const EthnicitiesInput = ({
     control,
-    defaultValue,
+    defaultValue = [],
     disabled,
 }: EthnicitiesInputProps) => (
     <Controller
         control={control}
-        name="specialties"
+        name="ethnicity"
         defaultValue={defaultValue as Ethnicities[]}
         rules={{
             required: true,
         }}
-        render={({ field: { onChange, onBlur, value, name } }) => (
-            <Autocomplete
-                multiple
-                options={Ethnicity.ENTRIES}
-                {...{
-                    onChange,
-                    onBlur,
-                    name,
-                    disabled,
-                    value,
-                }}
-                renderInput={(params) => (
-                    <TextField {...params} label="Your Ethnicity" />
-                )}
-            />
-        )}
+        render={({ field: { onChange, onBlur, value, name } }) => {
+            return (
+                <Autocomplete
+                    multiple
+                    options={Ethnicity.ENTRIES}
+                    onChange={(_, value) => onChange(value)}
+                    {...{
+                        onBlur,
+                        name,
+                        value,
+                        disabled,
+                    }}
+                    renderInput={(params) => (
+                        <TextField {...params} label="Your Ethnicity" />
+                    )}
+                />
+            );
+        }}
     />
 );

@@ -12,22 +12,28 @@ import {
     CredentialsSection,
 } from './inputs';
 import { MediaUploadWidget } from '@/components/features/media';
+import { CloudinaryUploadResult } from '@/components/features/media/hooks/userCloudinaryWidget';
 
 interface EditorFormProps {
-    onSelectFile: (e: React.ChangeEvent<HTMLInputElement>) => void;
     control: Control<ProviderProfile>;
     defaultValues?: Partial<ProviderProfile>;
     offersSlidingScale?: boolean;
     isTherapist: boolean;
     minimumRate: number;
+    onImageUploadSuccess: (
+        error: Error | null,
+        result: CloudinaryUploadResult
+    ) => void;
+    onImageUploadError: (error: string | Error) => void;
 }
 export const ProfileEditorForm = ({
-    onSelectFile,
     control,
     defaultValues,
     offersSlidingScale,
     isTherapist,
     minimumRate,
+    onImageUploadSuccess,
+    onImageUploadError,
 }: EditorFormProps) => {
     return (
         <EditorContainer>
@@ -35,8 +41,8 @@ export const ProfileEditorForm = ({
                 <H1>Edit Profile</H1>
                 <Divider sx={{ mb: 4 }} />
                 <MediaUploadWidget
-                    onUploadError={console.error}
-                    onUploadSuccess={console.log}
+                    onUploadError={onImageUploadError}
+                    onUploadSuccess={onImageUploadSuccess}
                 />
                 <DesignationInput
                     control={control}
@@ -104,8 +110,6 @@ export const ProfileEditorForm = ({
                 {/*
                 TODO: Add these fields
                 licensese
-                yearsOfExperience
-                practiceStartDate
     */}
 
                 {/* 

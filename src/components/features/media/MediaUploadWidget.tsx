@@ -30,7 +30,9 @@ export function MediaUploadWidget({
                 onUploadSuccess(null, result);
                 return;
             }
-            onUploadError(error);
+            if (error) {
+                onUploadError(error);
+            }
         },
     });
     return (

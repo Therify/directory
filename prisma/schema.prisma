@@ -219,8 +219,6 @@ enum ProfileType {
   therapist
 }
 
-//credentialing,
-//license/npi numbers and types
 model ProviderProfile {
   id                         String                       @id @default(cuid()) @map("provider_profile_id")
   givenName                  String                       @map("given_name")

@@ -13,7 +13,7 @@ interface AgeGroupsServedInputProps {
 
 export const AgeGroupsServedServedInput = ({
     control,
-    defaultValue,
+    defaultValue = [],
     disabled,
 }: AgeGroupsServedInputProps) => (
     <Controller
@@ -27,8 +27,8 @@ export const AgeGroupsServedServedInput = ({
             <Autocomplete
                 multiple
                 options={AgeGroup.ENTRIES}
+                onChange={(_, value) => onChange(value)}
                 {...{
-                    onChange,
                     onBlur,
                     name,
                     disabled,

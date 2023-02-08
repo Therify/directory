@@ -27,8 +27,8 @@ export const AcceptedInsurancesInput = ({
             <Autocomplete
                 multiple
                 options={InsuranceProvider.ENTRIES}
+                onChange={(_, value) => onChange(value)}
                 {...{
-                    onChange,
                     onBlur,
                     name,
                     disabled,
