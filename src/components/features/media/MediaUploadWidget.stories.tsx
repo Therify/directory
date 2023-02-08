@@ -8,4 +8,9 @@ const meta: Meta<typeof MediaUploadWidget> = {
 
 export default meta;
 
-export const Default: StoryObj<typeof MediaUploadWidget> = {};
+export const Default: StoryObj<typeof MediaUploadWidget> = {
+    args: {
+        onUploadSuccess: console.log,
+        onUploadError: console.error,
+    },
+};
