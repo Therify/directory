@@ -1,19 +1,21 @@
 import { Control, Controller } from 'react-hook-form';
-import { Input } from '@/components/ui';
+import { Input, FormValidation } from '@/components/ui';
 import { ProviderProfile } from '@/lib/types/providerProfile';
 
-interface NpiNumberInputProps {
+interface GivenNameInputProps {
     control: Control<ProviderProfile>;
     defaultValue?: string;
+    disabled?: boolean;
 }
 
-export const NpiNumberInput = ({
+export const GivenNameInput = ({
     control,
     defaultValue = '',
-}: NpiNumberInputProps) => (
+    disabled,
+}: GivenNameInputProps) => (
     <Controller
         control={control}
-        name="npiNumber"
+        name="givenName"
         defaultValue={defaultValue}
         rules={{
             required: true,
@@ -23,18 +25,20 @@ export const NpiNumberInput = ({
             fieldState: { error, isTouched },
         }) => (
             <Input
+                required
                 fullWidth
-                id="npiNumber"
-                label="NPI Number"
-                // errorMessage={
-                //     isTouched
-                //         ? FormValidation.getNameValidationErrorMessage(
-                //               error?.type as FormValidation.NameValidationType,
-                //               'First Name'
-                //           )
-                //         : undefined
-                // }
+                id="givenName"
+                label="First Name"
+                errorMessage={
+                    isTouched
+                        ? FormValidation.getNameValidationErrorMessage(
+                              error?.type as FormValidation.NameValidationType,
+                              'First Name'
+                          )
+                        : undefined
+                }
                 {...{
+                    disabled,
                     onChange,
                     onBlur,
                     value,

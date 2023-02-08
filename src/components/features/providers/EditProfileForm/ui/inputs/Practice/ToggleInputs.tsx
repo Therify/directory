@@ -5,11 +5,13 @@ import { ProviderProfile } from '@/lib/types/providerProfile';
 interface ToggleInputProps {
     control: Control<ProviderProfile>;
     defaultValue?: boolean;
+    disabled?: boolean;
 }
 
 export const OffersInPersonToggle = ({
     control,
     defaultValue = false,
+    disabled,
 }: ToggleInputProps) => (
     <Controller
         control={control}
@@ -34,6 +36,7 @@ export const OffersInPersonToggle = ({
                 //         : undefined
                 // }
                 {...{
+                    disabled,
                     onChange,
                     onBlur,
                     value,
@@ -47,6 +50,7 @@ export const OffersInPersonToggle = ({
 export const OffersVirtualToggle = ({
     control,
     defaultValue = false,
+    disabled,
 }: ToggleInputProps) => (
     <Controller
         control={control}
@@ -64,6 +68,7 @@ export const OffersVirtualToggle = ({
                     onBlur,
                     value,
                     name,
+                    disabled,
                 }}
             />
         )}
@@ -72,6 +77,7 @@ export const OffersVirtualToggle = ({
 export const OffersMedicationManagement = ({
     control,
     defaultValue = false,
+    disabled,
 }: ToggleInputProps) => (
     <Controller
         control={control}
@@ -89,6 +95,7 @@ export const OffersMedicationManagement = ({
                     onBlur,
                     value,
                     name,
+                    disabled,
                 }}
             />
         )}
@@ -97,6 +104,7 @@ export const OffersMedicationManagement = ({
 export const OffersPhoneConsultations = ({
     control,
     defaultValue = false,
+    disabled,
 }: ToggleInputProps) => (
     <Controller
         control={control}
@@ -108,12 +116,13 @@ export const OffersPhoneConsultations = ({
         render={({ field: { onChange, onBlur, value, name } }) => (
             <Switch
                 id="offersPhoneConsultations"
-                displayText="Offer phone consultation?"
+                displayText="Offer free phone consultation?"
                 {...{
                     onChange,
                     onBlur,
                     value,
                     name,
+                    disabled,
                 }}
             />
         )}

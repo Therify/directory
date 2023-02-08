@@ -1,17 +1,37 @@
 import { TwoColumnGrid } from '../../../ui/Grids/TwoColumnGrid';
 import { useForm } from 'react-hook-form';
-import { AreaOfFocus, InsuranceProvider, Pronoun, State } from '@/lib/types';
+import {
+    AreaOfFocus,
+    InsuranceProvider,
+    Language,
+    Modality,
+    Pronoun,
+    AgeGroup,
+    State,
+} from '@/lib/types';
 import { useEffect, useState } from 'react';
 import { ProviderProfile as ProviderProfileUi } from '../../directory/ProviderProfile';
 import { ProfileEditorForm } from './ui/ProfileEditorForm';
 import { ProviderProfile } from '@/lib/types/providerProfile';
+import { ProfileType } from '@prisma/client';
 
 export function CreateOrUpdateProfile() {
     const providerProfileForm = useForm<ProviderProfile>({
         mode: 'onChange',
-        defaultValues: {},
+        defaultValues: {
+            designation: ProfileType.therapist,
+            minimumRate: 0,
+            languagesSpoken: [Language.MAP.ENGLISH],
+            modalities: [Modality.MAP.INDIVIDUALS],
+            ageGroups: [AgeGroup.MAP.ADULTS],
+        },
     });
     const offersSlidingScale = providerProfileForm.watch('offersSlidingScale');
+    const designation = providerProfileForm.watch('designation');
+    const minimumRate = parseInt(
+        providerProfileForm.watch('minimumRate')?.toString() ?? '0'
+    );
+
     const [givenName, setGivenName] = useState('John');
     const [surname, setSurname] = useState('Smith');
     const [bio, setBio] = useState('');
@@ -54,6 +74,8 @@ export function CreateOrUpdateProfile() {
                     offersSlidingScale={offersSlidingScale}
                     control={providerProfileForm.control}
                     defaultValues={{}}
+                    isTherapist={designation === ProfileType.therapist}
+                    minimumRate={minimumRate}
                 />
             }
             rightSlot={

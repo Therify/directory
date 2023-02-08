@@ -1,20 +1,21 @@
 import { Control, Controller } from 'react-hook-form';
 import { Input, FormValidation } from '@/components/ui';
-import { TEST_IDS } from './testIds';
 import { ProviderProfile } from '@/lib/types/providerProfile';
 
-interface GivenNameInputProps {
+interface SurnameInputProps {
     control: Control<ProviderProfile>;
     defaultValue?: string;
+    disabled?: boolean;
 }
 
-export const GivenNameInput = ({
+export const SurnameInput = ({
     control,
     defaultValue = '',
-}: GivenNameInputProps) => (
+    disabled,
+}: SurnameInputProps) => (
     <Controller
         control={control}
-        name="givenName"
+        name="surname"
         defaultValue={defaultValue}
         rules={{
             required: true,
@@ -26,19 +27,18 @@ export const GivenNameInput = ({
             <Input
                 required
                 fullWidth
-                id="givenName"
-                label="First Name"
+                id="surname"
+                label="Last Name"
                 errorMessage={
                     isTouched
                         ? FormValidation.getNameValidationErrorMessage(
                               error?.type as FormValidation.NameValidationType,
-                              'First Name'
+                              'Last Name'
                           )
                         : undefined
                 }
-                autoComplete="first-name"
-                data-testid={TEST_IDS.FIRST_NAME}
                 {...{
+                    disabled,
                     onChange,
                     onBlur,
                     value,

@@ -1,20 +1,21 @@
 import { Control, Controller } from 'react-hook-form';
-import { Input, FormValidation } from '@/components/ui';
-import { TEST_IDS } from './testIds';
+import { Input } from '@/components/ui';
 import { ProviderProfile } from '@/lib/types/providerProfile';
 
-interface SurnameInputProps {
+interface NpiNumberInputProps {
     control: Control<ProviderProfile>;
     defaultValue?: string;
+    disabled?: boolean;
 }
 
-export const SurnameInput = ({
+export const NpiNumberInput = ({
     control,
     defaultValue = '',
-}: SurnameInputProps) => (
+    disabled,
+}: NpiNumberInputProps) => (
     <Controller
         control={control}
-        name="surname"
+        name="npiNumber"
         defaultValue={defaultValue}
         rules={{
             required: true,
@@ -24,25 +25,23 @@ export const SurnameInput = ({
             fieldState: { error, isTouched },
         }) => (
             <Input
-                required
                 fullWidth
-                id="surname"
-                label="Last Name"
-                errorMessage={
-                    isTouched
-                        ? FormValidation.getNameValidationErrorMessage(
-                              error?.type as FormValidation.NameValidationType,
-                              'Last Name'
-                          )
-                        : undefined
-                }
-                autoComplete="last-name"
-                data-testid={TEST_IDS.LAST_NAME}
+                id="npiNumber"
+                label="NPI Number"
+                // errorMessage={
+                //     isTouched
+                //         ? FormValidation.getNameValidationErrorMessage(
+                //               error?.type as FormValidation.NameValidationType,
+                //               'First Name'
+                //           )
+                //         : undefined
+                // }
                 {...{
                     onChange,
                     onBlur,
                     value,
                     name,
+                    disabled,
                 }}
             />
         )}

@@ -30,13 +30,13 @@ export const PronounsInput = ({
             <Select
                 required
                 fullWidth
-                label="Your Pronouns"
+                label="Pronouns"
                 id="pronouns"
                 errorMessage={
                     isTouched
                         ? FormValidation.getNameValidationErrorMessage(
                               error?.type as FormValidation.NameValidationType,
-                              'State'
+                              'Pronouns'
                           )
                         : undefined
                 }

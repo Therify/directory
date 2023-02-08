@@ -1,32 +1,32 @@
 import { Control, Controller } from 'react-hook-form';
-import { Modality } from '@/lib/types';
+import { Religion } from '@/lib/types';
 import { Autocomplete, TextField } from '@mui/material';
 import { ProviderProfile } from '@/lib/types/providerProfile';
 
-type ModalityServed = typeof Modality.ENTRIES[number];
+type Religions = typeof Religion.ENTRIES[number];
 
-interface ModalitiesServedInputProps {
+interface ReligionsInputProps {
     control: Control<ProviderProfile>;
     defaultValue?: string[];
     disabled?: boolean;
 }
 
-export const ModalititesServedInput = ({
+export const ReligionsInput = ({
     control,
     defaultValue,
     disabled,
-}: ModalitiesServedInputProps) => (
+}: ReligionsInputProps) => (
     <Controller
         control={control}
-        name="ageGroups"
-        defaultValue={defaultValue as ModalityServed[]}
+        name="religions"
+        defaultValue={defaultValue as Religions[]}
         rules={{
             required: true,
         }}
         render={({ field: { onChange, onBlur, value, name } }) => (
             <Autocomplete
                 multiple
-                options={Modality.ENTRIES}
+                options={Religion.ENTRIES}
                 {...{
                     onChange,
                     onBlur,
@@ -35,7 +35,10 @@ export const ModalititesServedInput = ({
                     value,
                 }}
                 renderInput={(params) => (
-                    <TextField {...params} label="Modalities" />
+                    <TextField
+                        {...params}
+                        label="Religions incorperated into your practice"
+                    />
                 )}
             />
         )}

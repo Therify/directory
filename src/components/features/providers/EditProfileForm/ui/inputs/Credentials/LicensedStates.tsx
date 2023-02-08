@@ -1,32 +1,32 @@
 import { Control, Controller } from 'react-hook-form';
-import { Religion } from '@/lib/types';
+import { State } from '@/lib/types';
 import { Autocomplete, TextField } from '@mui/material';
 import { ProviderProfile } from '@/lib/types/providerProfile';
 
-type Religions = typeof Religion.ENTRIES[number];
+type LicensedState = typeof State.ENTRIES[number];
 
-interface ReligionsInputProps {
+interface StateInputProps {
     control: Control<ProviderProfile>;
-    defaultValue?: string[];
+    defaultValue?: LicensedState[];
     disabled?: boolean;
 }
 
-export const ReligionsInput = ({
+export const LicensedStatesInput = ({
     control,
     defaultValue,
     disabled,
-}: ReligionsInputProps) => (
+}: StateInputProps) => (
     <Controller
         control={control}
-        name="specialties"
-        defaultValue={defaultValue as Religions[]}
-        rules={{
-            required: true,
-        }}
+        name="licensedStates"
+        defaultValue={defaultValue}
+        // rules={{
+        //     required: true,
+        // }}
         render={({ field: { onChange, onBlur, value, name } }) => (
             <Autocomplete
                 multiple
-                options={Religion.ENTRIES}
+                options={State.ENTRIES}
                 {...{
                     onChange,
                     onBlur,
@@ -35,7 +35,7 @@ export const ReligionsInput = ({
                     value,
                 }}
                 renderInput={(params) => (
-                    <TextField {...params} label="Religions" />
+                    <TextField {...params} label="Licensed States" />
                 )}
             />
         )}

@@ -12,42 +12,41 @@ export const MaximumRateInput = ({
     control,
     defaultValue,
     minimumRate = 0,
-}: MaximumRateInputProps) => (
-    <Controller
-        control={control}
-        name="maximumRate"
-        defaultValue={defaultValue}
-        rules={{
-            required: true,
-            min: minimumRate,
-        }}
-        render={({
-            field: { onChange, onBlur, value, name },
-            fieldState: { error, isTouched },
-        }) => (
-            <Input
-                fullWidth
-                type="number"
-                id="maximumRate"
-                label="Maximum Rate"
-                errorMessage={
-                    isTouched
-                        ? FormValidation.Number.getNumberValidationErrorMessage(
-                              error?.type as FormValidation.Number.NumberValidationType,
-                              {
-                                  fieldName: 'Rate',
-                                  greaterThanThreshold: minimumRate,
-                              }
-                          )
-                        : undefined
-                }
-                {...{
-                    onChange,
-                    onBlur,
-                    value,
-                    name,
-                }}
-            />
-        )}
-    />
-);
+}: MaximumRateInputProps) => {
+    const minimumAcceptableRate = minimumRate + 5;
+    return (
+        <Controller
+            control={control}
+            name="maximumRate"
+            defaultValue={defaultValue ?? minimumRate + 40}
+            rules={{
+                required: true,
+                min: minimumAcceptableRate,
+            }}
+            render={({
+                field: { onChange, onBlur, value, name },
+                fieldState: { error },
+            }) => (
+                <Input
+                    fullWidth
+                    type="number"
+                    id="maximumRate"
+                    label="Maximum Rate"
+                    errorMessage={FormValidation.Number.getNumberValidationErrorMessage(
+                        error?.type as FormValidation.Number.NumberValidationType,
+                        {
+                            fieldName: 'Rate',
+                            greaterThanThreshold: minimumAcceptableRate,
+                        }
+                    )}
+                    {...{
+                        onChange,
+                        onBlur,
+                        value,
+                        name,
+                    }}
+                />
+            )}
+        />
+    );
+};

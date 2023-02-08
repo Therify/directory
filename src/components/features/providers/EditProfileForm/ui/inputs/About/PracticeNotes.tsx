@@ -2,33 +2,32 @@ import { Control, Controller } from 'react-hook-form';
 import { Textarea } from '@/components/ui';
 import { ProviderProfile } from '@/lib/types/providerProfile';
 
-interface IdealClientDescriptionInputProps {
+interface PracticeNotesInputProps {
     control: Control<ProviderProfile>;
     defaultValue?: string;
+    disabled?: boolean;
 }
 
-export const IdealClientDescriptionInput = ({
+export const PracticeNotesInput = ({
     control,
     defaultValue = '',
-}: IdealClientDescriptionInputProps) => (
+    disabled,
+}: PracticeNotesInputProps) => (
     <Controller
         control={control}
-        name="idealClientDescription"
+        name="practiceNotes"
         defaultValue={defaultValue}
-        render={({
-            field: { onChange, onBlur, value, name },
-            fieldState: { error, isTouched },
-        }) => (
+        render={({ field: { onChange, onBlur, value, name } }) => (
             <Textarea
-                required
                 fullWidth
-                id="idealClientDescription"
-                label="Ideal client description"
+                id="practiceNotes"
+                label="Tell us about your approach with your clients"
                 {...{
                     onChange,
                     onBlur,
                     value,
                     name,
+                    disabled,
                 }}
             />
         )}

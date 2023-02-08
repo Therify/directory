@@ -2,30 +2,32 @@ import { Control, Controller } from 'react-hook-form';
 import { Textarea } from '@/components/ui';
 import { ProviderProfile } from '@/lib/types/providerProfile';
 
-interface BioInputProps {
+interface IdealClientDescriptionInputProps {
     control: Control<ProviderProfile>;
     defaultValue?: string;
+    disabled?: boolean;
 }
 
-export const BioInput = ({ control, defaultValue = '' }: BioInputProps) => (
+export const IdealClientDescriptionInput = ({
+    control,
+    defaultValue = '',
+    disabled,
+}: IdealClientDescriptionInputProps) => (
     <Controller
         control={control}
-        name="bio"
+        name="idealClientDescription"
         defaultValue={defaultValue}
-        render={({
-            field: { onChange, onBlur, value, name },
-            fieldState: { error, isTouched },
-        }) => (
+        render={({ field: { onChange, onBlur, value, name } }) => (
             <Textarea
-                required
                 fullWidth
-                id="bio"
-                label="About"
+                id="idealClientDescription"
+                label="Describe your ideal client"
                 {...{
                     onChange,
                     onBlur,
                     value,
                     name,
+                    disabled,
                 }}
             />
         )}

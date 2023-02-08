@@ -1,32 +1,32 @@
 import { Control, Controller } from 'react-hook-form';
-import { State } from '@/lib/types';
+import { CommunitiesServed } from '@/lib/types';
 import { Autocomplete, TextField } from '@mui/material';
 import { ProviderProfile } from '@/lib/types/providerProfile';
 
-type LicensedState = typeof State.ENTRIES[number];
+type CommunitiesServed = typeof CommunitiesServed.ENTRIES[number];
 
-interface StateInputProps {
+interface CommunitiesServedInputProps {
     control: Control<ProviderProfile>;
-    defaultValue?: LicensedState[];
+    defaultValue?: string[];
     disabled?: boolean;
 }
 
-export const LicensedStatesInput = ({
+export const CommunitiesServedInput = ({
     control,
     defaultValue,
     disabled,
-}: StateInputProps) => (
+}: CommunitiesServedInputProps) => (
     <Controller
         control={control}
-        name="licensedStates"
-        defaultValue={defaultValue}
+        name="communitiesServed"
+        defaultValue={defaultValue as CommunitiesServed[]}
         rules={{
             required: true,
         }}
         render={({ field: { onChange, onBlur, value, name } }) => (
             <Autocomplete
                 multiple
-                options={State.ENTRIES}
+                options={CommunitiesServed.ENTRIES}
                 {...{
                     onChange,
                     onBlur,
@@ -35,7 +35,7 @@ export const LicensedStatesInput = ({
                     value,
                 }}
                 renderInput={(params) => (
-                    <TextField {...params} label="Licensed States" />
+                    <TextField {...params} label="Communities Served" />
                 )}
             />
         )}

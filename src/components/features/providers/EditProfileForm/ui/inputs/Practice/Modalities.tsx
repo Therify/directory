@@ -1,32 +1,32 @@
 import { Control, Controller } from 'react-hook-form';
-import { AgeGroup } from '@/lib/types';
+import { Modality } from '@/lib/types';
 import { Autocomplete, TextField } from '@mui/material';
 import { ProviderProfile } from '@/lib/types/providerProfile';
 
-type AgeGroupsServed = typeof AgeGroup.ENTRIES[number];
+type ModalityServed = typeof Modality.ENTRIES[number];
 
-interface AgeGroupsServedInputProps {
+interface ModalitiesServedInputProps {
     control: Control<ProviderProfile>;
     defaultValue?: string[];
     disabled?: boolean;
 }
 
-export const AgeGroupsServedServedInput = ({
+export const ModalititesServedInput = ({
     control,
     defaultValue,
     disabled,
-}: AgeGroupsServedInputProps) => (
+}: ModalitiesServedInputProps) => (
     <Controller
         control={control}
-        name="ageGroups"
-        defaultValue={defaultValue as AgeGroupsServed[]}
+        name="modalities"
+        defaultValue={defaultValue as ModalityServed[]}
         rules={{
             required: true,
         }}
         render={({ field: { onChange, onBlur, value, name } }) => (
             <Autocomplete
                 multiple
-                options={AgeGroup.ENTRIES}
+                options={Modality.ENTRIES}
                 {...{
                     onChange,
                     onBlur,
@@ -35,7 +35,7 @@ export const AgeGroupsServedServedInput = ({
                     value,
                 }}
                 renderInput={(params) => (
-                    <TextField {...params} label="Age Groups Served" />
+                    <TextField {...params} label="Modalities" />
                 )}
             />
         )}

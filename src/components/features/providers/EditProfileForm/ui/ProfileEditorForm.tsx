@@ -4,31 +4,12 @@ import { styled } from '@mui/material/styles';
 import { Button, H1 } from '@/components/ui/';
 import { ProviderProfile } from '@/lib/types/providerProfile';
 import {
-    GivenNameInput,
-    SurnameInput,
-    ContactEmailInput,
-    BioInput,
-    NpiNumberInput,
     PricingInputs,
-    OffersInPersonToggle,
-    OffersMedicationManagement,
-    OffersPhoneConsultations,
-    OffersVirtualToggle,
-    IdealClientDescriptionInput,
-    PronounsInput,
-    PracticeNotesInput,
-    GenderInput,
+    PracticeSection,
     DesignationInput,
-    LicensedStatesInput,
-    AcceptedInsurancesInput,
-    SpecialtiesInput,
-    EthnicitiesInput,
-    ReligionsInput,
-    EvidenceBasedApproachInput,
-    LanguagesSpokenInput,
-    AgeGroupsServedServedInput,
-    ModalititesServedInput,
-    CommunitiesServedInput,
+    IdentitySection,
+    AboutSection,
+    CredentialsSection,
 } from './inputs';
 import { MediaUploadWidget } from '@/components/features/media';
 
@@ -37,12 +18,16 @@ interface EditorFormProps {
     control: Control<ProviderProfile>;
     defaultValues?: Partial<ProviderProfile>;
     offersSlidingScale?: boolean;
+    isTherapist: boolean;
+    minimumRate: number;
 }
 export const ProfileEditorForm = ({
     onSelectFile,
     control,
     defaultValues,
     offersSlidingScale,
+    isTherapist,
+    minimumRate,
 }: EditorFormProps) => {
     return (
         <EditorContainer>
@@ -57,67 +42,36 @@ export const ProfileEditorForm = ({
                     control={control}
                     defaultValue={defaultValues?.designation}
                 />
-                <GivenNameInput
+                <IdentitySection
                     control={control}
-                    defaultValue={defaultValues?.givenName}
+                    defaultValues={{
+                        givenName: defaultValues?.givenName,
+                        surname: defaultValues?.surname,
+                        gender: defaultValues?.gender,
+                        pronouns: defaultValues?.pronouns,
+                        ethnicities: defaultValues?.ethnicity,
+                        contactEmail: defaultValues?.contactEmail,
+                    }}
+                    disabled={false}
                 />
-                <SurnameInput
+                <AboutSection
                     control={control}
-                    defaultValue={defaultValues?.surname}
+                    disabled={false}
+                    defaultValues={{
+                        bio: defaultValues?.bio ?? undefined,
+                        practiceNotes:
+                            defaultValues?.practiceNotes ?? undefined,
+                        idealClientDescription:
+                            defaultValues?.idealClientDescription ?? undefined,
+                    }}
                 />
-                <PronounsInput
+                <CredentialsSection
                     control={control}
-                    defaultValue={defaultValues?.pronouns}
-                />
-                <GenderInput
-                    control={control}
-                    defaultValue={defaultValues?.gender}
-                />
-                <ContactEmailInput
-                    control={control}
-                    defaultValue={defaultValues?.contactEmail}
-                />
-                <BioInput
-                    control={control}
-                    defaultValue={defaultValues?.bio ?? undefined}
-                />
-                <PracticeNotesInput
-                    control={control}
-                    defaultValue={defaultValues?.practiceNotes ?? undefined}
-                />
-                <IdealClientDescriptionInput
-                    control={control}
-                    defaultValue={
-                        defaultValues?.idealClientDescription ?? undefined
-                    }
-                />
-                <LicensedStatesInput
-                    control={control}
-                    defaultValue={defaultValues?.licensedStates}
-                />
-                <AcceptedInsurancesInput
-                    control={control}
-                    defaultValue={defaultValues?.acceptedInsurances}
-                />
-                <NpiNumberInput
-                    control={control}
-                    defaultValue={defaultValues?.npiNumber ?? undefined}
-                />
-                <OffersInPersonToggle
-                    control={control}
-                    defaultValue={defaultValues?.offersInPerson}
-                />
-                <OffersMedicationManagement
-                    control={control}
-                    defaultValue={defaultValues?.offersMedicationManagement}
-                />
-                <OffersPhoneConsultations
-                    control={control}
-                    defaultValue={defaultValues?.offersPhoneConsultations}
-                />
-                <OffersVirtualToggle
-                    control={control}
-                    defaultValue={defaultValues?.offersVirtual}
+                    defaultValues={{
+                        npiNumber: defaultValues?.npiNumber ?? undefined,
+                        licensedStates: defaultValues?.licensedStates,
+                    }}
+                    disabled={false}
                 />
                 <PricingInputs
                     control={control}
@@ -127,42 +81,29 @@ export const ProfileEditorForm = ({
                         maximumRate: defaultValues?.maximumRate ?? undefined,
                     }}
                     offersSlidingScale={offersSlidingScale}
+                    minimumRate={minimumRate}
                 />
-                <SpecialtiesInput
+                <PracticeSection
                     control={control}
-                    defaultValue={defaultValues?.specialties}
-                />
-                <EthnicitiesInput
-                    control={control}
-                    defaultValue={defaultValues?.ethnicity}
-                />
-                <ReligionsInput
-                    control={control}
-                    defaultValue={defaultValues?.religions}
-                />
-                <EvidenceBasedApproachInput
-                    control={control}
-                    defaultValue={defaultValues?.evidenceBasedPractices}
-                />
-                <LanguagesSpokenInput
-                    control={control}
-                    defaultValue={defaultValues?.languagesSpoken}
-                />
-                <AgeGroupsServedServedInput
-                    control={control}
-                    defaultValue={defaultValues?.ageGroups}
-                />
-                <ModalititesServedInput
-                    control={control}
-                    defaultValue={defaultValues?.modalities}
-                />
-                <CommunitiesServedInput
-                    control={control}
-                    defaultValue={defaultValues?.communitiesServed}
+                    defaultValues={{
+                        acceptedInsurances: defaultValues?.acceptedInsurances,
+                        offersInPerson: defaultValues?.offersInPerson,
+                        offersMedicationManagement:
+                            defaultValues?.offersMedicationManagement,
+                        offersPhoneConsultations:
+                            defaultValues?.offersPhoneConsultations,
+                        offersVirtual: defaultValues?.offersVirtual,
+                        specialties: defaultValues?.specialties,
+                        religions: defaultValues?.religions,
+                        evidenceBasedApproaches:
+                            defaultValues?.evidenceBasedPractices,
+                    }}
+                    isTherapist={isTherapist}
+                    disabled={false}
                 />
                 {/*
                 TODO: Add these fields
-                licenses
+                licensese
                 yearsOfExperience
                 practiceStartDate
     */}
@@ -191,6 +132,7 @@ const EditorForm = styled('form')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(4),
     display: 'flex',
+    width: '100%',
     flexDirection: 'column',
     gap: theme.spacing(4),
 }));

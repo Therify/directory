@@ -18,7 +18,7 @@ export const EvidenceBasedApproachInput = ({
 }: EvidenceBasedApproachInputProps) => (
     <Controller
         control={control}
-        name="specialties"
+        name="evidenceBasedPractices"
         defaultValue={defaultValue as EvidenceBasedApproach[]}
         rules={{
             required: true,

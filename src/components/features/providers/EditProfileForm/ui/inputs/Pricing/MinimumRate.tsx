@@ -24,20 +24,19 @@ export const MinimumRateInput = ({
         }}
         render={({
             field: { onChange, onBlur, value, name },
-            fieldState: { error, isTouched },
+            fieldState: { error },
         }) => (
             <Input
                 fullWidth
                 type="number"
                 id="minimumRate"
-                errorMessage={
-                    isTouched
-                        ? FormValidation.Number.getNumberValidationErrorMessage(
-                              error?.type as FormValidation.Number.NumberValidationType,
-                              { fieldName: 'Rate' }
-                          )
-                        : undefined
-                }
+                errorMessage={FormValidation.Number.getNumberValidationErrorMessage(
+                    error?.type as FormValidation.Number.NumberValidationType,
+                    {
+                        fieldName: 'Rate',
+                        greaterThanThreshold: 0,
+                    }
+                )}
                 {...{
                     label,
                     onChange,
