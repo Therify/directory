@@ -4,6 +4,7 @@ import {
     CircularProgress,
 } from '@mui/material';
 import { Theme, useTheme } from '@mui/material/styles';
+import React from 'react';
 
 export const BUTTON_TYPE = {
     CONTAINED: 'contained',
@@ -60,40 +61,82 @@ const getSizeStyles = ({ spacing }: Theme, size?: ButtonSize) => {
     }
 };
 
-export const Button = ({
-    color = 'primary',
-    size,
-    isLoading,
-    loadingSlot,
-    children,
-    type,
-    style,
-    htmlButtonType = 'button',
-    ...props
-}: ButtonProps) => {
-    const theme = useTheme();
-    return (
-        <MuiButton
-            {...props}
-            variant={type ?? BUTTON_TYPE.CONTAINED}
-            color={color}
-            type={htmlButtonType}
-            style={{
-                ...getSizeStyles(theme, size ?? BUTTON_SIZE.MEDIUM),
-                lineHeight: 1,
-                ...style,
-            }}
-        >
-            {isLoading ? (
-                // eslint-disable-next-line react/jsx-no-useless-fragment
-                <>{loadingSlot ?? <DefaultLoadingSlot theme={theme} />}</>
-            ) : (
-                // eslint-disable-next-line react/jsx-no-useless-fragment
-                <>{children}</>
-            )}
-        </MuiButton>
-    );
-};
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+    (
+        {
+            color = 'primary',
+            size,
+            isLoading,
+            loadingSlot,
+            children,
+            type,
+            style,
+            htmlButtonType = 'button',
+            ...props
+        },
+        ref
+    ) => {
+        const theme = useTheme();
+        return (
+            <MuiButton
+                {...props}
+                variant={type ?? BUTTON_TYPE.CONTAINED}
+                color={color}
+                ref={ref}
+                type={htmlButtonType}
+                style={{
+                    ...getSizeStyles(theme, size ?? BUTTON_SIZE.MEDIUM),
+                    lineHeight: 1,
+                    ...style,
+                }}
+            >
+                {isLoading ? (
+                    // eslint-disable-next-line react/jsx-no-useless-fragment
+                    <>{loadingSlot ?? <DefaultLoadingSlot theme={theme} />}</>
+                ) : (
+                    // eslint-disable-next-line react/jsx-no-useless-fragment
+                    <>{children}</>
+                )}
+            </MuiButton>
+        );
+    }
+);
+Button.displayName = 'Button';
+
+// export const Button = ({
+//     color = 'primary',
+//     size,
+//     isLoading,
+//     loadingSlot,
+//     children,
+//     type,
+//     style,
+//     htmlButtonType = 'button',
+//     ...props
+// }: ButtonProps) => {
+//     const theme = useTheme();
+//     return (
+//         <MuiButton
+//             {...props}
+//             variant={type ?? BUTTON_TYPE.CONTAINED}
+//             color={color}
+//             type={htmlButtonType}
+//             style={{
+//                 ...getSizeStyles(theme, size ?? BUTTON_SIZE.MEDIUM),
+//                 lineHeight: 1,
+//                 ...style,
+//             }}
+//         >
+//             {isLoading ? (
+//                 // eslint-disable-next-line react/jsx-no-useless-fragment
+//                 <>{loadingSlot ?? <DefaultLoadingSlot theme={theme} />}</>
+//             ) : (
+//                 // eslint-disable-next-line react/jsx-no-useless-fragment
+//                 <>{children}</>
+//             )}
+//         </MuiButton>
+//     );
+// };
 
 const DefaultLoadingSlot = ({ theme }: { theme: Theme }) => (
     <CircularProgress
