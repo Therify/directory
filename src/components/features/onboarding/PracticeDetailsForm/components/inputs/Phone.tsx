@@ -47,7 +47,7 @@ export const PhoneNumberInput = ({
                 fullWidth
                 type="tel"
                 id="phone"
-                label="phone"
+                label="Phone"
                 errorMessage={
                     isTouched
                         ? FormValidation.Phone.getPhoneValidationErrorMessage(
