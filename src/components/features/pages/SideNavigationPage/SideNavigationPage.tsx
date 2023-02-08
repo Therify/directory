@@ -15,7 +15,7 @@ import {
 import { NotificationDrawer } from '@/components/features/in-app-notifications/ui';
 import { useInAppNotificationDrawer } from '@/components/features/in-app-notifications/hooks';
 
-interface SideNavigationPageProps {
+export interface SideNavigationPageProps {
     primaryMenu: NavigationLink[];
     secondaryMenu: NavigationLink[];
     mobileMenu: NavigationLink[];
