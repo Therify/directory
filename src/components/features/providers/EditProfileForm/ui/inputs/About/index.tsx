@@ -6,6 +6,7 @@ import { Control } from 'react-hook-form';
 import { BioInput } from './Bio';
 import { IdealClientDescriptionInput } from './IdealClientDescription';
 import { PracticeNotesInput } from './PracticeNotes';
+import { PracticeStartDateInput } from './PracticeStartDate';
 
 interface IdentitySectionProps {
     control: Control<ProviderProfile>;
@@ -14,6 +15,7 @@ interface IdentitySectionProps {
         bio?: string;
         practiceNotes?: string;
         idealClientDescription?: string;
+        practiceStartDate?: Date;
     };
 }
 export const AboutSection = ({
@@ -38,6 +40,11 @@ export const AboutSection = ({
                 control={control}
                 defaultValue={defaultValues.idealClientDescription}
                 disabled={disabled}
+            />
+            <PracticeStartDateInput
+                control={control}
+                disabled={disabled}
+                defaultValue={defaultValues?.practiceStartDate}
             />
         </Container>
     );
