@@ -1,6 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { DirectoryCard } from './DirectoryCard';
-import { MockDirectoryCardProps } from './DirectoryCard.mocks';
 
 const meta: Meta<typeof DirectoryCard> = {
     title: 'Features/Directory/DirectoryCard',
@@ -17,7 +16,5 @@ const meta: Meta<typeof DirectoryCard> = {
 export default meta;
 
 export const Default: StoryObj<typeof DirectoryCard> = {
-    args: {
-        ...MockDirectoryCardProps,
-    },
+    args: {},
 };
