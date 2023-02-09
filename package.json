@@ -91,7 +91,7 @@
         "lint-staged": "^13.1.0",
         "mailing": "^0.9.10",
         "prisma": "^4.9.0",
-        "storybook": "^7.0.0-beta.19",
+        "storybook": "^7.0.0-beta.45",
         "ts-jest": "^29.0.3",
         "ts-node": "^10.9.1",
         "zod-prisma": "^0.5.4"
