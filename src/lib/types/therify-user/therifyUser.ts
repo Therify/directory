@@ -9,7 +9,6 @@ export const schema = z.lazy(() =>
         createdAt: true,
         roles: true,
         accountId: true,
-        isPracticeAdmin: true,
     }).extend({
         userId: z.string(),
         avatarUrl: z.string().optional(),
@@ -21,6 +20,7 @@ export const schema = z.lazy(() =>
             renews: true,
             seats: true,
         }).nullable(),
+        isPracticeAdmin: z.boolean(),
     })
 );
 

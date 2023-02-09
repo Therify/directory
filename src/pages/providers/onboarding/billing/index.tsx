@@ -62,7 +62,10 @@ export default function PracticeOnboardingPage() {
 
     useEffect(() => {
         if (practiceData?.practice) {
-            practiceDetailsForm.setValue('id', practiceData.practice.id);
+            practiceDetailsForm.setValue(
+                'practiceId',
+                practiceData.practice.id
+            );
             practiceDetailsForm.setValue(
                 'address',
                 practiceData.practice.address
@@ -89,7 +92,7 @@ export default function PracticeOnboardingPage() {
 
     useEffect(() => {
         if (user?.sub) {
-            practiceDetailsForm.setValue('id', user.sub);
+            practiceDetailsForm.setValue('userId', user.sub);
         }
     }, [practiceDetailsForm, user?.sub]);
 

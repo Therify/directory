@@ -3,7 +3,7 @@ import { URL_PATHS } from '../../urlPaths';
 
 export const DASHBOARD: NavigationLink = {
     icon: NAVIGATION_ICON.DASHBOARD,
-    displayName: 'Dashbaord',
+    displayName: 'Dashboard',
     path: URL_PATHS.PROVIDERS.PRACTICE.DASHBOARD,
 } as const;
 

@@ -5,5 +5,6 @@ export * from './name';
 export * from './password';
 export * from './state';
 export * from './insurance';
+export * as Number from './number';
 export * as Phone from './phone';
 export * as Url from './url';

@@ -12,4 +12,8 @@ export * from './gender';
 export * from './issues';
 export * from './ethnicity';
 export * from './goals';
+export * from './language';
 export * from './therify-user';
+export * from './communities-served';
+export * from './modality';
+export * from './age-group';

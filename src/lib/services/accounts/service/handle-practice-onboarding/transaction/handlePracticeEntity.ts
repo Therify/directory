@@ -16,14 +16,14 @@ export const factory: HandlePracticeOnboardingEntityFactory = ({
     phone,
     email,
     website,
-    id,
+    practiceId,
 }) => {
     return {
         async commit({ prisma }, { getUserDetails: { userId } }) {
-            if (id) {
-                const { id: practiceId } = await prisma.practice.update({
+            if (practiceId) {
+                const { id: foundPracticeId } = await prisma.practice.update({
                     where: {
-                        id,
+                        id: practiceId,
                     },
                     data: {
                         name,
@@ -37,10 +37,11 @@ export const factory: HandlePracticeOnboardingEntityFactory = ({
                     },
                 });
                 return {
-                    practiceId,
+                    practiceId: foundPracticeId,
+                    created: false,
                 };
             }
-            const { id: practiceId } = await prisma.practice.create({
+            const { id: createdPracticeId } = await prisma.practice.create({
                 data: {
                     name,
                     address,
@@ -55,11 +56,15 @@ export const factory: HandlePracticeOnboardingEntityFactory = ({
             });
 
             return {
-                practiceId,
+                practiceId: createdPracticeId,
+                created: true,
             };
         },
-        rollback({ prisma }, { handlePracticeEntity: { practiceId } }) {
-            if (id === undefined) {
+        rollback(
+            { prisma },
+            { handlePracticeEntity: { practiceId, created } }
+        ) {
+            if (created) {
                 return prisma.practice.delete({
                     where: {
                         id: practiceId,

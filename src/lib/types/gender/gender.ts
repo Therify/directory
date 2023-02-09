@@ -1,7 +1,14 @@
 import * as z from 'zod';
 
-export const schema = z.enum(['Female', 'Male', 'Non-Binary']);
+export const ENTRIES = ['Female', 'Male', 'Non-Binary'] as const;
 
+export const MAP = {
+    FEMALE: ENTRIES[0],
+    MALE: ENTRIES[1],
+    NON_BINARY: ENTRIES[2],
+} as const;
+
+export const schema = z.enum(ENTRIES);
 export type Gender = z.infer<typeof schema>;
 
 export const validate = (value: unknown): Gender => {
