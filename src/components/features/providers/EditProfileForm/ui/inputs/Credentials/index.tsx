@@ -35,12 +35,10 @@ export const CredentialsSection = ({
                     control={control}
                     disabled={disabled}
                 />
-                {licensedStates.length > 0 && (
-                    <AcceptedInsuranceInput
-                        control={control}
-                        stateOptions={licensedStates}
-                    />
-                )}
+                <AcceptedInsuranceInput
+                    control={control}
+                    stateOptions={licensedStates}
+                />
             </Box>
         </Container>
     );

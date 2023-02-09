@@ -38,46 +38,46 @@ export const AcceptedInsuranceInput = ({
                     <FormSectionSubtitle>
                         Accepted Insurances
                     </FormSectionSubtitle>
-                    <Caption>
-                        Based on your licenses, please select any insurance
-                        panels you are in-network within these states.
-                    </Caption>
+                    <Box>
+                        {stateOptions.length === 0 ? (
+                            <Caption>Add a license.</Caption>
+                        ) : (
+                            <Caption>
+                                Based on your licenses, please select any
+                                insurance panels you are in-network within these
+                                states.
+                            </Caption>
+                        )}
+                    </Box>
                     {stateOptions.map((state) => {
                         return (
-                            <>
-                                <Autocomplete
-                                    key={state}
-                                    multiple
-                                    options={InsuranceProvider.ENTRIES}
-                                    onChange={(_, value) => {
-                                        console.log({
-                                            state,
-                                            insurancesByState,
-                                            value,
-                                        });
-                                        const update = Object.entries(
-                                            insurancesByState
-                                        ).map(([stateKey, insurances]) => ({
-                                            state: stateKey,
-                                            insurances:
-                                                state === stateKey
-                                                    ? value
-                                                    : insurances,
-                                        }));
+                            <Autocomplete
+                                key={state}
+                                multiple
+                                options={InsuranceProvider.ENTRIES}
+                                onChange={(_, value) => {
+                                    const update = Object.entries(
+                                        insurancesByState
+                                    ).map(([stateKey, insurances]) => ({
+                                        state: stateKey,
+                                        insurances:
+                                            state === stateKey
+                                                ? value
+                                                : insurances,
+                                    }));
 
-                                        onChange(update);
-                                    }}
-                                    value={insurancesByState[state] ?? []}
-                                    {...{
-                                        onBlur,
-                                        name,
-                                    }}
-                                    sx={{ width: '100%' }}
-                                    renderInput={(params) => (
-                                        <TextField {...params} label={state} />
-                                    )}
-                                />
-                            </>
+                                    onChange(update);
+                                }}
+                                value={insurancesByState[state] ?? []}
+                                {...{
+                                    onBlur,
+                                    name,
+                                }}
+                                sx={{ width: '100%' }}
+                                renderInput={(params) => (
+                                    <TextField {...params} label={state} />
+                                )}
+                            />
                         );
                     })}
                 </InputWrapper>

@@ -22,6 +22,7 @@ interface EditorFormProps {
     isTherapist: boolean;
     minimumRate: number;
     licensedStates?: typeof State.ENTRIES[number][];
+    profileImageUrl?: string;
     onImageUploadSuccess: (
         error: Error | null,
         result: CloudinaryUploadResult
@@ -37,6 +38,7 @@ export const ProfileEditorForm = ({
     licensedStates,
     onImageUploadSuccess,
     onImageUploadError,
+    profileImageUrl,
 }: EditorFormProps) => {
     return (
         <EditorContainer>
@@ -46,6 +48,9 @@ export const ProfileEditorForm = ({
                 <MediaUploadWidget
                     onUploadError={onImageUploadError}
                     onUploadSuccess={onImageUploadSuccess}
+                    buttonText={
+                        profileImageUrl ? 'Change Image' : 'Upload Image'
+                    }
                 />
                 <DesignationInput
                     control={control}
@@ -74,14 +79,16 @@ export const ProfileEditorForm = ({
                             defaultValues?.idealClientDescription ?? undefined,
                     }}
                 />
-                <CredentialsSection
-                    control={control}
-                    defaultValues={{
-                        npiNumber: defaultValues?.npiNumber ?? undefined,
-                    }}
-                    licensedStates={licensedStates}
-                    disabled={false}
-                />
+                {isTherapist && (
+                    <CredentialsSection
+                        control={control}
+                        defaultValues={{
+                            npiNumber: defaultValues?.npiNumber ?? undefined,
+                        }}
+                        licensedStates={licensedStates}
+                        disabled={false}
+                    />
+                )}
                 <PricingInputs
                     control={control}
                     defaultValues={{

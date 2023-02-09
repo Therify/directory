@@ -1,5 +1,4 @@
 import {
-    ProviderCredentialInput,
     FormSectionSubtitle,
     Button,
     IconButton,
@@ -19,6 +18,7 @@ import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 import { format } from 'date-fns';
 import { DeleteRounded, LocalPoliceRounded } from '@mui/icons-material';
+import { ProviderCredentialInput } from './ProviderCredentialInput';
 
 interface StateInputProps {
     control: Control<ProviderProfile>;

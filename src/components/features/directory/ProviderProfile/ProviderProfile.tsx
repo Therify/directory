@@ -6,6 +6,7 @@ import {
     Paragraph,
     PARAGRAPH_SIZE,
 } from '@/components/ui/Typography/Paragraph';
+import { AgeGroup, ProviderCredential } from '@/lib/types';
 import {
     AutoFixHighOutlined,
     BadgeOutlined,
@@ -18,6 +19,7 @@ import {
 } from '@mui/icons-material';
 import { Box, Chip, Stack, useMediaQuery } from '@mui/material';
 import { styled, Theme } from '@mui/material/styles';
+import { ProfileType } from '@prisma/client';
 import { CriteriaCard, CRITERIA_CARD_TYPES } from './CriteriaCard';
 
 interface ProviderProfileProps {
@@ -25,7 +27,7 @@ interface ProviderProfileProps {
     givenName?: string;
     surname?: string;
     pronouns?: string;
-    state?: string;
+    cityState?: string;
     acceptedInsurances?: string[];
     specialties?: string[];
     bio?: string | null;
@@ -34,26 +36,38 @@ interface ProviderProfileProps {
     gender?: string;
     ethnicity?: string[];
     languages?: string[];
+    credentials?: ProviderCredential.ProviderCredential[];
+    ageGroups?: AgeGroup.AgeGroup[];
+    designation: ProfileType;
+    modalities?: string[];
 }
 
 export function ProviderProfile({
+    designation,
     profileImageUrl = null,
-    givenName = 'John',
-    surname = 'Smith',
-    pronouns = 'he/him',
-    state = 'California',
-    acceptedInsurances = ['Aetna', 'Blue Cross Blue Shield'],
-    specialties = ['Counseling', 'Psychotherapy'],
-    bio = `Lorem ipsum dolor sit amet, consectetur adipiscing elit`,
+    givenName = 'Your Name',
+    surname,
+    pronouns,
+    cityState,
+    acceptedInsurances = [],
+    specialties = [],
+    bio = `Tell us about yourself.`,
     offersInPerson = false,
     offersVirtual = false,
-    gender = 'Undisclosed',
+    gender,
     ethnicity = [],
-    languages = ['English'],
+    languages = [],
+    credentials = [],
+    ageGroups = [],
+    modalities = [],
 }: ProviderProfileProps) {
+    const isTherapist = designation === ProfileType.therapist;
     const isSmallScreen = useMediaQuery((theme: Theme) =>
         theme.breakpoints.down('sm')
     );
+    const credentialsList = Array.from(
+        new Set(credentials.map(({ type }) => type))
+    ).join(', ');
     const ELEMENT_DIMENSIONS = {
         headerHeight: isSmallScreen ? 121 : 222,
         avatar: isSmallScreen ? AVATAR_SIZE.HUGE : AVATAR_SIZE.XHUGE,
@@ -101,13 +115,15 @@ export function ProviderProfile({
                         <ProviderName>
                             {givenName} {surname}
                         </ProviderName>
-                        <Paragraph size="small">({pronouns})</Paragraph>
+                        {pronouns && (
+                            <Paragraph size="small">({pronouns})</Paragraph>
+                        )}
                     </ProviderNameContainer>
                     <ProviderCredentials>
-                        <Paragraph>Licensed Professional Counselor</Paragraph>
+                        <Paragraph>{credentialsList}</Paragraph>
                     </ProviderCredentials>
                     <ProviderState>
-                        <Paragraph>Nashville, {state}</Paragraph>
+                        <Paragraph>{cityState}</Paragraph>
                     </ProviderState>
                 </ProviderTitle>
                 <ProviderModalities>
@@ -132,16 +148,18 @@ export function ProviderProfile({
                 </ProviderModalities>
                 <ProviderVideo />
                 <ProviderMatchCriteria>
-                    <CriteriaCard
-                        type={CRITERIA_CARD_TYPES.INSURANCE}
-                        sx={{
-                            minWidth: {
-                                xs: 235,
-                                md: 338,
-                            },
-                        }}
-                        items={acceptedInsurances}
-                    />
+                    {isTherapist && (
+                        <CriteriaCard
+                            type={CRITERIA_CARD_TYPES.INSURANCE}
+                            sx={{
+                                minWidth: {
+                                    xs: 235,
+                                    md: 338,
+                                },
+                            }}
+                            items={acceptedInsurances}
+                        />
+                    )}
                     <CriteriaCard
                         type={CRITERIA_CARD_TYPES.SPECIALTIES}
                         sx={{
@@ -179,15 +197,25 @@ export function ProviderProfile({
                                 University
                             </Paragraph>
                         </ProviderAttribute> */}
-                        <ProviderAttribute>
-                            <BadgeOutlined />
-                            <AttributeText>License type: LPC</AttributeText>
-                        </ProviderAttribute>
-                        <ProviderAttribute>
-                            <TransgenderOutlined />
-                            <AttributeText>Gender: {gender}</AttributeText>
-                        </ProviderAttribute>
-                        {ethnicity.length && (
+                        {credentials.length > 0 && (
+                            <ProviderAttribute>
+                                <BadgeOutlined />
+                                <AttributeText>
+                                    License{' '}
+                                    {credentials.length === 1
+                                        ? 'type'
+                                        : 'types'}
+                                    : {credentialsList}
+                                </AttributeText>
+                            </ProviderAttribute>
+                        )}
+                        {gender && (
+                            <ProviderAttribute>
+                                <TransgenderOutlined />
+                                <AttributeText>Gender: {gender}</AttributeText>
+                            </ProviderAttribute>
+                        )}
+                        {ethnicity.length > 0 && (
                             <ProviderAttribute>
                                 <PublicOutlined />
                                 <AttributeText>
@@ -201,18 +229,22 @@ export function ProviderProfile({
                                 Languages: {languages.join(', ')}
                             </AttributeText>
                         </ProviderAttribute>
-                        <ProviderAttribute>
-                            <PeopleOutlined />
-                            <AttributeText>
-                                Works with: Adolescents, Adults, and Seniors
-                            </AttributeText>
-                        </ProviderAttribute>
-                        <ProviderAttribute>
-                            <AutoFixHighOutlined />
-                            <AttributeText>
-                                Specialties: {specialties.join(', ')}
-                            </AttributeText>
-                        </ProviderAttribute>
+                        {ageGroups.length > 0 && (
+                            <ProviderAttribute>
+                                <PeopleOutlined />
+                                <AttributeText>
+                                    Works with: {ageGroups.join(', ')}
+                                </AttributeText>
+                            </ProviderAttribute>
+                        )}
+                        {specialties.length > 0 && (
+                            <ProviderAttribute>
+                                <AutoFixHighOutlined />
+                                <AttributeText>
+                                    Specialties: {specialties.join(', ')}
+                                </AttributeText>
+                            </ProviderAttribute>
+                        )}
                     </ul>
                 </ProviderDetails>
             </ProfileContent>

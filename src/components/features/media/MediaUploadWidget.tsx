@@ -9,6 +9,7 @@ import {
 
 interface MediaUploadWidgetProps {
     folder?: string;
+    buttonText?: string;
     onUploadSuccess: (
         error: Error | null,
         result: CloudinaryUploadResult
@@ -20,6 +21,7 @@ export function MediaUploadWidget({
     onUploadSuccess,
     onUploadError,
     folder,
+    buttonText = 'Upload Image',
 }: MediaUploadWidgetProps) {
     const buttonRef = useRef<HTMLButtonElement>(null);
     useCloudinaryWidget({
@@ -38,7 +40,7 @@ export function MediaUploadWidget({
     return (
         <Box>
             <Button ref={buttonRef} startIcon={<UploadFile />} size="small">
-                Upload Image
+                {buttonText}
             </Button>
         </Box>
     );

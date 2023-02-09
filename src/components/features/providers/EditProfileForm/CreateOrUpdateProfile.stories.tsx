@@ -9,5 +9,17 @@ const meta: Meta<typeof CreateOrUpdateProfile> = {
 export default meta;
 
 export const Default: StoryObj<typeof CreateOrUpdateProfile> = {
-    args: {},
+    decorators: [
+        (Story) => (
+            <div style={{ width: '95vw', height: '95vh' }}>{Story()}</div>
+        ),
+    ],
+    args: {
+        practice: {
+            id: 'test',
+            city: 'Nashville',
+            state: 'Tennessee',
+            website: 'https://www.example.com',
+        },
+    },
 };

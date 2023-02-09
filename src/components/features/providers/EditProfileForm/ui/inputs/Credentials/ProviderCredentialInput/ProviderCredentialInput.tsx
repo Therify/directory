@@ -2,9 +2,12 @@ import { ProviderCredential } from '@/lib/types';
 import { Box } from '@mui/material';
 import { styled, SxProps, Theme, useTheme } from '@mui/material/styles';
 import { useForm } from 'react-hook-form';
-import { Button } from '../../Button';
-import { Caption, CAPTION_SIZE } from '../../Typography';
-import { FormSectionTitle } from '../formTypography';
+import {
+    Button,
+    Caption,
+    CAPTION_SIZE,
+    FormSectionTitle,
+} from '@/components/ui';
 import {
     LicenseNumberInput,
     LicenseTypeInput,
