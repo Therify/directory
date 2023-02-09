@@ -44,6 +44,9 @@ import {
     CancelRounded,
     VisibilityRounded,
 } from '@mui/icons-material';
+import { generateMock } from '@anatine/zod-mock';
+import { DirectoryListingSchema, ProviderProfileSchema } from '@/lib/schema';
+import { z } from 'zod';
 
 export const getServerSideProps = RBAC.requireProviderAuth(
     withPageAuthRequired()
@@ -63,85 +66,32 @@ const getProfileStatusBadge = (status?: ListingStatus) => {
     }
 };
 
+type ProviderPracticeProfileListItems = Array<
+    z.infer<typeof ProviderProfileSchema> & {
+        directoryListing?: z.infer<typeof DirectoryListingSchema>;
+    }
+>;
+
+const TEST_PROFILES: ProviderPracticeProfileListItems = Array.from({
+    length: 3,
+}).map(() => {
+    const providerProfile = generateMock(
+        ProviderProfileSchema.extend({
+            slug: z.string(),
+        })
+    );
+    const directoryListing = generateMock(DirectoryListingSchema);
+    return {
+        ...providerProfile,
+        directoryListing,
+    };
+});
+
 export default function PracticeProfilesPage() {
     const { user, isLoading } = useTherifyUser();
     const router = useRouter();
     const theme = useTheme();
-    const profiles: (ProviderProfile & {
-        directoryListing?: DirectoryListing;
-    })[] = [
-        {
-            id: '1',
-            givenName: 'John',
-            surname: 'Doe',
-            contactEmail: 'test@gmail.com',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            userId: null,
-            bio: null,
-            profileImageUrl: null,
-            yearsOfExperience: '10+',
-            minimumRate: 100,
-            maximumRate: 200,
-            idealClientDescription: null,
-            practiceNotes: null,
-            slug: 'john-doe',
-            directoryListing: { status: ListingStatus.listed },
-        } as ProviderProfile & { directoryListing?: DirectoryListing },
-        {
-            id: '13',
-            givenName: 'John',
-            surname: 'Doer',
-            contactEmail: 'test@gmail.com',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            userId: null,
-            bio: null,
-            profileImageUrl: null,
-            yearsOfExperience: '10+',
-            minimumRate: 100,
-            maximumRate: 200,
-            idealClientDescription: null,
-            practiceNotes: null,
-            slug: 'john-doe',
-            directoryListing: { status: ListingStatus.unlisted },
-        } as ProviderProfile & { directoryListing?: DirectoryListing },
-        {
-            id: '12',
-            givenName: 'Jane',
-            surname: 'Doe',
-            contactEmail: 'test@gmail.com',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            userId: null,
-            bio: null,
-            profileImageUrl: null,
-            yearsOfExperience: '10+',
-            minimumRate: 100,
-            maximumRate: 200,
-            idealClientDescription: null,
-            practiceNotes: null,
-            slug: 'jane-doe',
-            directoryListing: { status: ListingStatus.pending },
-        } as ProviderProfile & { directoryListing?: DirectoryListing },
-        {
-            id: '123',
-            givenName: 'John',
-            surname: 'Wick',
-            contactEmail: 'test@gmail.com',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            userId: null,
-            bio: null,
-            profileImageUrl: null,
-            yearsOfExperience: '10+',
-            minimumRate: 100,
-            maximumRate: 200,
-            idealClientDescription: null,
-            practiceNotes: null,
-            slug: 'john-wick',
-        } as ProviderProfile & { directoryListing?: DirectoryListing },
-    ];
+    const profiles = TEST_PROFILES;
 
     const isOverPlanCapacity =
         user?.plan?.seats !== undefined &&
@@ -311,7 +261,9 @@ const getListingAction = (status?: ListingStatus) => {
 const ProfileActions = ({
     profile,
 }: {
-    profile: ProviderProfile & { directoryListing?: DirectoryListing };
+    profile: z.infer<typeof ProviderProfileSchema> & {
+        directoryListing?: z.infer<typeof DirectoryListingSchema>;
+    };
 }) => {
     const router = useRouter();
     const theme = useTheme();
@@ -352,9 +304,7 @@ const ProfileActions = ({
                     size={BUTTON_SIZE.SMALL}
                     color="info"
                     onClick={() =>
-                        router.push(
-                            `${URL_PATHS.DIRECTORY.ROOT}/${profile.slug}`
-                        )
+                        router.push(`${URL_PATHS.DIRECTORY.ROOT}/${profile.id}`)
                     }
                     style={{ marginRight: theme.spacing(4) }}
                 >

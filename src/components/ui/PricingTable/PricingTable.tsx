@@ -3,7 +3,7 @@ import { styled, SxProps, Theme } from '@mui/material/styles';
 import { Badge, BADGE_SIZE, BADGE_COLOR } from '../Badge';
 import { AbstractShape1, AbstractShape2 } from '../Shapes';
 import { H3, PARAGRAPH_SIZE, Paragraph } from '../Typography';
-import { Toggle, ToggleType } from '../FormElements';
+import { Toggle, TOGGLE_TYPE } from '../FormElements';
 export interface PricingTableFeature {
     feature: string;
     checked: boolean;
@@ -66,7 +66,7 @@ export const PricingTable = ({
                         {features.map((feature, i) => (
                             <FeatureItem key={i}>
                                 <FeatureCheckbox
-                                    type={ToggleType.Checkbox}
+                                    type={TOGGLE_TYPE.CHECKBOX}
                                     checked={feature.checked}
                                     displayText={feature.feature}
                                 />

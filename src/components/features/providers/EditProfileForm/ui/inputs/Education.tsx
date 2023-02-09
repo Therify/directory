@@ -13,7 +13,7 @@ export const EducationInput = ({
 }: EducationInputProps) => (
     <Controller
         control={control}
-        name="education"
+        name="surname"
         defaultValue={defaultValue}
         rules={{
             required: true,
