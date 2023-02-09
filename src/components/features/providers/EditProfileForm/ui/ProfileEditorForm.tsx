@@ -13,6 +13,7 @@ import {
 } from './inputs';
 import { MediaUploadWidget } from '@/components/features/media';
 import { CloudinaryUploadResult } from '@/components/features/media/hooks/userCloudinaryWidget';
+import { State } from '@/lib/types';
 
 interface EditorFormProps {
     control: Control<ProviderProfile>;
@@ -20,6 +21,7 @@ interface EditorFormProps {
     offersSlidingScale?: boolean;
     isTherapist: boolean;
     minimumRate: number;
+    licensedStates?: typeof State.ENTRIES[number][];
     onImageUploadSuccess: (
         error: Error | null,
         result: CloudinaryUploadResult
@@ -32,6 +34,7 @@ export const ProfileEditorForm = ({
     offersSlidingScale,
     isTherapist,
     minimumRate,
+    licensedStates,
     onImageUploadSuccess,
     onImageUploadError,
 }: EditorFormProps) => {
@@ -75,8 +78,8 @@ export const ProfileEditorForm = ({
                     control={control}
                     defaultValues={{
                         npiNumber: defaultValues?.npiNumber ?? undefined,
-                        licensedStates: defaultValues?.licensedStates,
                     }}
+                    licensedStates={licensedStates}
                     disabled={false}
                 />
                 <PricingInputs
@@ -92,7 +95,6 @@ export const ProfileEditorForm = ({
                 <PracticeSection
                     control={control}
                     defaultValues={{
-                        acceptedInsurances: defaultValues?.acceptedInsurances,
                         offersInPerson: defaultValues?.offersInPerson,
                         offersMedicationManagement:
                             defaultValues?.offersMedicationManagement,
@@ -107,10 +109,6 @@ export const ProfileEditorForm = ({
                     isTherapist={isTherapist}
                     disabled={false}
                 />
-                {/*
-                TODO: Add these fields
-                licensese
-    */}
 
                 {/* 
                 <Input

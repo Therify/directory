@@ -19,3 +19,4 @@ export * from './modality';
 export * from './age-group';
 export * from './provider-credential';
 export * from './provider-supervisor';
+export * from './accepted-insurance';

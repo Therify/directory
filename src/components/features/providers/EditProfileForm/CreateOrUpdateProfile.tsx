@@ -1,7 +1,7 @@
+import { useEffect, useMemo } from 'react';
 import { TwoColumnGrid } from '../../../ui/Grids/TwoColumnGrid';
 import { useForm } from 'react-hook-form';
 import { Language, Modality, AgeGroup, Gender } from '@/lib/types';
-import { useEffect, useState } from 'react';
 import { ProviderProfile as ProviderProfileUi } from '../../directory/ProviderProfile';
 import { ProfileEditorForm } from './ui/ProfileEditorForm';
 import { ProviderProfile } from '@/lib/types/providerProfile';
@@ -24,6 +24,8 @@ export function CreateOrUpdateProfile({
             languagesSpoken: [Language.MAP.ENGLISH],
             modalities: [Modality.MAP.INDIVIDUALS],
             ageGroups: [AgeGroup.MAP.ADULTS],
+            acceptedInsurances: [],
+            credentials: [],
             ...providerProfile,
         },
     });
@@ -36,14 +38,45 @@ export function CreateOrUpdateProfile({
     const surname = providerProfileForm.watch('surname');
     const pronouns = providerProfileForm.watch('pronouns');
     const state = 'TODO: Get from practice';
-    const acceptedInsurances = providerProfileForm.watch('acceptedInsurances');
     const specialties = providerProfileForm.watch('specialties');
     const bio = providerProfileForm.watch('bio');
     const offersInPerson = providerProfileForm.watch('offersInPerson');
     const offersVirtual = providerProfileForm.watch('offersVirtual');
     const profileImageUrl = providerProfileForm.watch('profileImageUrl');
+    const credentials = providerProfileForm.watch('credentials');
+    // TODO: move to util function
+    const acceptedInsurances = Array.from(
+        new Set(
+            (providerProfileForm.watch('acceptedInsurances') ?? []).flatMap(
+                ({ insurances }) => insurances
+            )
+        )
+    ).sort();
 
-    console.log({ specialties });
+    const licensedStates = useMemo(() => {
+        return Array.from(
+            new Set((credentials ?? []).map(({ state }) => state))
+        );
+    }, [credentials]);
+
+    useEffect(() => {
+        const acceptedInsurances = (
+            providerProfileForm.getValues('acceptedInsurances') ?? []
+        ).filter((insurance) => licensedStates.includes(insurance.state));
+        licensedStates.forEach((state) => {
+            const stateIsFound =
+                acceptedInsurances.find(({ state: s }) => s === state) !==
+                undefined;
+            if (!stateIsFound) {
+                acceptedInsurances.push({ state, insurances: [] });
+            }
+            providerProfileForm.setValue(
+                'acceptedInsurances',
+                acceptedInsurances
+            );
+        });
+    }, [licensedStates, providerProfileForm]);
+
     const onImageUploadError = (error: Error | string) => {
         console.error(error);
         return;
@@ -56,7 +89,6 @@ export function CreateOrUpdateProfile({
             onImageUploadError(error);
             return;
         }
-        console.log({ result });
         providerProfileForm.setValue('profileImageUrl', result.info.secure_url);
     };
     return (
@@ -69,6 +101,7 @@ export function CreateOrUpdateProfile({
                     minimumRate={minimumRate}
                     onImageUploadSuccess={onImageUploadSuccess}
                     onImageUploadError={onImageUploadError}
+                    licensedStates={licensedStates}
                 />
             }
             rightSlot={

@@ -1,8 +1,4 @@
-import {
-    FormSectionTitle,
-    FormSectionSubtitle,
-    Caption,
-} from '@/components/ui';
+import { FormSectionTitle, FormSectionSubtitle } from '@/components/ui';
 import { ProviderProfile } from '@/lib/types/providerProfile';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -29,7 +25,6 @@ interface IdentitySectionProps {
         offersMedicationManagement?: boolean;
         offersPhoneConsultations?: boolean;
         offersVirtual?: boolean;
-        acceptedInsurances?: string[];
         specialties?: string[];
         religions?: string[];
         evidenceBasedApproaches?: string[];

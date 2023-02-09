@@ -239,6 +239,7 @@ model ProviderProfile {
   practiceNotes              String?                      @map("practice_notes")
   gender                     String
   credentials                Json[]
+  acceptedInsurances         Json[]                       @map("accepted_insurances")
   supervisor                 Json?
   specialties                String[]
   ethnicity                  String[]

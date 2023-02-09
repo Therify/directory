@@ -36,7 +36,7 @@ export const GenderInput = ({
                     isTouched
                         ? FormValidation.getNameValidationErrorMessage(
                               error?.type as FormValidation.NameValidationType,
-                              'State'
+                              'Gender'
                           )
                         : undefined
                 }
