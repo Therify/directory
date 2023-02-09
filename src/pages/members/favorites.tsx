@@ -2,41 +2,25 @@ import { DirectoryCard } from '@/components/features/directory/DirectoryCard';
 import { MemberNavigationPage } from '@/components/features/pages/MemberNavigationPage';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { membersService } from '@/lib/services/members';
-import { DirectoryPageProps } from '@/lib/services/members/get-directory-page-props/getDirectoryPageProps';
-import { URL_PATHS } from '@/lib/sitemap/urlPaths';
+import { FavoritesPageProps } from '@/lib/services/members/get-favorites-page-props/getFavoritesPageProps';
 import { RBAC } from '@/lib/utils';
 import { trpc } from '@/lib/utils/trpc';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
-import { ProviderProfile } from '@prisma/client';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import React from 'react';
-
-const STATES = ['New York', 'New Jersey'] as const;
-
-type JSONSafeProviderProfile = Omit<
-    ProviderProfile,
-    'createdAt' | 'updatedAt'
-> & {
-    createdAt: string;
-    updatedAt: string;
-};
-interface Props {
-    results: JSONSafeProviderProfile[];
-}
 
 export const getServerSideProps = RBAC.requireMemberAuth(
     withPageAuthRequired({
-        getServerSideProps: membersService.getDirectoryPageProps,
+        getServerSideProps: membersService.getFavoritesPageProps,
     })
 );
 
-function Directory({
-    providerProfiles = [],
-    user,
+export default function MemberFavoritesPage({
     favoriteProfiles = [],
-}: DirectoryPageProps) {
+    user,
+}: FavoritesPageProps) {
     const router = useRouter();
     const mutation = trpc.useMutation('members.favorite-profile');
     const [favoriteProfilesMap, setFavoriteProfilesMap] = React.useState<{
@@ -51,29 +35,20 @@ function Directory({
         )
     );
     return (
-        <MemberNavigationPage
-            currentPath={URL_PATHS.MEMBERS.DIRECTORY}
-            user={user}
-        >
-            <Container>
+        <MemberNavigationPage user={user} currentPath="/members/favorites">
+            <PageContainer>
                 <PageHeader
-                    type="secondary"
-                    title="Find a provider that sees & understands you"
-                    subtitle="Our providers are licensed and ready to provide the care you deserve"
+                    title="Your Favorited Provider Profiles"
+                    subtitle="You can view your favorited provider profiles here."
                 />
-                <ResultsSection>
-                    {providerProfiles.map((profile) => {
+                <FavoriteProfilesContainer>
+                    {favoriteProfiles.map((profile) => {
                         const isCurrentlyFavorite =
-                            favoriteProfilesMap[profile.id] ?? false;
+                            favoriteProfilesMap[profile.id];
                         return (
                             <DirectoryCard
                                 {...profile}
                                 key={profile.id}
-                                onClick={() => {
-                                    router.push(
-                                        `members/directory/${profile.id}`
-                                    );
-                                }}
                                 isFavorite={isCurrentlyFavorite}
                                 handleFavoriteClicked={(setIsFavorite) =>
                                     () => {
@@ -96,26 +71,21 @@ function Directory({
                                             }
                                         );
                                     }}
+                                onClick={() =>
+                                    router.push(
+                                        `/members/directory/${profile.id}`
+                                    )
+                                }
                             />
                         );
                     })}
-                </ResultsSection>
-            </Container>
+                </FavoriteProfilesContainer>
+            </PageContainer>
         </MemberNavigationPage>
     );
 }
 
-const FilterSection = styled(Box)(({ theme }) => ({}));
-
-const ResultsSection = styled(Box)(({ theme }) => ({
-    display: 'grid',
-    gridGap: theme.spacing(4),
-    width: '100%',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-    padding: theme.spacing(4),
-}));
-
-const Container = styled(Box)(({ theme }) => ({
+const PageContainer = styled(Box)(({ theme }) => ({
     maxWidth: theme.breakpoints.values.lg,
     height: '100%',
     margin: '0 auto',
@@ -123,4 +93,10 @@ const Container = styled(Box)(({ theme }) => ({
     overflowY: 'auto',
 }));
 
-export default Directory;
+const FavoriteProfilesContainer = styled(Box)(({ theme }) => ({
+    display: 'grid',
+    gridGap: theme.spacing(4),
+    width: '100%',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+    padding: theme.spacing(4),
+}));

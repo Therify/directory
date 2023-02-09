@@ -59,7 +59,7 @@ function Directory({ results = [] }: Props) {
                         <DirectoryCard
                             key={profile.id}
                             onClick={() => {
-                                router.push(`/directory/${profile.id}`);
+                                router.push(`directory/${profile.id}`);
                             }}
                             providerName={`${profile.givenName} ${profile.surname}`}
                             providerCredentials={''}

@@ -36,7 +36,7 @@ interface NumberErrorMessageOptions {
     equalNumber?: number;
     notEqualNumber?: number;
 }
-export const createNameValidationErrorMessages = (
+export const createNumberValidationErrorMessages = (
     fieldName?: string,
     options?: NumberErrorMessageOptions
 ) => ({
@@ -71,7 +71,7 @@ export const getNumberValidationErrorMessage = (
 ): string | undefined => {
     const { fieldName, ...errorMessageOptions } = options ?? {};
     if (!error) return undefined;
-    return createNameValidationErrorMessages(fieldName, errorMessageOptions)[
+    return createNumberValidationErrorMessages(fieldName, errorMessageOptions)[
         error
     ];
 };

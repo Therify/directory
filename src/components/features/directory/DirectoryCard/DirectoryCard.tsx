@@ -11,62 +11,190 @@ import Icon, { IconProps } from '@mui/material/Icon';
 import { H4 } from '@/components/ui/Typography/Headers';
 import { Subhead } from '@/components/ui/Typography/Subhead';
 import { Button } from '@/components/ui/Button';
+import { ProviderProfile } from '@prisma/client';
+import React from 'react';
+import Lottie from 'react-lottie';
+import ANIMATION_DATA from './favoriteAnimation.json';
 
 export const DEFAULT_PROFILE_IMAGE_URL =
     'https://res.cloudinary.com/dbrkfldqn/image/upload/v1675367176/app.therify.co/placeholders/profile_placeholder_aacskl.png' as const;
-export interface DirectoryCardProps {
-    providerName: string;
-    providerCredentials: string;
-    providerImageURL: string | null;
-    providerRate: number;
+
+export type DirectoryCardProps = {
     isFavorite?: boolean;
+    handleFavoriteClicked?: (
+        callback: (isFavorite: boolean) => void
+    ) => () => void;
     onClick?: () => void;
+} & ProviderProfile;
+
+function formatProviderName({
+    givenName,
+    surname,
+}: Pick<ProviderProfile, 'givenName' | 'surname'>) {
+    return `${givenName} ${surname}`;
+}
+
+function formatProviderRate({
+    minimumRate,
+    maximumRate,
+}: Pick<ProviderProfile, 'minimumRate' | 'maximumRate'>) {
+    return maximumRate ? `${minimumRate} - ${maximumRate}` : minimumRate;
+}
+
+const DEFAULT_ANIMATION_OPTIONS = {
+    loop: false,
+    animationData: ANIMATION_DATA,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice',
+        overflow: 'visible',
+    },
+};
+
+interface RenderFavoriteAnimationProps {
+    isStopped: boolean;
+    isPaused: boolean;
+    callback: () => void;
+}
+function renderFavoriteAnimation({
+    isStopped,
+    isPaused,
+    callback,
+}: RenderFavoriteAnimationProps) {
+    return (
+        <Lottie
+            options={DEFAULT_ANIMATION_OPTIONS}
+            isStopped={isStopped}
+            isPaused={isPaused}
+            eventListeners={[
+                {
+                    eventName: 'complete',
+                    callback,
+                },
+            ]}
+        />
+    );
+}
+
+interface RenderFavoriteIconProps {
+    isFavorite: boolean;
+    isStopped: boolean;
+    isPaused: boolean;
+    callback: () => void;
+    isAnimating: boolean;
+}
+
+function renderFavoriteIcon({
+    isFavorite,
+    isPaused,
+    isStopped,
+    callback,
+    isAnimating,
+}: RenderFavoriteIconProps) {
+    if (isAnimating) {
+        return renderFavoriteAnimation({
+            isStopped,
+            isPaused,
+            callback,
+        });
+    }
+    if (isFavorite) {
+        return <Favorite />;
+    }
+    return <FavoriteBorder />;
 }
 
 export function DirectoryCard({
-    providerName,
-    providerCredentials,
-    providerImageURL,
-    providerRate,
+    givenName,
+    surname,
+    profileImageUrl,
+    licenses,
+    minimumRate,
+    maximumRate,
     isFavorite = false,
-    onClick = () => {},
+    handleFavoriteClicked,
+    onClick,
 }: DirectoryCardProps) {
+    const [isProviderFavorite, setIsProviderFavorite] =
+        React.useState(isFavorite);
+    const [isStopped, setIsStopped] = React.useState(false);
+    const [isPaused, setIsPaused] = React.useState(false);
+    const [isAnimating, setIsAnimating] = React.useState(false);
     return (
         <Card>
             <CardMedia
                 component="img"
                 height={50}
                 sx={{ objectFit: 'cover', maxHeight: 236 }}
-                image={providerImageURL ?? DEFAULT_PROFILE_IMAGE_URL}
+                image={profileImageUrl ?? DEFAULT_PROFILE_IMAGE_URL}
+                alt="Profile Image"
             />
             <Box sx={{ padding: 2 }}>
                 <CardContent>
                     <Stack direction="column">
                         <Stack direction="row" justifyContent={'space-between'}>
-                            <Box>${providerRate}</Box>
                             <Box>
-                                <CardIcon isFavorite={isFavorite}>
-                                    {isFavorite ? (
-                                        <Favorite />
-                                    ) : (
-                                        <FavoriteBorder />
-                                    )}
-                                </CardIcon>
+                                $
+                                {formatProviderRate({
+                                    minimumRate,
+                                    maximumRate,
+                                })}
                             </Box>
+                            {handleFavoriteClicked && (
+                                <Box>
+                                    <CardIcon
+                                        isFavorite={isProviderFavorite}
+                                        onClick={handleFavoriteClicked(
+                                            (isNowFavorited) => {
+                                                if (isNowFavorited) {
+                                                    setIsProviderFavorite(true);
+                                                    setIsStopped(false);
+                                                    setIsPaused(false);
+                                                    setIsAnimating(true);
+                                                }
+                                                setIsProviderFavorite(
+                                                    isNowFavorited
+                                                );
+                                            }
+                                        )}
+                                    >
+                                        {renderFavoriteIcon({
+                                            isFavorite: isProviderFavorite,
+                                            isStopped,
+                                            isPaused,
+                                            isAnimating,
+                                            callback: () => {
+                                                console.log('complete');
+                                                setIsAnimating(false);
+                                                setIsStopped(true);
+                                                setIsPaused(true);
+                                            },
+                                        })}
+                                    </CardIcon>
+                                </Box>
+                            )}
                         </Stack>
                         <Stack>
-                            <ProviderName>{providerName}</ProviderName>
-                            <ProviderCredentials>
-                                {providerCredentials}
-                            </ProviderCredentials>
+                            <ProviderName>
+                                {formatProviderName({
+                                    givenName,
+                                    surname,
+                                })}
+                            </ProviderName>
+                            {licenses && (
+                                <ProviderCredentials>
+                                    {licenses}
+                                </ProviderCredentials>
+                            )}
                         </Stack>
                     </Stack>
                 </CardContent>
-                <CardActions>
-                    <Button fullWidth onClick={onClick}>
-                        View
-                    </Button>
-                </CardActions>
+                {onClick && (
+                    <CardActions>
+                        <Button fullWidth onClick={onClick}>
+                            View
+                        </Button>
+                    </CardActions>
+                )}
             </Box>
         </Card>
     );
@@ -91,5 +219,24 @@ interface CardIconProps extends IconProps {
 const CardIcon = styled(Icon, {
     shouldForwardProp: (prop) => prop !== 'isFavorite',
 })<CardIconProps>(({ theme, isFavorite }) => ({
+    transition: 'transform 0.2s',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'visible',
     color: isFavorite ? theme.palette.error.main : theme.palette.grey[500],
+    '&:hover': {
+        transform: 'scale(1.1)',
+        cursor: 'pointer',
+    },
+    '& > div[aria-label="animation"]': {
+        overflow: 'visible !important',
+        '& > svg': {
+            overflow: 'visible !important',
+            width: '75px !important',
+            height: '75px !important',
+            position: 'relative',
+            top: '-25px',
+        },
+    },
 }));
