@@ -23,15 +23,13 @@ import { State } from '@/lib/types';
 import { ChevronLeft } from '@mui/icons-material';
 import { useRef } from 'react';
 import useOnScreen from '@/lib/hooks/use-on-screen';
+import { ProfileType } from '@prisma/client';
 
 interface EditorFormProps {
+    profile: ProviderProfile;
     control: Control<ProviderProfile>;
     defaultValues?: Partial<ProviderProfile>;
-    offersSlidingScale?: boolean;
-    isTherapist: boolean;
-    minimumRate: number;
     licensedStates?: typeof State.ENTRIES[number][];
-    profileImageUrl?: string;
     onImageUploadSuccess: (
         error: Error | null,
         result: CloudinaryUploadResult
@@ -45,14 +43,11 @@ interface EditorFormProps {
 }
 export const ProfileEditorForm = ({
     control,
+    profile,
     defaultValues,
-    offersSlidingScale,
-    isTherapist,
-    minimumRate,
     licensedStates,
     onImageUploadSuccess,
     onImageUploadError,
-    profileImageUrl,
     onSubmitForm,
     isSubmittingForm,
     isFormValid,
@@ -66,7 +61,8 @@ export const ProfileEditorForm = ({
     // for the floating button to position correctly
     const isHeaderSaveVisible = useOnScreen(headerSaveButtonRef);
     const isFooterSaveVisible = useOnScreen(footerSaveButtonRef);
-    const saveButtonText = 'Save Profile';
+    const saveButtonText = profile.id ? 'Save Changes' : 'Create Profile';
+    const isTherapist = profile.designation === ProfileType.therapist;
 
     return (
         <EditorContainer>
@@ -118,7 +114,9 @@ export const ProfileEditorForm = ({
                     onUploadSuccess={onImageUploadSuccess}
                     disabled={isSubmittingForm}
                     buttonText={
-                        profileImageUrl ? 'Change Image' : 'Upload Image'
+                        profile.profileImageUrl
+                            ? 'Change Image'
+                            : 'Upload Image'
                     }
                 />
                 <DesignationInput
@@ -166,8 +164,8 @@ export const ProfileEditorForm = ({
                         minimumRate: defaultValues?.minimumRate,
                         maximumRate: defaultValues?.maximumRate ?? undefined,
                     }}
-                    offersSlidingScale={offersSlidingScale}
-                    minimumRate={minimumRate}
+                    offersSlidingScale={profile.offersSlidingScale}
+                    minimumRate={profile.minimumRate}
                     disabled={isSubmittingForm}
                 />
                 <PracticeSection

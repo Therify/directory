@@ -17,7 +17,11 @@ import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 import { format } from 'date-fns';
-import { DeleteRounded, LocalPoliceRounded } from '@mui/icons-material';
+import {
+    DeleteRounded,
+    LocalPoliceRounded,
+    AddRounded,
+} from '@mui/icons-material';
 import { ProviderCredentialInput } from './ProviderCredentialInput';
 
 interface StateInputProps {
@@ -60,7 +64,7 @@ export const CredentialsManagerInput = ({
                         <Modal
                             onClose={() => setShowEditor(false)}
                             isOpen
-                            title="New Credential"
+                            title="New License"
                             postBodySlot={
                                 <ProviderCredentialInput
                                     onSubmit={(credential) => {
@@ -73,7 +77,7 @@ export const CredentialsManagerInput = ({
                     )}
                     {credentialToDelete && (
                         <Modal
-                            title="Are you sure you want to delete this credential?"
+                            title="Are you sure you want to delete this license?"
                             fullWidthButtons
                             postBodySlot={
                                 <Box>
@@ -104,7 +108,7 @@ export const CredentialsManagerInput = ({
                                     ).length === 1 && (
                                         <Caption>
                                             This will also delete any accepted
-                                            insurances associated with this{' '}
+                                            insurances associated with{' '}
                                             {credentialToDelete.state}.
                                         </Caption>
                                     )}
@@ -131,11 +135,11 @@ export const CredentialsManagerInput = ({
                     )}
 
                     <Button
-                        fullWidth
                         onClick={() => setShowEditor(true)}
                         disabled={disabled}
+                        startIcon={<AddRounded />}
                     >
-                        Add Credential
+                        Add License
                     </Button>
                 </Box>
             )}

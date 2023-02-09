@@ -15,8 +15,8 @@ export const schema = ProviderProfileSchema.extend({
     credentials: ProviderCredential.schema.array(),
     acceptedInsurances: AcceptedInsurance.schema.array(),
     supervisor: ProviderSupervisor.schema.nullable(),
+    id: z.string().optional(),
 }).omit({
-    id: true,
     createdAt: true,
     updatedAt: true,
 });

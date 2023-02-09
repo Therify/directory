@@ -106,14 +106,11 @@ export function CreateOrUpdateProfile({
             leftSlot={
                 <SlotWrapper>
                     <ProfileEditorForm
-                        offersSlidingScale={offersSlidingScale}
+                        profile={providerProfileForm.getValues()}
                         control={providerProfileForm.control}
-                        isTherapist={designation === ProfileType.therapist}
-                        minimumRate={minimumRate}
                         onImageUploadSuccess={onImageUploadSuccess}
                         onImageUploadError={onImageUploadError}
                         licensedStates={licensedStates}
-                        profileImageUrl={profileImageUrl ?? undefined}
                         onSubmitForm={async () => {}}
                         isFormValid={providerProfileForm.formState.isValid}
                         isSubmittingForm={false}
