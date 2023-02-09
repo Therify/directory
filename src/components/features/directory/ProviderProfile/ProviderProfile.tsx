@@ -301,7 +301,7 @@ const ProviderMatchCriteria = styled(Box)(({ theme }) => ({
 }));
 
 const ModalityChip = styled(Chip)(({ theme }) => ({
-    borderRadius: 2,
+    borderRadius: 4,
     padding: theme.spacing(0.5, 1),
     marginRight: theme.spacing(1),
 }));
