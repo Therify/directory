@@ -15,6 +15,7 @@ export const Default: StoryObj<typeof CreateOrUpdateProfile> = {
         ),
     ],
     args: {
+        onBack: () => console.log('back'),
         practice: {
             id: 'test',
             city: 'Nashville',

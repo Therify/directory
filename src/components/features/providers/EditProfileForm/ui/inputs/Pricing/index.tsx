@@ -16,12 +16,14 @@ interface PricingInputsProps {
     };
     offersSlidingScale?: boolean;
     minimumRate?: number;
+    disabled?: boolean;
 }
 export const PricingInputs = ({
     control,
     defaultValues,
     offersSlidingScale,
     minimumRate,
+    disabled,
 }: PricingInputsProps) => {
     return (
         <Box>
@@ -30,6 +32,7 @@ export const PricingInputs = ({
                 <OffersSlidingScaleToggle
                     control={control}
                     defaultValue={defaultValues?.offersSlidingScale}
+                    disabled={disabled}
                 />
             </Box>
             <PriceScaleContainer>
@@ -41,10 +44,12 @@ export const PricingInputs = ({
                             : 'Your rate per session'
                     }
                     defaultValue={defaultValues?.minimumRate}
+                    disabled={disabled}
                 />
                 {offersSlidingScale && (
                     <MaximumRateInput
                         control={control}
+                        disabled={disabled}
                         defaultValue={defaultValues?.maximumRate}
                         minimumRate={minimumRate}
                     />

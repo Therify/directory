@@ -6,12 +6,14 @@ interface MaximumRateInputProps {
     control: Control<ProviderProfile>;
     defaultValue?: number;
     minimumRate?: number;
+    disabled?: boolean;
 }
 
 export const MaximumRateInput = ({
     control,
     defaultValue,
     minimumRate = 0,
+    disabled,
 }: MaximumRateInputProps) => {
     const minimumAcceptableRate = minimumRate + 5;
     return (
@@ -40,6 +42,7 @@ export const MaximumRateInput = ({
                         }
                     )}
                     {...{
+                        disabled,
                         onChange,
                         onBlur,
                         value,

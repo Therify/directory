@@ -13,11 +13,13 @@ import { Box } from '@mui/material';
 interface CreateOrUpdateProfileProps {
     providerProfile?: Partial<ProviderProfile>;
     practice: Pick<Practice, 'id' | 'city' | 'state' | 'website'>;
+    onBack?: () => void;
 }
 
 export function CreateOrUpdateProfile({
     providerProfile,
     practice,
+    onBack,
 }: CreateOrUpdateProfileProps) {
     const providerProfileForm = useForm<ProviderProfile>({
         mode: 'onChange',
@@ -99,7 +101,7 @@ export function CreateOrUpdateProfile({
     return (
         <TwoColumnGrid
             fillSpace
-            leftSlotSx={SLOT_STYLES}
+            leftSlotSx={{ ...SLOT_STYLES, position: 'relative' }}
             rightSlotSx={SLOT_STYLES}
             leftSlot={
                 <SlotWrapper>
@@ -112,6 +114,10 @@ export function CreateOrUpdateProfile({
                         onImageUploadError={onImageUploadError}
                         licensedStates={licensedStates}
                         profileImageUrl={profileImageUrl ?? undefined}
+                        onSubmitForm={async () => {}}
+                        isFormValid={providerProfileForm.formState.isValid}
+                        isSubmittingForm={false}
+                        onBack={onBack}
                     />
                 </SlotWrapper>
             }

@@ -5,11 +5,13 @@ import { ProviderProfile } from '@/lib/types/providerProfile';
 interface ToggleInputProps {
     control: Control<ProviderProfile>;
     defaultValue?: boolean;
+    disabled?: boolean;
 }
 
 export const OffersSlidingScaleToggle = ({
     control,
     defaultValue = false,
+    disabled,
 }: ToggleInputProps) => (
     <Controller
         control={control}
@@ -22,12 +24,7 @@ export const OffersSlidingScaleToggle = ({
             <Switch
                 id="offersSlidingScale"
                 displayText="Offer sliding scale?"
-                {...{
-                    onChange,
-                    onBlur,
-                    value,
-                    name,
-                }}
+                {...{ disabled, onChange, onBlur, value, name }}
             />
         )}
     />

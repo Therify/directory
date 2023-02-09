@@ -6,12 +6,14 @@ interface MinimumRateInputProps {
     control: Control<ProviderProfile>;
     defaultValue?: number;
     label: string;
+    disabled?: boolean;
 }
 
 export const MinimumRateInput = ({
     control,
     label,
     defaultValue = 0,
+    disabled,
 }: MinimumRateInputProps) => (
     <Controller
         control={control}
@@ -38,6 +40,7 @@ export const MinimumRateInput = ({
                     }
                 )}
                 {...{
+                    disabled,
                     label,
                     onChange,
                     onBlur,
