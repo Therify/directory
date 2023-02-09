@@ -5,9 +5,15 @@ import processDirectoryApplicationFn from '@/lib/vendors/inngest/processApplicat
 import sendWelcomeEmailFn from '@/lib/vendors/inngest/sendWelcomeEmail';
 const APP_NAME = 'therify-directory' as const;
 
-export default serve(APP_NAME, [
-    demoFn,
-    getDirectoryApplicationFn,
-    processDirectoryApplicationFn,
-    sendWelcomeEmailFn,
-]);
+export default serve(
+    APP_NAME,
+    [
+        demoFn,
+        getDirectoryApplicationFn,
+        processDirectoryApplicationFn,
+        sendWelcomeEmailFn,
+    ],
+    {
+        signingKey: process.env.INNGEST_SIGNING_KEY,
+    }
+);
