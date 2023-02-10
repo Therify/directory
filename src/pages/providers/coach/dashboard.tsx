@@ -1,15 +1,15 @@
 import { useRouter } from 'next/router';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
-import { H1 } from '@/components/ui';
+import { H1 } from '@/lib/shared/components/ui';
 import {
     COACH_MAIN_MENU,
     COACH_SECONDARY_MENU,
     COACH_MOBILE_MENU,
     URL_PATHS,
 } from '@/lib/sitemap';
-import { SideNavigationPage } from '@/components/features/pages';
-import { useTherifyUser } from '@/lib/hooks';
-import { RBAC } from '@/lib/utils';
+import { SideNavigationPage } from '@/lib/shared/components/features/pages';
+import { useTherifyUser } from '@/lib/shared/hooks';
+import { RBAC } from '@/lib/shared/utils';
 
 export const getServerSideProps = RBAC.requireCoachAuth(withPageAuthRequired());
 

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { MemberRegistrationSuccess } from '@/components/features/registration';
+import { MemberRegistrationSuccess } from '@/lib/modules/registration/components';
 
 export default function RegistrationSuccessPage() {
     const router = useRouter();

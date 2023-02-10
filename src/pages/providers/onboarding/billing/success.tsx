@@ -10,14 +10,14 @@ import {
     Paragraph,
     Button,
     CenteredContainer,
-} from '@/components/ui';
+} from '@/lib/shared/components/ui';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
-import { usePracticeOnboardingStorage } from '@/components/features/onboarding';
+import { usePracticeOnboardingStorage } from '@/lib/modules/onboarding/components';
 import { PlanStatus, Role } from '@prisma/client';
 import { useRouter } from 'next/router';
 import { URL_PATHS } from '@/lib/sitemap';
-import { useTherifyUser } from '@/lib/hooks';
-import { RBAC } from '@/lib/utils';
+import { useTherifyUser } from '@/lib/shared/hooks';
+import { RBAC } from '@/lib/shared/utils';
 
 export const getServerSideProps = RBAC.requireProviderAuth(
     withPageAuthRequired()

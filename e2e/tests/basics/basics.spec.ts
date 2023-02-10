@@ -1,4 +1,4 @@
-import { sleep } from '@/lib/utils';
+import { sleep } from '@/lib/shared/utils';
 
 describe('sleep', function () {
     it('should sleep', async function () {

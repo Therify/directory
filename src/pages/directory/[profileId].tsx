@@ -1,7 +1,7 @@
-import { ProviderProfile as ProviderProfileUi } from '@/components/features/directory/ProviderProfile';
-import { TopBar, TopNavigationLayout } from '@/components/ui';
+import { ProviderProfile as ProviderProfileUi } from '@/lib/modules/directory/components/ProviderProfile';
+import { TopBar, TopNavigationLayout } from '@/lib/shared/components/ui';
 import { prisma } from '@/lib/prisma';
-import { ProviderProfile } from '@/lib/types';
+import { ProviderProfile } from '@/lib/shared/types';
 import { GetServerSideProps } from 'next';
 
 export default function ProviderProfilePage({

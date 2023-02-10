@@ -1,10 +1,10 @@
-import { DirectoryCard } from '@/components/features/directory/DirectoryCard';
-import { MemberNavigationPage } from '@/components/features/pages/MemberNavigationPage';
-import { PageHeader } from '@/components/ui/PageHeader';
-import { membersService } from '@/lib/services/members';
-import { FavoritesPageProps } from '@/lib/services/members/get-favorites-page-props/getFavoritesPageProps';
-import { RBAC } from '@/lib/utils';
-import { trpc } from '@/lib/utils/trpc';
+import { DirectoryCard } from '@/lib/modules/directory/components/DirectoryCard';
+import { MemberNavigationPage } from '@/lib/shared/components/features/pages/MemberNavigationPage';
+import { PageHeader } from '@/lib/shared/components/ui/PageHeader';
+import { membersService } from '@/lib/modules/members/service';
+import { FavoritesPageProps } from '@/lib/modules/members/service/get-favorites-page-props/getFavoritesPageProps';
+import { RBAC } from '@/lib/shared/utils';
+import { trpc } from '@/lib/shared/utils/trpc';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';

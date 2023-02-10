@@ -1,15 +1,15 @@
 import { useRouter } from 'next/router';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
-import { H1 } from '@/components/ui';
-import { SideNavigationPage } from '@/components/features/pages';
+import { H1 } from '@/lib/shared/components/ui';
+import { SideNavigationPage } from '@/lib/shared/components/features/pages';
 import {
     THERAPIST_MAIN_MENU,
     THERAPIST_SECONDARY_MENU,
     THERAPIST_MOBILE_MENU,
     URL_PATHS,
 } from '@/lib/sitemap';
-import { useTherifyUser } from '@/lib/hooks';
-import { RBAC } from '@/lib/utils';
+import { useTherifyUser } from '@/lib/shared/hooks';
+import { RBAC } from '@/lib/shared/utils';
 
 export const getServerSideProps = RBAC.requireTherapistAuth(
     withPageAuthRequired()

@@ -1,11 +1,11 @@
-import { DirectoryCard } from '@/components/features/directory/DirectoryCard';
-import { MemberNavigationPage } from '@/components/features/pages/MemberNavigationPage';
-import { PageHeader } from '@/components/ui/PageHeader';
-import { membersService } from '@/lib/services/members';
-import { DirectoryPageProps } from '@/lib/services/members/get-directory-page-props/getDirectoryPageProps';
+import { DirectoryCard } from '@/lib/modules/directory/components/DirectoryCard';
+import { MemberNavigationPage } from '@/lib/shared/components/features/pages/MemberNavigationPage';
+import { PageHeader } from '@/lib/shared/components/ui/PageHeader';
+import { membersService } from '@/lib/modules/members/service';
+import { DirectoryPageProps } from '@/lib/modules/members/service/get-directory-page-props/getDirectoryPageProps';
 import { URL_PATHS } from '@/lib/sitemap/urlPaths';
-import { RBAC } from '@/lib/utils';
-import { trpc } from '@/lib/utils/trpc';
+import { RBAC } from '@/lib/shared/utils';
+import { trpc } from '@/lib/shared/utils/trpc';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';

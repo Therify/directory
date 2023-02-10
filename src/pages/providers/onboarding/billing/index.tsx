@@ -1,27 +1,27 @@
 import { useEffect, useState } from 'react';
 import { Box } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
-import { HandlePracticeOnboarding } from '@/lib/features/onboarding';
-import { trpc } from '@/lib/utils/trpc';
+import { HandlePracticeOnboarding } from '@/lib/modules/onboarding/features';
+import { trpc } from '@/lib/shared/utils/trpc';
 import {
     FormContainer,
     StepperContainer,
     Button,
     Caption,
-} from '@/components/ui';
+} from '@/lib/shared/components/ui';
 import {
     PracticeDetailsForm,
     usePracticeOnboardingStorage,
-} from '@/components/features/onboarding';
+} from '@/lib/modules/onboarding/components';
 import { useForm } from 'react-hook-form';
 import { ArrowForwardRounded as NextIcon } from '@mui/icons-material';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
-import { getProductByEnvironment, PRODUCTS } from '@/lib/types';
+import { getProductByEnvironment, PRODUCTS } from '@/lib/shared/types';
 import { TRPCClientError } from '@trpc/client';
 import Link from 'next/link';
 import { URL_PATHS } from '@/lib/sitemap';
-import { RBAC } from '@/lib/utils';
+import { RBAC } from '@/lib/shared/utils';
 
 const REGISTRATION_STEPS = ['Registration', 'Payment', 'Onboarding'] as const;
 

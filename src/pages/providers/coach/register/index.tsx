@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useRegistrationStorage } from '@/components/features/registration/ProviderRegistrationFlow/hooks';
-import { RegisterProvider } from '@/lib/features/registration';
-import { ProviderRegistrationFlow } from '@/components/features/registration';
-import { trpc } from '@/lib/utils/trpc';
-import { ROLES } from '@/lib/types/roles';
+import { useRegistrationStorage } from '@/lib/modules/registration/components/ProviderRegistrationFlow/hooks';
+import { RegisterProvider } from '@/lib/modules/registration/features';
+import { ProviderRegistrationFlow } from '@/lib/modules/registration/components';
+import { trpc } from '@/lib/shared/utils/trpc';
+import { ROLES } from '@/lib/shared/types/roles';
 import { URL_PATHS } from '@/lib/sitemap';
 
 export default function ProviderRegistrationPage() {

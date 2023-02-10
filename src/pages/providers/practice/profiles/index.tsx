@@ -17,16 +17,16 @@ import {
     Modal,
     Paragraph,
     PageContentContainer,
-} from '@/components/ui';
-import { SideNavigationPage } from '@/components/features/pages';
+} from '@/lib/shared/components/ui';
+import { SideNavigationPage } from '@/lib/shared/components/features/pages';
 import {
     PRACTICE_ADMIN_MAIN_MENU,
     PRACTICE_ADMIN_SECONDARY_MENU,
     PRACTICE_ADMIN_MOBILE_MENU,
     URL_PATHS,
 } from '@/lib/sitemap';
-import { useTherifyUser } from '@/lib/hooks';
-import { RBAC } from '@/lib/utils';
+import { useTherifyUser } from '@/lib/shared/hooks';
+import { RBAC } from '@/lib/shared/utils';
 import { useEffect, useState } from 'react';
 import { ListingStatus, Role } from '@prisma/client';
 import { styled, useTheme } from '@mui/material/styles';
@@ -42,7 +42,10 @@ import {
     SendRounded,
     AddCircleOutlineRounded,
 } from '@mui/icons-material';
-import { DirectoryListingSchema, ProviderProfileSchema } from '@/lib/schema';
+import {
+    DirectoryListingSchema,
+    ProviderProfileSchema,
+} from '@/lib/shared/schema';
 import { z } from 'zod';
 
 export const getServerSideProps = RBAC.requireProviderAuth(
