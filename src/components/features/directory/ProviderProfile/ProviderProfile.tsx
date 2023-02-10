@@ -143,7 +143,7 @@ export function ProviderProfile({
                         <Paragraph>
                             {designation === ProfileType.therapist
                                 ? 'Therapist'
-                                : 'Coach'}
+                                : 'Mental Health Coach'}
                             {practice && (
                                 <>
                                     {'  '} at{'  '}
@@ -262,7 +262,7 @@ export function ProviderProfile({
                             } offers a free 15 min phone consultation to get started`}
                         />
                     )}
-                    {offersMedicationManagement && (
+                    {offersMedicationManagement && isTherapist && (
                         <CalloutBanner
                             icon={<MedicationOutlined />}
                             title="Offers medication management"
@@ -281,7 +281,10 @@ export function ProviderProfile({
                     {practiceNotes && (
                         <>
                             <Paragraph noMargin bold>
-                                My approach to therapy
+                                My approach to{' '}
+                                {isTherapist
+                                    ? 'therapy'
+                                    : 'mental health coaching'}
                             </Paragraph>
                             <AttributeText sx={{ whiteSpace: 'pre-line' }}>
                                 {practiceNotes}

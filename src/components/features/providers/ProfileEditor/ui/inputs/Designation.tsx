@@ -14,7 +14,7 @@ const OPTIONS: SelectOption[] = [
     },
     {
         value: ProfileType.coach,
-        displayText: 'Coach',
+        displayText: 'Mental Health Coach',
     },
 ];
 
