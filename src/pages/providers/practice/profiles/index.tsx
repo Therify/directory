@@ -14,6 +14,7 @@ import {
     H1,
     List,
     ListItem,
+    Modal,
     Paragraph,
     PageContentContainer,
 } from '@/components/ui';
@@ -26,7 +27,7 @@ import {
 } from '@/lib/sitemap';
 import { useTherifyUser } from '@/lib/hooks';
 import { RBAC } from '@/lib/utils';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ListingStatus, Role } from '@prisma/client';
 import { styled, useTheme } from '@mui/material/styles';
 import { Box } from '@mui/material';
@@ -38,6 +39,8 @@ import {
     VisibilityOffRounded,
     CancelRounded,
     VisibilityRounded,
+    SendRounded,
+    AddCircleOutlineRounded,
 } from '@mui/icons-material';
 import { DirectoryListingSchema, ProviderProfileSchema } from '@/lib/schema';
 import { z } from 'zod';
@@ -72,6 +75,8 @@ export default function PracticeProfilesPage() {
     const { user, isLoading } = useTherifyUser();
     const router = useRouter();
     const theme = useTheme();
+    const [showNewProfileModal, setShowNewProfileModal] = useState(false);
+    // TODO: Get profiles for practice
     const profiles = TEST_PROFILES;
 
     const isOverPlanCapacity =
@@ -124,13 +129,7 @@ export default function PracticeProfilesPage() {
                         </Box>
                     </Box>
                     <Box className="admin-controls">
-                        <Button
-                            onClick={() =>
-                                router.push(
-                                    URL_PATHS.PROVIDERS.PRACTICE.PROFILES_CREATE
-                                )
-                            }
-                        >
+                        <Button onClick={() => setShowNewProfileModal(true)}>
                             New Profile
                         </Button>
                     </Box>
@@ -193,6 +192,25 @@ export default function PracticeProfilesPage() {
                     })}
                 </List>
             </PageContentContainer>
+
+            <Modal
+                isOpen={showNewProfileModal}
+                onClose={() => setShowNewProfileModal(false)}
+                title="Create New Profile"
+                message="How would you like to create a profile?"
+                fullWidthButtons
+                shouldStackButtons
+                primaryButtonText="Fill out the profile myself"
+                primaryButtonOnClick={() => {
+                    router.push(URL_PATHS.PROVIDERS.PRACTICE.PROFILES_CREATE);
+                }}
+                primaryButtonEndIcon={<AddCircleOutlineRounded />}
+                secondaryButtonText="Invite a provider to create their profile"
+                secondaryButtonOnClick={() => {
+                    router.push(URL_PATHS.PROVIDERS.PRACTICE.PROVIDER_INVITE);
+                }}
+                secondaryButtonEndIcon={<SendRounded />}
+            />
         </SideNavigationPage>
     );
 }

@@ -1,14 +1,15 @@
-import { Divider, Box, useTheme } from '@mui/material';
+import { Divider, Box } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { Control } from 'react-hook-form';
 import { styled } from '@mui/material/styles';
 import {
-    Avatar,
     Button,
     BUTTON_SIZE,
     BUTTON_TYPE,
     FormSectionTitle,
     H1,
     IconButton,
+    Modal,
 } from '@/components/ui/';
 import {
     PricingInputs,
@@ -18,11 +19,10 @@ import {
     AboutSection,
     CredentialsSection,
 } from './inputs';
-import { MediaUploadWidget } from '@/components/features/media';
 import { CloudinaryUploadResult } from '@/components/features/media/hooks/userCloudinaryWidget';
 import { State, ProviderProfile } from '@/lib/types';
 import { ChevronLeft } from '@mui/icons-material';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import useOnScreen from '@/lib/hooks/use-on-screen';
 import { ProfileType } from '@prisma/client';
 import { ImageSection } from './inputs/Image';
@@ -32,15 +32,16 @@ interface EditorFormProps {
     defaultValues?: Partial<ProviderProfile.ProviderProfile>;
     isFormValid: boolean;
     isSubmittingForm: boolean;
-    licensedStates?: typeof State.ENTRIES[number][];
+    licensedStates?: (typeof State.ENTRIES)[number][];
     onImageUploadSuccess: (
         error: Error | null,
         result: CloudinaryUploadResult
     ) => void;
     onImageUploadError: (error: string | Error) => void;
     onDeleteImage: () => void;
-    onSubmitForm: () => Promise<void>;
+    onSubmitForm: () => void;
     onBack?: () => void;
+    onShowProfilePreview?: () => void;
     hideFloatingButton?: boolean;
     watchedProfileValues: {
         id: ProviderProfile.ProviderProfile['id'];
@@ -48,6 +49,7 @@ interface EditorFormProps {
         profileImageUrl: ProviderProfile.ProviderProfile['profileImageUrl'];
         offersSlidingScale: ProviderProfile.ProviderProfile['offersSlidingScale'];
         minimumRate: ProviderProfile.ProviderProfile['minimumRate'];
+        givenName: ProviderProfile.ProviderProfile['givenName'];
     };
 }
 export const ProfileEditorForm = ({
@@ -61,19 +63,21 @@ export const ProfileEditorForm = ({
     isSubmittingForm,
     isFormValid,
     onBack,
+    onShowProfilePreview,
     hideFloatingButton,
     watchedProfileValues,
 }: EditorFormProps) => {
+    const isNewProfile = !watchedProfileValues.id;
     const theme = useTheme();
     const headerSaveButtonRef = useRef(null);
     const footerSaveButtonRef = useRef(null);
+    const [confirmSave, setConfirmSave] = useState(false);
+
     // Parent container needs to be `position: 'relative'`
     // for the floating button to position correctly
     const isHeaderSaveVisible = useOnScreen(headerSaveButtonRef);
     const isFooterSaveVisible = useOnScreen(footerSaveButtonRef);
-    const saveButtonText = watchedProfileValues.id
-        ? 'Save Changes'
-        : 'Create Profile';
+    const saveButtonText = isNewProfile ? 'Create Profile' : 'Save Changes';
     const isTherapist =
         watchedProfileValues.designation === ProfileType.therapist;
     // TODO: Add supervisor input
@@ -94,31 +98,46 @@ export const ProfileEditorForm = ({
                     </Box>
                 )}
                 <HeaderContainer marginBottom={4}>
-                    <H1 style={{ margin: 0 }}>Profile Editor</H1>
+                    <H1>Profile Editor</H1>
+                    <PreviewProfileButton
+                        color="secondary"
+                        onClick={() => onShowProfilePreview?.()}
+                    >
+                        Preview Profile
+                    </PreviewProfileButton>
                     <Button
                         ref={headerSaveButtonRef}
                         fullWidth={false}
                         type="contained"
                         disabled={!isFormValid || isSubmittingForm}
                         isLoading={isSubmittingForm}
-                        onClick={onSubmitForm}
+                        onClick={() => setConfirmSave(true)}
                     >
                         {saveButtonText}
                     </Button>
                 </HeaderContainer>
                 {!hideFloatingButton && (
-                    <FloatingButton
+                    <FloatingButtons
                         showButton={
                             !isHeaderSaveVisible && !isFooterSaveVisible
                         }
-                        type="contained"
-                        size={BUTTON_SIZE.LARGE}
-                        disabled={!isFormValid || isSubmittingForm}
-                        isLoading={isSubmittingForm}
-                        onClick={onSubmitForm}
                     >
-                        {saveButtonText}
-                    </FloatingButton>
+                        <PreviewProfileButton
+                            color="secondary"
+                            onClick={() => onShowProfilePreview?.()}
+                        >
+                            Preview Profile
+                        </PreviewProfileButton>
+                        <Button
+                            type="contained"
+                            size={BUTTON_SIZE.LARGE}
+                            disabled={!isFormValid || isSubmittingForm}
+                            isLoading={isSubmittingForm}
+                            onClick={() => setConfirmSave(true)}
+                        >
+                            {saveButtonText}
+                        </Button>
+                    </FloatingButtons>
                 )}
                 <Divider sx={{ mb: 4 }} />
                 <FormSectionTitle style={{ marginTop: 0 }}>
@@ -170,25 +189,71 @@ export const ProfileEditorForm = ({
                     value={education}
                     onChange={(e) => setEducation(e.target.value)}
                 /> */}
-                <Button
-                    ref={footerSaveButtonRef}
-                    fullWidth={false}
-                    type="contained"
-                    disabled={!isFormValid || isSubmittingForm}
-                    isLoading={isSubmittingForm}
-                    onClick={onSubmitForm}
-                >
-                    {saveButtonText}
-                </Button>
+                <Box width="100%" ref={footerSaveButtonRef}>
+                    <PreviewProfileButton
+                        color="secondary"
+                        fullWidth
+                        onClick={() => onShowProfilePreview?.()}
+                        style={{ marginBottom: theme.spacing(2) }}
+                    >
+                        Preview Profile
+                    </PreviewProfileButton>
+                    <Button
+                        fullWidth
+                        type="contained"
+                        disabled={!isFormValid || isSubmittingForm}
+                        isLoading={isSubmittingForm}
+                        onClick={() => setConfirmSave(true)}
+                    >
+                        {saveButtonText}
+                    </Button>
+                </Box>
             </EditorForm>
+            <Modal
+                isOpen={confirmSave}
+                onClose={() => setConfirmSave(false)}
+                title={isNewProfile ? 'Create Profile' : 'Update Profile'}
+                message={
+                    isNewProfile
+                        ? `Are you sure you want to create this profile for ${watchedProfileValues.givenName}?`
+                        : 'Are you sure you want to save these changes?'
+                }
+                fullWidthButtons
+                primaryButtonText={isNewProfile ? 'Create' : 'Save'}
+                primaryButtonOnClick={() => {
+                    onSubmitForm();
+                    setConfirmSave(false);
+                }}
+                secondaryButtonText="Cancel"
+                secondaryButtonOnClick={() => setConfirmSave(false)}
+            />
         </EditorContainer>
     );
 };
 const HeaderContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
     marginBottom: theme.spacing(4),
+    justifyContent: 'flex-start',
+    flexDirection: 'column',
+    '& button': {
+        width: '100%',
+    },
+    '& h1': {
+        ...theme.typography.h2,
+        marginBottom: theme.spacing(2),
+    },
+    [theme.breakpoints.up('md')]: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        '& h1': {
+            ...theme.typography.h1,
+            marginBottom: 0,
+        },
+        '& button': {
+            width: 'inherit',
+        },
+    },
 }));
 
 const EditorContainer = styled(Box)(({ theme }) => ({
@@ -208,17 +273,32 @@ const EditorForm = styled('form')(({ theme }) => ({
     gap: theme.spacing(4),
 }));
 
-const FloatingButton = styled(Button, {
+const PreviewProfileButton = styled(Button)(({ theme }) => ({
+    marginBottom: theme.spacing(2),
+    display: 'block',
+    [theme.breakpoints.up('md')]: {
+        display: 'none',
+    },
+}));
+
+const FloatingButtons = styled(Box, {
     shouldForwardProp: (prop) => 'showButton' !== prop,
 })<{
     showButton: boolean;
 }>(({ theme, showButton }) => ({
     position: 'absolute',
-    right: showButton ? theme.spacing(3) : '-100%',
-    bottom: theme.spacing(3),
     padding: theme.spacing(2),
-    zIndex: 1,
-    transition: 'right 0.3s ease-in-out',
-    minWidth: '25%',
-    maxWidth: '100%',
+    zIndex: 2,
+    display: 'flex',
+    flexDirection: 'column',
+    minWidth: `25%`,
+    maxWidth: `calc(100% - ${theme.spacing(6)})`,
+    bottom: showButton ? theme.spacing(3) : '-100%',
+    right: theme.spacing(3),
+    transition: 'bottom 0.2s ease-in-out',
+    [theme.breakpoints.up('md')]: {
+        right: showButton ? theme.spacing(3) : '-100%',
+        bottom: theme.spacing(3),
+        transition: 'right 0.3s ease-in-out',
+    },
 }));
