@@ -11,6 +11,7 @@ export default async function callback(
     } catch (error) {
         if (error instanceof ProfileHandlerError) {
             res.status(error.status ?? 400).end(error.message);
+            return;
         }
         res.status(500).end(
             (error as { message: string }).message ??

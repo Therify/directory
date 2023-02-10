@@ -43,7 +43,7 @@ export const PricingInputs = ({
                     visible={offersSlidingScale}
                 />
             </PriceScaleContainer>
-            <Caption>Your rate in dollars per 50 minute session</Caption>
+            <Caption>Your rate in dollars per 45 minute session</Caption>
         </Box>
     );
 };

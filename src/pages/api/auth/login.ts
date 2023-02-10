@@ -18,6 +18,7 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
     } catch (error) {
         if (error instanceof LoginHandlerError) {
             res.status(error.status ?? 400).end(error.message);
+            return;
         }
         res.status(500).end(
             (error as { message: string }).message ??
