@@ -3,6 +3,12 @@ import * as z from 'zod';
 export const schema = z.object({
     npiNumber: z.string(),
     expiration: z.string(),
+    // TODO: Do we want to include these?
+    // name: z.string(),
+    // supervisorLicense:z.object({
+    //     licenseNumber: z.string(),
+    //     state: z.string(),
+    // })
 });
 
 export type ProviderSupervisor = z.infer<typeof schema>;

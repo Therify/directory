@@ -33,6 +33,7 @@ import { CriteriaCard, CRITERIA_CARD_TYPES } from './CriteriaCard';
 interface ProviderProfileProps {
     practice?: Pick<Practice, 'id' | 'name' | 'city' | 'state' | 'website'>;
     isFavorited?: boolean;
+    isFavoriteLoading?: boolean;
     onFavorite?: () => Promise<void>;
     onShare?: () => void;
 }
@@ -41,6 +42,7 @@ export function ProviderProfile({
     practice,
     onShare,
     onFavorite,
+    isFavoriteLoading,
     isFavorited,
     designation,
     profileImageUrl = null,
