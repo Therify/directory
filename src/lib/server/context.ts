@@ -1,10 +1,10 @@
-import { AccountsService } from '@/lib/services/accounts';
+import { AccountsService } from '@/lib/modules/accounts/service';
 import * as trpcNext from '@trpc/server/adapters/next';
-import { membersService, MembersService } from '../services/members';
+import { membersService, MembersService } from '../modules/members/service';
 import {
     notificationsService,
     NotificationsService,
-} from '../services/notifications';
+} from '../modules/notifications/service';
 
 // The app's context - is generated for each incoming request
 export interface Context {

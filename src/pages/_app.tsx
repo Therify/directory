@@ -1,13 +1,13 @@
 import type { AppProps, AppType } from 'next/app';
 import { ThemeProvider } from '@mui/material/styles';
-import { ApplicationContainer } from '@/components/ui';
+import { ApplicationContainer } from '@/lib/shared/components/ui';
 import { withTRPC } from '@trpc/next';
 import { UserProvider as Auth0UserProvider } from '@auth0/nextjs-auth0/client';
 import { AppRouter } from '@/lib/server/routers/app';
-import { TherifyUser, FirebaseClient } from '@/lib/context';
-import { therifyDesignSystem } from '@/components/themes/therify-design-system';
-import { InAppNotificationsContext } from '@/components/features/in-app-notifications/context';
-import { Globals } from '@/components/styles';
+import { TherifyUser, FirebaseClient } from '@/lib/shared/context';
+import { therifyDesignSystem } from '@/lib/shared/components/themes/therify-design-system';
+import { InAppNotificationsContext } from '@/lib/modules/notifications/components/context';
+import { Globals } from '@/lib/shared/components/styles';
 
 const App: AppType = ({ Component, pageProps }: AppProps) => {
     return (

@@ -5,13 +5,13 @@ import { Account } from '@prisma/client';
 import { GetServerSideProps } from 'next';
 import { styled } from '@mui/material/styles';
 
-import { trpc } from '@/lib/utils/trpc';
+import { trpc } from '@/lib/shared/utils/trpc';
 import { URL_PATHS } from '@/lib/sitemap';
-import { ROLES } from '@/lib/types/roles';
-import { AccountsService } from '@/lib/services/accounts';
-import { RegisterMember } from '@/lib/features/registration';
-import { MemberRegistrationFlow } from '@/components/features/registration';
-import { useRegistrationStorage } from '@/components/features/registration/MemberRegistrationFlow/hooks';
+import { ROLES } from '@/lib/shared/types/roles';
+import { AccountsService } from '@/lib/modules/accounts/service';
+import { RegisterMember } from '@/lib/modules/registration/features';
+import { MemberRegistrationFlow } from '@/lib/modules/registration/components';
+import { useRegistrationStorage } from '@/lib/modules/registration/components/MemberRegistrationFlow/hooks';
 
 interface Props {
     hasRegistrationCode: boolean;

@@ -1,19 +1,18 @@
 import { useRouter } from 'next/router';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
-import { PageContentContainer } from '@/components/ui';
-import { SideNavigationPage } from '@/components/features/pages';
+import { SideNavigationPage } from '@/lib/shared/components/features/pages';
 import {
     PRACTICE_ADMIN_MAIN_MENU,
     PRACTICE_ADMIN_SECONDARY_MENU,
     PRACTICE_ADMIN_MOBILE_MENU,
     URL_PATHS,
 } from '@/lib/sitemap';
-import { useTherifyUser } from '@/lib/hooks';
-import { RBAC } from '@/lib/utils';
+import { useTherifyUser } from '@/lib/shared/hooks';
+import { RBAC } from '@/lib/shared/utils';
 import { useEffect } from 'react';
 import { Role } from '@prisma/client';
-import { ProfileEditor } from '@/components/features/providers/ProfileEditor';
-import { TherifyUser } from '@/lib/types';
+import { ProfileEditor } from '@/lib/modules/providers/components/ProfileEditor';
+import { TherifyUser } from '@/lib/shared/types';
 
 export const getServerSideProps = RBAC.requireProviderAuth(
     withPageAuthRequired()

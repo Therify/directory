@@ -9,7 +9,7 @@ datasource db {
 
 generator zod {
   provider    = "zod-prisma"
-  output      = "../src/lib/schema"
+  output      = "../src/lib/shared/schema"
   modelSuffix = "Schema"
 }
 

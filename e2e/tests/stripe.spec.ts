@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { VendorStripe } from '@/lib/vendors/stripe';
+import { VendorStripe } from '@/lib/shared/vendors/stripe';
 
 describe('Stripe', () => {
     describe('Customer Management', function () {

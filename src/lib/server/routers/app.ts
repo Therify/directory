@@ -1,6 +1,6 @@
 import { createRouter } from '../createRouter';
-import { accountsRouter } from './accounts';
-import { memberRouter } from './members';
+import { accountsRouter } from '@/lib/modules/accounts/routes';
+import { memberRouter } from '@/lib/modules/members/routes';
 
 export const appRouter = createRouter()
     .merge('accounts.', accountsRouter)

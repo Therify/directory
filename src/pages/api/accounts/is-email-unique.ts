@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { AccountsService } from '@/lib/services/accounts';
+import { AccountsService } from '@/lib/modules/accounts/service';
 
 export default async function handler(
     req: NextApiRequest,

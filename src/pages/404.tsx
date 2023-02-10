@@ -4,7 +4,7 @@ import {
     Paragraph,
     Button,
     TherifyIcon,
-} from '@/components/ui';
+} from '@/lib/shared/components/ui';
 import { URL_PATHS } from '@/lib/sitemap';
 import { useRouter } from 'next/router';
 

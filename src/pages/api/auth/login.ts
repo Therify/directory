@@ -1,4 +1,4 @@
-import { getUrls } from '@/lib/utils';
+import { getUrls } from '@/lib/shared/utils';
 import { handleLogin, LoginHandlerError } from '@auth0/nextjs-auth0';
 import { NextApiRequest, NextApiResponse } from 'next';
 

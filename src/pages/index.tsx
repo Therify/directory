@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { TwoColumnGrid } from '@/components/ui/Grids/TwoColumnGrid';
+import { TwoColumnGrid } from '@/lib/shared/components/ui/Grids/TwoColumnGrid';
 import {
     Caption,
     Button,
@@ -7,7 +7,7 @@ import {
     Paragraph,
     LoadingContainer,
     CenteredContainer,
-} from '@/components/ui';
+} from '@/lib/shared/components/ui';
 import Box from '@mui/material/Box';
 import { styled, useTheme } from '@mui/material/styles';
 import { default as NextImage } from 'next/image';
@@ -15,7 +15,7 @@ import { useRouter } from 'next/router';
 import { URL_PATHS } from '@/lib/sitemap';
 import Link from 'next/link';
 import { Role } from '@prisma/client';
-import { useTherifyUser } from '@/lib/hooks';
+import { useTherifyUser } from '@/lib/shared/hooks';
 
 const ABSTRACT_SHAPE_URL =
     'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673455675/app.therify.co/shapes/abstract-shape_fbvcil.svg' as const;

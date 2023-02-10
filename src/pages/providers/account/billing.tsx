@@ -1,7 +1,7 @@
 import { Box, Link } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { ArrowForwardRounded as ArrowIcon } from '@mui/icons-material';
-import { Paragraph, H3, Button } from '@/components/ui';
+import { Paragraph, H3, Button } from '@/lib/shared/components/ui';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 
 export const getServerSideProps = withPageAuthRequired();

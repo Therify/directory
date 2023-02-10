@@ -1,7 +1,7 @@
 import Stripe from 'stripe';
 import { buffer } from 'micro';
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import { stripeWebhookService } from '@/lib/services/webhooks';
+import { stripeWebhookService } from '@/lib/modules/webhooks/services';
 
 export const config = { api: { bodyParser: false } };
 

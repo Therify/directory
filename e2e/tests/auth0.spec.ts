@@ -1,6 +1,6 @@
 import crypto from 'crypto';
-import { VendorAuth0 } from '@/lib/vendors/auth0';
-import { sleep } from '@/lib/utils';
+import { VendorAuth0 } from '@/lib/shared/vendors/auth0';
+import { sleep } from '@/lib/shared/utils';
 
 describe('VendorAuth0', function () {
     let createdUserId: string;
