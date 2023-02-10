@@ -1,4 +1,3 @@
-import '../styles/globals.css';
 import type { AppProps, AppType } from 'next/app';
 import { ThemeProvider } from '@mui/material/styles';
 import { ApplicationContainer } from '@/components/ui';
@@ -8,10 +7,12 @@ import { AppRouter } from '@/lib/server/routers/app';
 import { TherifyUser, FirebaseClient } from '@/lib/context';
 import { therifyDesignSystem } from '@/components/themes/therify-design-system';
 import { InAppNotificationsContext } from '@/components/features/in-app-notifications/context';
+import { Globals } from '@/components/styles';
 
 const App: AppType = ({ Component, pageProps }: AppProps) => {
     return (
         <ThemeProvider theme={therifyDesignSystem}>
+            <Globals />
             <Auth0UserProvider>
                 <TherifyUser.Provider>
                     <FirebaseClient.Provider>
@@ -36,6 +37,12 @@ export default withTRPC<AppRouter>({
         const url = process.env.VERCEL_URL
             ? `https://${process.env.VERCEL_URL}/api/trpc`
             : 'http://localhost:3000/api/trpc';
+        if (typeof window !== 'undefined') {
+            // during client requests
+            return {
+                url: '/api/trpc',
+            };
+        }
 
         return {
             url,

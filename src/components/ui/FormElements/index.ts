@@ -8,6 +8,7 @@ export {
     Checkbox,
     Switch,
     Radio,
+    TOGGLE_TYPE,
 } from './Toggle';
 export * from './formTypography';
 export type { ToggleProps, ToggleType } from './Toggle';

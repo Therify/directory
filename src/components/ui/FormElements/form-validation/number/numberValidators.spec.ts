@@ -1,39 +1,39 @@
 import {
-    getNameValidationErrorMessage,
-    NameValidationType,
-    createNameValidationErrorMessages,
+    getNumberValidationErrorMessage,
+    NumberValidationType,
+    createNumberValidationErrorMessages,
 } from './numberValidators';
 
 describe('Name Validation', function () {
     describe('getNameValidationErrorMessage', function () {
-        const errorMessages = createNameValidationErrorMessages();
+        const errorMessages = createNumberValidationErrorMessages();
 
         describe('createNameValidationErrorMessages', () => {
             test('uses fieldName if provided', () => {
                 const fieldName = 'First Name';
                 const errorMessages =
-                    createNameValidationErrorMessages(fieldName);
-                expect(errorMessages[NameValidationType.Required]).toBe(
+                    createNumberValidationErrorMessages(fieldName);
+                expect(errorMessages[NumberValidationType.Required]).toBe(
                     `${fieldName} is required`
                 );
             });
 
             test('uses default fieldName if not provided', () => {
-                const errorMessages = createNameValidationErrorMessages();
-                expect(errorMessages[NameValidationType.Required]).toBe(
-                    'Name is required'
+                const errorMessages = createNumberValidationErrorMessages();
+                expect(errorMessages[NumberValidationType.Required]).toBe(
+                    'Number is required'
                 );
             });
         });
 
         test('name is required', function () {
             expect(
-                getNameValidationErrorMessage(NameValidationType.Required)
+                getNumberValidationErrorMessage(NumberValidationType.Required)
             ).toBe(errorMessages.required);
         });
 
         test('returning undefined', function () {
-            expect(getNameValidationErrorMessage(undefined)).toBe(undefined);
+            expect(getNumberValidationErrorMessage(undefined)).toBe(undefined);
         });
     });
 });

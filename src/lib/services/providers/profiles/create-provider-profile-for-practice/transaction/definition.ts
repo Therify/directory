@@ -10,7 +10,8 @@ export const transactionDefinition = z.object({
         profileId: z.string(),
     }),
     createDirectoryListing: z.object({
-        listingId: z.string(),
+        listingPracticeId: z.string(),
+        listingProfileId: z.string(),
     }),
     createPracticeProviderInvitation: z.object({
         invitationId: z.string().optional(),

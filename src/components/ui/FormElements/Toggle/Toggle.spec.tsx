@@ -1,7 +1,7 @@
 import userEvent from '@testing-library/user-event';
 
 import { renderWithTheme } from '../../../fixtures/renderWithTheme';
-import { TEST_IDS, Toggle, ToggleType } from './index';
+import { TEST_IDS, Toggle, TOGGLE_TYPE } from './index';
 
 describe('Toggle', () => {
     const user = userEvent.setup();
@@ -22,7 +22,7 @@ describe('Toggle', () => {
         const onChange = jest.fn();
         const { getByTestId } = renderWithTheme(
             <Toggle
-                type={ToggleType.Checkbox}
+                type={TOGGLE_TYPE.CHECKBOX}
                 displayText="Text"
                 onChange={onChange}
             />
@@ -32,16 +32,20 @@ describe('Toggle', () => {
         expect(onChange).toHaveBeenCalled();
     });
 
-    describe('Checkbox', () => {
+    describe('CHECKBOX', () => {
         it('should render checkbox unchecked', () => {
             const { getByTestId } = renderWithTheme(
-                <Toggle type={ToggleType.Checkbox} displayText="Text" />
+                <Toggle type={TOGGLE_TYPE.CHECKBOX} displayText="Text" />
             );
             expect(getByTestId('CheckBoxOutlineBlankIcon')).toBeVisible();
         });
         it('should render checkbox checked', () => {
             const { getByTestId } = renderWithTheme(
-                <Toggle type={ToggleType.Checkbox} checked displayText="Text" />
+                <Toggle
+                    type={TOGGLE_TYPE.CHECKBOX}
+                    checked
+                    displayText="Text"
+                />
             );
             expect(getByTestId('CheckBoxIcon')).toBeVisible();
         });
@@ -49,7 +53,7 @@ describe('Toggle', () => {
         it('renders unchecked color', () => {
             const { getByTestId, theme } = renderWithTheme(
                 <Toggle
-                    type={ToggleType.Checkbox}
+                    type={TOGGLE_TYPE.CHECKBOX}
                     displayText="Text"
                     uncheckedColor="error"
                 />
@@ -62,7 +66,7 @@ describe('Toggle', () => {
         it('renders checked color', () => {
             const { getByTestId, theme } = renderWithTheme(
                 <Toggle
-                    type={ToggleType.Checkbox}
+                    type={TOGGLE_TYPE.CHECKBOX}
                     displayText="Text"
                     checkedColor="success"
                     checked
@@ -74,16 +78,16 @@ describe('Toggle', () => {
         });
     });
 
-    describe('Radio', () => {
+    describe('RADIO', () => {
         it('should render radio unchecked', () => {
             const { getByTestId } = renderWithTheme(
-                <Toggle type={ToggleType.Radio} displayText="Text" />
+                <Toggle type={TOGGLE_TYPE.RADIO} displayText="Text" />
             );
             expect(getByTestId('RadioButtonUncheckedIcon')).toBeVisible();
         });
         it('should render radio checked', () => {
             const { getByTestId } = renderWithTheme(
-                <Toggle type={ToggleType.Radio} checked displayText="Text" />
+                <Toggle type={TOGGLE_TYPE.RADIO} checked displayText="Text" />
             );
             expect(getByTestId('RadioButtonCheckedIcon')).toBeVisible();
         });
@@ -91,7 +95,7 @@ describe('Toggle', () => {
         it('renders unchecked color', () => {
             const { getByTestId, theme } = renderWithTheme(
                 <Toggle
-                    type={ToggleType.Radio}
+                    type={TOGGLE_TYPE.RADIO}
                     displayText="Text"
                     uncheckedColor="warning"
                 />
@@ -104,7 +108,7 @@ describe('Toggle', () => {
         it('renders checked color', () => {
             const { getByTestId, theme } = renderWithTheme(
                 <Toggle
-                    type={ToggleType.Radio}
+                    type={TOGGLE_TYPE.RADIO}
                     displayText="Text"
                     checkedColor="info"
                     checked
@@ -119,7 +123,7 @@ describe('Toggle', () => {
     describe('Switch', () => {
         it('renders a switch', () => {
             const { container } = renderWithTheme(
-                <Toggle type={ToggleType.Switch} />
+                <Toggle type={TOGGLE_TYPE.SWITCH} />
             );
             const switchEl =
                 container.getElementsByClassName('MuiSwitch-root')[0] ?? [];
@@ -128,7 +132,7 @@ describe('Toggle', () => {
 
         it('passes unchecked state to switch', () => {
             const { getByTestId } = renderWithTheme(
-                <Toggle checked={false} type={ToggleType.Switch} />
+                <Toggle checked={false} type={TOGGLE_TYPE.SWITCH} />
             );
             expect(getByTestId(TEST_IDS.CONTROL_ELEMENT)).not.toHaveClass(
                 'Mui-checked'
@@ -137,7 +141,7 @@ describe('Toggle', () => {
 
         it('passes checked state switch', () => {
             const { getByTestId } = renderWithTheme(
-                <Toggle checked type={ToggleType.Switch} />
+                <Toggle checked type={TOGGLE_TYPE.SWITCH} />
             );
             expect(getByTestId(TEST_IDS.CONTROL_ELEMENT)).toHaveClass(
                 'Mui-checked'
@@ -146,7 +150,7 @@ describe('Toggle', () => {
 
         it('passes unchecked color to switch', () => {
             const { container, theme } = renderWithTheme(
-                <Toggle type={ToggleType.Switch} uncheckedColor="secondary" />
+                <Toggle type={TOGGLE_TYPE.SWITCH} uncheckedColor="secondary" />
             );
             const track =
                 container.getElementsByClassName('MuiSwitch-track')[0];
@@ -157,7 +161,7 @@ describe('Toggle', () => {
 
         it('passes checked color to switch', () => {
             const { container, theme } = renderWithTheme(
-                <Toggle checked type={ToggleType.Switch} checkedColor="info" />
+                <Toggle checked type={TOGGLE_TYPE.SWITCH} checkedColor="info" />
             );
             const track =
                 container.getElementsByClassName('MuiSwitch-track')[0];
@@ -167,7 +171,10 @@ describe('Toggle', () => {
         it('passes size to switch', () => {
             const trackHeight = 10;
             const { container } = renderWithTheme(
-                <Toggle type={ToggleType.Switch} switchSize={{ trackHeight }} />
+                <Toggle
+                    type={TOGGLE_TYPE.SWITCH}
+                    switchSize={{ trackHeight }}
+                />
             );
             const track = container.getElementsByClassName('MuiSwitch-root')[0];
             expect(track).toHaveStyle(`height: ${trackHeight}px`);

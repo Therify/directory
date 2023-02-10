@@ -5,11 +5,13 @@ import { membersService } from '@/lib/services/members';
 import { DirectoryPageProps } from '@/lib/services/members/get-directory-page-props/getDirectoryPageProps';
 import { URL_PATHS } from '@/lib/sitemap/urlPaths';
 import { RBAC } from '@/lib/utils';
+import { trpc } from '@/lib/utils/trpc';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import { ProviderProfile } from '@prisma/client';
 import { useRouter } from 'next/navigation';
+import React from 'react';
 
 const STATES = ['New York', 'New Jersey'] as const;
 
@@ -30,8 +32,24 @@ export const getServerSideProps = RBAC.requireMemberAuth(
     })
 );
 
-function Directory({ providerProfiles = [], user }: DirectoryPageProps) {
+function Directory({
+    providerProfiles = [],
+    user,
+    favoriteProfiles = [],
+}: DirectoryPageProps) {
     const router = useRouter();
+    const mutation = trpc.useMutation('members.favorite-profile');
+    const [favoriteProfilesMap, setFavoriteProfilesMap] = React.useState<{
+        [key: string]: boolean;
+    }>(
+        favoriteProfiles.reduce(
+            (acc, profile) => ({
+                ...acc,
+                [profile.id]: true,
+            }),
+            {}
+        )
+    );
     return (
         <MemberNavigationPage
             currentPath={URL_PATHS.MEMBERS.DIRECTORY}
@@ -44,19 +62,43 @@ function Directory({ providerProfiles = [], user }: DirectoryPageProps) {
                     subtitle="Our providers are licensed and ready to provide the care you deserve"
                 />
                 <ResultsSection>
-                    {providerProfiles.map((profile) => (
-                        <DirectoryCard
-                            key={profile.id}
-                            onClick={() => {
-                                router.push(`/members/directory/${profile.id}`);
-                            }}
-                            providerName={`${profile.givenName} ${profile.surname}`}
-                            providerCredentials={''}
-                            providerImageURL={profile.profileImageUrl}
-                            providerRate={profile.minimumRate}
-                            isFavorite={false}
-                        />
-                    ))}
+                    {providerProfiles.map((profile) => {
+                        const isCurrentlyFavorite =
+                            favoriteProfilesMap[profile.id] ?? false;
+                        return (
+                            <DirectoryCard
+                                {...profile}
+                                key={profile.id}
+                                onClick={() => {
+                                    router.push(
+                                        `members/directory/${profile.id}`
+                                    );
+                                }}
+                                isFavorite={isCurrentlyFavorite}
+                                handleFavoriteClicked={(setIsFavorite) =>
+                                    () => {
+                                        mutation.mutate(
+                                            {
+                                                profileId: profile.id,
+                                                memberId: user.userId,
+                                                isFavorite: isCurrentlyFavorite,
+                                            },
+                                            {
+                                                onSuccess: ({ isFavorite }) =>
+                                                    setIsFavorite(isFavorite),
+                                                onSettled: () => {
+                                                    setFavoriteProfilesMap({
+                                                        ...favoriteProfilesMap,
+                                                        [profile.id]:
+                                                            !isCurrentlyFavorite,
+                                                    });
+                                                },
+                                            }
+                                        );
+                                    }}
+                            />
+                        );
+                    })}
                 </ResultsSection>
             </Container>
         </MemberNavigationPage>

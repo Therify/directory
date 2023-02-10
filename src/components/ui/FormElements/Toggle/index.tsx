@@ -12,11 +12,13 @@ export const TEST_IDS = {
     CONTROL_ELEMENT: 'control-element',
 };
 
-export const enum ToggleType {
-    Checkbox = 'checkbox',
-    Radio = 'radio',
-    Switch = 'switch',
-}
+export const TOGGLE_TYPE = {
+    CHECKBOX: 'checkbox',
+    RADIO: 'radio',
+    SWITCH: 'switch',
+} as const;
+
+export type ToggleType = typeof TOGGLE_TYPE[keyof typeof TOGGLE_TYPE];
 
 interface BaseToggleProps {
     displayText?: React.ReactNode;
@@ -31,20 +33,20 @@ export type ToggleProps = BaseToggleProps &
 
 const getControlElement = (type: ToggleType) => {
     switch (type) {
-        case ToggleType.Radio:
+        case TOGGLE_TYPE.RADIO:
             return MuiRadio;
 
-        case ToggleType.Switch:
+        case TOGGLE_TYPE.SWITCH:
             return SwitchUi;
 
-        case ToggleType.Checkbox:
+        case TOGGLE_TYPE.CHECKBOX:
         default:
             return MuiCheckbox;
     }
 };
 
 export const Toggle = ({
-    type = ToggleType.Checkbox,
+    type = TOGGLE_TYPE.CHECKBOX,
     displayText,
     uncheckedColor,
     checkedColor,
@@ -59,7 +61,7 @@ export const Toggle = ({
             control={
                 <ControlEl
                     data-testid={TEST_IDS.CONTROL_ELEMENT}
-                    {...(type === ToggleType.Switch
+                    {...(type === TOGGLE_TYPE.SWITCH
                         ? {
                               uncheckedColor,
                               checkedColor,
@@ -76,14 +78,14 @@ export const Toggle = ({
 };
 
 export const Switch = (props: Omit<ToggleProps, 'type'>) => (
-    <Toggle type={ToggleType.Switch} {...props} />
+    <Toggle type={TOGGLE_TYPE.SWITCH} {...props} />
 );
 export const Checkbox = (props: Omit<ToggleProps, 'type'>) => (
-    <Toggle type={ToggleType.Checkbox} {...props} />
+    <Toggle type={TOGGLE_TYPE.CHECKBOX} {...props} />
 );
 
 export const Radio = (props: Omit<ToggleProps, 'type'>) => (
-    <Toggle type={ToggleType.Radio} {...props} />
+    <Toggle type={TOGGLE_TYPE.RADIO} {...props} />
 );
 
 const StyledFormControlLabel = styled(FormControlLabel, {

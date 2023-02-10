@@ -16,21 +16,27 @@ export const factory: (
                 createProviderProfile: { profileId },
             }
         ) {
-            const { id: listingId } = await prisma.directoryListing.create({
+            const {
+                practiceId: listingPracticeId,
+                providerProfileId: listingProfileId,
+            } = await prisma.directoryListing.create({
                 data: {
                     practiceId,
-                    profileId,
+                    providerProfileId: profileId,
                     status: ListingStatus.unlisted,
                 },
             });
 
             return {
-                listingId,
+                listingPracticeId,
+                listingProfileId,
             };
         },
-        rollback({ prisma }, { createDirectoryListing: { listingId: id } }) {
+        rollback({ prisma }, { createDirectoryListing: { listingProfileId } }) {
             return prisma.directoryListing.delete({
-                where: { id },
+                where: {
+                    providerProfileId: listingProfileId,
+                },
             });
         },
     };
