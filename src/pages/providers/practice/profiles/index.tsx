@@ -27,12 +27,7 @@ import {
 import { useTherifyUser } from '@/lib/hooks';
 import { RBAC } from '@/lib/utils';
 import { useEffect } from 'react';
-import {
-    DirectoryListing,
-    ListingStatus,
-    ProviderProfile,
-    Role,
-} from '@prisma/client';
+import { ListingStatus, Role } from '@prisma/client';
 import { styled, useTheme } from '@mui/material/styles';
 import { Box } from '@mui/material';
 import {
@@ -44,7 +39,6 @@ import {
     CancelRounded,
     VisibilityRounded,
 } from '@mui/icons-material';
-import { generateMock } from '@anatine/zod-mock';
 import { DirectoryListingSchema, ProviderProfileSchema } from '@/lib/schema';
 import { z } from 'zod';
 
@@ -72,20 +66,7 @@ type ProviderPracticeProfileListItems = Array<
     }
 >;
 
-const TEST_PROFILES: ProviderPracticeProfileListItems = Array.from({
-    length: 3,
-}).map(() => {
-    const providerProfile = generateMock(
-        ProviderProfileSchema.extend({
-            slug: z.string(),
-        })
-    );
-    const directoryListing = generateMock(DirectoryListingSchema);
-    return {
-        ...providerProfile,
-        directoryListing,
-    };
-});
+const TEST_PROFILES: ProviderPracticeProfileListItems = [];
 
 export default function PracticeProfilesPage() {
     const { user, isLoading } = useTherifyUser();
