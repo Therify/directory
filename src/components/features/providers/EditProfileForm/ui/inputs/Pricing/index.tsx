@@ -1,5 +1,5 @@
 import { FormSectionTitle, Caption } from '@/components/ui';
-import { ProviderProfile } from '@/lib/types/providerProfile';
+import { ProviderProfile } from '@/lib/types';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Control } from 'react-hook-form';
@@ -8,7 +8,7 @@ import { MinimumRateInput } from './MinimumRate';
 import { OffersSlidingScaleToggle } from './OffersSlidingScale';
 
 interface PricingInputsProps {
-    control: Control<ProviderProfile>;
+    control: Control<ProviderProfile.ProviderProfile>;
     offersSlidingScale?: boolean;
     minimumRate?: number;
     disabled?: boolean;

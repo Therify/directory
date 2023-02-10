@@ -6,7 +6,7 @@ import {
     Paragraph,
     PARAGRAPH_SIZE,
 } from '@/components/ui/Typography/Paragraph';
-import { AgeGroup, ProviderCredential } from '@/lib/types';
+import { ProviderProfile as ProviderProfileType } from '@/lib/types';
 import {
     AutoFixHighOutlined,
     BadgeOutlined,
@@ -23,32 +23,16 @@ import { ProfileType } from '@prisma/client';
 import { CriteriaCard, CRITERIA_CARD_TYPES } from './CriteriaCard';
 
 interface ProviderProfileProps {
-    profileImageUrl?: string | null;
-    givenName?: string;
-    surname?: string;
-    pronouns?: string;
     cityState?: string;
-    acceptedInsurances?: string[];
-    specialties?: string[];
-    bio?: string | null;
-    offersInPerson?: boolean;
-    offersVirtual?: boolean;
-    gender?: string;
-    ethnicity?: string[];
-    languages?: string[];
-    credentials?: ProviderCredential.ProviderCredential[];
-    ageGroups?: AgeGroup.AgeGroup[];
-    designation: ProfileType;
-    modalities?: string[];
 }
 
 export function ProviderProfile({
+    cityState,
     designation,
     profileImageUrl = null,
     givenName = 'Your Name',
     surname,
     pronouns,
-    cityState,
     acceptedInsurances = [],
     specialties = [],
     bio = `Tell us about yourself.`,
@@ -56,11 +40,10 @@ export function ProviderProfile({
     offersVirtual = false,
     gender,
     ethnicity = [],
-    languages = [],
+    languagesSpoken = [],
     credentials = [],
     ageGroups = [],
-    modalities = [],
-}: ProviderProfileProps) {
+}: ProviderProfileProps & ProviderProfileType.ProviderProfile) {
     const isTherapist = designation === ProfileType.therapist;
     const isSmallScreen = useMediaQuery((theme: Theme) =>
         theme.breakpoints.down('sm')
@@ -73,6 +56,9 @@ export function ProviderProfile({
         avatar: isSmallScreen ? AVATAR_SIZE.HUGE : AVATAR_SIZE.XHUGE,
         contentMarginTop: isSmallScreen ? 0.75 : 0.5,
     };
+    const allAcceptedInsurances = Array.from(
+        new Set(acceptedInsurances.flatMap(({ insurances }) => insurances))
+    ).sort();
     return (
         <ProfileContainer
             sx={{
@@ -157,7 +143,7 @@ export function ProviderProfile({
                                     md: 338,
                                 },
                             }}
-                            items={acceptedInsurances}
+                            items={allAcceptedInsurances}
                         />
                     )}
                     <CriteriaCard
@@ -226,7 +212,7 @@ export function ProviderProfile({
                         <ProviderAttribute>
                             <TranslateOutlined />
                             <AttributeText>
-                                Languages: {languages.join(', ')}
+                                Languages: {languagesSpoken.join(', ')}
                             </AttributeText>
                         </ProviderAttribute>
                         {ageGroups.length > 0 && (

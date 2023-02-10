@@ -11,8 +11,7 @@ import {
     Divider,
 } from '@/components/ui';
 import { Control, Controller } from 'react-hook-form';
-import { ProviderProfile } from '@/lib/types/providerProfile';
-import { ProviderCredential } from '@/lib/types';
+import { ProviderCredential, ProviderProfile } from '@/lib/types';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
@@ -25,7 +24,7 @@ import {
 import { ProviderCredentialInput } from './ProviderCredentialInput';
 
 interface InputProps {
-    control: Control<ProviderProfile>;
+    control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
 }
 

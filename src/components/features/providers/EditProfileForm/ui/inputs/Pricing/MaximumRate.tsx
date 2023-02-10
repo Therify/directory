@@ -1,9 +1,9 @@
 import { Control, Controller } from 'react-hook-form';
 import { Input, FormValidation } from '@/components/ui';
-import { ProviderProfile } from '@/lib/types/providerProfile';
+import { ProviderProfile } from '@/lib/types';
 
 interface MaximumRateInputProps {
-    control: Control<ProviderProfile>;
+    control: Control<ProviderProfile.ProviderProfile>;
     minimumRate?: number;
     disabled?: boolean;
     visible?: boolean;
@@ -20,6 +20,7 @@ export const MaximumRateInput = ({
         <Controller
             control={control}
             name="maximumRate"
+            defaultValue={minimumRate}
             rules={{
                 min: visible ? minimumAcceptableRate : undefined,
             }}

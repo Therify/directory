@@ -1,10 +1,10 @@
 import { Controller, Control } from 'react-hook-form';
 import { FormValidation } from '@/components/ui';
 import { DatePicker } from '@/components/ui';
-import { ProviderProfile } from '@/lib/types/providerProfile';
+import { ProviderProfile } from '@/lib/types';
 
 interface PraticeStartInputProps {
-    control: Control<ProviderProfile>;
+    control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
 }
 

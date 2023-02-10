@@ -1,13 +1,12 @@
 import { Control, Controller } from 'react-hook-form';
-import { Ethnicity } from '@/lib/types';
+import { Ethnicity, ProviderProfile } from '@/lib/types';
 import { Autocomplete, TextField } from '@mui/material';
-import { ProviderProfile } from '@/lib/types/providerProfile';
 import { InputWrapper } from '@/components/ui';
 
 type Ethnicities = typeof Ethnicity.ENTRIES[number];
 
 interface EthnicitiesInputProps {
-    control: Control<ProviderProfile>;
+    control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
 }
 

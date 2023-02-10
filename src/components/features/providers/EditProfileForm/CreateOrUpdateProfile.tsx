@@ -1,20 +1,19 @@
 import { useEffect, useMemo } from 'react';
 import { TwoColumnGrid } from '../../../ui/Grids/TwoColumnGrid';
 import { useForm } from 'react-hook-form';
-import { Language, Modality, AgeGroup, Gender } from '@/lib/types';
+import { Language, Modality, AgeGroup, ProviderProfile } from '@/lib/types';
 import { ProviderProfile as ProviderProfileUi } from '../../directory/ProviderProfile';
 import { ProfileEditorForm } from './ui/ProfileEditorForm';
-import { ProviderProfile } from '@/lib/types/providerProfile';
 import { Practice, ProfileType } from '@prisma/client';
 import { CloudinaryUploadResult } from '../../media/hooks/userCloudinaryWidget';
 import { styled, SxProps } from '@mui/material/styles';
 import { Box } from '@mui/material';
 
 interface CreateOrUpdateProfileProps {
-    providerProfile?: Partial<ProviderProfile>;
+    providerProfile?: Partial<ProviderProfile.ProviderProfile>;
     practice: Pick<Practice, 'id' | 'city' | 'state' | 'website'>;
     onBack?: () => void;
-    onSubmit?: (profile: ProviderProfile) => void;
+    onSubmit?: (profile: ProviderProfile.ProviderProfile) => void;
 }
 
 export function CreateOrUpdateProfile({
@@ -22,7 +21,7 @@ export function CreateOrUpdateProfile({
     practice,
     onBack,
 }: CreateOrUpdateProfileProps) {
-    const providerProfileForm = useForm<ProviderProfile>({
+    const providerProfileForm = useForm<ProviderProfile.ProviderProfile>({
         mode: 'onChange',
         defaultValues: {
             offersInPerson: false,
@@ -46,36 +45,14 @@ export function CreateOrUpdateProfile({
             ...providerProfile,
         },
     });
-
-    const profileId = providerProfileForm.watch('id');
-    const designation = providerProfileForm.watch('designation');
-    const offersSlidingScale = providerProfileForm.watch('offersSlidingScale');
-    const givenName = providerProfileForm.watch('givenName');
-    const surname = providerProfileForm.watch('surname');
-    const pronouns = providerProfileForm.watch('pronouns');
-    const specialties = providerProfileForm.watch('specialties');
-    const bio = providerProfileForm.watch('bio');
-    const offersInPerson = providerProfileForm.watch('offersInPerson');
-    const offersVirtual = providerProfileForm.watch('offersVirtual');
-    const profileImageUrl = providerProfileForm.watch('profileImageUrl');
-    const ethnicity = providerProfileForm.watch('ethnicity');
-    const credentials = providerProfileForm.watch('credentials');
-    const minimumRate = providerProfileForm.watch('minimumRate');
-
-    // TODO: move to util function
-    const acceptedInsurances = Array.from(
-        new Set(
-            (providerProfileForm.watch('acceptedInsurances') ?? []).flatMap(
-                ({ insurances }) => insurances
-            )
-        )
-    ).sort();
-
+    const watchedProfile = providerProfileForm.watch();
     const licensedStates = useMemo(() => {
         return Array.from(
-            new Set((credentials ?? []).map(({ state }) => state))
+            new Set(
+                (watchedProfile.credentials ?? []).map(({ state }) => state)
+            )
         );
-    }, [credentials]);
+    }, [watchedProfile.credentials]);
 
     useEffect(() => {
         const acceptedInsurances = (
@@ -99,12 +76,19 @@ export function CreateOrUpdateProfile({
         const minimumRate = parseInt(
             providerProfileForm.getValues('minimumRate')?.toString() ?? '0'
         );
-        if (offersSlidingScale) {
+        if (watchedProfile.offersSlidingScale) {
             providerProfileForm.setValue('maximumRate', minimumRate + 40);
         } else {
             providerProfileForm.setValue('maximumRate', minimumRate);
         }
-    }, [offersSlidingScale, providerProfileForm]);
+    }, [watchedProfile.offersSlidingScale, providerProfileForm]);
+
+    useEffect(() => {
+        if (watchedProfile.designation === ProfileType.coach) {
+            providerProfileForm.setValue('offersMedicationManagement', false);
+        }
+    }, [providerProfileForm, watchedProfile.designation]);
+
     const onDeleteImage = () => {
         providerProfileForm.setValue('profileImageUrl', null);
     };
@@ -141,11 +125,12 @@ export function CreateOrUpdateProfile({
                         isSubmittingForm={false}
                         onBack={onBack}
                         watchedProfileValues={{
-                            id: profileId,
-                            designation,
-                            profileImageUrl,
-                            offersSlidingScale,
-                            minimumRate,
+                            id: watchedProfile.id,
+                            designation: watchedProfile.designation,
+                            profileImageUrl: watchedProfile.profileImageUrl,
+                            offersSlidingScale:
+                                watchedProfile.offersSlidingScale,
+                            minimumRate: watchedProfile.minimumRate,
                         }}
                     />
                 </SlotWrapper>
@@ -153,18 +138,8 @@ export function CreateOrUpdateProfile({
             rightSlot={
                 <SlotWrapper>
                     <ProviderProfileUi
-                        designation={providerProfileForm.watch('designation')}
-                        profileImageUrl={profileImageUrl}
-                        givenName={givenName}
-                        surname={surname}
-                        pronouns={pronouns}
                         cityState={`${practice.city}, ${practice.state}`}
-                        acceptedInsurances={acceptedInsurances}
-                        specialties={specialties}
-                        bio={bio}
-                        offersInPerson={offersInPerson}
-                        offersVirtual={offersVirtual}
-                        ethnicity={ethnicity}
+                        {...watchedProfile}
                     />
                 </SlotWrapper>
             }

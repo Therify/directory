@@ -1,11 +1,10 @@
 import { Control, Controller } from 'react-hook-form';
-import { Modality } from '@/lib/types';
+import { Modality, ProviderProfile } from '@/lib/types';
 import { Autocomplete, TextField } from '@mui/material';
-import { ProviderProfile } from '@/lib/types/providerProfile';
 import { InputWrapper } from '@/components/ui';
 
 interface ModalitiesServedInputProps {
-    control: Control<ProviderProfile>;
+    control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
 }
 

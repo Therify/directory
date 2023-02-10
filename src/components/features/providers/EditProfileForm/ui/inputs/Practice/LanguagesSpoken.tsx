@@ -1,13 +1,12 @@
 import { Control, Controller } from 'react-hook-form';
-import { Language } from '@/lib/types';
+import { Language, ProviderProfile } from '@/lib/types';
 import { Autocomplete, TextField } from '@mui/material';
-import { ProviderProfile } from '@/lib/types/providerProfile';
 import { InputWrapper } from '@/components/ui';
 
 type LanguagesSpoken = typeof Language.ENTRIES[number];
 
 interface LanguagesInputProps {
-    control: Control<ProviderProfile>;
+    control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
 }
 

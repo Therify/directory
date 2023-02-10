@@ -1,13 +1,12 @@
 import { Control, Controller } from 'react-hook-form';
-import { AreaOfFocus } from '@/lib/types';
+import { ProviderProfile, AreaOfFocus } from '@/lib/types';
 import { Autocomplete, TextField } from '@mui/material';
-import { ProviderProfile } from '@/lib/types/providerProfile';
 import { InputWrapper } from '@/components/ui';
 
 type Specialties = typeof AreaOfFocus.ENTRIES[number];
 
 interface SpecialtiesInputProps {
-    control: Control<ProviderProfile>;
+    control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
 }
 

@@ -1,16 +1,15 @@
 import { Control } from 'react-hook-form';
 import { FormSectionTitle } from '@/components/ui/FormElements';
-import { ProviderProfile } from '@/lib/types/providerProfile';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { State, ProviderCredential } from '@/lib/types';
+import { State, ProviderCredential, ProviderProfile } from '@/lib/types';
 import { NpiNumberInput } from './NpiNumber';
 import { AcceptedInsuranceInput } from './AcceptedInsurance';
 import { CredentialsManagerInput } from './CredentialsManager';
 import { PracticeStartDateInput } from './PracticeStartDate';
 
 interface IdentitySectionProps {
-    control: Control<ProviderProfile>;
+    control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
     defaultValues: {
         npiNumber?: string;

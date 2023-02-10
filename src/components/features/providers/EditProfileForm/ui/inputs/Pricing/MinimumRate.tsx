@@ -1,9 +1,9 @@
 import { Control, Controller } from 'react-hook-form';
 import { Input, FormValidation } from '@/components/ui';
-import { ProviderProfile } from '@/lib/types/providerProfile';
+import { ProviderProfile } from '@/lib/types';
 
 interface MinimumRateInputProps {
-    control: Control<ProviderProfile>;
+    control: Control<ProviderProfile.ProviderProfile>;
     label: string;
     disabled?: boolean;
 }

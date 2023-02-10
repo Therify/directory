@@ -1,13 +1,12 @@
 import { Control, Controller } from 'react-hook-form';
-import { CommunitiesServed } from '@/lib/types';
+import { CommunitiesServed, ProviderProfile } from '@/lib/types';
 import { Autocomplete, TextField } from '@mui/material';
-import { ProviderProfile } from '@/lib/types/providerProfile';
 import { InputWrapper } from '@/components/ui';
 
 type CommunitiesServed = typeof CommunitiesServed.ENTRIES[number];
 
 interface CommunitiesServedInputProps {
-    control: Control<ProviderProfile>;
+    control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
 }
 

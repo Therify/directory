@@ -1,13 +1,12 @@
 import { Control, Controller } from 'react-hook-form';
-import { AgeGroup } from '@/lib/types';
+import { AgeGroup, ProviderProfile } from '@/lib/types';
 import { Autocomplete, TextField } from '@mui/material';
-import { ProviderProfile } from '@/lib/types/providerProfile';
 import { InputWrapper } from '@/components/ui';
 
 type AgeGroupsServed = typeof AgeGroup.ENTRIES[number];
 
 interface AgeGroupsServedInputProps {
-    control: Control<ProviderProfile>;
+    control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
 }
 

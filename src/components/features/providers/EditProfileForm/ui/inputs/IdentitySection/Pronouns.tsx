@@ -1,11 +1,10 @@
 import { Control, Controller } from 'react-hook-form';
 import { Select, FormValidation } from '@/components/ui';
 import { asSelectOptions } from '@/lib/utils';
-import { Pronoun } from '@/lib/types';
-import { ProviderProfile } from '@/lib/types/providerProfile';
+import { Pronoun, ProviderProfile } from '@/lib/types';
 
 interface PronounsInputProps {
-    control: Control<ProviderProfile>;
+    control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
 }
 const PRONOUNS_OPTIONS = asSelectOptions(Pronoun.ENTRIES);

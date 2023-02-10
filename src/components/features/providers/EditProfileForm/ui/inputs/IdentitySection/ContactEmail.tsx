@@ -1,9 +1,9 @@
 import { Controller, Control } from 'react-hook-form';
 import { Input, FormValidation } from '@/components/ui';
-import { ProviderProfile } from '@/lib/types/providerProfile';
+import { ProviderProfile } from '@/lib/types';
 
 interface ContactEmailInputProps {
-    control: Control<ProviderProfile>;
+    control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
 }
 

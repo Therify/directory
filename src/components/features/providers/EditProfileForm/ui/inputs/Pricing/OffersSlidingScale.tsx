@@ -1,9 +1,9 @@
 import { Control, Controller } from 'react-hook-form';
 import { Switch } from '@/components/ui';
-import { ProviderProfile } from '@/lib/types/providerProfile';
+import { ProviderProfile } from '@/lib/types';
 
 interface ToggleInputProps {
-    control: Control<ProviderProfile>;
+    control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
 }
 
@@ -18,7 +18,7 @@ export const OffersSlidingScaleToggle = ({
             <Switch
                 id="offersSlidingScale"
                 displayText="Offer sliding scale?"
-                {...{ disabled, onChange, onBlur, value, name }}
+                {...{ disabled, onChange, checked: value, onBlur, value, name }}
             />
         )}
     />

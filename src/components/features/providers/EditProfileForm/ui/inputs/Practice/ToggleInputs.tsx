@@ -1,9 +1,9 @@
 import { Control, Controller } from 'react-hook-form';
 import { Switch } from '@/components/ui';
-import { ProviderProfile } from '@/lib/types/providerProfile';
+import { ProviderProfile } from '@/lib/types';
 
 interface ToggleInputProps {
-    control: Control<ProviderProfile>;
+    control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
 }
 
@@ -21,19 +21,12 @@ export const OffersInPersonToggle = ({
             <Switch
                 id="offersInPerson"
                 displayText="Offer in-person sessions?"
-                // errorMessage={
-                //     isTouched
-                //         ? FormValidation.getNameValidationErrorMessage(
-                //               error?.type as FormValidation.NameValidationType,
-                //               'First Name'
-                //           )
-                //         : undefined
-                // }
                 {...{
                     disabled,
                     onChange,
                     onBlur,
                     value,
+                    checked: value,
                     name,
                 }}
             />
@@ -48,22 +41,20 @@ export const OffersVirtualToggle = ({
     <Controller
         control={control}
         name="offersVirtual"
-        render={({ field: { onChange, onBlur, value, name } }) => {
-            console.log({ value });
-            return (
-                <Switch
-                    id="offersInPerson"
-                    displayText="Offer virtual sessions?"
-                    {...{
-                        onChange,
-                        onBlur,
-                        value,
-                        name,
-                        disabled,
-                    }}
-                />
-            );
-        }}
+        render={({ field: { onChange, onBlur, value, name } }) => (
+            <Switch
+                id="offersInPerson"
+                displayText="Offer virtual sessions?"
+                {...{
+                    onChange,
+                    onBlur,
+                    value,
+                    checked: value,
+                    name,
+                    disabled,
+                }}
+            />
+        )}
     />
 );
 export const OffersMedicationManagement = ({
@@ -81,6 +72,7 @@ export const OffersMedicationManagement = ({
                     onChange,
                     onBlur,
                     value,
+                    checked: value,
                     name,
                     disabled,
                 }}
@@ -103,6 +95,7 @@ export const OffersPhoneConsultations = ({
                     onChange,
                     onBlur,
                     value,
+                    checked: value,
                     name,
                     disabled,
                 }}

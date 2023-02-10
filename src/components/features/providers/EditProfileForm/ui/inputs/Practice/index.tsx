@@ -1,5 +1,5 @@
 import { FormSectionTitle, FormSectionSubtitle } from '@/components/ui';
-import { ProviderProfile } from '@/lib/types/providerProfile';
+import { ProviderProfile } from '@/lib/types';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Control } from 'react-hook-form';
@@ -18,7 +18,7 @@ import { LanguagesSpokenInput } from './LanguagesSpoken';
 import { ReligionsInput } from './Religions';
 
 interface IdentitySectionProps {
-    control: Control<ProviderProfile>;
+    control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
     isTherapist?: boolean;
 }

@@ -1,9 +1,9 @@
 import { Control, Controller } from 'react-hook-form';
 import { Textarea } from '@/components/ui';
-import { ProviderProfile } from '@/lib/types/providerProfile';
+import { ProviderProfile } from '@/lib/types';
 
 interface IdealClientDescriptionInputProps {
-    control: Control<ProviderProfile>;
+    control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
 }
 

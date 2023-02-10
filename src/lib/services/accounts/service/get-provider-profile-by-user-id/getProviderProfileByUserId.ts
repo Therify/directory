@@ -1,4 +1,5 @@
 import { GetProviderProfileByUserId } from '@/lib/features/provider-profiles';
+import { ProviderProfile } from '@/lib/types';
 import { Role } from '@prisma/client';
 import { AccountsServiceParams } from '../params';
 
@@ -9,7 +10,7 @@ export const factory =
     }: GetProviderProfileByUserId.Input): Promise<{
         profile: GetProviderProfileByUserId.Output['profile'];
     }> => {
-        const user = await prisma.user.findUniqueOrThrow({
+        const { roles, providerProfile } = await prisma.user.findUniqueOrThrow({
             where: {
                 id: userId,
             },
@@ -19,11 +20,14 @@ export const factory =
             },
         });
         if (
-            !user.roles.includes(Role.provider_coach) &&
-            !user.roles.includes(Role.provider_therapist)
+            !roles.includes(Role.provider_coach) &&
+            !roles.includes(Role.provider_therapist)
         ) {
             throw new Error('User is not a provider.');
         }
+        if (providerProfile === null) {
+            return { profile: null };
+        }
 
-        return { profile: user.providerProfile };
+        return { profile: ProviderProfile.validate(providerProfile) };
     };

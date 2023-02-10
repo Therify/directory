@@ -1,11 +1,10 @@
 import { Control, Controller } from 'react-hook-form';
 import { Select, FormValidation } from '@/components/ui';
 import { asSelectOptions } from '@/lib/utils';
-import { Gender } from '@/lib/types';
-import { ProviderProfile } from '@/lib/types/providerProfile';
+import { Gender, ProviderProfile } from '@/lib/types';
 
 interface GenderInputProps {
-    control: Control<ProviderProfile>;
+    control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
 }
 const OPTIONS = asSelectOptions(Gender.ENTRIES);

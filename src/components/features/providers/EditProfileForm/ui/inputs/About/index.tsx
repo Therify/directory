@@ -1,5 +1,5 @@
 import { FormSectionTitle } from '@/components/ui/FormElements';
-import { ProviderProfile } from '@/lib/types/providerProfile';
+import { ProviderProfile } from '@/lib/types';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Control } from 'react-hook-form';
@@ -8,7 +8,7 @@ import { IdealClientDescriptionInput } from './IdealClientDescription';
 import { PracticeNotesInput } from './PracticeNotes';
 
 interface IdentitySectionProps {
-    control: Control<ProviderProfile>;
+    control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
 }
 export const AboutSection = ({ control, disabled }: IdentitySectionProps) => {

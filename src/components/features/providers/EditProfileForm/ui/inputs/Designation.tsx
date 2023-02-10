@@ -1,10 +1,10 @@
 import { Control, Controller } from 'react-hook-form';
 import { Select, SelectOption } from '@/components/ui';
-import { ProviderProfile } from '@/lib/types/providerProfile';
+import { ProviderProfile } from '@/lib/types';
 import { ProfileType } from '@prisma/client';
 
 interface DesignationInputProps {
-    control: Control<ProviderProfile>;
+    control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
 }
 const OPTIONS: SelectOption[] = [

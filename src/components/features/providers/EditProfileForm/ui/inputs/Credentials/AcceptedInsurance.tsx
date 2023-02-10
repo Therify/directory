@@ -1,12 +1,16 @@
-import { AcceptedInsurance, InsuranceProvider, State } from '@/lib/types';
-import { ProviderProfile } from '@/lib/types/providerProfile';
+import {
+    AcceptedInsurance,
+    InsuranceProvider,
+    State,
+    ProviderProfile,
+} from '@/lib/types';
 import { Autocomplete, Box, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Control, Controller } from 'react-hook-form';
 import { Caption, FormSectionSubtitle } from '@/components/ui';
 
 interface AcceptedInsuranceInputProps {
-    control: Control<ProviderProfile>;
+    control: Control<ProviderProfile.ProviderProfile>;
     stateOptions: State.State[];
 }
 type InsuranceByState = Record<

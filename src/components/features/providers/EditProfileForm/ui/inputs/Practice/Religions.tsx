@@ -1,13 +1,12 @@
 import { Control, Controller } from 'react-hook-form';
-import { Religion } from '@/lib/types';
+import { ProviderProfile, Religion } from '@/lib/types';
 import { Autocomplete, TextField } from '@mui/material';
-import { ProviderProfile } from '@/lib/types/providerProfile';
 import { InputWrapper } from '@/components/ui';
 
 type Religions = typeof Religion.ENTRIES[number];
 
 interface ReligionsInputProps {
-    control: Control<ProviderProfile>;
+    control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
 }
 

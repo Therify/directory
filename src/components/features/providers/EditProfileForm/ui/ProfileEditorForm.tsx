@@ -10,7 +10,6 @@ import {
     H1,
     IconButton,
 } from '@/components/ui/';
-import { ProviderProfile } from '@/lib/types/providerProfile';
 import {
     PricingInputs,
     PracticeSection,
@@ -21,7 +20,7 @@ import {
 } from './inputs';
 import { MediaUploadWidget } from '@/components/features/media';
 import { CloudinaryUploadResult } from '@/components/features/media/hooks/userCloudinaryWidget';
-import { State } from '@/lib/types';
+import { State, ProviderProfile } from '@/lib/types';
 import { ChevronLeft } from '@mui/icons-material';
 import { useRef } from 'react';
 import useOnScreen from '@/lib/hooks/use-on-screen';
@@ -29,8 +28,8 @@ import { ProfileType } from '@prisma/client';
 import { ImageSection } from './inputs/Image';
 
 interface EditorFormProps {
-    control: Control<ProviderProfile>;
-    defaultValues?: Partial<ProviderProfile>;
+    control: Control<ProviderProfile.ProviderProfile>;
+    defaultValues?: Partial<ProviderProfile.ProviderProfile>;
     isFormValid: boolean;
     isSubmittingForm: boolean;
     licensedStates?: typeof State.ENTRIES[number][];
@@ -44,11 +43,11 @@ interface EditorFormProps {
     onBack?: () => void;
     hideFloatingButton?: boolean;
     watchedProfileValues: {
-        id: ProviderProfile['id'];
-        designation: ProviderProfile['designation'];
-        profileImageUrl: ProviderProfile['profileImageUrl'];
-        offersSlidingScale: ProviderProfile['offersSlidingScale'];
-        minimumRate: ProviderProfile['minimumRate'];
+        id: ProviderProfile.ProviderProfile['id'];
+        designation: ProviderProfile.ProviderProfile['designation'];
+        profileImageUrl: ProviderProfile.ProviderProfile['profileImageUrl'];
+        offersSlidingScale: ProviderProfile.ProviderProfile['offersSlidingScale'];
+        minimumRate: ProviderProfile.ProviderProfile['minimumRate'];
     };
 }
 export const ProfileEditorForm = ({

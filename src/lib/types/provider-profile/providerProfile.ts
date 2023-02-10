@@ -1,13 +1,12 @@
 import * as z from 'zod';
-import * as Pronoun from './pronoun';
-import { ProviderProfileSchema } from '../schema';
-import { ProviderCredential } from './provider-credential';
-import { ProviderSupervisor } from './provider-supervisor';
-import { AcceptedInsurance } from './accepted-insurance';
+import * as Pronoun from '../pronoun';
+import { ProviderProfileSchema } from '../../schema';
+import { ProviderCredential } from '../provider-credential';
+import { ProviderSupervisor } from '../provider-supervisor';
+import { AcceptedInsurance } from '../accepted-insurance';
 
 export const schema = ProviderProfileSchema.extend({
     pronouns: Pronoun.schema,
-    // practiceName: z.string(),
     credentials: ProviderCredential.schema.array(),
     acceptedInsurances: AcceptedInsurance.schema.array(),
     supervisor: ProviderSupervisor.schema.nullable(),
