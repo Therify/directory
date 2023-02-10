@@ -3,21 +3,19 @@ import { Input, FormValidation } from '@/components/ui';
 import { ProviderProfile } from '@/lib/types/providerProfile';
 
 interface EducationInputProps {
-    control: Control<ProviderProfile>;
-    defaultValue?: string;
+    // TODO: remove once added. This just make typescript happy
+    control: Control<ProviderProfile & { education: string }>;
+    disabled?: boolean;
 }
 
-export const EducationInput = ({
-    control,
-    defaultValue = '',
-}: EducationInputProps) => (
+export const EducationInput = ({ control, disabled }: EducationInputProps) => (
     <Controller
         control={control}
         name="education"
-        defaultValue={defaultValue}
-        rules={{
-            required: true,
-        }}
+        defaultValue=""
+        // rules={{
+        //     required: true,
+        // }}
         render={({
             field: { onChange, onBlur, value, name },
             fieldState: { error, isTouched },
@@ -35,6 +33,7 @@ export const EducationInput = ({
                 //         : undefined
                 // }
                 {...{
+                    disabled,
                     onChange,
                     onBlur,
                     value,

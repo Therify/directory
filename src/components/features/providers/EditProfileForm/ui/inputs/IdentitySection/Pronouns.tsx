@@ -6,20 +6,14 @@ import { ProviderProfile } from '@/lib/types/providerProfile';
 
 interface PronounsInputProps {
     control: Control<ProviderProfile>;
-    defaultValue?: string;
     disabled?: boolean;
 }
 const PRONOUNS_OPTIONS = asSelectOptions(Pronoun.ENTRIES);
 
-export const PronounsInput = ({
-    control,
-    defaultValue = Pronoun.MAP.THEY_THEM,
-    disabled,
-}: PronounsInputProps) => (
+export const PronounsInput = ({ control, disabled }: PronounsInputProps) => (
     <Controller
         control={control}
         name="pronouns"
-        defaultValue={defaultValue as typeof Pronoun.ENTRIES[number]}
         rules={{
             required: true,
         }}
@@ -32,6 +26,7 @@ export const PronounsInput = ({
                 fullWidth
                 label="Pronouns"
                 id="pronouns"
+                placeholder="Choose your pronouns"
                 errorMessage={
                     isTouched
                         ? FormValidation.getNameValidationErrorMessage(

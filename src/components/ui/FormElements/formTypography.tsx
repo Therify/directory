@@ -12,4 +12,5 @@ export const FormSectionTitle = styled(H2)(({ theme }) => ({
 }));
 export const FormSectionSubtitle = styled(H3)(({ theme }) => ({
     ...theme.typography.body2,
+    fontWeight: 500,
 }));

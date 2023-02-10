@@ -5,3 +5,4 @@ export {
     TEST_IDS as PASSWORD_INPUT_TEST_IDS,
 } from './PasswordInput';
 export { Textarea } from './Textarea';
+export { InputWrapper } from './InputWrapper';

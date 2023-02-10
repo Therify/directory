@@ -7,6 +7,7 @@ import { State, ProviderCredential } from '@/lib/types';
 import { NpiNumberInput } from './NpiNumber';
 import { AcceptedInsuranceInput } from './AcceptedInsurance';
 import { CredentialsManagerInput } from './CredentialsManager';
+import { PracticeStartDateInput } from './PracticeStartDate';
 
 interface IdentitySectionProps {
     control: Control<ProviderProfile>;
@@ -14,6 +15,7 @@ interface IdentitySectionProps {
     defaultValues: {
         npiNumber?: string;
         credentials?: ProviderCredential.ProviderCredential[];
+        practiceStartDate?: Date;
     };
     licensedStates?: typeof State.ENTRIES[number][];
 }
@@ -26,10 +28,10 @@ export const CredentialsSection = ({
     return (
         <Container>
             <FormSectionTitle>Your Credentials</FormSectionTitle>
-            <NpiNumberInput
-                control={control}
-                defaultValue={defaultValues.npiNumber}
-            />
+            <TwoInputContainer>
+                <PracticeStartDateInput control={control} disabled={disabled} />
+                <NpiNumberInput control={control} />
+            </TwoInputContainer>
             <Box marginTop={6}>
                 <CredentialsManagerInput
                     control={control}
@@ -50,5 +52,27 @@ const Container = styled(Box)(({ theme }) => ({
     flexDirection: 'column',
     '& > *': {
         flex: 1,
+    },
+}));
+
+const TwoInputContainer = styled(Box)(({ theme }) => ({
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    [theme.breakpoints.up('md')]: {
+        flexDirection: 'row',
+    },
+
+    '& > *': {
+        flex: 1,
+        [theme.breakpoints.up('md')]: {
+            width: `calc(50% - ${theme.spacing(1)})`,
+            '&:first-of-type': {
+                marginRight: theme.spacing(1),
+            },
+            '&:last-of-type': {
+                marginLeft: theme.spacing(1),
+            },
+        },
     },
 }));

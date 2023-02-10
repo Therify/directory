@@ -13,18 +13,9 @@ import { SurnameInput } from './Surname';
 interface IdentitySectionProps {
     control: Control<ProviderProfile>;
     disabled?: boolean;
-    defaultValues: {
-        givenName?: string;
-        surname?: string;
-        gender?: string;
-        pronouns?: string;
-        ethnicities?: string[];
-        contactEmail?: string;
-    };
 }
 export const IdentitySection = ({
     control,
-    defaultValues,
     disabled,
 }: IdentitySectionProps) => {
     return (
@@ -39,42 +30,18 @@ export const IdentitySection = ({
                     },
                 }}
             >
-                <ContactEmailInput
-                    control={control}
-                    disabled={disabled}
-                    defaultValue={defaultValues.contactEmail}
-                />
+                <ContactEmailInput control={control} disabled={disabled} />
             </Box>
             <TwoInputContainer>
-                <GivenNameInput
-                    control={control}
-                    defaultValue={defaultValues.givenName}
-                    disabled={disabled}
-                />
-                <SurnameInput
-                    control={control}
-                    defaultValue={defaultValues.surname}
-                    disabled={disabled}
-                />
+                <GivenNameInput control={control} disabled={disabled} />
+                <SurnameInput control={control} disabled={disabled} />
             </TwoInputContainer>
             <TwoInputContainer>
-                <GenderInput
-                    control={control}
-                    defaultValue={defaultValues.gender}
-                    disabled={disabled}
-                />
-                <PronounsInput
-                    control={control}
-                    defaultValue={defaultValues.pronouns}
-                    disabled={disabled}
-                />
+                <GenderInput control={control} disabled={disabled} />
+                <PronounsInput control={control} disabled={disabled} />
             </TwoInputContainer>
             <Box marginTop={8}>
-                <EthnicitiesInput
-                    control={control}
-                    defaultValue={defaultValues.ethnicities}
-                    disabled={disabled}
-                />
+                <EthnicitiesInput control={control} disabled={disabled} />
             </Box>
         </Box>
     );

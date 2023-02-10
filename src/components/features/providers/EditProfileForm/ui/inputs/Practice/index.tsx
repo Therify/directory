@@ -20,24 +20,10 @@ import { ReligionsInput } from './Religions';
 interface IdentitySectionProps {
     control: Control<ProviderProfile>;
     disabled?: boolean;
-    defaultValues: {
-        offersInPerson?: boolean;
-        offersMedicationManagement?: boolean;
-        offersPhoneConsultations?: boolean;
-        offersVirtual?: boolean;
-        specialties?: string[];
-        religions?: string[];
-        evidenceBasedApproaches?: string[];
-        ageGroupsServed?: string[];
-        communitiesServed?: string[];
-        modalities?: string[];
-        languagesSpoken?: string[];
-    };
     isTherapist?: boolean;
 }
 export const PracticeSection = ({
     control,
-    defaultValues,
     disabled,
     isTherapist,
 }: IdentitySectionProps) => {
@@ -46,22 +32,13 @@ export const PracticeSection = ({
             <FormSectionTitle>Your Practice</FormSectionTitle>
             <FormSectionSubtitle>Session format</FormSectionSubtitle>
             <TwoInputContainer>
-                <OffersInPersonToggle
-                    control={control}
-                    defaultValue={defaultValues.offersInPerson}
-                    disabled={disabled}
-                />
-                <OffersVirtualToggle
-                    control={control}
-                    defaultValue={defaultValues.offersInPerson}
-                    disabled={disabled}
-                />
+                <OffersInPersonToggle control={control} disabled={disabled} />
+                <OffersVirtualToggle control={control} disabled={disabled} />
             </TwoInputContainer>
             <Box marginBottom={4}>
                 <FormSectionSubtitle>Consultations</FormSectionSubtitle>
                 <OffersPhoneConsultations
                     control={control}
-                    defaultValue={defaultValues.offersPhoneConsultations}
                     disabled={disabled}
                 />
             </Box>
@@ -72,49 +49,26 @@ export const PracticeSection = ({
                     </FormSectionSubtitle>
                     <OffersMedicationManagement
                         control={control}
-                        defaultValue={defaultValues.offersMedicationManagement}
                         disabled={disabled}
                     />
                 </Box>
             )}
             <InputsContainer>
                 <FormSectionSubtitle>Practice</FormSectionSubtitle>
-                <SpecialtiesInput
-                    control={control}
-                    defaultValue={defaultValues.specialties}
-                    disabled={disabled}
-                />
+                <SpecialtiesInput control={control} disabled={disabled} />
                 <EvidenceBasedApproachInput
                     control={control}
-                    defaultValue={defaultValues.evidenceBasedApproaches}
                     disabled={disabled}
                 />
-                <LanguagesSpokenInput
-                    control={control}
-                    defaultValue={defaultValues.languagesSpoken}
-                    disabled={disabled}
-                />
+                <LanguagesSpokenInput control={control} disabled={disabled} />
                 <FormSectionSubtitle>Demographics</FormSectionSubtitle>
-                <ModalititesServedInput
-                    control={control}
-                    defaultValue={defaultValues.modalities}
-                    disabled={disabled}
-                />
+                <ModalititesServedInput control={control} disabled={disabled} />
                 <AgeGroupsServedServedInput
                     control={control}
-                    defaultValue={defaultValues.ageGroupsServed}
                     disabled={disabled}
                 />
-                <CommunitiesServedInput
-                    control={control}
-                    defaultValue={defaultValues.communitiesServed}
-                    disabled={disabled}
-                />
-                <ReligionsInput
-                    control={control}
-                    defaultValue={defaultValues.religions}
-                    disabled={disabled}
-                />
+                <CommunitiesServedInput control={control} disabled={disabled} />
+                <ReligionsInput control={control} disabled={disabled} />
             </InputsContainer>
         </Box>
     );

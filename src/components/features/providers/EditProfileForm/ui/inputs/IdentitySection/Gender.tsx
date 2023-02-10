@@ -6,23 +6,18 @@ import { ProviderProfile } from '@/lib/types/providerProfile';
 
 interface GenderInputProps {
     control: Control<ProviderProfile>;
-    defaultValue?: string;
     disabled?: boolean;
 }
 const OPTIONS = asSelectOptions(Gender.ENTRIES);
 
-export const GenderInput = ({
-    control,
-    defaultValue,
-    disabled,
-}: GenderInputProps) => (
+export const GenderInput = ({ control, disabled }: GenderInputProps) => (
     <Controller
         control={control}
         name="gender"
-        defaultValue={defaultValue as typeof Gender.ENTRIES[number]}
         rules={{
             required: true,
         }}
+        defaultValue=""
         render={({
             field: { onChange, onBlur, value, name },
             fieldState: { error, isTouched },
@@ -32,6 +27,7 @@ export const GenderInput = ({
                 fullWidth
                 label="Gender"
                 id="gender"
+                placeholder="Choose your gender"
                 errorMessage={
                     isTouched
                         ? FormValidation.getNameValidationErrorMessage(

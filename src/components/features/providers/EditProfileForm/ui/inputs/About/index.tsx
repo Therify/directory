@@ -6,45 +6,20 @@ import { Control } from 'react-hook-form';
 import { BioInput } from './Bio';
 import { IdealClientDescriptionInput } from './IdealClientDescription';
 import { PracticeNotesInput } from './PracticeNotes';
-import { PracticeStartDateInput } from './PracticeStartDate';
 
 interface IdentitySectionProps {
     control: Control<ProviderProfile>;
     disabled?: boolean;
-    defaultValues: {
-        bio?: string;
-        practiceNotes?: string;
-        idealClientDescription?: string;
-        practiceStartDate?: Date;
-    };
 }
-export const AboutSection = ({
-    control,
-    defaultValues,
-    disabled,
-}: IdentitySectionProps) => {
+export const AboutSection = ({ control, disabled }: IdentitySectionProps) => {
     return (
         <Container>
             <FormSectionTitle>About you</FormSectionTitle>
-            <BioInput
-                control={control}
-                defaultValue={defaultValues.bio}
-                disabled={disabled}
-            />
-            <PracticeNotesInput
-                control={control}
-                defaultValue={defaultValues.practiceNotes}
-                disabled={disabled}
-            />
+            <BioInput control={control} disabled={disabled} />
+            <PracticeNotesInput control={control} disabled={disabled} />
             <IdealClientDescriptionInput
                 control={control}
-                defaultValue={defaultValues.idealClientDescription}
                 disabled={disabled}
-            />
-            <PracticeStartDateInput
-                control={control}
-                disabled={disabled}
-                defaultValue={defaultValues?.practiceStartDate}
             />
         </Container>
     );

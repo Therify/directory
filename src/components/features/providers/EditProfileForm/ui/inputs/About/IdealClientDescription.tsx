@@ -4,19 +4,17 @@ import { ProviderProfile } from '@/lib/types/providerProfile';
 
 interface IdealClientDescriptionInputProps {
     control: Control<ProviderProfile>;
-    defaultValue?: string;
     disabled?: boolean;
 }
 
 export const IdealClientDescriptionInput = ({
     control,
-    defaultValue = '',
     disabled,
 }: IdealClientDescriptionInputProps) => (
     <Controller
         control={control}
         name="idealClientDescription"
-        defaultValue={defaultValue}
+        defaultValue=""
         render={({ field: { onChange, onBlur, value, name } }) => (
             <Textarea
                 fullWidth

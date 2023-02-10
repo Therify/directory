@@ -4,19 +4,14 @@ import { ProviderProfile } from '@/lib/types/providerProfile';
 
 interface SurnameInputProps {
     control: Control<ProviderProfile>;
-    defaultValue?: string;
     disabled?: boolean;
 }
 
-export const SurnameInput = ({
-    control,
-    defaultValue = '',
-    disabled,
-}: SurnameInputProps) => (
+export const SurnameInput = ({ control, disabled }: SurnameInputProps) => (
     <Controller
         control={control}
         name="surname"
-        defaultValue={defaultValue}
+        defaultValue=""
         rules={{
             required: true,
         }}

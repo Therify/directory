@@ -14,6 +14,7 @@ interface CreateOrUpdateProfileProps {
     providerProfile?: Partial<ProviderProfile>;
     practice: Pick<Practice, 'id' | 'city' | 'state' | 'website'>;
     onBack?: () => void;
+    onSubmit?: (profile: ProviderProfile) => void;
 }
 
 export function CreateOrUpdateProfile({
@@ -24,22 +25,31 @@ export function CreateOrUpdateProfile({
     const providerProfileForm = useForm<ProviderProfile>({
         mode: 'onChange',
         defaultValues: {
-            gender: Gender.MAP.PREFER_NOT_TO_SAY,
-            designation: ProfileType.therapist,
-            minimumRate: 40,
-            languagesSpoken: [Language.MAP.ENGLISH],
+            offersInPerson: false,
+            offersMedicationManagement: false,
+            offersPhoneConsultations: false,
+            offersVirtual: true,
+            offersSlidingScale: false,
+            specialties: [],
+            ethnicity: [],
+            religions: [],
+            evidenceBasedPractices: [],
+            communitiesServed: [],
             modalities: [Modality.MAP.INDIVIDUALS],
+            languagesSpoken: [Language.MAP.ENGLISH],
             ageGroups: [AgeGroup.MAP.ADULTS],
+            minimumRate: 40,
+            designation: ProfileType.therapist,
             acceptedInsurances: [],
             credentials: [],
+            yearsOfExperience: '',
             ...providerProfile,
         },
     });
-    const offersSlidingScale = providerProfileForm.watch('offersSlidingScale');
+
+    const profileId = providerProfileForm.watch('id');
     const designation = providerProfileForm.watch('designation');
-    const minimumRate = parseInt(
-        providerProfileForm.watch('minimumRate')?.toString() ?? '0'
-    );
+    const offersSlidingScale = providerProfileForm.watch('offersSlidingScale');
     const givenName = providerProfileForm.watch('givenName');
     const surname = providerProfileForm.watch('surname');
     const pronouns = providerProfileForm.watch('pronouns');
@@ -50,6 +60,8 @@ export function CreateOrUpdateProfile({
     const profileImageUrl = providerProfileForm.watch('profileImageUrl');
     const ethnicity = providerProfileForm.watch('ethnicity');
     const credentials = providerProfileForm.watch('credentials');
+    const minimumRate = providerProfileForm.watch('minimumRate');
+
     // TODO: move to util function
     const acceptedInsurances = Array.from(
         new Set(
@@ -83,6 +95,19 @@ export function CreateOrUpdateProfile({
         });
     }, [licensedStates, providerProfileForm]);
 
+    useEffect(() => {
+        const minimumRate = parseInt(
+            providerProfileForm.getValues('minimumRate')?.toString() ?? '0'
+        );
+        if (offersSlidingScale) {
+            providerProfileForm.setValue('maximumRate', minimumRate + 40);
+        } else {
+            providerProfileForm.setValue('maximumRate', minimumRate);
+        }
+    }, [offersSlidingScale, providerProfileForm]);
+    const onDeleteImage = () => {
+        providerProfileForm.setValue('profileImageUrl', null);
+    };
     const onImageUploadError = (error: Error | string) => {
         // TODO: handle error
         console.error(error);
@@ -106,8 +131,8 @@ export function CreateOrUpdateProfile({
             leftSlot={
                 <SlotWrapper>
                     <ProfileEditorForm
-                        profile={providerProfileForm.getValues()}
                         control={providerProfileForm.control}
+                        onDeleteImage={onDeleteImage}
                         onImageUploadSuccess={onImageUploadSuccess}
                         onImageUploadError={onImageUploadError}
                         licensedStates={licensedStates}
@@ -115,6 +140,13 @@ export function CreateOrUpdateProfile({
                         isFormValid={providerProfileForm.formState.isValid}
                         isSubmittingForm={false}
                         onBack={onBack}
+                        watchedProfileValues={{
+                            id: profileId,
+                            designation,
+                            profileImageUrl,
+                            offersSlidingScale,
+                            minimumRate,
+                        }}
                     />
                 </SlotWrapper>
             }

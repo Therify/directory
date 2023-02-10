@@ -4,7 +4,6 @@ import { ProviderProfile } from '@/lib/types/providerProfile';
 
 interface MinimumRateInputProps {
     control: Control<ProviderProfile>;
-    defaultValue?: number;
     label: string;
     disabled?: boolean;
 }
@@ -12,13 +11,11 @@ interface MinimumRateInputProps {
 export const MinimumRateInput = ({
     control,
     label,
-    defaultValue = 0,
     disabled,
 }: MinimumRateInputProps) => (
     <Controller
         control={control}
         name="minimumRate"
-        defaultValue={defaultValue}
         rules={{
             required: true,
             min: 0,
@@ -29,6 +26,7 @@ export const MinimumRateInput = ({
             fieldState: { error },
         }) => (
             <Input
+                required
                 fullWidth
                 type="number"
                 id="minimumRate"

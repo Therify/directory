@@ -4,19 +4,17 @@ import { ProviderProfile } from '@/lib/types/providerProfile';
 
 interface PracticeNotesInputProps {
     control: Control<ProviderProfile>;
-    defaultValue?: string;
     disabled?: boolean;
 }
 
 export const PracticeNotesInput = ({
     control,
-    defaultValue = '',
     disabled,
 }: PracticeNotesInputProps) => (
     <Controller
         control={control}
         name="practiceNotes"
-        defaultValue={defaultValue}
+        defaultValue=""
         render={({ field: { onChange, onBlur, value, name } }) => (
             <Textarea
                 fullWidth

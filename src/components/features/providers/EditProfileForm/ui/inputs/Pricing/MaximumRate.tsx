@@ -4,26 +4,24 @@ import { ProviderProfile } from '@/lib/types/providerProfile';
 
 interface MaximumRateInputProps {
     control: Control<ProviderProfile>;
-    defaultValue?: number;
     minimumRate?: number;
     disabled?: boolean;
+    visible?: boolean;
 }
 
 export const MaximumRateInput = ({
     control,
-    defaultValue,
     minimumRate = 0,
     disabled,
+    visible,
 }: MaximumRateInputProps) => {
     const minimumAcceptableRate = minimumRate + 5;
     return (
         <Controller
             control={control}
             name="maximumRate"
-            defaultValue={defaultValue ?? minimumRate + 40}
             rules={{
-                required: true,
-                min: minimumAcceptableRate,
+                min: visible ? minimumAcceptableRate : undefined,
             }}
             render={({
                 field: { onChange, onBlur, value, name },
@@ -48,6 +46,7 @@ export const MaximumRateInput = ({
                         value,
                         name,
                     }}
+                    wrapperSx={!visible ? { display: 'none' } : undefined}
                 />
             )}
         />

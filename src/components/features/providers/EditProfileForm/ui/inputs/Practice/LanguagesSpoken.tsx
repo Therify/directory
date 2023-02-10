@@ -2,42 +2,52 @@ import { Control, Controller } from 'react-hook-form';
 import { Language } from '@/lib/types';
 import { Autocomplete, TextField } from '@mui/material';
 import { ProviderProfile } from '@/lib/types/providerProfile';
+import { InputWrapper } from '@/components/ui';
 
 type LanguagesSpoken = typeof Language.ENTRIES[number];
 
 interface LanguagesInputProps {
     control: Control<ProviderProfile>;
-    defaultValue?: string[];
     disabled?: boolean;
 }
 
 export const LanguagesSpokenInput = ({
     control,
-    defaultValue = [],
     disabled,
 }: LanguagesInputProps) => (
     <Controller
         control={control}
         name="languagesSpoken"
-        defaultValue={defaultValue as LanguagesSpoken[]}
-        rules={{
-            required: true,
-        }}
-        render={({ field: { onChange, onBlur, value, name } }) => (
-            <Autocomplete
-                multiple
-                options={Language.ENTRIES}
-                onChange={(_, value) => onChange(value)}
-                {...{
-                    onBlur,
-                    name,
-                    disabled,
-                    value,
-                }}
-                renderInput={(params) => (
-                    <TextField {...params} label="Languages spoken" />
-                )}
-            />
+        rules={{ required: true }}
+        render={({
+            field: { onChange, onBlur, value, name },
+            fieldState: { error },
+        }) => (
+            <InputWrapper
+                fullWidth
+                required
+                label="Languages Spoken"
+                errorMessage={
+                    error?.type
+                        ? 'At least one language selection is required'
+                        : undefined
+                }
+            >
+                <Autocomplete
+                    multiple
+                    options={Language.ENTRIES}
+                    onChange={(_, value) => onChange(value)}
+                    {...{
+                        onBlur,
+                        name,
+                        disabled,
+                        value,
+                    }}
+                    renderInput={(params) => (
+                        <TextField {...params} label="Languages spoken" />
+                    )}
+                />
+            </InputWrapper>
         )}
     />
 );

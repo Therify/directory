@@ -4,16 +4,12 @@ import { ProviderProfile } from '@/lib/types/providerProfile';
 
 interface ContactEmailInputProps {
     control: Control<ProviderProfile>;
-    defaultValue?: string;
     disabled?: boolean;
-    helperText?: string;
 }
 
 export const ContactEmailInput = ({
     control,
-    defaultValue = '',
     disabled,
-    helperText,
 }: ContactEmailInputProps) => (
     <Controller
         control={control}
@@ -25,7 +21,7 @@ export const ContactEmailInput = ({
                     FormValidation.isValidEmail,
             },
         }}
-        defaultValue={defaultValue}
+        defaultValue=""
         render={({
             field: { onChange, onBlur, value, name },
             fieldState: { error, isTouched },
@@ -47,7 +43,7 @@ export const ContactEmailInput = ({
                     autoComplete="email"
                     type="email"
                     disabled={disabled}
-                    helperText={helperText}
+                    helperText="This email will receive referral information, but will not be publically listed on your profile."
                     {...{
                         onChange,
                         onBlur,

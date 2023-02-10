@@ -5,7 +5,6 @@ import { ProfileType } from '@prisma/client';
 
 interface DesignationInputProps {
     control: Control<ProviderProfile>;
-    defaultValue?: ProfileType;
     disabled?: boolean;
 }
 const OPTIONS: SelectOption[] = [
@@ -21,13 +20,11 @@ const OPTIONS: SelectOption[] = [
 
 export const DesignationInput = ({
     control,
-    defaultValue = ProfileType.therapist,
     disabled,
 }: DesignationInputProps) => (
     <Controller
         control={control}
         name="designation"
-        defaultValue={defaultValue}
         rules={{
             required: true,
         }}

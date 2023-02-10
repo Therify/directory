@@ -2,6 +2,7 @@ import { Divider, Box, useTheme } from '@mui/material';
 import { Control } from 'react-hook-form';
 import { styled } from '@mui/material/styles';
 import {
+    Avatar,
     Button,
     BUTTON_SIZE,
     BUTTON_TYPE,
@@ -24,28 +25,36 @@ import { ChevronLeft } from '@mui/icons-material';
 import { useRef } from 'react';
 import useOnScreen from '@/lib/hooks/use-on-screen';
 import { ProfileType } from '@prisma/client';
+import { ImageSection } from './inputs/Image';
 
 interface EditorFormProps {
-    profile: ProviderProfile;
     control: Control<ProviderProfile>;
     defaultValues?: Partial<ProviderProfile>;
+    isFormValid: boolean;
+    isSubmittingForm: boolean;
     licensedStates?: typeof State.ENTRIES[number][];
     onImageUploadSuccess: (
         error: Error | null,
         result: CloudinaryUploadResult
     ) => void;
     onImageUploadError: (error: string | Error) => void;
-    isFormValid: boolean;
-    isSubmittingForm: boolean;
+    onDeleteImage: () => void;
     onSubmitForm: () => Promise<void>;
     onBack?: () => void;
     hideFloatingButton?: boolean;
+    watchedProfileValues: {
+        id: ProviderProfile['id'];
+        designation: ProviderProfile['designation'];
+        profileImageUrl: ProviderProfile['profileImageUrl'];
+        offersSlidingScale: ProviderProfile['offersSlidingScale'];
+        minimumRate: ProviderProfile['minimumRate'];
+    };
 }
 export const ProfileEditorForm = ({
     control,
-    profile,
     defaultValues,
     licensedStates,
+    onDeleteImage,
     onImageUploadSuccess,
     onImageUploadError,
     onSubmitForm,
@@ -53,17 +62,21 @@ export const ProfileEditorForm = ({
     isFormValid,
     onBack,
     hideFloatingButton,
+    watchedProfileValues,
 }: EditorFormProps) => {
     const theme = useTheme();
     const headerSaveButtonRef = useRef(null);
     const footerSaveButtonRef = useRef(null);
-    // Parent contaner needs to be `position: 'relative'`
+    // Parent container needs to be `position: 'relative'`
     // for the floating button to position correctly
     const isHeaderSaveVisible = useOnScreen(headerSaveButtonRef);
     const isFooterSaveVisible = useOnScreen(footerSaveButtonRef);
-    const saveButtonText = profile.id ? 'Save Changes' : 'Create Profile';
-    const isTherapist = profile.designation === ProfileType.therapist;
-
+    const saveButtonText = watchedProfileValues.id
+        ? 'Save Changes'
+        : 'Create Profile';
+    const isTherapist =
+        watchedProfileValues.designation === ProfileType.therapist;
+    // TODO: Add supervisor input
     return (
         <EditorContainer>
             <EditorForm>
@@ -100,7 +113,6 @@ export const ProfileEditorForm = ({
                         }
                         type="contained"
                         size={BUTTON_SIZE.LARGE}
-                        style={{ width: '25%' }}
                         disabled={!isFormValid || isSubmittingForm}
                         isLoading={isSubmittingForm}
                         onClick={onSubmitForm}
@@ -109,44 +121,24 @@ export const ProfileEditorForm = ({
                     </FloatingButton>
                 )}
                 <Divider sx={{ mb: 4 }} />
-                <MediaUploadWidget
-                    onUploadError={onImageUploadError}
-                    onUploadSuccess={onImageUploadSuccess}
-                    disabled={isSubmittingForm}
-                    buttonText={
-                        profile.profileImageUrl
-                            ? 'Change Image'
-                            : 'Upload Image'
-                    }
-                />
                 <DesignationInput
                     control={control}
-                    defaultValue={defaultValues?.designation}
+                    disabled={isSubmittingForm}
+                />
+                <ImageSection
+                    onDeleteImage={onDeleteImage}
+                    onImageUploadError={onImageUploadError}
+                    onImageUploadSuccess={onImageUploadSuccess}
+                    profileImageUrl={
+                        watchedProfileValues.profileImageUrl ?? undefined
+                    }
                     disabled={isSubmittingForm}
                 />
                 <IdentitySection
                     control={control}
-                    defaultValues={{
-                        givenName: defaultValues?.givenName,
-                        surname: defaultValues?.surname,
-                        gender: defaultValues?.gender,
-                        pronouns: defaultValues?.pronouns,
-                        ethnicities: defaultValues?.ethnicity,
-                        contactEmail: defaultValues?.contactEmail,
-                    }}
                     disabled={isSubmittingForm}
                 />
-                <AboutSection
-                    control={control}
-                    disabled={isSubmittingForm}
-                    defaultValues={{
-                        bio: defaultValues?.bio ?? undefined,
-                        practiceNotes:
-                            defaultValues?.practiceNotes ?? undefined,
-                        idealClientDescription:
-                            defaultValues?.idealClientDescription ?? undefined,
-                    }}
-                />
+                <AboutSection control={control} disabled={isSubmittingForm} />
                 {isTherapist && (
                     <CredentialsSection
                         control={control}
@@ -159,29 +151,12 @@ export const ProfileEditorForm = ({
                 )}
                 <PricingInputs
                     control={control}
-                    defaultValues={{
-                        offersSlidingScale: defaultValues?.offersSlidingScale,
-                        minimumRate: defaultValues?.minimumRate,
-                        maximumRate: defaultValues?.maximumRate ?? undefined,
-                    }}
-                    offersSlidingScale={profile.offersSlidingScale}
-                    minimumRate={profile.minimumRate}
+                    offersSlidingScale={watchedProfileValues.offersSlidingScale}
+                    minimumRate={watchedProfileValues.minimumRate}
                     disabled={isSubmittingForm}
                 />
                 <PracticeSection
                     control={control}
-                    defaultValues={{
-                        offersInPerson: defaultValues?.offersInPerson,
-                        offersMedicationManagement:
-                            defaultValues?.offersMedicationManagement,
-                        offersPhoneConsultations:
-                            defaultValues?.offersPhoneConsultations,
-                        offersVirtual: defaultValues?.offersVirtual,
-                        specialties: defaultValues?.specialties,
-                        religions: defaultValues?.religions,
-                        evidenceBasedApproaches:
-                            defaultValues?.evidenceBasedPractices,
-                    }}
                     isTherapist={isTherapist}
                     disabled={isSubmittingForm}
                 />
@@ -241,4 +216,6 @@ const FloatingButton = styled(Button, {
     padding: theme.spacing(2),
     zIndex: 1,
     transition: 'right 0.3s ease-in-out',
+    minWidth: '25%',
+    maxWidth: '100%',
 }));

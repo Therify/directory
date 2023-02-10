@@ -4,22 +4,16 @@ import { ProviderProfile } from '@/lib/types/providerProfile';
 
 interface ToggleInputProps {
     control: Control<ProviderProfile>;
-    defaultValue?: boolean;
     disabled?: boolean;
 }
 
 export const OffersInPersonToggle = ({
     control,
-    defaultValue = false,
     disabled,
 }: ToggleInputProps) => (
     <Controller
         control={control}
         name="offersInPerson"
-        defaultValue={defaultValue}
-        rules={{
-            required: true,
-        }}
         render={({
             field: { onChange, onBlur, value, name },
             fieldState: { error, isTouched },
@@ -49,43 +43,36 @@ export const OffersInPersonToggle = ({
 
 export const OffersVirtualToggle = ({
     control,
-    defaultValue = false,
     disabled,
 }: ToggleInputProps) => (
     <Controller
         control={control}
         name="offersVirtual"
-        defaultValue={defaultValue}
-        rules={{
-            required: true,
+        render={({ field: { onChange, onBlur, value, name } }) => {
+            console.log({ value });
+            return (
+                <Switch
+                    id="offersInPerson"
+                    displayText="Offer virtual sessions?"
+                    {...{
+                        onChange,
+                        onBlur,
+                        value,
+                        name,
+                        disabled,
+                    }}
+                />
+            );
         }}
-        render={({ field: { onChange, onBlur, value, name } }) => (
-            <Switch
-                id="offersInPerson"
-                displayText="Offer virtual sessions?"
-                {...{
-                    onChange,
-                    onBlur,
-                    value,
-                    name,
-                    disabled,
-                }}
-            />
-        )}
     />
 );
 export const OffersMedicationManagement = ({
     control,
-    defaultValue = false,
     disabled,
 }: ToggleInputProps) => (
     <Controller
         control={control}
         name="offersMedicationManagement"
-        defaultValue={defaultValue}
-        rules={{
-            required: true,
-        }}
         render={({ field: { onChange, onBlur, value, name } }) => (
             <Switch
                 id="offersMedicationManagement"
@@ -103,16 +90,11 @@ export const OffersMedicationManagement = ({
 );
 export const OffersPhoneConsultations = ({
     control,
-    defaultValue = false,
     disabled,
 }: ToggleInputProps) => (
     <Controller
         control={control}
         name="offersPhoneConsultations"
-        defaultValue={defaultValue}
-        rules={{
-            required: true,
-        }}
         render={({ field: { onChange, onBlur, value, name } }) => (
             <Switch
                 id="offersPhoneConsultations"

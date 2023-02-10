@@ -5,55 +5,51 @@ import { ProviderProfile } from '@/lib/types/providerProfile';
 
 interface PraticeStartInputProps {
     control: Control<ProviderProfile>;
-    defaultValue?: Date;
     disabled?: boolean;
 }
 
 export const PracticeStartDateInput = ({
     control,
     disabled,
-    defaultValue = new Date(),
 }: PraticeStartInputProps) => (
     <Controller
         control={control}
         name="practiceStartDate"
-        defaultValue={defaultValue}
         rules={{
             required: true,
             validate: {
                 [FormValidation.DateValidationType.IsValid]: (date) =>
                     !!date && FormValidation.validateDateIsValid(date),
+                [FormValidation.DateValidationType.IsPast]: (date) =>
+                    !!date && FormValidation.validateIsPastDate(date),
             },
         }}
         render={({
             field: { onChange, value, onBlur },
-            fieldState: { error, isTouched },
+            fieldState: { error },
         }) => (
             <DatePicker
                 required
                 label="When did you begin practicing?"
                 helperText="Feel free to approximate"
                 onChange={(date) => {
-                    if (date === null) return onChange(undefined);
-
-                    onChange(
-                        FormValidation.validateDateIsValid(date)
-                            ? date?.toISOString()
-                            : date?.toDateString()
-                    );
+                    if (
+                        date === null ||
+                        !FormValidation.validateDateIsValid(date)
+                    )
+                        return onChange(null);
+                    onChange(date);
                 }}
                 errorMessage={
-                    isTouched
+                    value !== null
                         ? FormValidation.getDateValidationErrorMessage(
-                              error?.type as FormValidation.DateValidationType,
-                              {
-                                  minimumAge: 18,
-                              }
+                              error?.type as FormValidation.DateValidationType
                           )
                         : undefined
                 }
+                onClose={onBlur}
                 onBlur={onBlur}
-                value={value ? new Date(value) : new Date()}
+                value={value ?? null}
                 disabled={disabled}
             />
         )}

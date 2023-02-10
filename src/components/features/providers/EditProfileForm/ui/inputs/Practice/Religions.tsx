@@ -2,45 +2,43 @@ import { Control, Controller } from 'react-hook-form';
 import { Religion } from '@/lib/types';
 import { Autocomplete, TextField } from '@mui/material';
 import { ProviderProfile } from '@/lib/types/providerProfile';
+import { InputWrapper } from '@/components/ui';
 
 type Religions = typeof Religion.ENTRIES[number];
 
 interface ReligionsInputProps {
     control: Control<ProviderProfile>;
-    defaultValue?: string[];
     disabled?: boolean;
 }
 
-export const ReligionsInput = ({
-    control,
-    defaultValue = [],
-    disabled,
-}: ReligionsInputProps) => (
+export const ReligionsInput = ({ control, disabled }: ReligionsInputProps) => (
     <Controller
         control={control}
         name="religions"
-        defaultValue={defaultValue as Religions[]}
-        rules={{
-            required: true,
-        }}
         render={({ field: { onChange, onBlur, value, name } }) => (
-            <Autocomplete
-                multiple
-                options={Religion.ENTRIES}
-                onChange={(_, value) => onChange(value)}
-                {...{
-                    onBlur,
-                    name,
-                    disabled,
-                    value,
-                }}
-                renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        label="Religions incorperated into your practice"
-                    />
-                )}
-            />
+            <InputWrapper
+                fullWidth
+                label="Religions incorperated into your practice"
+                helperText="If you do not incorperate faith-based practices, leave this field blank"
+            >
+                <Autocomplete
+                    multiple
+                    options={Religion.ENTRIES}
+                    onChange={(_, value) => onChange(value)}
+                    {...{
+                        onBlur,
+                        name,
+                        disabled,
+                        value,
+                    }}
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            label="Religions incorperated into your practice"
+                        />
+                    )}
+                />
+            </InputWrapper>
         )}
     />
 );

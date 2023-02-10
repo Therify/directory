@@ -20,9 +20,6 @@ export const AcceptedInsuranceInput = ({
     <Controller
         control={control}
         name="acceptedInsurances"
-        rules={{
-            required: true,
-        }}
         render={({
             field: { onChange, onBlur, value: acceptedInsurances, name },
         }) => {

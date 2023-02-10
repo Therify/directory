@@ -24,17 +24,12 @@ import {
 } from '@mui/icons-material';
 import { ProviderCredentialInput } from './ProviderCredentialInput';
 
-interface StateInputProps {
+interface InputProps {
     control: Control<ProviderProfile>;
-    defaultValue?: ProviderCredential.ProviderCredential[];
     disabled?: boolean;
 }
 
-export const CredentialsManagerInput = ({
-    control,
-    defaultValue,
-    disabled,
-}: StateInputProps) => {
+export const CredentialsManagerInput = ({ control, disabled }: InputProps) => {
     const [showEditor, setShowEditor] = useState(false);
     const [credentialToDelete, setCredentialToDelete] =
         useState<ProviderCredential.ProviderCredential>();
@@ -43,7 +38,6 @@ export const CredentialsManagerInput = ({
         <Controller
             control={control}
             name="credentials"
-            defaultValue={defaultValue}
             render={({ field: { onChange, value, name } }) => (
                 <Box marginBottom={6}>
                     <FormSectionSubtitle>Licenses</FormSectionSubtitle>

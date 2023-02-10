@@ -12,6 +12,10 @@ export const validateIsFutureDate = (date: Date) => {
     return validateMinimumDate(date, new Date());
 };
 
+export const validateIsPastDate = (date: Date) => {
+    return isBefore(date, new Date());
+};
+
 export const validateMaximumDate = (date: Date, maximumDate: Date) => {
     return isBefore(date, maximumDate);
 };
@@ -28,6 +32,7 @@ export const enum DateValidationType {
     MaxDate = 'maxDate',
     MinAge = 'minAge',
     IsFuture = 'isFuture',
+    IsPast = 'isPast',
 }
 
 interface ErrorOptions {
@@ -58,6 +63,7 @@ export const createDateValidationErrorMessages = (options: ErrorOptions) => {
             minimumAge ?? 18
         } years old`,
         [DateValidationType.IsFuture]: `${fieldName} must be in the future`,
+        [DateValidationType.IsPast]: `${fieldName} must be in the past`,
     };
 };
 
