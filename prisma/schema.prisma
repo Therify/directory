@@ -219,8 +219,6 @@ enum ProfileType {
   therapist
 }
 
-//credentialing,
-//license/npi numbers and types
 model ProviderProfile {
   id                         String                       @id @default(cuid()) @map("provider_profile_id")
   givenName                  String                       @map("given_name")
@@ -231,7 +229,6 @@ model ProviderProfile {
   user                       User?                        @relation(fields: [userId], references: [id])
   userId                     String?                      @unique @map("user_id")
   bio                        String?                      @db.Text
-  licenses                   String[]
   npiNumber                  String?                      @map("npi_number")
   offersSlidingScale         Boolean                      @default(false) @map("offers_sliding_scale")
   profileImageUrl            String?                      @map("profile_image_url")
@@ -241,8 +238,9 @@ model ProviderProfile {
   idealClientDescription     String?                      @map("ideal_client_description") @db.Text
   practiceNotes              String?                      @map("practice_notes")
   gender                     String
-  acceptedInsurances         String[]                     @map("accepted_insurances")
-  licensedStates             String[]                     @map("licensed_states")
+  credentials                Json[]
+  acceptedInsurances         Json[]                       @map("accepted_insurances")
+  supervisor                 Json?
   specialties                String[]
   ethnicity                  String[]
   communitiesServed          String[]                     @map("communities_served")

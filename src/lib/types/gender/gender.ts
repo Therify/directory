@@ -1,11 +1,17 @@
 import * as z from 'zod';
 
-export const ENTRIES = ['Female', 'Male', 'Non-Binary'] as const;
+export const ENTRIES = [
+    'Female',
+    'Male',
+    'Non-Binary',
+    'Prefer not to say',
+] as const;
 
 export const MAP = {
     FEMALE: ENTRIES[0],
     MALE: ENTRIES[1],
     NON_BINARY: ENTRIES[2],
+    PREFER_NOT_TO_SAY: ENTRIES[3],
 } as const;
 
 export const schema = z.enum(ENTRIES);

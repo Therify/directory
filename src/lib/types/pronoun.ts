@@ -1,11 +1,19 @@
 import * as z from 'zod';
 
-export const ENTRIES = ['He/Him', 'She/Her', 'They/Them'] as const;
+export const ENTRIES = [
+    'He/Him',
+    'She/Her',
+    'They/Them',
+    'He/They',
+    'She/They',
+] as const;
 
 export const MAP = {
     HE_HIM: ENTRIES[0],
     SHE_HER: ENTRIES[1],
     THEY_THEM: ENTRIES[2],
+    HE_THEY: ENTRIES[3],
+    SHE_THEY: ENTRIES[4],
 } as const;
 
 export const schema = z.enum(ENTRIES);

@@ -1,6 +1,5 @@
 import { GetServerSideProps } from 'next';
-import { ProviderProfile } from '@prisma/client';
-import { TherifyUser } from '@/lib/types/therify-user';
+import { ProviderProfile, TherifyUser } from '@/lib/types';
 import { MembersServiceParams } from '../params';
 import { getSession } from '@auth0/nextjs-auth0';
 import { AccountsService } from '../../accounts/service';
@@ -10,7 +9,7 @@ interface GetDirectoryProfileProps extends MembersServiceParams {
 }
 
 export interface DirectoryProfilePageProps {
-    providerProfile: ProviderProfile;
+    providerProfile: ProviderProfile.ProviderProfile;
     user: TherifyUser.TherifyUser;
 }
 
@@ -47,7 +46,9 @@ export function factory({ prisma, accountService }: GetDirectoryProfileProps) {
         }
         return {
             props: {
-                providerProfile: JSON.parse(JSON.stringify(providerProfile)),
+                providerProfile: JSON.parse(
+                    JSON.stringify(ProviderProfile.validate(providerProfile))
+                ),
                 user: JSON.parse(JSON.stringify(user)),
             },
         };

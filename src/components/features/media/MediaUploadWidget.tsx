@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/Button';
-import { Box } from '@mui/material';
+import { SxProps, Theme } from '@mui/material/styles';
 import { UploadFile } from '@mui/icons-material';
 import { useRef } from 'react';
 import {
@@ -9,17 +9,23 @@ import {
 
 interface MediaUploadWidgetProps {
     folder?: string;
+    buttonText?: string;
+    disabled?: boolean;
     onUploadSuccess: (
         error: Error | null,
         result: CloudinaryUploadResult
     ) => void;
     onUploadError: (error: Error | string) => void;
+    sx?: SxProps<Theme>;
 }
 
 export function MediaUploadWidget({
     onUploadSuccess,
     onUploadError,
+    disabled,
     folder,
+    buttonText = 'Upload Image',
+    sx,
 }: MediaUploadWidgetProps) {
     const buttonRef = useRef<HTMLButtonElement>(null);
     useCloudinaryWidget({
@@ -30,14 +36,20 @@ export function MediaUploadWidget({
                 onUploadSuccess(null, result);
                 return;
             }
-            onUploadError(error);
+            if (error) {
+                onUploadError(error);
+            }
         },
     });
     return (
-        <Box>
-            <Button ref={buttonRef} startIcon={<UploadFile />} size="small">
-                Upload Image
-            </Button>
-        </Box>
+        <Button
+            ref={buttonRef}
+            disabled={disabled}
+            startIcon={<UploadFile />}
+            size="small"
+            sx={sx}
+        >
+            {buttonText}
+        </Button>
     );
 }

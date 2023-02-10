@@ -53,8 +53,9 @@ export function CriteriaCard({ type, items, ...props }: CriteriaCardProps) {
                 py: 4,
                 px: 6,
                 backgroundColor: getBackgroundColor(type),
+                borderRadius: '4px',
                 [theme.breakpoints.up('md')]: {
-                    borderRaidus: 8,
+                    borderRadius: '6px',
                 },
             }}
             {...rest}

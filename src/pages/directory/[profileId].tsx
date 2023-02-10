@@ -1,18 +1,18 @@
-import { ProviderProfile } from '@/components/features/directory/ProviderProfile';
+import { ProviderProfile as ProviderProfileUi } from '@/components/features/directory/ProviderProfile';
 import { TopBar, TopNavigationLayout } from '@/components/ui';
 import { prisma } from '@/lib/prisma';
-import { ProviderProfile as IProviderProfile } from '@prisma/client';
+import { ProviderProfile } from '@/lib/types';
 import { GetServerSideProps } from 'next';
 
 export default function ProviderProfilePage({
-    results,
+    profile,
 }: {
-    results: IProviderProfile;
+    profile: ProviderProfile.ProviderProfile;
 }) {
-    console.log(results);
+    console.log(profile);
     return (
         <TopNavigationLayout navigationSlot={<TopBar />}>
-            <ProviderProfile {...results} />
+            <ProviderProfileUi {...profile} />
         </TopNavigationLayout>
     );
 }
@@ -27,7 +27,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     return {
         props: {
-            results: JSON.parse(JSON.stringify(results)),
+            profile: JSON.parse(
+                JSON.stringify(ProviderProfile.validate(results))
+            ),
         },
     };
 };

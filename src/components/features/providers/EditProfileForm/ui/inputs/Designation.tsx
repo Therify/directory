@@ -1,33 +1,30 @@
 import { Control, Controller } from 'react-hook-form';
 import { Select, SelectOption } from '@/components/ui';
-import { ProviderProfile } from '@/lib/types/providerProfile';
+import { ProviderProfile } from '@/lib/types';
 import { ProfileType } from '@prisma/client';
 
 interface DesignationInputProps {
-    control: Control<ProviderProfile>;
-    defaultValue?: ProfileType;
+    control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
 }
 const OPTIONS: SelectOption[] = [
     {
         value: ProfileType.therapist,
-        displayText: 'Therapy',
+        displayText: 'Therapist',
     },
     {
         value: ProfileType.coach,
-        displayText: 'Coaching',
+        displayText: 'Coach',
     },
 ];
 
 export const DesignationInput = ({
     control,
-    defaultValue = ProfileType.therapist,
     disabled,
 }: DesignationInputProps) => (
     <Controller
         control={control}
         name="designation"
-        defaultValue={defaultValue}
         rules={{
             required: true,
         }}
@@ -35,7 +32,7 @@ export const DesignationInput = ({
             <Select
                 required
                 fullWidth
-                label="What sevice will you be performing?"
+                label="Are you a therapist or coach?"
                 id="designation"
                 value={value}
                 {...{

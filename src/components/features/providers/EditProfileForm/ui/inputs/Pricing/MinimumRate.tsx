@@ -1,22 +1,21 @@
 import { Control, Controller } from 'react-hook-form';
 import { Input, FormValidation } from '@/components/ui';
-import { ProviderProfile } from '@/lib/types/providerProfile';
+import { ProviderProfile } from '@/lib/types';
 
 interface MinimumRateInputProps {
-    control: Control<ProviderProfile>;
-    defaultValue?: number;
+    control: Control<ProviderProfile.ProviderProfile>;
     label: string;
+    disabled?: boolean;
 }
 
 export const MinimumRateInput = ({
     control,
     label,
-    defaultValue = 0,
+    disabled,
 }: MinimumRateInputProps) => (
     <Controller
         control={control}
         name="minimumRate"
-        defaultValue={defaultValue}
         rules={{
             required: true,
             min: 0,
@@ -24,21 +23,22 @@ export const MinimumRateInput = ({
         }}
         render={({
             field: { onChange, onBlur, value, name },
-            fieldState: { error, isTouched },
+            fieldState: { error },
         }) => (
             <Input
+                required
                 fullWidth
                 type="number"
                 id="minimumRate"
-                errorMessage={
-                    isTouched
-                        ? FormValidation.Number.getNumberValidationErrorMessage(
-                              error?.type as FormValidation.Number.NumberValidationType,
-                              { fieldName: 'Rate' }
-                          )
-                        : undefined
-                }
+                errorMessage={FormValidation.Number.getNumberValidationErrorMessage(
+                    error?.type as FormValidation.Number.NumberValidationType,
+                    {
+                        fieldName: 'Rate',
+                        greaterThanThreshold: 0,
+                    }
+                )}
                 {...{
+                    disabled,
                     label,
                     onChange,
                     onBlur,

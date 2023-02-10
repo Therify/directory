@@ -107,7 +107,7 @@ export function DirectoryCard({
     givenName,
     surname,
     profileImageUrl,
-    licenses,
+    credentials,
     minimumRate,
     maximumRate,
     isFavorite = false,
@@ -180,9 +180,10 @@ export function DirectoryCard({
                                     surname,
                                 })}
                             </ProviderName>
-                            {licenses && (
+                            {credentials && (
                                 <ProviderCredentials>
-                                    {licenses}
+                                    {/* // TODO: What should this be? */}
+                                    {JSON.stringify(credentials)}
                                 </ProviderCredentials>
                             )}
                         </Stack>

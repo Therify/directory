@@ -1,75 +1,170 @@
+import { useEffect, useMemo } from 'react';
 import { TwoColumnGrid } from '../../../ui/Grids/TwoColumnGrid';
 import { useForm } from 'react-hook-form';
-import { AreaOfFocus, InsuranceProvider, Pronoun, State } from '@/lib/types';
-import { useEffect, useState } from 'react';
+import { Language, Modality, AgeGroup, ProviderProfile } from '@/lib/types';
 import { ProviderProfile as ProviderProfileUi } from '../../directory/ProviderProfile';
 import { ProfileEditorForm } from './ui/ProfileEditorForm';
-import { ProviderProfile } from '@/lib/types/providerProfile';
+import { Practice, ProfileType } from '@prisma/client';
+import { CloudinaryUploadResult } from '../../media/hooks/userCloudinaryWidget';
+import { styled, SxProps } from '@mui/material/styles';
+import { Box } from '@mui/material';
 
-export function CreateOrUpdateProfile() {
-    const providerProfileForm = useForm<ProviderProfile>({
+interface CreateOrUpdateProfileProps {
+    providerProfile?: Partial<ProviderProfile.ProviderProfile>;
+    practice: Pick<Practice, 'id' | 'city' | 'state' | 'website'>;
+    onBack?: () => void;
+    onSubmit?: (profile: ProviderProfile.ProviderProfile) => void;
+}
+
+export function CreateOrUpdateProfile({
+    providerProfile,
+    practice,
+    onBack,
+}: CreateOrUpdateProfileProps) {
+    const providerProfileForm = useForm<ProviderProfile.ProviderProfile>({
         mode: 'onChange',
-        defaultValues: {},
+        defaultValues: {
+            offersInPerson: false,
+            offersMedicationManagement: false,
+            offersPhoneConsultations: false,
+            offersVirtual: true,
+            offersSlidingScale: false,
+            specialties: [],
+            ethnicity: [],
+            religions: [],
+            evidenceBasedPractices: [],
+            communitiesServed: [],
+            modalities: [Modality.MAP.INDIVIDUALS],
+            languagesSpoken: [Language.MAP.ENGLISH],
+            ageGroups: [AgeGroup.MAP.ADULTS],
+            minimumRate: 40,
+            designation: ProfileType.therapist,
+            acceptedInsurances: [],
+            credentials: [],
+            yearsOfExperience: '',
+            ...providerProfile,
+        },
     });
-    const offersSlidingScale = providerProfileForm.watch('offersSlidingScale');
-    const [givenName, setGivenName] = useState('John');
-    const [surname, setSurname] = useState('Smith');
-    const [bio, setBio] = useState('');
-    const [acceptedInsurances, setAcceptedInsurances] = useState<
-        InsuranceProvider.InsuranceProvider[]
-    >([]);
-    const [specialties, setSpecialties] = useState<AreaOfFocus.AreaOfFocus[]>(
-        []
-    );
-    const [pronouns, setPronouns] = useState<Pronoun.Pronoun>(
-        Pronoun.MAP.THEY_THEM
-    );
-    const [state, setState] = useState<State.State>(State.MAP.NEW_YORK);
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
-    const [preview, setPreview] = useState<string | null>(null);
-    const [offersInPerson, setOffersInPerson] = useState(false);
-    const [offersVirtual, setOffersVirtual] = useState(false);
-    const [education, setEducation] = useState('');
+    const watchedProfile = providerProfileForm.watch();
+    const licensedStates = useMemo(() => {
+        return Array.from(
+            new Set(
+                (watchedProfile.credentials ?? []).map(({ state }) => state)
+            )
+        );
+    }, [watchedProfile.credentials]);
+
     useEffect(() => {
-        if (!selectedFile) {
-            setPreview(null);
+        const acceptedInsurances = (
+            providerProfileForm.getValues('acceptedInsurances') ?? []
+        ).filter((insurance) => licensedStates.includes(insurance.state));
+        licensedStates.forEach((state) => {
+            const stateIsFound =
+                acceptedInsurances.find(({ state: s }) => s === state) !==
+                undefined;
+            if (!stateIsFound) {
+                acceptedInsurances.push({ state, insurances: [] });
+            }
+            providerProfileForm.setValue(
+                'acceptedInsurances',
+                acceptedInsurances
+            );
+        });
+    }, [licensedStates, providerProfileForm]);
+
+    useEffect(() => {
+        const minimumRate = parseInt(
+            providerProfileForm.getValues('minimumRate')?.toString() ?? '0'
+        );
+        if (watchedProfile.offersSlidingScale) {
+            providerProfileForm.setValue('maximumRate', minimumRate + 40);
+        } else {
+            providerProfileForm.setValue('maximumRate', minimumRate);
+        }
+    }, [watchedProfile.offersSlidingScale, providerProfileForm]);
+
+    useEffect(() => {
+        if (watchedProfile.designation === ProfileType.coach) {
+            providerProfileForm.setValue('offersMedicationManagement', false);
+        }
+    }, [providerProfileForm, watchedProfile.designation]);
+
+    const onDeleteImage = () => {
+        providerProfileForm.setValue('profileImageUrl', null);
+    };
+    const onImageUploadError = (error: Error | string) => {
+        // TODO: handle error
+        console.error(error);
+        return;
+    };
+    const onImageUploadSuccess = (
+        error: Error | null,
+        result: CloudinaryUploadResult
+    ) => {
+        if (error) {
+            onImageUploadError(error);
             return;
         }
-        const objectUrl = URL.createObjectURL(selectedFile);
-        setPreview(objectUrl);
-        return () => URL.revokeObjectURL(objectUrl);
-    }, [selectedFile]);
-    const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!e.target.files || e.target.files.length === 0) {
-            setSelectedFile(null);
-            return;
-        }
-        setSelectedFile(e.target.files[0]);
+        providerProfileForm.setValue('profileImageUrl', result.info.secure_url);
     };
     return (
         <TwoColumnGrid
+            fillSpace
+            leftSlotSx={{ ...SLOT_STYLES, position: 'relative' }}
+            rightSlotSx={SLOT_STYLES}
             leftSlot={
-                <ProfileEditorForm
-                    onSelectFile={onSelectFile}
-                    offersSlidingScale={offersSlidingScale}
-                    control={providerProfileForm.control}
-                    defaultValues={{}}
-                />
+                <SlotWrapper>
+                    <ProfileEditorForm
+                        control={providerProfileForm.control}
+                        onDeleteImage={onDeleteImage}
+                        onImageUploadSuccess={onImageUploadSuccess}
+                        onImageUploadError={onImageUploadError}
+                        licensedStates={licensedStates}
+                        onSubmitForm={async () => {}}
+                        isFormValid={providerProfileForm.formState.isValid}
+                        isSubmittingForm={false}
+                        onBack={onBack}
+                        watchedProfileValues={{
+                            id: watchedProfile.id,
+                            designation: watchedProfile.designation,
+                            profileImageUrl: watchedProfile.profileImageUrl,
+                            offersSlidingScale:
+                                watchedProfile.offersSlidingScale,
+                            minimumRate: watchedProfile.minimumRate,
+                        }}
+                    />
+                </SlotWrapper>
             }
             rightSlot={
-                <ProviderProfileUi
-                    profileImageUrl={preview}
-                    givenName={givenName}
-                    surname={surname}
-                    pronouns={pronouns}
-                    state={state}
-                    acceptedInsurances={acceptedInsurances}
-                    specialties={specialties}
-                    bio={bio}
-                    offersInPerson={offersInPerson}
-                    offersVirtual={offersVirtual}
-                />
+                <SlotWrapper>
+                    <ProviderProfileUi
+                        cityState={`${practice.city}, ${practice.state}`}
+                        {...watchedProfile}
+                    />
+                </SlotWrapper>
             }
         />
     );
 }
+const SCROLLBAR_STYLE: SxProps = {
+    // Hides the scrollbar but keeps scroll functionality
+    msOverflowStyle: 'none' /* IE and Edge */,
+    scrollbarWidth: 'none',
+    '& > div::-webkit-scrollbar': {
+        display: 'none',
+    },
+};
+const SLOT_STYLES = {
+    display: 'flex',
+    height: '100%',
+    width: '100%',
+    overflow: 'hidden',
+};
+const SlotWrapper = styled(Box)(() => ({
+    height: '100%',
+    width: '100%',
+    flex: 1,
+    overflowX: 'hidden',
+    overflowY: 'auto',
+    ...SCROLLBAR_STYLE,
+}));

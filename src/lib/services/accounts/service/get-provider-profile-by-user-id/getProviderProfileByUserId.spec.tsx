@@ -1,7 +1,9 @@
 import { factory as getProviderProfileByUserIdFactory } from './getProviderProfileByUserId';
 import { prismaMock } from '@/lib/prisma/__mock__';
-import { ProviderProfile, Role, User } from '@prisma/client';
+import { ProfileType, Role, User } from '@prisma/client';
+import { generateMock } from '@anatine/zod-mock';
 import { AccountsServiceParams } from '../params';
+import { ProviderProfile } from '@/lib/types';
 
 const mockUserResult = {
     id: 'test-user-id',
@@ -13,20 +15,27 @@ const mockUserResult = {
     createdAt: new Date('2021-03-01'),
     providerProfile: {
         id: 'test-provider-id',
-    } as ProviderProfile,
-} as unknown as User & { providerProfile: ProviderProfile };
+    } as ProviderProfile.ProviderProfile,
+} as unknown as User & { providerProfile: ProviderProfile.ProviderProfile };
 
 describe('getProviderProfileByUserId', () => {
     it('should return a provider profile', async () => {
         const getProviderProfileByUserId = getProviderProfileByUserIdFactory({
             prisma: prismaMock,
         } as unknown as AccountsServiceParams);
-        prismaMock.user.findUniqueOrThrow.mockResolvedValue(mockUserResult);
+        const mockProfile = {
+            ...generateMock(ProviderProfile.schema),
+            designation: ProfileType.therapist,
+        };
+        prismaMock.user.findUniqueOrThrow.mockResolvedValue({
+            ...mockUserResult,
+            providerProfile: mockProfile,
+        } as unknown as User & { providerProfile: ProviderProfile.ProviderProfile });
         const result = await getProviderProfileByUserId({
             userId: mockUserResult.id,
         });
         await expect(result).toEqual({
-            profile: mockUserResult.providerProfile,
+            profile: mockProfile,
         });
     });
 
@@ -52,7 +61,7 @@ describe('getProviderProfileByUserId', () => {
         prismaMock.user.findUniqueOrThrow.mockResolvedValue({
             ...mockUserResult,
             providerProfile: null,
-        } as unknown as User & { providerProfile: ProviderProfile });
+        } as unknown as User & { providerProfile: ProviderProfile.ProviderProfile });
         const result = await getProviderProfileByUserId({
             userId: mockUserResult.id,
         });

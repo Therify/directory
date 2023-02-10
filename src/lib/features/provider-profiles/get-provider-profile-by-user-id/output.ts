@@ -1,8 +1,8 @@
-import { ProviderProfileSchema } from '@/lib/schema';
+import { ProviderProfile } from '@/lib/types';
 import * as z from 'zod';
 
 export const schema = z.object({
-    profile: ProviderProfileSchema.nullable(),
+    profile: ProviderProfile.schema.nullable(),
     errors: z.array(z.string()),
 });
 

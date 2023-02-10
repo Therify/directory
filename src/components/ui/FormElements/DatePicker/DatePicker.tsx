@@ -60,16 +60,20 @@ export const DatePicker = ({
             <Box marginBottom={theme.spacing(4)} sx={sx}>
                 <Picker
                     label={
-                        <>
-                            {label}{' '}
-                            {required && (
-                                <Required
-                                    data-testid={TEST_IDS.REQUIRED_INDICATOR}
-                                >
-                                    *
-                                </Required>
-                            )}
-                        </>
+                        label && (
+                            <>
+                                {label}{' '}
+                                {required && (
+                                    <Required
+                                        data-testid={
+                                            TEST_IDS.REQUIRED_INDICATOR
+                                        }
+                                    >
+                                        *
+                                    </Required>
+                                )}
+                            </>
+                        )
                     }
                     inputFormat={inputFormat}
                     value={value}
@@ -119,6 +123,7 @@ const Input = styled(TextField, {
         return {
             width: '100%',
             '& label': {
+                marginBottom: theme.spacing(4),
                 transform: 'none',
                 position: 'relative',
                 fontSize: '.875rem',
@@ -132,7 +137,6 @@ const Input = styled(TextField, {
             },
             '& .MuiInputBase-root': {
                 lineHeight: 1,
-                marginTop: theme.spacing(4),
                 borderRadius: theme.shape.borderRadius,
                 border: `1px solid`,
                 borderColor:

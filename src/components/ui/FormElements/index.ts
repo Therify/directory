@@ -10,5 +10,6 @@ export {
     Radio,
     TOGGLE_TYPE,
 } from './Toggle';
+export * from './formTypography';
 export type { ToggleProps, ToggleType } from './Toggle';
 export * as FormValidation from './form-validation';
