@@ -10,6 +10,7 @@ export default async function callback(
         res.end();
     } catch (error) {
         if (error instanceof CallbackHandlerError) {
+            console.error(error);
             res.status(error.status ?? 400).end(error.message);
             return;
         }
