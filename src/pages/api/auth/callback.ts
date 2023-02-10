@@ -1,3 +1,4 @@
+import { getUrls } from '@/lib/utils';
 import { handleCallback, CallbackHandlerError } from '@auth0/nextjs-auth0';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -6,11 +7,14 @@ export default async function callback(
     res: NextApiResponse
 ) {
     try {
-        await handleCallback(req, res);
+        const { redirectUri } = getUrls(req);
+        await handleCallback(req, res, {
+            redirectUri: redirectUri,
+        });
         res.end();
     } catch (error) {
+        console.error(error);
         if (error instanceof CallbackHandlerError) {
-            console.error(error);
             res.status(error.status ?? 400).end(error.message);
             return;
         }
