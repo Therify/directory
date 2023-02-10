@@ -14,6 +14,7 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
             user: { ...session?.user, name: 'John Doe' },
         });
         await handleLogin(req, res);
+        res.end();
     } catch (error) {
         if (error instanceof LoginHandlerError) {
             res.status(error.status ?? 400).end(error.message);

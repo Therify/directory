@@ -7,6 +7,7 @@ export default async function callback(
 ) {
     try {
         await handleProfile(req, res);
+        res.end();
     } catch (error) {
         if (error instanceof ProfileHandlerError) {
             res.status(error.status ?? 400).end(error.message);
