@@ -29,7 +29,6 @@ export const ImageSection = ({
     disabled,
     profileImageUrl,
 }: ImageSectionProps) => {
-    const theme = useTheme();
     const [showModal, setShowModal] = useState(false);
     return (
         <Box>

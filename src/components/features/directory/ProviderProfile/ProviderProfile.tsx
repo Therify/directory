@@ -223,23 +223,25 @@ export function ProviderProfile({
                     )}
                 </ProviderMatchCriteria>
                 <Box>
-                    {practiceStartDate && yearsOfExperience && (
-                        <CalloutBanner
-                            icon={<VerifiedOutlined />}
-                            title={`${
-                                yearsOfExperience > 10
-                                    ? '10+'
-                                    : yearsOfExperience
-                            } ${
-                                yearsOfExperience === 1 ? 'year' : 'years'
-                            } of experience`}
-                            description={`${
-                                givenName ?? 'This provider'
-                            } has been serving people like you since ${getYear(
-                                practiceStartDate
-                            )}`}
-                        />
-                    )}
+                    {practiceStartDate &&
+                        yearsOfExperience !== undefined &&
+                        yearsOfExperience > 0 && (
+                            <CalloutBanner
+                                icon={<VerifiedOutlined />}
+                                title={`${
+                                    yearsOfExperience > 10
+                                        ? '10+'
+                                        : yearsOfExperience
+                                } ${
+                                    yearsOfExperience === 1 ? 'year' : 'years'
+                                } of experience`}
+                                description={`${
+                                    givenName ?? 'This provider'
+                                } has been serving people like you since ${getYear(
+                                    practiceStartDate
+                                )}`}
+                            />
+                        )}
                     {offersPhoneConsultations && (
                         <CalloutBanner
                             icon={<PhoneOutlined />}
