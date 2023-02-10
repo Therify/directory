@@ -85,6 +85,7 @@ export function ProviderProfile({
     ).sort();
 
     // NOTES: Only thing not listed is the licensed states
+    // TODO: How do we show therapist vs coach?
     return (
         <ProfileContainer
             sx={{
