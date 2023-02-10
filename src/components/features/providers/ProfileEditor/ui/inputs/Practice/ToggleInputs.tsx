@@ -90,7 +90,7 @@ export const OffersPhoneConsultations = ({
         render={({ field: { onChange, onBlur, value, name } }) => (
             <Switch
                 id="offersPhoneConsultations"
-                displayText="Offer free phone consultation?"
+                displayText="Offer free 15 min phone consultation?"
                 {...{
                     onChange,
                     onBlur,

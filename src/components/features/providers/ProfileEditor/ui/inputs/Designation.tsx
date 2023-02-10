@@ -14,7 +14,7 @@ const OPTIONS: SelectOption[] = [
     },
     {
         value: ProfileType.coach,
-        displayText: 'Coach',
+        displayText: 'Mental Health Coach',
     },
 ];
 
@@ -32,7 +32,6 @@ export const DesignationInput = ({
             <Select
                 required
                 fullWidth
-                label="Are you a therapist or coach?"
                 id="designation"
                 value={value}
                 {...{

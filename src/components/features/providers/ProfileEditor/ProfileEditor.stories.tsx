@@ -20,7 +20,8 @@ export const Default: StoryObj<typeof ProfileEditor> = {
             id: 'test',
             city: 'Nashville',
             state: 'Tennessee',
-            website: 'https://www.example.com',
+            website: 'https://www.therify.co',
+            name: 'Therify',
         },
     },
 };

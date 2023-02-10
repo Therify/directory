@@ -11,7 +11,7 @@ import { Box } from '@mui/material';
 
 interface ProfileEditorProps {
     providerProfile?: Partial<ProviderProfile.ProviderProfile>;
-    practice: Pick<Practice, 'id' | 'city' | 'state' | 'website'>;
+    practice: Pick<Practice, 'id' | 'name' | 'city' | 'state' | 'website'>;
     onBack?: () => void;
     onSubmit?: (profile: ProviderProfile.ProviderProfile) => void;
 }
@@ -138,8 +138,9 @@ export function ProfileEditor({
             rightSlot={
                 <SlotWrapper>
                     <ProviderProfileUi
-                        cityState={`${practice.city}, ${practice.state}`}
+                        practice={practice}
                         {...watchedProfile}
+                        bio={watchedProfile.bio || 'Tell us about yourself.'}
                     />
                 </SlotWrapper>
             }

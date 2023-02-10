@@ -7,6 +7,7 @@
         "dev:doppler": "doppler run --project=directory --config=dev --token=$DEV_DIRECTORY_DOPPLER_TOKEN -- yarn dev",
         "dev": "next dev",
         "build": "next build",
+        "dev:build": "doppler run --project=directory --config=dev --token=$DEV_DIRECTORY_DOPPLER_TOKEN -- yarn build",
         "start": "next start",
         "lint": "next lint",
         "test": "jest",

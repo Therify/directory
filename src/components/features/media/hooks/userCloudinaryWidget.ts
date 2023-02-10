@@ -61,14 +61,13 @@ export function useCloudinaryWidget({
             onUploadResult
         );
         if (!buttonRef.current) return;
-        buttonRef.current.addEventListener('click', () => {
+        const handleClick = () => {
             widget.open();
-        });
+        };
+        buttonRef.current.addEventListener('click', handleClick);
         return () => {
             if (!_buttonRef) return;
-            _buttonRef.removeEventListener('click', () => {
-                widget.open();
-            });
+            _buttonRef.removeEventListener('click', handleClick);
         };
     }, [buttonRef, onUploadResult, folder]);
 }
