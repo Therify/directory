@@ -15,7 +15,7 @@ export const NpiNumberInput = ({ control, disabled }: NpiNumberInputProps) => (
         render={({ field: { onChange, onBlur, value, name } }) => (
             <Input
                 fullWidth
-                helperText="This is for our records. This will not be displayed on your profile."
+                helperText="This is for our records and will not be displayed on your profile."
                 id="npiNumber"
                 label="NPI Number"
                 {...{
