@@ -28,18 +28,6 @@ export default VendorInngest.createFunction(
                 idealClientDescription: 'answers.idealClientDescription',
                 gender: 'answers.gender',
                 // @ts-ignore
-                acceptedInsurances: [
-                    'answers.acceptedInsurances',
-                    (answer) => {
-                        if (!answer) return [];
-                        if (Array.isArray(answer)) {
-                            return answer;
-                        }
-                        return Object.values(answer);
-                    },
-                ],
-                licensedStates: 'answers.licensedStates',
-                // @ts-ignore
                 specialties: [
                     'answers.specialties',
                     (answer) => {

@@ -71,7 +71,7 @@ function Directory({
                                 key={profile.id}
                                 onClick={() => {
                                     router.push(
-                                        `members/directory/${profile.id}`
+                                        `/members/directory/${profile.id}`
                                     );
                                 }}
                                 isFavorite={isCurrentlyFavorite}

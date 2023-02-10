@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE "member_favorites" (
+CREATE TABLE IF NOT EXISTS "member_favorites" (
     "member_id" TEXT NOT NULL,
     "profile_id" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
