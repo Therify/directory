@@ -283,7 +283,7 @@ model SelfAssessment {
   userId    String   @map("user_id")
   concerns  String[]
   goals     String[]
-  notes     String?  @db.Text
+  notes     String?  @default("") @db.Text
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
 
   // /* ------------------------------- Preferences ------------------------------ */
