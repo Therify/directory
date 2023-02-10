@@ -1,11 +1,11 @@
 import * as z from 'zod';
 
 export const ENTRIES = [
-    'He/Him',
-    'She/Her',
-    'They/Them',
-    'He/They',
-    'She/They',
+    'he/him/his',
+    'she/her/hers',
+    'they/them/theirs',
+    'he/they',
+    'she/they',
 ] as const;
 
 export const MAP = {
