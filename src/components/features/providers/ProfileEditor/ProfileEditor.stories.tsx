@@ -1,14 +1,14 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { CreateOrUpdateProfile } from './CreateOrUpdateProfile';
+import { ProfileEditor } from './ProfileEditor';
 
-const meta: Meta<typeof CreateOrUpdateProfile> = {
-    title: 'components/features/providers/CreateOrUpdateProfile',
-    component: CreateOrUpdateProfile,
+const meta: Meta<typeof ProfileEditor> = {
+    title: 'components/features/providers/ProfileEditor',
+    component: ProfileEditor,
 };
 
 export default meta;
 
-export const Default: StoryObj<typeof CreateOrUpdateProfile> = {
+export const Default: StoryObj<typeof ProfileEditor> = {
     decorators: [
         (Story) => (
             <div style={{ width: '95vw', height: '95vh' }}>{Story()}</div>

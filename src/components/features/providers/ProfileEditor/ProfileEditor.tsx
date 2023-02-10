@@ -9,18 +9,18 @@ import { CloudinaryUploadResult } from '../../media/hooks/userCloudinaryWidget';
 import { styled, SxProps } from '@mui/material/styles';
 import { Box } from '@mui/material';
 
-interface CreateOrUpdateProfileProps {
+interface ProfileEditorProps {
     providerProfile?: Partial<ProviderProfile.ProviderProfile>;
     practice: Pick<Practice, 'id' | 'city' | 'state' | 'website'>;
     onBack?: () => void;
     onSubmit?: (profile: ProviderProfile.ProviderProfile) => void;
 }
 
-export function CreateOrUpdateProfile({
+export function ProfileEditor({
     providerProfile,
     practice,
     onBack,
-}: CreateOrUpdateProfileProps) {
+}: ProfileEditorProps) {
     const providerProfileForm = useForm<ProviderProfile.ProviderProfile>({
         mode: 'onChange',
         defaultValues: {
