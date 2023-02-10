@@ -35,7 +35,7 @@ export function ProviderProfile({
     pronouns,
     acceptedInsurances = [],
     specialties = [],
-    bio = `Tell us about yourself.`,
+    bio = '',
     offersInPerson = false,
     offersVirtual = false,
     gender,

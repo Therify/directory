@@ -139,7 +139,11 @@ export function ProfileEditor({
                 <SlotWrapper>
                     <ProviderProfileUi
                         cityState={`${practice.city}, ${practice.state}`}
-                        {...watchedProfile}
+                        {...{
+                            ...watchedProfile,
+                            bio:
+                                watchedProfile.bio || 'Tell us about yourself.',
+                        }}
                     />
                 </SlotWrapper>
             }
