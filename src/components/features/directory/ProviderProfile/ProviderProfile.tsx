@@ -85,7 +85,6 @@ export function ProviderProfile({
     ).sort();
 
     // NOTES: Only thing not listed is the licensed states
-    // TODO: How do we show therapist vs coach?
     return (
         <ProfileContainer
             sx={{
@@ -135,27 +134,26 @@ export function ProviderProfile({
                         )}
                     </ProviderNameContainer>
                     <ProviderCredentials>
-                        {credentials.length > 0 && (
-                            <Paragraph>
-                                {credentialsList}
-                                {practice && (
-                                    <>
-                                        {/* TODO: Link to practice */}
-                                        {'  '} at{'  '}
-                                        {practice.website ? (
-                                            <PracticeLink
-                                                href={practice.website}
-                                                target="_blank"
-                                            >
-                                                {practice.name}
-                                            </PracticeLink>
-                                        ) : (
-                                            practice.name
-                                        )}
-                                    </>
-                                )}
-                            </Paragraph>
-                        )}
+                        <Paragraph>
+                            {designation === ProfileType.therapist
+                                ? 'Therapist'
+                                : 'Coach'}
+                            {practice && (
+                                <>
+                                    {'  '} at{'  '}
+                                    {practice.website ? (
+                                        <PracticeLink
+                                            href={practice.website}
+                                            target="_blank"
+                                        >
+                                            {practice.name}
+                                        </PracticeLink>
+                                    ) : (
+                                        practice.name
+                                    )}
+                                </>
+                            )}
+                        </Paragraph>
                     </ProviderCredentials>
                     <ProviderState>
                         {practice && (
