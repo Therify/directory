@@ -10,11 +10,11 @@ interface DesignationInputProps {
 const OPTIONS: SelectOption[] = [
     {
         value: ProfileType.therapist,
-        displayText: 'Therapy',
+        displayText: 'Therapist',
     },
     {
         value: ProfileType.coach,
-        displayText: 'Coaching',
+        displayText: 'Coach',
     },
 ];
 
@@ -32,7 +32,7 @@ export const DesignationInput = ({
             <Select
                 required
                 fullWidth
-                label="What sevice will you be performing?"
+                label="Are you a therapist or coach?"
                 id="designation"
                 value={value}
                 {...{

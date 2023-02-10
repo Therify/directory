@@ -6,6 +6,7 @@ import {
     Button,
     BUTTON_SIZE,
     BUTTON_TYPE,
+    FormSectionTitle,
     H1,
     IconButton,
 } from '@/components/ui/';
@@ -121,6 +122,9 @@ export const ProfileEditorForm = ({
                     </FloatingButton>
                 )}
                 <Divider sx={{ mb: 4 }} />
+                <FormSectionTitle style={{ marginTop: 0 }}>
+                    Profile Type
+                </FormSectionTitle>
                 <DesignationInput
                     control={control}
                     disabled={isSubmittingForm}
