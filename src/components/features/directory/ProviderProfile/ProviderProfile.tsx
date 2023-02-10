@@ -24,24 +24,19 @@ import {
 } from '@mui/icons-material';
 import { Box, Chip, Link, Stack, useMediaQuery } from '@mui/material';
 import { styled, Theme } from '@mui/material/styles';
-import { ProfileType } from '@prisma/client';
+import { Practice, ProfileType } from '@prisma/client';
 import { getYear, intervalToDuration } from 'date-fns';
 import { CalloutBanner } from './CalloutBanner';
 import { CriteriaCard, CRITERIA_CARD_TYPES } from './CriteriaCard';
 
 interface ProviderProfileProps {
-    cityState?: string;
-    practice?: {
-        id: string;
-        name: string;
-    };
+    practice?: Pick<Practice, 'id' | 'name' | 'city' | 'state' | 'website'>;
     isFavorited?: boolean;
     onFavorite?: () => Promise<void>;
     onShare?: () => void;
 }
 
 export function ProviderProfile({
-    cityState,
     practice,
     onShare,
     onFavorite,
@@ -139,21 +134,34 @@ export function ProviderProfile({
                         )}
                     </ProviderNameContainer>
                     <ProviderCredentials>
-                        <Paragraph>
-                            {credentialsList}
-
-                            {practice && (
-                                <>
-                                    {/* TODO: Link to practice */} at{' '}
-                                    <PracticeLink href="">
-                                        {practice.name}
-                                    </PracticeLink>
-                                </>
-                            )}
-                        </Paragraph>
+                        {credentials.length > 0 && (
+                            <Paragraph>
+                                {credentialsList}
+                                {practice && (
+                                    <>
+                                        {/* TODO: Link to practice */}
+                                        {'  '} at{'  '}
+                                        {practice.website ? (
+                                            <PracticeLink
+                                                href={practice.website}
+                                                target="_blank"
+                                            >
+                                                {practice.name}
+                                            </PracticeLink>
+                                        ) : (
+                                            practice.name
+                                        )}
+                                    </>
+                                )}
+                            </Paragraph>
+                        )}
                     </ProviderCredentials>
                     <ProviderState>
-                        <SecondaryText>{cityState}</SecondaryText>
+                        {practice && (
+                            <SecondaryText>
+                                {practice.city}, {practice.state}
+                            </SecondaryText>
+                        )}
                     </ProviderState>
                 </ProviderTitle>
                 <Box
@@ -188,7 +196,7 @@ export function ProviderProfile({
                 </Box>
                 <ProviderVideo />
                 <ProviderMatchCriteria>
-                    {isTherapist && (
+                    {isTherapist && allAcceptedInsurances.length > 0 && (
                         <CriteriaCard
                             type={CRITERIA_CARD_TYPES.INSURANCE}
                             sx={{
@@ -200,16 +208,18 @@ export function ProviderProfile({
                             items={allAcceptedInsurances}
                         />
                     )}
-                    <CriteriaCard
-                        type={CRITERIA_CARD_TYPES.SPECIALTIES}
-                        sx={{
-                            minWidth: {
-                                xs: 235,
-                                md: 338,
-                            },
-                        }}
-                        items={specialties}
-                    />
+                    {specialties.length > 0 && (
+                        <CriteriaCard
+                            type={CRITERIA_CARD_TYPES.SPECIALTIES}
+                            sx={{
+                                minWidth: {
+                                    xs: 235,
+                                    md: 338,
+                                },
+                            }}
+                            items={specialties}
+                        />
+                    )}
                 </ProviderMatchCriteria>
                 <Box>
                     {practiceStartDate && yearsOfExperience && (
@@ -256,11 +266,7 @@ export function ProviderProfile({
                     </AttributeText>
                     {practiceNotes && (
                         <>
-                            <Paragraph
-                                noMargin
-                                bold
-                                size={PARAGRAPH_SIZE.LARGE}
-                            >
+                            <Paragraph noMargin bold>
                                 My approach to therapy
                             </Paragraph>
                             <AttributeText sx={{ whiteSpace: 'pre-line' }}>
@@ -270,11 +276,7 @@ export function ProviderProfile({
                     )}
                     {idealClientDescription && (
                         <>
-                            <Paragraph
-                                noMargin
-                                // bold
-                                size={PARAGRAPH_SIZE.LARGE}
-                            >
+                            <Paragraph noMargin bold>
                                 My ideal client
                             </Paragraph>
                             <AttributeText sx={{ whiteSpace: 'pre-line' }}>

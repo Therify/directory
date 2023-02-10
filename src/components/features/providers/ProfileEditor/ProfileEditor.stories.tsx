@@ -21,6 +21,7 @@ export const Default: StoryObj<typeof ProfileEditor> = {
             city: 'Nashville',
             state: 'Tennessee',
             website: 'https://www.example.com',
+            name: 'Therify Therapy',
         },
     },
 };

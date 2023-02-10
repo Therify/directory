@@ -98,10 +98,12 @@ export const Basic: StoryObj<typeof ProviderProfile> = {};
 
 export const TherapistProfile: StoryObj<typeof ProviderProfile> = {
     args: {
-        cityState: 'Nashville, TN',
         practice: {
             id: 'practice-id',
             name: 'A Better Place Therapy',
+            city: 'Nashville',
+            state: 'Tennessee',
+            website: 'https://google.com',
         },
         ...therapist,
     },
