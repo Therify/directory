@@ -21,6 +21,7 @@ import {
     VideoCameraFrontOutlined,
     Diversity1Outlined,
     ChurchOutlined,
+    PersonPinCircleOutlined,
 } from '@mui/icons-material';
 import { Box, Chip, Link, Stack, useMediaQuery } from '@mui/material';
 import { styled, Theme } from '@mui/material/styles';
@@ -74,6 +75,9 @@ export function ProviderProfile({
     });
     const credentialsList = Array.from(
         new Set(credentials.map(({ type }) => type))
+    ).join(', ');
+    const licensedStates = Array.from(
+        new Set(credentials.map(({ state }) => state))
     ).join(', ');
     const ELEMENT_DIMENSIONS = {
         headerHeight: isSmallScreen ? 121 : 222,
@@ -156,9 +160,9 @@ export function ProviderProfile({
                         </Paragraph>
                     </ProviderCredentials>
                     <ProviderState>
-                        {practice && (
+                        {credentials.length > 0 && (
                             <SecondaryText>
-                                {practice.city}, {practice.state}
+                                Licensed in {licensedStates}
                             </SecondaryText>
                         )}
                     </ProviderState>
@@ -234,18 +238,25 @@ export function ProviderProfile({
                                     yearsOfExperience === 1 ? 'year' : 'years'
                                 } of experience`}
                                 description={`${
-                                    givenName ?? 'This provider'
+                                    givenName || 'This provider'
                                 } has been serving people like you since ${getYear(
                                     practiceStartDate
                                 )}`}
                             />
                         )}
+                    {offersInPerson && practice && (
+                        <CalloutBanner
+                            icon={<PersonPinCircleOutlined />}
+                            title={`In-person sessions in ${practice.city}, ${practice.state}`}
+                            description={`In-person sessions available at ${practice.name}`}
+                        />
+                    )}
                     {offersPhoneConsultations && (
                         <CalloutBanner
                             icon={<PhoneOutlined />}
                             title="Free intro phone consultations"
                             description={`${
-                                givenName ?? 'This provider'
+                                givenName || 'This provider'
                             } offers a free 15 min phone consultation to get started`}
                         />
                     )}

@@ -48,6 +48,12 @@ const therapist: ProviderProfileType.ProviderProfile = {
             type: 'LMFT',
             expirationDate: '2021-12-31',
         },
+        {
+            state: 'New York',
+            licenseNumber: '123456',
+            type: 'LMFT',
+            expirationDate: '2021-12-31',
+        },
     ],
     acceptedInsurances: [
         {
@@ -57,6 +63,10 @@ const therapist: ProviderProfileType.ProviderProfile = {
                 InsuranceProvider.MAP.AMERIHEALTH,
                 InsuranceProvider.MAP.BLUECROSS_BLUESHIELD,
             ],
+        },
+        {
+            state: 'New York',
+            insurances: [InsuranceProvider.MAP.BLUECROSS_BLUESHIELD],
         },
     ],
     // supervisor: null,
