@@ -90,7 +90,6 @@ export function ProviderProfile({
         new Set(acceptedInsurances.flatMap(({ insurances }) => insurances))
     ).sort();
 
-    // NOTES: Only thing not listed is the licensed states
     return (
         <ProfileContainer
             sx={{
