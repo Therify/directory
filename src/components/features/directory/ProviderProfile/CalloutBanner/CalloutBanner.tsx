@@ -35,9 +35,6 @@ const CalloutWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    '&:last-of-type': {
-        marginBottom: theme.spacing(4),
-    },
 }));
 
 const Description = styled(Paragraph)(({ theme }) => ({

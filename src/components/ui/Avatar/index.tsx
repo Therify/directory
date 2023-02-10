@@ -12,6 +12,7 @@ export const AVATAR_SIZE = {
     XXLARGE: 16,
     HUGE: 24,
     XHUGE: 32,
+    XXHuge: 55,
 } as const;
 
 export type AvatarSize = typeof AVATAR_SIZE[keyof typeof AVATAR_SIZE];
