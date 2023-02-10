@@ -52,6 +52,9 @@ export function useCloudinaryWidget({
     folder,
 }: UseCloudinaryWidgetParams) {
     useEffect(() => {
+        if (typeof window === 'undefined') {
+            return;
+        }
         let _buttonRef = buttonRef.current;
         const widget = window.cloudinary.createUploadWidget(
             {

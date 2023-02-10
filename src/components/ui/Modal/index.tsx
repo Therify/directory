@@ -32,11 +32,15 @@ type PrimaryButtonProps =
           primaryButtonText: string;
           primaryButtonOnClick: () => void;
           primaryButtonDisabled?: boolean;
+          primaryButtonEndIcon?: ReactNode;
+          primaryButtonStartIcon?: ReactNode;
       }
     | {
           primaryButtonText?: undefined;
           primaryButtonOnClick?: undefined;
           primaryButtonDisabled?: boolean;
+          primaryButtonEndIcon?: ReactNode;
+          primaryButtonStartIcon?: ReactNode;
       };
 
 type SecondaryButtonProps =
@@ -44,11 +48,15 @@ type SecondaryButtonProps =
           secondaryButtonText: string;
           secondaryButtonOnClick: () => void;
           secondaryButtonDisabled?: boolean;
+          secondaryButtonEndIcon?: ReactNode;
+          secondaryButtonStartIcon?: ReactNode;
       }
     | {
           secondaryButtonText?: undefined;
           secondaryButtonOnClick?: undefined;
           secondaryButtonDisabled?: boolean;
+          secondaryButtonEndIcon?: ReactNode;
+          secondaryButtonStartIcon?: ReactNode;
       };
 
 type ModalProps = BaseModalProps & PrimaryButtonProps & SecondaryButtonProps;
@@ -79,6 +87,10 @@ export const Modal = ({
     primaryButtonText,
     primaryButtonOnClick,
     primaryButtonDisabled,
+    primaryButtonEndIcon,
+    primaryButtonStartIcon,
+    secondaryButtonEndIcon,
+    secondaryButtonStartIcon,
     secondaryButtonText,
     secondaryButtonOnClick,
     secondaryButtonDisabled,
@@ -182,6 +194,8 @@ export const Modal = ({
                                 type={BUTTON_TYPE.OUTLINED}
                                 color="info"
                                 onClick={secondaryButtonOnClick}
+                                endIcon={secondaryButtonEndIcon}
+                                startIcon={secondaryButtonStartIcon}
                                 style={{
                                     marginRight:
                                         isPrimaryButton && !shouldStackButtons
@@ -203,6 +217,8 @@ export const Modal = ({
                                 fullWidth={fullWidthButtons}
                                 size={BUTTON_SIZE.SMALL}
                                 onClick={primaryButtonOnClick}
+                                startIcon={primaryButtonStartIcon}
+                                endIcon={primaryButtonEndIcon}
                             >
                                 {primaryButtonText}
                             </Button>
