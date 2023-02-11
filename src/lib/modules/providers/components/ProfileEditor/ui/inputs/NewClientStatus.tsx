@@ -35,6 +35,7 @@ export const NewClientStatusInput = ({
         render={({ field: { onChange, onBlur, value, name } }) => (
             <Select
                 required
+                label="Are you currently accepting new clients?"
                 fullWidth
                 id="newClientStatus"
                 value={value}

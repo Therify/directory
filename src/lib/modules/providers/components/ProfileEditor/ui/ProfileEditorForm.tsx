@@ -150,16 +150,16 @@ export const ProfileEditorForm = ({
                 )}
                 <Divider sx={{ mb: 4 }} />
                 <FormSectionTitle style={{ marginTop: 0 }}>
-                    Accepting New Clients?
-                </FormSectionTitle>
-                <NewClientStatusInput
-                    control={control}
-                    disabled={isSubmittingForm}
-                />
-                <FormSectionTitle style={{ marginTop: 0 }}>
                     Profile Type
                 </FormSectionTitle>
                 <DesignationInput
+                    control={control}
+                    disabled={isSubmittingForm}
+                />
+                <FormSectionTitle style={{ margin: 0 }}>
+                    New Clients
+                </FormSectionTitle>
+                <NewClientStatusInput
                     control={control}
                     disabled={isSubmittingForm}
                 />
