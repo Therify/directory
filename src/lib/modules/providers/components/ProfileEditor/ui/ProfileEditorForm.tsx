@@ -29,10 +29,9 @@ import { ImageSection } from './inputs/Image';
 
 interface EditorFormProps {
     control: Control<ProviderProfile.ProviderProfile>;
-    defaultValues?: Partial<ProviderProfile.ProviderProfile>;
     isFormValid: boolean;
     isSubmittingForm: boolean;
-    licensedStates?: typeof State.ENTRIES[number][];
+    licensedStates?: (typeof State.ENTRIES)[number][];
     onImageUploadSuccess: (
         error: Error | null,
         result: CloudinaryUploadResult
@@ -43,6 +42,9 @@ interface EditorFormProps {
     onBack?: () => void;
     onShowProfilePreview?: () => void;
     hideFloatingButton?: boolean;
+    setSupervisor: (
+        supervisor: ProviderProfile.ProviderProfile['supervisor']
+    ) => void;
     watchedProfileValues: {
         id: ProviderProfile.ProviderProfile['id'];
         designation: ProviderProfile.ProviderProfile['designation'];
@@ -54,7 +56,6 @@ interface EditorFormProps {
 }
 export const ProfileEditorForm = ({
     control,
-    defaultValues,
     licensedStates,
     onDeleteImage,
     onImageUploadSuccess,
@@ -66,6 +67,7 @@ export const ProfileEditorForm = ({
     onShowProfilePreview,
     hideFloatingButton,
     watchedProfileValues,
+    setSupervisor,
 }: EditorFormProps) => {
     const isNewProfile = !watchedProfileValues.id;
     const theme = useTheme();
@@ -161,16 +163,13 @@ export const ProfileEditorForm = ({
                     disabled={isSubmittingForm}
                 />
                 <AboutSection control={control} disabled={isSubmittingForm} />
-                {isTherapist && (
-                    <CredentialsSection
-                        control={control}
-                        defaultValues={{
-                            npiNumber: defaultValues?.npiNumber ?? undefined,
-                        }}
-                        licensedStates={licensedStates}
-                        disabled={isSubmittingForm}
-                    />
-                )}
+                <CredentialsSection
+                    isTherapist={isTherapist}
+                    control={control}
+                    licensedStates={licensedStates}
+                    disabled={isSubmittingForm}
+                    setSupervisor={setSupervisor}
+                />
                 <PricingInputs
                     control={control}
                     offersSlidingScale={watchedProfileValues.offersSlidingScale}

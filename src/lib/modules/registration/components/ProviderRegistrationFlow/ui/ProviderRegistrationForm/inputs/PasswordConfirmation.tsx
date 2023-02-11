@@ -78,7 +78,6 @@ const InputWithPasswordWatcher = ({
         <Input
             allowShowPassword
             required
-            fullWidth
             id="confirmPassword"
             label="Confirm Password"
             data-testid={TEST_IDS.CONFIRM_PASSWORD}

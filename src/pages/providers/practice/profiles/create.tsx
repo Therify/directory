@@ -39,7 +39,7 @@ export default function PracticeProfileCreatePage() {
                     name: 'Therify',
                     city: 'San Francisco',
                     state: 'CA',
-                    website: 'https://therify.com',
+                    website: 'https://therify.co',
                 }}
                 onSubmit={async (profile) => {
                     console.log('TODO: Create profile...', profile);

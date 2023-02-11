@@ -15,7 +15,6 @@ interface InputBaseProps {
     helperText?: string;
     label?: string;
     id?: string;
-    fullWidthInput?: boolean;
     required?: boolean;
     variant?: 'default' | 'white';
     wrapperSx?: SxProps<Theme>;
@@ -35,7 +34,6 @@ export const Input = ({
     helperText,
     label,
     id,
-    fullWidthInput,
     required,
     variant = 'default',
     wrapperSx,
@@ -49,7 +47,7 @@ export const Input = ({
     return (
         <FormControl
             variant="standard"
-            fullWidth={fullWidthInput}
+            fullWidth={inputProps.fullWidth}
             sx={{ marginBottom: theme.spacing(4), ...wrapperSx }}
         >
             {label && (

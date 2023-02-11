@@ -1,21 +1,27 @@
 import { Control, Controller } from 'react-hook-form';
 import { Input, FormValidation } from '@/lib/shared/components/ui';
-import { RegisterProvider } from '@/lib/modules/registration/features';
-import { TEST_IDS } from './testIds';
+import { ProviderProfile, ProviderSupervisor } from '@/lib/shared/types';
 
-interface GivenNameInputProps {
-    control: Control<RegisterProvider.Input>;
-    defaultValue?: string;
+interface InputProps {
+    control: Control<ProviderProfile.ProviderProfile>;
+    disabled?: boolean;
+    storeLocalData: (
+        key:
+            | keyof ProviderSupervisor.ProviderSupervisor
+            | keyof ProviderSupervisor.ProviderSupervisor['supervisorLicense'],
+        value: string
+    ) => void;
 }
 
-export const GivenNameInput = ({
+export const NameInput = ({
     control,
-    defaultValue = '',
-}: GivenNameInputProps) => (
+    disabled,
+    storeLocalData,
+}: InputProps) => (
     <Controller
         control={control}
-        name="givenName"
-        defaultValue={defaultValue}
+        name="supervisor.name"
+        defaultValue=""
         rules={{
             required: true,
         }}
@@ -25,20 +31,24 @@ export const GivenNameInput = ({
         }) => (
             <Input
                 required
-                id="givenName"
-                label="First Name"
+                fullWidth
+                id="name"
+                label="Name"
+                placeholder="Supervisor Name"
                 errorMessage={
                     isTouched
                         ? FormValidation.getNameValidationErrorMessage(
                               error?.type as FormValidation.NameValidationType,
-                              'First Name'
+                              'Name'
                           )
                         : undefined
                 }
-                autoComplete="first-name"
-                data-testid={TEST_IDS.FIRST_NAME}
+                onChange={(e) => {
+                    onChange(e);
+                    storeLocalData('name', e.target.value);
+                }}
                 {...{
-                    onChange,
+                    disabled,
                     onBlur,
                     value,
                     name,

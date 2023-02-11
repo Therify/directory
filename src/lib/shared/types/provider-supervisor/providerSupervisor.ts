@@ -1,4 +1,5 @@
 import * as z from 'zod';
+import { ENTRIES as STATES } from '../state';
 
 export const schema = z.object({
     name: z.string(),
@@ -6,7 +7,7 @@ export const schema = z.object({
     supervisorLicense: z.object({
         expiration: z.string(),
         licenseNumber: z.string(),
-        state: z.string(),
+        state: z.enum(STATES),
     }),
 });
 
