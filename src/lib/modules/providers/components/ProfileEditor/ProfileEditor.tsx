@@ -152,7 +152,6 @@ export function ProfileEditor({
                             isSubmittingForm={false}
                             onBack={onBack}
                             onShowProfilePreview={() => {
-                                console.log('show profile preview');
                                 setShowProfilePreview(true);
                             }}
                             setSupervisor={(supervisor) =>
