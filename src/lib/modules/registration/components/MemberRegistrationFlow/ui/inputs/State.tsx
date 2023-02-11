@@ -22,7 +22,6 @@ export const StateInput = ({ control, defaultValue = '' }: StateInputProps) => (
         }) => (
             <Input
                 required
-                fullWidth
                 id="state"
                 label="State"
                 errorMessage={

@@ -47,7 +47,6 @@ export const EmailAddressInput = ({
             return (
                 <Input
                     required
-                    fullWidth
                     id="emailAddress"
                     label="Email"
                     errorMessage={
