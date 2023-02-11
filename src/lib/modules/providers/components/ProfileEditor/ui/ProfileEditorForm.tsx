@@ -18,6 +18,7 @@ import {
     IdentitySection,
     AboutSection,
     CredentialsSection,
+    NewClientStatusInput,
 } from './inputs';
 import { CloudinaryUploadResult } from '@/lib/modules/media/components/hooks/userCloudinaryWidget';
 import { State, ProviderProfile } from '@/lib/shared/types';
@@ -82,7 +83,7 @@ export const ProfileEditorForm = ({
     const saveButtonText = isNewProfile ? 'Create Profile' : 'Save Changes';
     const isTherapist =
         watchedProfileValues.designation === ProfileType.therapist;
-    // TODO: Add supervisor input
+
     return (
         <EditorContainer>
             <EditorForm>
@@ -101,22 +102,28 @@ export const ProfileEditorForm = ({
                 )}
                 <HeaderContainer marginBottom={4}>
                     <H1>Profile Editor</H1>
-                    <PreviewProfileButton
-                        color="secondary"
-                        onClick={() => onShowProfilePreview?.()}
-                    >
-                        Preview Profile
-                    </PreviewProfileButton>
-                    <Button
-                        ref={headerSaveButtonRef}
-                        fullWidth={false}
-                        type="contained"
-                        disabled={!isFormValid || isSubmittingForm}
-                        isLoading={isSubmittingForm}
-                        onClick={() => setConfirmSave(true)}
-                    >
-                        {saveButtonText}
-                    </Button>
+                    <Box display="flex">
+                        <PreviewProfileButton
+                            color="secondary"
+                            onClick={() => onShowProfilePreview?.()}
+                            style={{
+                                marginBottom: 0,
+                                marginRight: theme.spacing(2),
+                            }}
+                        >
+                            Preview Profile
+                        </PreviewProfileButton>
+                        <Button
+                            ref={headerSaveButtonRef}
+                            fullWidth={false}
+                            type="contained"
+                            disabled={!isFormValid || isSubmittingForm}
+                            isLoading={isSubmittingForm}
+                            onClick={() => setConfirmSave(true)}
+                        >
+                            {saveButtonText}
+                        </Button>
+                    </Box>
                 </HeaderContainer>
                 {!hideFloatingButton && (
                     <FloatingButtons
@@ -142,6 +149,13 @@ export const ProfileEditorForm = ({
                     </FloatingButtons>
                 )}
                 <Divider sx={{ mb: 4 }} />
+                <FormSectionTitle style={{ marginTop: 0 }}>
+                    Accepting New Clients?
+                </FormSectionTitle>
+                <NewClientStatusInput
+                    control={control}
+                    disabled={isSubmittingForm}
+                />
                 <FormSectionTitle style={{ marginTop: 0 }}>
                     Profile Type
                 </FormSectionTitle>
