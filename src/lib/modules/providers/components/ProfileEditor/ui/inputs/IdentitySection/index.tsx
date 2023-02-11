@@ -1,7 +1,7 @@
 import { FormSectionTitle } from '@/lib/shared/components/ui/FormElements';
 import { ProviderProfile } from '@/lib/shared/types';
 import { Box } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { Control } from 'react-hook-form';
 import { ContactEmailInput } from './ContactEmail';
 import { EthnicitiesInput } from './Ethnicities';
@@ -18,6 +18,7 @@ export const IdentitySection = ({
     control,
     disabled,
 }: IdentitySectionProps) => {
+    const theme = useTheme();
     return (
         <Box width="100%">
             <FormSectionTitle>Your Identity</FormSectionTitle>
@@ -40,7 +41,7 @@ export const IdentitySection = ({
                 <GenderInput control={control} disabled={disabled} />
                 <PronounsInput control={control} disabled={disabled} />
             </TwoInputContainer>
-            <Box marginTop={8}>
+            <Box>
                 <EthnicitiesInput control={control} disabled={disabled} />
             </Box>
         </Box>

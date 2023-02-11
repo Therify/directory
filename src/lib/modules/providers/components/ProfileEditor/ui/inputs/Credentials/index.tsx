@@ -2,27 +2,28 @@ import { Control } from 'react-hook-form';
 import { FormSectionTitle } from '@/lib/shared/components/ui/FormElements';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { State, ProviderCredential, ProviderProfile } from '@/lib/shared/types';
+import { State, ProviderProfile } from '@/lib/shared/types';
 import { NpiNumberInput } from './NpiNumber';
 import { AcceptedInsuranceInput } from './AcceptedInsurance';
 import { CredentialsManagerInput } from './CredentialsManager';
 import { PracticeStartDateInput } from './PracticeStartDate';
+import { SupervisorInput } from './SupervisorInput';
 
 interface IdentitySectionProps {
+    isTherapist: boolean;
     control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
-    defaultValues: {
-        npiNumber?: string;
-        credentials?: ProviderCredential.ProviderCredential[];
-        practiceStartDate?: Date;
-    };
-    licensedStates?: typeof State.ENTRIES[number][];
+    licensedStates?: (typeof State.ENTRIES)[number][];
+    setSupervisor: (
+        supervisor: ProviderProfile.ProviderProfile['supervisor']
+    ) => void;
 }
 export const CredentialsSection = ({
+    isTherapist,
     control,
-    defaultValues,
     disabled,
     licensedStates = [],
+    setSupervisor,
 }: IdentitySectionProps) => {
     return (
         <Container>
@@ -36,10 +37,19 @@ export const CredentialsSection = ({
                     control={control}
                     disabled={disabled}
                 />
-                <AcceptedInsuranceInput
-                    control={control}
-                    stateOptions={licensedStates}
-                />
+                {isTherapist && (
+                    <>
+                        <AcceptedInsuranceInput
+                            control={control}
+                            stateOptions={licensedStates}
+                        />
+                        <SupervisorInput
+                            setSupervisor={setSupervisor}
+                            control={control}
+                            disabled={disabled}
+                        />
+                    </>
+                )}
             </Box>
         </Container>
     );
