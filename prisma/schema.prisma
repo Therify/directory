@@ -219,6 +219,12 @@ enum ProfileType {
   therapist
 }
 
+enum NewClientStatus {
+  accepting
+  waitlist
+  not_accepting
+}
+
 model ProviderProfile {
   id                         String                       @id @default(cuid()) @map("provider_profile_id")
   givenName                  String                       @map("given_name")
@@ -255,6 +261,7 @@ model ProviderProfile {
   offersPhoneConsultations   Boolean                      @default(false) @map("offers_phone_consultations")
   offersVirtual              Boolean                      @default(true) @map("offers_virtual")
   designation                ProfileType                  @map("profile_type")
+  newClientStatus            NewClientStatus              @map("new_client_status")
   directoryListing           DirectoryListing?
   practiceStartDate          DateTime?                    @map("practice_start_date") @db.Timestamp(6)
   PracticeProviderInvitation PracticeProviderInvitation[]

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Practice, ProfileType } from '@prisma/client';
+import { NewClientStatus, Practice, ProfileType } from '@prisma/client';
 import { styled, SxProps, useTheme } from '@mui/material/styles';
 import { Box, Drawer, useMediaQuery } from '@mui/material';
 import { Button, TwoColumnGrid } from '@/lib/shared/components/ui';
@@ -30,6 +30,7 @@ export function ProfileEditor({
     const providerProfileForm = useForm<ProviderProfile.ProviderProfile>({
         mode: 'onChange',
         defaultValues: {
+            newClientStatus: NewClientStatus.accepting,
             offersInPerson: false,
             offersMedicationManagement: false,
             offersPhoneConsultations: false,

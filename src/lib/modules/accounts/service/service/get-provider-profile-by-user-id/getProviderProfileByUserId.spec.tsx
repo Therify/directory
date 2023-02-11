@@ -1,6 +1,6 @@
 import { factory as getProviderProfileByUserIdFactory } from './getProviderProfileByUserId';
 import { prismaMock } from '@/lib/prisma/__mock__';
-import { ProfileType, Role, User } from '@prisma/client';
+import { NewClientStatus, ProfileType, Role, User } from '@prisma/client';
 import { generateMock } from '@anatine/zod-mock';
 import { AccountsServiceParams } from '../params';
 import { ProviderProfile } from '@/lib/shared/types';
@@ -23,9 +23,10 @@ describe('getProviderProfileByUserId', () => {
         const getProviderProfileByUserId = getProviderProfileByUserIdFactory({
             prisma: prismaMock,
         } as unknown as AccountsServiceParams);
-        const mockProfile = {
+        const mockProfile: ProviderProfile.ProviderProfile = {
             ...generateMock(ProviderProfile.schema),
             designation: ProfileType.therapist,
+            newClientStatus: NewClientStatus.accepting,
         };
         prismaMock.user.findUniqueOrThrow.mockResolvedValue({
             ...mockUserResult,
