@@ -1,17 +1,24 @@
 import { Control, Controller } from 'react-hook-form';
 import { Input } from '@/lib/shared/components/ui';
-import { ProviderProfile } from '@/lib/shared/types';
+import { ProviderProfile, ProviderSupervisor } from '@/lib/shared/types';
 
 interface InputProps {
     control: Control<ProviderProfile.ProviderProfile>;
     defaultValue?: string;
     disabled?: boolean;
+    storeLocalData: (
+        key:
+            | keyof ProviderSupervisor.ProviderSupervisor
+            | keyof ProviderSupervisor.ProviderSupervisor['supervisorLicense'],
+        value: string
+    ) => void;
 }
 
 export const LicenseNumberInput = ({
     control,
     defaultValue = '',
     disabled,
+    storeLocalData,
 }: InputProps) => (
     <Controller
         control={control}
@@ -27,9 +34,12 @@ export const LicenseNumberInput = ({
                 fullWidth
                 id="licenseNumber"
                 placeholder="Supervisor License Number"
+                onChange={(e) => {
+                    onChange(e);
+                    storeLocalData('licenseNumber', e.target.value);
+                }}
                 {...{
                     disabled,
-                    onChange,
                     onBlur,
                     value,
                     name,

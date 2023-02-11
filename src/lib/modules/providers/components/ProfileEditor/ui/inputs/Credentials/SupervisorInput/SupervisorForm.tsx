@@ -2,7 +2,7 @@ import { Control } from 'react-hook-form';
 import { styled } from '@mui/material/styles';
 import { Box } from '@mui/material';
 import { Divider, FormSectionSubtitle } from '@/lib/shared/components/ui';
-import { ProviderProfile } from '@/lib/shared/types';
+import { ProviderProfile, ProviderSupervisor } from '@/lib/shared/types';
 import {
     NameInput,
     NpiNumberInput,
@@ -14,20 +14,50 @@ import {
 interface SupervisorFormProps {
     control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
+    storeLocalData: (
+        key:
+            | keyof ProviderSupervisor.ProviderSupervisor
+            | keyof ProviderSupervisor.ProviderSupervisor['supervisorLicense'],
+        value: string
+    ) => void;
 }
 
-export const SupervisorForm = ({ disabled, control }: SupervisorFormProps) => (
+export const SupervisorForm = ({
+    disabled,
+    control,
+    storeLocalData,
+}: SupervisorFormProps) => (
     <Box width="100%">
         <Divider />
         <FormSectionSubtitle>Supervisor Details</FormSectionSubtitle>
         <Box width="100%">
-            <NameInput control={control} disabled={disabled} />
-            <LicenseNumberInput control={control} disabled={disabled} />
+            <NameInput
+                control={control}
+                disabled={disabled}
+                storeLocalData={storeLocalData}
+            />
+            <LicenseNumberInput
+                control={control}
+                disabled={disabled}
+                storeLocalData={storeLocalData}
+            />
             <TwoInputContainer>
-                <ExpirationDateInput control={control} disabled={disabled} />
-                <StateInput control={control} disabled={disabled} />
+                <ExpirationDateInput
+                    control={control}
+                    disabled={disabled}
+                    storeLocalData={storeLocalData}
+                />
+                <StateInput
+                    control={control}
+                    disabled={disabled}
+                    storeLocalData={storeLocalData}
+                />
             </TwoInputContainer>
-            <NpiNumberInput control={control} disabled={disabled} />
+            <NpiNumberInput
+                control={control}
+                disabled={disabled}
+                storeLocalData={storeLocalData}
+            />
         </Box>
     </Box>
 );

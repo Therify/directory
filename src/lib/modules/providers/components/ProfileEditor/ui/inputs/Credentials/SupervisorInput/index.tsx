@@ -1,5 +1,5 @@
 import { Switch, FormSectionSubtitle } from '@/lib/shared/components/ui';
-import { ProviderProfile, State } from '@/lib/shared/types';
+import { ProviderProfile, ProviderSupervisor, State } from '@/lib/shared/types';
 import { Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
@@ -30,10 +30,36 @@ export const SupervisorInput = ({
 }: SupervisorManagerProps) => {
     const theme = useTheme();
     const [isSupervised, setIsSupervised] = useState(false);
+    const [localSupervisor, setLocalSupervisor] =
+        useState<ProviderSupervisor.ProviderSupervisor>(DEFAULT_SUPERVISOR);
+
+    // This allows the supervisor form to be re-hydrated with supervisor data
+    // when a user fills out the supervisor section, unchecks the switch (setting the profile supervisor value to `null`),
+    // and then rechecks the switch.
+    const storeLocalData = (
+        key:
+            | keyof ProviderSupervisor.ProviderSupervisor
+            | keyof ProviderSupervisor.ProviderSupervisor['supervisorLicense'],
+        value: string
+    ) => {
+        if (['npiNumber', 'name', 'supervisorLicense'].includes(key)) {
+            return setLocalSupervisor({
+                ...localSupervisor,
+                [key]: value,
+            });
+        }
+        return setLocalSupervisor({
+            ...localSupervisor,
+            supervisorLicense: {
+                ...localSupervisor.supervisorLicense,
+                [key]: value,
+            },
+        });
+    };
+
     useEffect(() => {
-        console.log('Supervisor form useEffect: ', { isSupervised });
         if (isSupervised) {
-            setSupervisor(DEFAULT_SUPERVISOR);
+            setSupervisor(localSupervisor);
         } else {
             setSupervisor(null);
         }
@@ -47,11 +73,17 @@ export const SupervisorInput = ({
                 disabled={disabled}
                 displayText="Are you supervised?"
                 checked={isSupervised}
-                onChange={() => setIsSupervised(!isSupervised)}
+                onChange={() => {
+                    setIsSupervised(!isSupervised);
+                }}
                 style={{ marginBottom: theme.spacing(4) }}
             />
             {isSupervised && (
-                <SupervisorForm disabled={disabled} control={control} />
+                <SupervisorForm
+                    disabled={disabled}
+                    control={control}
+                    storeLocalData={storeLocalData}
+                />
             )}
         </Box>
     );

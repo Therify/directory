@@ -1,13 +1,23 @@
 import { Control, Controller } from 'react-hook-form';
 import { Input, FormValidation } from '@/lib/shared/components/ui';
-import { ProviderProfile } from '@/lib/shared/types';
+import { ProviderProfile, ProviderSupervisor } from '@/lib/shared/types';
 
 interface InputProps {
     control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
+    storeLocalData: (
+        key:
+            | keyof ProviderSupervisor.ProviderSupervisor
+            | keyof ProviderSupervisor.ProviderSupervisor['supervisorLicense'],
+        value: string
+    ) => void;
 }
 
-export const NameInput = ({ control, disabled }: InputProps) => (
+export const NameInput = ({
+    control,
+    disabled,
+    storeLocalData,
+}: InputProps) => (
     <Controller
         control={control}
         name="supervisor.name"
@@ -33,9 +43,12 @@ export const NameInput = ({ control, disabled }: InputProps) => (
                           )
                         : undefined
                 }
+                onChange={(e) => {
+                    onChange(e);
+                    storeLocalData('name', e.target.value);
+                }}
                 {...{
                     disabled,
-                    onChange,
                     onBlur,
                     value,
                     name,
