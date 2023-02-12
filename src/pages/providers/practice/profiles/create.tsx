@@ -13,6 +13,7 @@ import { useEffect } from 'react';
 import { Role } from '@prisma/client';
 import { ProfileEditor } from '@/lib/modules/providers/components/ProfileEditor';
 import { TherifyUser } from '@/lib/shared/types';
+import { trpc } from '@/lib/shared/utils/trpc';
 
 export const getServerSideProps = RBAC.requireProviderAuth(
     withPageAuthRequired()
@@ -22,6 +23,12 @@ export default function PracticeProfileCreatePage() {
     const { user, isLoading } = useTherifyUser();
     usePracticeAdminProtection(user);
     const router = useRouter();
+
+    const {
+        mutate: createProfileForPractice,
+        isLoading: isCreatingProfile,
+        error,
+    } = trpc.useMutation('providers.profile.create-profile-for-practice');
 
     return (
         <SideNavigationPage
@@ -41,8 +48,14 @@ export default function PracticeProfileCreatePage() {
                     state: 'CA',
                     website: 'https://therify.co',
                 }}
+                isCreatingProfile={isCreatingProfile}
                 onSubmit={async (profile) => {
-                    console.log('TODO: Create profile...', profile);
+                    if (!user?.userId)
+                        return console.error('User is not logged in');
+                    return createProfileForPractice({
+                        userId: user.userId,
+                        profile,
+                    });
                 }}
             />
         </SideNavigationPage>

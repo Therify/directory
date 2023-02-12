@@ -13,6 +13,7 @@ export const transactionDefinition = z.object({
         listingPracticeId: z.string(),
         listingProfileId: z.string(),
     }),
+    createPracticeProfile: z.unknown(),
 });
 
 export type CreateProviderProfileForPracticeTransaction =

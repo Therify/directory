@@ -1,1 +1,1 @@
-export const ROUTE = '.create-provider-profile-for-practice' as const;
+export const ROUTE = 'profile.create-profile-for-practice' as const;

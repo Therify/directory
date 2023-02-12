@@ -1,5 +1,4 @@
 import { CreateProviderProfileForPractice } from '@/lib/modules/providers/features/profiles';
-
 import { CreateProviderProfileForPracticeTransaction } from './definition';
 
 export const factory: (

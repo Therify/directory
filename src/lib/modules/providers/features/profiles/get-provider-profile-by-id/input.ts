@@ -1,9 +1,7 @@
-import { ProviderProfile } from '@/lib/shared/types';
 import * as z from 'zod';
 
 export const schema = z.object({
-    profile: ProviderProfile.schema,
-    userId: z.string(),
+    profileId: z.string(),
 });
 
 export type Input = z.infer<typeof schema>;

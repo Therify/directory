@@ -173,7 +173,7 @@ model Practice {
   updatedAt                  DateTime                     @updatedAt @map("updated_at")
   practiceProvider           PracticeProvider[]
   practiceProviderInvitation PracticeProviderInvitation[]
-  providerProfiles           ProviderProfile[]
+  PracticeProfile            PracticeProfile[]
 
   @@map("practices")
 }
@@ -189,6 +189,19 @@ model PracticeProvider {
 
   @@id([practiceId, userId])
   @@map("practice_providers")
+}
+
+model PracticeProfile {
+  practice   Practice        @relation(fields: [practiceId], references: [id])
+  practiceId String          @map("practice_id")
+  profile    ProviderProfile @relation(fields: [profileId], references: [id])
+  profileId  String          @map("profile_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@id([practiceId, profileId])
+  @@map("practice_profiles")
 }
 
 enum InvitationStatus {
@@ -265,10 +278,9 @@ model ProviderProfile {
   newClientStatus            NewClientStatus              @map("new_client_status")
   directoryListing           DirectoryListing?
   practiceStartDate          DateTime?                    @map("practice_start_date") @db.Timestamp(6)
-  practice                   Practice?                    @relation(fields: [practiceId], references: [id])
-  practiceId                 String?                      @map("practice_id")
   PracticeProviderInvitation PracticeProviderInvitation[]
   memberFavorites            MemberFavorites[]
+  practiceProfile            PracticeProfile[]
 
   @@map("provider_profiles")
 }

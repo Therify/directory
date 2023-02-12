@@ -18,11 +18,16 @@ export function factory({ prisma }: ProvidersServiceParams) {
         });
         if (!practice) throw new Error('User is not a practice admin');
 
-        const profiles = await prisma.providerProfile.findMany({
+        const results = await prisma.practiceProfile.findMany({
             where: {
                 practiceId: practice.id,
             },
+            select: {
+                profile: true,
+            },
         });
+
+        const profiles = results.map((result) => result.profile);
 
         return {
             profiles: JSON.parse(
