@@ -52,9 +52,18 @@ export default function PracticeProfileCreatePage() {
                 onSubmit={async (profile) => {
                     if (!user?.userId)
                         return console.error('User is not logged in');
+                    if (!profile.practiceStartDate)
+                        return console.error(
+                            'practiceStartDate is not defined'
+                        );
+
                     return createProfileForPractice({
                         userId: user.userId,
-                        profile,
+                        profile: {
+                            ...profile,
+                            practiceStartDate:
+                                profile.practiceStartDate.toISOString(),
+                        },
                     });
                 }}
             />

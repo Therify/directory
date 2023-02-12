@@ -2,7 +2,9 @@ import { ProviderProfile } from '@/lib/shared/types';
 import * as z from 'zod';
 
 export const schema = z.object({
-    profile: ProviderProfile.schema,
+    profile: ProviderProfile.schema.extend({
+        practiceStartDate: z.string().transform((value) => new Date(value)),
+    }),
     userId: z.string(),
 });
 
