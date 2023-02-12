@@ -9,7 +9,7 @@ export const useProviderProfile = (userId?: string) => {
         refetch,
     } = trpc.useQuery(
         [
-            'accounts.users.get-provider-profile-by-user-id',
+            'providers.profiles.get-profile-by-user-id',
             {
                 userId: userId ?? '',
             },

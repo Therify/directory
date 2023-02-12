@@ -1,10 +1,10 @@
-import { GetProviderProfileByUserId } from '@/lib/modules/provider-profiles/features';
+import { GetProviderProfileByUserId } from '@/lib/modules/providers/features/profiles';
 import { ProviderProfile } from '@/lib/shared/types';
 import { Role } from '@prisma/client';
-import { AccountsServiceParams } from '../params';
+import { ProvidersServiceParams } from '../../params';
 
 export const factory =
-    ({ prisma }: AccountsServiceParams) =>
+    ({ prisma }: ProvidersServiceParams) =>
     async ({
         userId,
     }: GetProviderProfileByUserId.Input): Promise<{

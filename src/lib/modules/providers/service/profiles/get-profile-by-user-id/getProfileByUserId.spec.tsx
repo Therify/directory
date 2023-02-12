@@ -1,8 +1,8 @@
-import { factory as getProviderProfileByUserIdFactory } from './getProviderProfileByUserId';
+import { factory as getProviderProfileByUserIdFactory } from './getProfileByUserId';
 import { prismaMock } from '@/lib/prisma/__mock__';
 import { NewClientStatus, ProfileType, Role, User } from '@prisma/client';
 import { generateMock } from '@anatine/zod-mock';
-import { AccountsServiceParams } from '../params';
+import { ProvidersServiceParams } from '../../params';
 import { ProviderProfile } from '@/lib/shared/types';
 
 const mockUserResult = {
@@ -18,11 +18,11 @@ const mockUserResult = {
     } as ProviderProfile.ProviderProfile,
 } as unknown as User & { providerProfile: ProviderProfile.ProviderProfile };
 
-describe('getProviderProfileByUserId', () => {
+describe('getProfileByUserId', () => {
     it('should return a provider profile', async () => {
         const getProviderProfileByUserId = getProviderProfileByUserIdFactory({
             prisma: prismaMock,
-        } as unknown as AccountsServiceParams);
+        } as unknown as ProvidersServiceParams);
         const mockProfile: ProviderProfile.ProviderProfile = {
             ...generateMock(ProviderProfile.schema),
             designation: ProfileType.therapist,
@@ -43,7 +43,7 @@ describe('getProviderProfileByUserId', () => {
     it('should throw when user not provider', async () => {
         const getProviderProfileByUserId = getProviderProfileByUserIdFactory({
             prisma: prismaMock,
-        } as unknown as AccountsServiceParams);
+        } as unknown as ProvidersServiceParams);
         prismaMock.user.findUniqueOrThrow.mockResolvedValue({
             ...mockUserResult,
             roles: [Role.member],
@@ -58,7 +58,7 @@ describe('getProviderProfileByUserId', () => {
     it('should return null when no profile', async () => {
         const getProviderProfileByUserId = getProviderProfileByUserIdFactory({
             prisma: prismaMock,
-        } as unknown as AccountsServiceParams);
+        } as unknown as ProvidersServiceParams);
         prismaMock.user.findUniqueOrThrow.mockResolvedValue({
             ...mockUserResult,
             providerProfile: null,

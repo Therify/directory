@@ -15,7 +15,6 @@ import { registerMember } from './register-member';
 import { Billing } from './billing';
 import { GetUserDetailsById } from './get-user-details-by-id';
 import { CreateFirebaseAuthToken } from './create-firebase-auth-token';
-import { GetProviderProfileByUserId } from './get-provider-profile-by-user-id';
 import { GetAccountByRegistrationCode } from './get-account-by-registration-code';
 
 const factoryParams: AccountsServiceParams = {
@@ -36,8 +35,6 @@ export const AccountsService = {
     handlePracticeOnboarding: HandlePracticeOnboarding.factory(factoryParams),
     registerMember: registerMember,
     createFirebaseAuthToken: CreateFirebaseAuthToken.factory(factoryParams),
-    getProviderProfileByUserId:
-        GetProviderProfileByUserId.factory(factoryParams),
     getAccountByRegistrationCode:
         GetAccountByRegistrationCode.factory(factoryParams),
     billing: Billing.factory(factoryParams),

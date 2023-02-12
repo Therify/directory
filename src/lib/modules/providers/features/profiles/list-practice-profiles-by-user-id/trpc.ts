@@ -1,1 +1,1 @@
-export const ROUTE = '.list-practice-provider-profiles-by-user-id' as const;
+export const ROUTE = 'profiles.list-practice-profiles-by-user-id' as const;
