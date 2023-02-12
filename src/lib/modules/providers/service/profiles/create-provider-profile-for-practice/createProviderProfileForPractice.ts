@@ -10,9 +10,7 @@ import {
 import { CreateProviderProfileForPractice } from '@/lib/modules/providers/features/profiles';
 
 export function factory(context: ProvidersServiceParams) {
-    return async function registerProvider(
-        params: CreateProviderProfileForPractice.Input
-    ) {
+    return async function (params: CreateProviderProfileForPractice.Input) {
         return await TransactionV1.executeTransaction(
             transactionDefinition,
             { ...context },

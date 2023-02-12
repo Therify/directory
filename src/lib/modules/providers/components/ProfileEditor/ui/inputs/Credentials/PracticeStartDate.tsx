@@ -38,7 +38,7 @@ export const PracticeStartDateInput = ({
                         !FormValidation.validateDateIsValid(date)
                     )
                         return onChange(null);
-                    onChange(date);
+                    onChange(date.toISOString());
                 }}
                 errorMessage={
                     value !== null
@@ -49,7 +49,7 @@ export const PracticeStartDateInput = ({
                 }
                 onClose={onBlur}
                 onBlur={onBlur}
-                value={value ?? null}
+                value={new Date(value) ?? null}
                 disabled={disabled}
             />
         )}

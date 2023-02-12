@@ -9,6 +9,7 @@ import { SupervisorForm } from './SupervisorForm';
 interface SupervisorManagerProps {
     disabled?: boolean;
     control: Control<ProviderProfile.ProviderProfile>;
+    supervisor: ProviderProfile.ProviderProfile['supervisor'];
     setSupervisor: (
         supervisor: ProviderProfile.ProviderProfile['supervisor']
     ) => void;
@@ -26,12 +27,15 @@ const DEFAULT_SUPERVISOR: ProviderProfile.ProviderProfile['supervisor'] = {
 export const SupervisorInput = ({
     disabled,
     control,
+    supervisor,
     setSupervisor,
 }: SupervisorManagerProps) => {
     const theme = useTheme();
-    const [isSupervised, setIsSupervised] = useState(false);
+    const [isSupervised, setIsSupervised] = useState(!!supervisor);
     const [localSupervisor, setLocalSupervisor] =
-        useState<ProviderSupervisor.ProviderSupervisor>(DEFAULT_SUPERVISOR);
+        useState<ProviderSupervisor.ProviderSupervisor>(
+            supervisor ?? DEFAULT_SUPERVISOR
+        );
 
     // This allows the supervisor form to be re-hydrated with supervisor data
     // when a user fills out the supervisor section, unchecks the switch (setting the profile supervisor value to `null`),

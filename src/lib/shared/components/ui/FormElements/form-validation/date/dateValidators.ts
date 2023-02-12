@@ -4,25 +4,25 @@ export const validateDateIsValid = (date: string | Date) => {
     return isValid(new Date(date));
 };
 
-export const validateMinimumDate = (date: Date, minimumDate: Date) => {
-    return isAfter(date, minimumDate);
+export const validateMinimumDate = (date: string | Date, minimumDate: Date) => {
+    return isAfter(new Date(date), minimumDate);
 };
 
-export const validateIsFutureDate = (date: Date) => {
-    return validateMinimumDate(date, new Date());
+export const validateIsFutureDate = (date: string | Date) => {
+    return validateMinimumDate(new Date(date), new Date());
 };
 
-export const validateIsPastDate = (date: Date) => {
-    return isBefore(date, new Date());
+export const validateIsPastDate = (date: string | Date) => {
+    return isBefore(new Date(date), new Date());
 };
 
-export const validateMaximumDate = (date: Date, maximumDate: Date) => {
-    return isBefore(date, maximumDate);
+export const validateMaximumDate = (date: string | Date, maximumDate: Date) => {
+    return isBefore(new Date(date), maximumDate);
 };
 
-export const validateMinimumAge = (date: Date, minimumAge: number) => {
+export const validateMinimumAge = (date: string | Date, minimumAge: number) => {
     const minimumDate = subYears(new Date(), minimumAge);
-    return isBefore(date, minimumDate);
+    return isBefore(new Date(date), minimumDate);
 };
 
 export const enum DateValidationType {

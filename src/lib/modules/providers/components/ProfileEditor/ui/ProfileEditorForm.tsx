@@ -53,6 +53,7 @@ interface EditorFormProps {
         offersSlidingScale: ProviderProfile.ProviderProfile['offersSlidingScale'];
         minimumRate: ProviderProfile.ProviderProfile['minimumRate'];
         givenName: ProviderProfile.ProviderProfile['givenName'];
+        supervisor: ProviderProfile.ProviderProfile['supervisor'];
     };
 }
 export const ProfileEditorForm = ({
@@ -179,6 +180,7 @@ export const ProfileEditorForm = ({
                 <AboutSection control={control} disabled={isSubmittingForm} />
                 <CredentialsSection
                     isTherapist={isTherapist}
+                    supervisor={watchedProfileValues.supervisor}
                     control={control}
                     licensedStates={licensedStates}
                     disabled={isSubmittingForm}

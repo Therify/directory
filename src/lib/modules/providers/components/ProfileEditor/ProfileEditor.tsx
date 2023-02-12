@@ -23,7 +23,7 @@ import { CloudinaryUploadResult } from '../../../media/components/hooks/userClou
 interface ProfileEditorProps {
     providerProfile?: Partial<ProviderProfile.ProviderProfile>;
     practice: Pick<Practice, 'id' | 'name' | 'city' | 'state' | 'website'>;
-    isCreatingProfile: boolean;
+    isSavingProfile: boolean;
     onBack?: () => void;
     onSubmit: (profile: ProviderProfile.ProviderProfile) => Promise<void>;
 }
@@ -31,7 +31,7 @@ interface ProfileEditorProps {
 export function ProfileEditor({
     providerProfile,
     practice,
-    isCreatingProfile,
+    isSavingProfile,
     onBack,
     onSubmit,
 }: ProfileEditorProps) {
@@ -161,7 +161,7 @@ export function ProfileEditor({
                                 isFormValid={
                                     providerProfileForm.formState.isValid
                                 }
-                                isSubmittingForm={isCreatingProfile}
+                                isSubmittingForm={isSavingProfile}
                                 onBack={onBack}
                                 onShowProfilePreview={() => {
                                     setShowProfilePreview(true);
@@ -181,6 +181,7 @@ export function ProfileEditor({
                                     offersSlidingScale:
                                         watchedProfile.offersSlidingScale,
                                     minimumRate: watchedProfile.minimumRate,
+                                    supervisor: watchedProfile.supervisor,
                                 }}
                             />
                         </SlotWrapper>
@@ -224,7 +225,7 @@ export function ProfileEditor({
                 }
             />
             <Modal
-                isOpen={isCreatingProfile}
+                isOpen={isSavingProfile}
                 showCloseButton={false}
                 onClose={() => {}}
                 headerSlot={

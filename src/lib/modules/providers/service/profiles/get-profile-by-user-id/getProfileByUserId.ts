@@ -29,5 +29,11 @@ export const factory =
             return { profile: null };
         }
 
-        return { profile: ProviderProfile.validate(providerProfile) };
+        return {
+            profile: ProviderProfile.validate({
+                ...providerProfile,
+                practiceStartDate:
+                    providerProfile.practiceStartDate?.toISOString(),
+            }),
+        };
     };

@@ -17,6 +17,7 @@ import {
     Modal,
     Paragraph,
     PageContentContainer,
+    LoadingContainer,
 } from '@/lib/shared/components/ui';
 import { SideNavigationPage } from '@/lib/shared/components/features/pages';
 import {
@@ -42,11 +43,10 @@ import {
     SendRounded,
     AddCircleOutlineRounded,
 } from '@mui/icons-material';
-import {
-    DirectoryListingSchema,
-    ProviderProfileSchema,
-} from '@/lib/shared/schema';
+import { DirectoryListingSchema } from '@/lib/shared/schema';
 import { z } from 'zod';
+import { trpc } from '@/lib/shared/utils/trpc';
+import { ProviderProfile } from '@/lib/shared/types';
 
 export const getServerSideProps = RBAC.requireProviderAuth(
     withPageAuthRequired()
@@ -67,23 +67,43 @@ const getProfileStatusBadge = (status?: ListingStatus) => {
 };
 
 type ProviderPracticeProfileListItems = Array<
-    z.infer<typeof ProviderProfileSchema> & {
+    ProviderProfile.ProviderProfile & {
         directoryListing?: z.infer<typeof DirectoryListingSchema>;
     }
 >;
-
-const TEST_PROFILES: ProviderPracticeProfileListItems = [];
 
 export default function PracticeProfilesPage() {
     const { user, isLoading } = useTherifyUser();
     const router = useRouter();
     const theme = useTheme();
     const [showNewProfileModal, setShowNewProfileModal] = useState(false);
-    // TODO: Get profiles for practice
-    const profiles = TEST_PROFILES;
+    const {
+        data,
+        error: queryError,
+        isLoading: isLoadingProfiles,
+        isRefetching,
+        refetch,
+    } = trpc.useQuery(
+        [
+            'providers.profiles.list-practice-profiles-by-user-id',
+            {
+                userId: user?.userId ?? '',
+            },
+        ],
+        {
+            refetchOnWindowFocus: false,
+            enabled: Boolean(user?.userId),
+        }
+    );
+    const { profiles, errors } = data ?? {
+        profiles: [] as ProviderProfile.ProviderProfile[],
+        errors: [] as string[],
+    };
+    const [errorMessage] = errors;
 
     const isOverPlanCapacity =
         user?.plan?.seats !== undefined &&
+        profiles &&
         profiles.length > (user?.plan?.seats ?? 1);
 
     useEffect(() => {
@@ -105,96 +125,113 @@ export default function PracticeProfilesPage() {
             mobileMenu={[...PRACTICE_ADMIN_MOBILE_MENU]}
             isLoadingUser={isLoading}
         >
-            <PageContentContainer fillContentSpace paddingX={4} paddingY={8}>
-                <TitleContainer>
-                    <Box>
-                        <Title>Profiles</Title>
+            <LoadingContainer isLoading={isLoading && isLoadingProfiles}>
+                <PageContentContainer
+                    fillContentSpace
+                    paddingX={4}
+                    paddingY={8}
+                >
+                    <TitleContainer>
+                        <Box>
+                            <Title>Profiles</Title>
 
-                        <Box
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="flex-start"
-                        >
-                            {isOverPlanCapacity && (
-                                <WarningRounded
-                                    color="error"
-                                    style={{ marginRight: theme.spacing(3) }}
-                                />
-                            )}
-                            <SeatCount
-                                italic
-                                isOverPlanCapacity={isOverPlanCapacity}
+                            <Box
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="flex-start"
                             >
-                                {profiles.length}{' '}
-                                {user?.plan?.seats && ` of ${user.plan.seats}`}{' '}
-                                profiles active for your practice.
-                            </SeatCount>
+                                {isOverPlanCapacity && (
+                                    <WarningRounded
+                                        color="error"
+                                        style={{
+                                            marginRight: theme.spacing(3),
+                                        }}
+                                    />
+                                )}
+                                <SeatCount
+                                    italic
+                                    isOverPlanCapacity={isOverPlanCapacity}
+                                >
+                                    {profiles.length}{' '}
+                                    {user?.plan?.seats &&
+                                        ` of ${user.plan.seats}`}{' '}
+                                    profiles active for your practice.
+                                </SeatCount>
+                            </Box>
                         </Box>
-                    </Box>
-                    <Box className="admin-controls">
-                        <Button onClick={() => setShowNewProfileModal(true)}>
-                            New Profile
-                        </Button>
-                    </Box>
-                </TitleContainer>
-                <ListTitle marginLeft={5} marginBottom={0}>
-                    Provider Name
-                </ListTitle>
-                <List>
-                    {profiles.map((profile) => {
-                        const name =
-                            `${profile.givenName} ${profile.surname}`.trim();
-                        const { text: badgeText, color: badgeColor } =
-                            getProfileStatusBadge(
-                                profile.directoryListing?.status
-                            );
-                        return (
-                            <ListItem
-                                key={profile.id}
-                                onClick={() =>
-                                    router.push(
-                                        `${URL_PATHS.PROVIDERS.PRACTICE.PROFILE_EDITOR}/${profile.id}`
-                                    )
-                                }
+                        <Box className="admin-controls">
+                            <Button
+                                onClick={() => setShowNewProfileModal(true)}
                             >
-                                <Box
-                                    display="flex"
-                                    justifyContent="space-between"
-                                    alignItems="center"
+                                New Profile
+                            </Button>
+                        </Box>
+                    </TitleContainer>
+                    <ListTitle marginLeft={5} marginBottom={0}>
+                        Provider Name
+                    </ListTitle>
+                    <List>
+                        {profiles.map((profile) => {
+                            const name =
+                                `${profile.givenName} ${profile.surname}`.trim();
+                            const { text: badgeText, color: badgeColor } =
+                                getProfileStatusBadge(
+                                    // TODO: Add directory listing to preview profile type
+                                    // profile.directoryListing?.status
+                                    undefined
+                                );
+                            return (
+                                <ListItem
+                                    key={profile.id}
+                                    onClick={() =>
+                                        router.push(
+                                            `${URL_PATHS.PROVIDERS.PRACTICE.PROFILE_EDITOR}/${profile.id}`
+                                        )
+                                    }
                                 >
                                     <Box
                                         display="flex"
                                         justifyContent="space-between"
                                         alignItems="center"
                                     >
-                                        <Avatar
-                                            src={profile.profileImageUrl ?? '#'}
-                                            size={AVATAR_SIZE.EXTRA_SMALL}
-                                            sx={{ mr: 4 }}
-                                        />
-                                        <Paragraph
-                                            noMargin
-                                            sx={{
-                                                fontWeight: 500,
-                                                marginRight: theme.spacing(4),
-                                            }}
+                                        <Box
+                                            display="flex"
+                                            justifyContent="space-between"
+                                            alignItems="center"
                                         >
-                                            {name}
-                                        </Paragraph>
-                                        <Badge
-                                            size={BADGE_SIZE.SMALL}
-                                            color={badgeColor}
-                                        >
-                                            {badgeText}
-                                        </Badge>
+                                            <Avatar
+                                                src={
+                                                    profile.profileImageUrl ??
+                                                    '#'
+                                                }
+                                                size={AVATAR_SIZE.EXTRA_SMALL}
+                                                sx={{ mr: 4 }}
+                                            />
+                                            <Paragraph
+                                                noMargin
+                                                sx={{
+                                                    fontWeight: 500,
+                                                    marginRight:
+                                                        theme.spacing(4),
+                                                }}
+                                            >
+                                                {name}
+                                            </Paragraph>
+                                            <Badge
+                                                size={BADGE_SIZE.SMALL}
+                                                color={badgeColor}
+                                            >
+                                                {badgeText}
+                                            </Badge>
+                                        </Box>
+                                        <ProfileActions profile={profile} />
                                     </Box>
-                                    <ProfileActions profile={profile} />
-                                </Box>
-                            </ListItem>
-                        );
-                    })}
-                </List>
-            </PageContentContainer>
+                                </ListItem>
+                            );
+                        })}
+                    </List>
+                </PageContentContainer>
+            </LoadingContainer>
 
             <Modal
                 isOpen={showNewProfileModal}
@@ -263,7 +300,7 @@ const getListingAction = (status?: ListingStatus) => {
 const ProfileActions = ({
     profile,
 }: {
-    profile: z.infer<typeof ProviderProfileSchema> & {
+    profile: ProviderProfile.ProviderProfile & {
         directoryListing?: z.infer<typeof DirectoryListingSchema>;
     };
 }) => {

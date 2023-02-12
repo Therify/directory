@@ -4,12 +4,16 @@ import {
     listPracticeProfilesByUserIdResolver,
     getProviderProfileByUserIdResolver,
     createProviderProfileForPracticeResolver,
+    getProviderProfileByIdResolver,
+    updateProviderProfileResolver,
 } from './resolvers';
 import { Context } from '@/lib/server/context';
 import {
     GetProviderProfileByUserId,
     ListPracticeProfilesByUserId,
     CreateProviderProfileForPractice,
+    GetProviderProfileById,
+    UpdateProviderProfile,
 } from '@/lib/modules/providers/features/profiles';
 
 export const router = trpc
@@ -18,6 +22,11 @@ export const router = trpc
         input: GetProviderProfileByUserId.inputSchema,
         output: GetProviderProfileByUserId.outputSchema,
         resolve: getProviderProfileByUserIdResolver,
+    })
+    .query(GetProviderProfileById.TRPC_ROUTE, {
+        input: GetProviderProfileById.inputSchema,
+        output: GetProviderProfileById.outputSchema,
+        resolve: getProviderProfileByIdResolver,
     })
     .query(ListPracticeProfilesByUserId.TRPC_ROUTE, {
         input: ListPracticeProfilesByUserId.inputSchema,
@@ -28,4 +37,9 @@ export const router = trpc
         input: CreateProviderProfileForPractice.inputSchema,
         output: CreateProviderProfileForPractice.outputSchema,
         resolve: createProviderProfileForPracticeResolver,
+    })
+    .mutation(UpdateProviderProfile.TRPC_ROUTE, {
+        input: UpdateProviderProfile.inputSchema,
+        output: UpdateProviderProfile.outputSchema,
+        resolve: updateProviderProfileResolver,
     });

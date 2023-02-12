@@ -195,7 +195,7 @@ model PracticeProfile {
   practice   Practice        @relation(fields: [practiceId], references: [id])
   practiceId String          @map("practice_id")
   profile    ProviderProfile @relation(fields: [profileId], references: [id])
-  profileId  String          @map("profile_id")
+  profileId  String          @unique @map("profile_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -280,7 +280,7 @@ model ProviderProfile {
   practiceStartDate          DateTime?                    @map("practice_start_date") @db.Timestamp(6)
   PracticeProviderInvitation PracticeProviderInvitation[]
   memberFavorites            MemberFavorites[]
-  practiceProfile            PracticeProfile[]
+  practiceProfile            PracticeProfile?
 
   @@map("provider_profiles")
 }

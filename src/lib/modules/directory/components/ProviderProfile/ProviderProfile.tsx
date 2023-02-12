@@ -71,8 +71,9 @@ export function ProviderProfile({
     const isSmallScreen = useMediaQuery((theme: Theme) =>
         theme.breakpoints.down('sm')
     );
+
     const { years: yearsOfExperience } = intervalToDuration({
-        start: practiceStartDate ?? new Date(),
+        start: new Date(practiceStartDate),
         end: new Date(),
     });
     const credentialsList = Array.from(
@@ -241,7 +242,7 @@ export function ProviderProfile({
                                 description={`${
                                     givenName || 'This provider'
                                 } has been serving people like you since ${getYear(
-                                    practiceStartDate
+                                    new Date(practiceStartDate)
                                 )}`}
                             />
                         )}

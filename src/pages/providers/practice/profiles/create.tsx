@@ -14,6 +14,7 @@ import { Role } from '@prisma/client';
 import { ProfileEditor } from '@/lib/modules/providers/components/ProfileEditor';
 import { TherifyUser } from '@/lib/shared/types';
 import { trpc } from '@/lib/shared/utils/trpc';
+import { CreateProviderProfileForPractice } from '@/lib/modules/providers/features/profiles';
 
 export const getServerSideProps = RBAC.requireProviderAuth(
     withPageAuthRequired()
@@ -28,7 +29,9 @@ export default function PracticeProfileCreatePage() {
         mutate: createProfileForPractice,
         isLoading: isCreatingProfile,
         error,
-    } = trpc.useMutation('providers.profile.create-profile-for-practice');
+    } = trpc.useMutation(
+        `providers.${CreateProviderProfileForPractice.TRPC_ROUTE}`
+    );
 
     return (
         <SideNavigationPage
@@ -41,6 +44,7 @@ export default function PracticeProfileCreatePage() {
             isLoadingUser={isLoading}
         >
             <ProfileEditor
+                //  TODO: Get practice from query
                 practice={{
                     id: '1',
                     name: 'Therify',
@@ -48,7 +52,7 @@ export default function PracticeProfileCreatePage() {
                     state: 'CA',
                     website: 'https://therify.co',
                 }}
-                isCreatingProfile={isCreatingProfile}
+                isSavingProfile={isCreatingProfile}
                 onSubmit={async (profile) => {
                     if (!user?.userId)
                         return console.error('User is not logged in');
@@ -59,11 +63,7 @@ export default function PracticeProfileCreatePage() {
 
                     return createProfileForPractice({
                         userId: user.userId,
-                        profile: {
-                            ...profile,
-                            practiceStartDate:
-                                profile.practiceStartDate.toISOString(),
-                        },
+                        profile: profile,
                     });
                 }}
             />
