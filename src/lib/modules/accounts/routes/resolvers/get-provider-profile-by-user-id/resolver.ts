@@ -1,5 +1,5 @@
 import { Context } from '@/lib/server/context';
-import { GetProviderProfileByUserId } from '@/lib/modules/provider-profiles/features';
+import { GetProviderProfileByUserId } from '@/lib/modules/providers/features/profiles';
 import { ProcedureResolver } from '@trpc/server/dist/declarations/src/internals/procedure';
 
 export const resolve: ProcedureResolver<
@@ -19,7 +19,7 @@ export const resolve: ProcedureResolver<
             errors: [],
         };
     } catch (error) {
-        let errorMessage = 'There was a problem getting your profile.';
+        let errorMessage = 'There was a problem getting the profile.';
         if (error instanceof Error) {
             errorMessage = error.message;
         }

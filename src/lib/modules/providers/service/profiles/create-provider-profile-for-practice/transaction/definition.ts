@@ -13,9 +13,6 @@ export const transactionDefinition = z.object({
         listingPracticeId: z.string(),
         listingProfileId: z.string(),
     }),
-    createPracticeProviderInvitation: z.object({
-        invitationId: z.string().optional(),
-    }),
 });
 
 export type CreateProviderProfileForPracticeTransaction =

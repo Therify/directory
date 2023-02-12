@@ -3,7 +3,6 @@ import { TransactionV1 } from '@/lib/shared/utils';
 import {
     transactionDefinition,
     CreateDirectoryListing,
-    CreatePracticeProviderInvitation,
     CreateProviderProfile,
     GetPractice,
 } from './transaction';
@@ -20,8 +19,6 @@ export function factory(context: ProvidersServiceParams) {
                 getPractice: GetPractice.factory(params),
                 createProviderProfile: CreateProviderProfile.factory(params),
                 createDirectoryListing: CreateDirectoryListing.factory(params),
-                createPracticeProviderInvitation:
-                    CreatePracticeProviderInvitation.factory(params),
             },
             true
         );
