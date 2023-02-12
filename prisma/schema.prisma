@@ -173,6 +173,7 @@ model Practice {
   updatedAt                  DateTime                     @updatedAt @map("updated_at")
   practiceProvider           PracticeProvider[]
   practiceProviderInvitation PracticeProviderInvitation[]
+  providerProfiles           ProviderProfile[]
 
   @@map("practices")
 }
@@ -264,6 +265,8 @@ model ProviderProfile {
   newClientStatus            NewClientStatus              @map("new_client_status")
   directoryListing           DirectoryListing?
   practiceStartDate          DateTime?                    @map("practice_start_date") @db.Timestamp(6)
+  practice                   Practice?                    @relation(fields: [practiceId], references: [id])
+  practiceId                 String?                      @map("practice_id")
   PracticeProviderInvitation PracticeProviderInvitation[]
   memberFavorites            MemberFavorites[]
 
