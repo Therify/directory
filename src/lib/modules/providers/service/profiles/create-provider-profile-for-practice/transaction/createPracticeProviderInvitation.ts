@@ -1,4 +1,4 @@
-import { CreateProviderProfileForPractice } from '@/lib/modules/provider-profiles/features';
+import { CreateProviderProfileForPractice } from '@/lib/modules/providers/features/profiles';
 import { InvitationStatus, ListingStatus } from '@prisma/client';
 
 import { CreateProviderProfileForPracticeTransaction } from './definition';

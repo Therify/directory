@@ -1,6 +1,4 @@
-import { getNodeEnvironmentConfiguration } from '@/lib/shared/configuration';
-import { CreateProviderProfileForPractice } from '@/lib/modules/provider-profiles/features';
-import { getRoleByEnvironment, Role } from '@/lib/shared/types/roles';
+import { CreateProviderProfileForPractice } from '@/lib/modules/providers/features/profiles';
 import { CreateProviderProfileForPracticeTransaction } from './definition';
 
 export const factory: (

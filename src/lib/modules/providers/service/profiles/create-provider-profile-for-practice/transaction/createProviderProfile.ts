@@ -1,4 +1,4 @@
-import { CreateProviderProfileForPractice } from '@/lib/modules/provider-profiles/features';
+import { CreateProviderProfileForPractice } from '@/lib/modules/providers/features/profiles';
 
 import { CreateProviderProfileForPracticeTransaction } from './definition';
 

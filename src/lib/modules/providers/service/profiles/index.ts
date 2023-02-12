@@ -3,4 +3,6 @@ import { CreateProviceProfileForPractice } from './create-provider-profile-for-p
 
 export const profilesFactory = (params: ProvidersServiceParams) => ({
     createProfileForPractice: CreateProviceProfileForPractice.factory(params),
+    listProfilesForPractice: () => {},
+    getFullProfileById: () => {},
 });

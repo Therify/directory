@@ -1,4 +1,3 @@
-import { CreateProviderProfileForPractice } from '@/lib/modules/provider-profiles/features';
 import { ProvidersServiceParams } from '../../params';
 import { TransactionV1 } from '@/lib/shared/utils';
 import {
@@ -8,6 +7,7 @@ import {
     CreateProviderProfile,
     GetPractice,
 } from './transaction';
+import { CreateProviderProfileForPractice } from '@/lib/modules/providers/features/profiles';
 
 export function factory(context: ProvidersServiceParams) {
     return async function registerProvider(
