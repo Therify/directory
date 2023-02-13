@@ -7,6 +7,7 @@ import { Button } from '@/lib/shared/components/ui/Button';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import { H6 } from '@/lib/shared/components/ui/Typography';
+import { NewClientStatus } from '@prisma/client';
 
 interface OnProviderSelectedCallback {
     (params: { memberId: string; providerId: string }): void;
@@ -15,12 +16,12 @@ interface OnProviderSelectedCallback {
 interface ConnectionWidgetProps {
     onProviderSelected?: OnProviderSelectedCallback;
     providerHasBeenSelected?: boolean;
-    providerAvailability: ProviderAvailability.ProviderAvailability;
+    newClientStatus: NewClientStatus;
 }
 
 export const ConnectionWidget = ({
     providerHasBeenSelected,
-    providerAvailability,
+    newClientStatus,
 }: ConnectionWidgetProps) => {
     if (providerHasBeenSelected) {
         return (
@@ -37,10 +38,7 @@ export const ConnectionWidget = ({
                     </Box>
                     <Box>
                         <Heading>We&apos;ve contacted Provider Name!</Heading>
-                        <Description
-                            providerAvailability={providerAvailability}
-                            sx={{ color: 'white !important' }}
-                        >
+                        <Description sx={{ color: 'white !important' }}>
                             They&apos;ll reach out to you to schedule time
                         </Description>
                     </Box>
@@ -48,21 +46,23 @@ export const ConnectionWidget = ({
             </ProviderSelectedContainer>
         );
     }
-    return displayAvailability(providerAvailability);
+    return displayAvailability(newClientStatus);
 };
 
 function displayAvailability(
-    availability: ProviderAvailability.ProviderAvailability,
+    newClientStatus: NewClientStatus,
     isMobile: boolean = false
 ) {
-    switch (availability) {
-        case ProviderAvailability.MAP.AVAILABLE:
+    switch (newClientStatus) {
+        case NewClientStatus.accepting:
             return (
-                <AvailabilityContainer providerAvailability={availability}>
+                <AvailabilityContainer
+                    newClientStatus={NewClientStatus.accepting}
+                >
                     <Box>
                         <Heading>Ready to contact ProviderName?</Heading>
                         {!isMobile && (
-                            <Description providerAvailability={availability}>
+                            <Description>
                                 Notify providerName that you&apos;re interested
                                 in connecting
                             </Description>
@@ -71,9 +71,11 @@ function displayAvailability(
                     <Button fullWidth>Select ProviderName</Button>
                 </AvailabilityContainer>
             );
-        case ProviderAvailability.MAP.UNAVAILABLE:
+        case NewClientStatus.not_accepting:
             return (
-                <AvailabilityContainer providerAvailability={availability}>
+                <AvailabilityContainer
+                    newClientStatus={NewClientStatus.not_accepting}
+                >
                     <AvailabilityContents>
                         <Box>
                             <EventBusy />
@@ -82,10 +84,7 @@ function displayAvailability(
                             <Heading>
                                 I&apos;m not currently accepting clients
                             </Heading>
-                            <Description
-                                providerAvailability={availability}
-                                sx={{ color: 'white !important' }}
-                            >
+                            <Description sx={{ color: 'white !important' }}>
                                 To be notified when I&apos;m available, click
                                 here
                             </Description>
@@ -93,19 +92,18 @@ function displayAvailability(
                     </AvailabilityContents>
                 </AvailabilityContainer>
             );
-        case ProviderAvailability.MAP.WAIT_LIST:
+        case NewClientStatus.waitlist:
             return (
-                <AvailabilityContainer providerAvailability={availability}>
+                <AvailabilityContainer
+                    newClientStatus={NewClientStatus.waitlist}
+                >
                     <AvailabilityContents>
                         <Box>
                             <Timer />
                         </Box>
                         <Box>
                             <Heading>I&apos;m currently at capacity</Heading>
-                            <Description
-                                providerAvailability={availability}
-                                sx={{ color: 'white !important' }}
-                            >
+                            <Description sx={{ color: 'white !important' }}>
                                 To be added to my waitlist, click here
                             </Description>
                         </Box>
@@ -128,15 +126,15 @@ const ProviderSelectedContainer = styled(CelebrationContainer)(({ theme }) => ({
 }));
 
 const AvailabilityContainer = styled(Box)<{
-    providerAvailability: ProviderAvailability.ProviderAvailability;
-}>(({ theme, providerAvailability }) => ({
+    newClientStatus: NewClientStatus;
+}>(({ theme, newClientStatus }) => ({
     padding: '1.688rem 1rem',
     position: 'absolute',
     bottom: 0,
     left: 0,
     width: '100%',
     background: 'white',
-    ...(providerAvailability === ProviderAvailability.MAP.AVAILABLE && {
+    ...(newClientStatus === NewClientStatus.accepting && {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -144,12 +142,12 @@ const AvailabilityContainer = styled(Box)<{
             marginRight: theme.spacing(10),
         },
     }),
-    ...(providerAvailability === ProviderAvailability.MAP.UNAVAILABLE && {
+    ...(newClientStatus === NewClientStatus.not_accepting && {
         background: theme.palette.error.main,
         display: 'flex',
         justifyContent: 'center',
     }),
-    ...(providerAvailability === ProviderAvailability.MAP.WAIT_LIST && {
+    ...(newClientStatus === NewClientStatus.waitlist && {
         background: theme.palette.warning.main,
         display: 'flex',
         justifyContent: 'center',
@@ -191,21 +189,13 @@ const Heading = styled(H6)(({ theme }) => ({
     },
 }));
 
-const Description = styled(Paragraph)<{
-    providerAvailability: ProviderAvailability.ProviderAvailability;
-}>(({ theme, providerAvailability }) => {
-    const shouldRenderWhiteText =
-        providerAvailability === ProviderAvailability.MAP.UNAVAILABLE ||
-        providerAvailability === ProviderAvailability.MAP.WAIT_LIST;
+const Description = styled(Paragraph)(({ theme }) => {
     return {
         ...theme.typography.body1,
         fontSize: '0.875rem',
         fontWeight: 400,
         padding: 0,
         margin: 0,
-        ...(shouldRenderWhiteText && {
-            color: 'white',
-        }),
         [theme.breakpoints.up('md')]: {
             fontSize: '1.25rem',
             marginBottom: theme.spacing(4),

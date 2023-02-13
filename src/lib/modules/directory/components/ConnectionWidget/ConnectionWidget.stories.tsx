@@ -1,4 +1,3 @@
-import { ProviderAvailability } from '@/lib/shared/types';
 import { Meta, StoryObj } from '@storybook/react';
 import { ConnectionWidget } from './ConnectionWidget';
 
@@ -9,15 +8,15 @@ const meta: Meta<typeof ConnectionWidget> = {
 
 export default meta;
 
-export const WithAvailabiliuty: StoryObj<typeof ConnectionWidget> = {
+export const WithAvailability: StoryObj<typeof ConnectionWidget> = {
     args: {
-        providerAvailability: ProviderAvailability.MAP.AVAILABLE,
+        newClientStatus: 'accepting',
     },
 };
 
-export const NoAvailabiliuty: StoryObj<typeof ConnectionWidget> = {
+export const NoAvailability: StoryObj<typeof ConnectionWidget> = {
     args: {
-        providerAvailability: ProviderAvailability.MAP.UNAVAILABLE,
+        newClientStatus: 'not_accepting',
     },
 };
 
@@ -29,6 +28,6 @@ export const ProviderSelected: StoryObj<typeof ConnectionWidget> = {
 
 export const Waitlist: StoryObj<typeof ConnectionWidget> = {
     args: {
-        providerAvailability: ProviderAvailability.MAP.WAIT_LIST,
+        newClientStatus: 'waitlist',
     },
 };
