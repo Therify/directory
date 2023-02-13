@@ -1,5 +1,5 @@
 import '../src/styles/globals.css';
-import { therifyDesignSystem } from '../src/components/themes/therify-design-system';
+import { therifyDesignSystem } from '../src/lib/shared/components/themes/therify-design-system';
 import { ThemeProvider } from '@mui/material/styles';
 
 export const parameters = {

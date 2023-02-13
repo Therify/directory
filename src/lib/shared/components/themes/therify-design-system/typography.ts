@@ -1,4 +1,5 @@
 import { TypographyOptions } from '@mui/material/styles/createTypography';
+import { createTheme } from '@mui/material/styles';
 
 const DOCUMENT_FONT_FAMILY = ['Roboto', '-apple-system', 'sans-serif'] as const;
 const HEADING_DISPLAY_FONT_FAMILY = ['P22 Mackinac', 'Georgia'] as const;
@@ -146,13 +147,21 @@ export const typography: TypographyOptions = {
         fontSize: '1rem',
         lineHeight: '1.625rem',
         fontWeight: 400,
+        [createTheme().breakpoints.up('md')]: {
+            fontSize: '1.125rem',
+            color: '#000000',
+        },
     },
     body2: {
         // Medium Paragraph
         fontFamily: DOCUMENT_FONT_FAMILY.join(', '),
-        fontSize: '1.125rem',
+        fontSize: '1rem',
         lineHeight: '1.75rem',
         fontWeight: 400,
+        [createTheme().breakpoints.up('md')]: {
+            fontSize: '1.125rem',
+            color: '#000000',
+        },
     },
     body3: {
         // Large Paragraph
