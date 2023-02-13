@@ -34,6 +34,8 @@ describe('getProfileByUserId', () => {
         };
         prismaMock.user.findUniqueOrThrow.mockResolvedValue({
             ...mockUserResult,
+            credentials: [],
+            supervisor: null,
             providerProfile: mockDbProfile,
         } as unknown as User & { providerProfile: ProviderProfile.ProviderProfile });
         const result = await getProviderProfileByUserId({
