@@ -114,7 +114,7 @@ model Plan {
   startDate            DateTime        @map("start_date")
   endDate              DateTime        @map("end_date")
   accountId            String?         @map("account_id") // Missing account id means individual plan
-  userId               String          @unique @map("user_id") // Missing user id means unclaimed seat
+  userId               String          @map("user_id") // Missing user id means unclaimed seat
   billingUserId        String?         @map("billing_user_id")
   createdAt            DateTime        @default(now()) @map("created_at")
   updatedAt            DateTime        @updatedAt @map("updated_at")
