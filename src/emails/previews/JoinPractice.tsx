@@ -5,7 +5,7 @@ export function preview() {
     return (
         <JoinPractice
             practiceName="Therify"
-            invitationLink="https://therify.com"
+            invitationLink="https://therify.co"
         />
     );
 }

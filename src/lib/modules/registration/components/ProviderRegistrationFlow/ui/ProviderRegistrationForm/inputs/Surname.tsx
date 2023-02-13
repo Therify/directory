@@ -25,7 +25,6 @@ export const SurnameInput = ({
         }) => (
             <Input
                 required
-                fullWidth
                 id="surname"
                 label="Last Name"
                 errorMessage={

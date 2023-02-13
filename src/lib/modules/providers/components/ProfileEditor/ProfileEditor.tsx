@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Practice, ProfileType } from '@prisma/client';
+import { NewClientStatus, Practice, ProfileType } from '@prisma/client';
 import { styled, SxProps, useTheme } from '@mui/material/styles';
 import { Box, Drawer, useMediaQuery } from '@mui/material';
 import { Button, TwoColumnGrid } from '@/lib/shared/components/ui';
@@ -30,6 +30,7 @@ export function ProfileEditor({
     const providerProfileForm = useForm<ProviderProfile.ProviderProfile>({
         mode: 'onChange',
         defaultValues: {
+            newClientStatus: NewClientStatus.accepting,
             offersInPerson: false,
             offersMedicationManagement: false,
             offersPhoneConsultations: false,
@@ -63,40 +64,54 @@ export function ProfileEditor({
         );
     }, [watchedProfile.credentials]);
 
-    useEffect(() => {
-        const acceptedInsurances = (
-            providerProfileForm.getValues('acceptedInsurances') ?? []
-        ).filter((insurance) => licensedStates.includes(insurance.state));
-        licensedStates.forEach((state) => {
-            const stateIsFound =
-                acceptedInsurances.find(({ state: s }) => s === state) !==
-                undefined;
-            if (!stateIsFound) {
-                acceptedInsurances.push({ state, insurances: [] });
-            }
-            providerProfileForm.setValue(
-                'acceptedInsurances',
-                acceptedInsurances
+    useEffect(
+        function manageAcceptedInsuranceStates() {
+            const acceptedInsurances = (
+                providerProfileForm.getValues('acceptedInsurances') ?? []
+            ).filter((insurance) => licensedStates.includes(insurance.state));
+            licensedStates.forEach((state) => {
+                const stateIsFound =
+                    acceptedInsurances.find(({ state: s }) => s === state) !==
+                    undefined;
+                if (!stateIsFound) {
+                    acceptedInsurances.push({ state, insurances: [] });
+                }
+                providerProfileForm.setValue(
+                    'acceptedInsurances',
+                    acceptedInsurances
+                );
+            });
+        },
+        [licensedStates, providerProfileForm]
+    );
+
+    useEffect(
+        function manageSlidingScaleRates() {
+            const minimumRate = parseInt(
+                providerProfileForm.getValues('minimumRate')?.toString() ?? '0'
             );
-        });
-    }, [licensedStates, providerProfileForm]);
+            if (watchedProfile.offersSlidingScale) {
+                providerProfileForm.setValue('maximumRate', minimumRate + 40);
+            } else {
+                providerProfileForm.setValue('maximumRate', minimumRate);
+            }
+        },
+        [watchedProfile.offersSlidingScale, providerProfileForm]
+    );
 
-    useEffect(() => {
-        const minimumRate = parseInt(
-            providerProfileForm.getValues('minimumRate')?.toString() ?? '0'
-        );
-        if (watchedProfile.offersSlidingScale) {
-            providerProfileForm.setValue('maximumRate', minimumRate + 40);
-        } else {
-            providerProfileForm.setValue('maximumRate', minimumRate);
-        }
-    }, [watchedProfile.offersSlidingScale, providerProfileForm]);
-
-    useEffect(() => {
-        if (watchedProfile.designation === ProfileType.coach) {
-            providerProfileForm.setValue('offersMedicationManagement', false);
-        }
-    }, [providerProfileForm, watchedProfile.designation]);
+    useEffect(
+        function setCoachDefaults() {
+            if (watchedProfile.designation === ProfileType.coach) {
+                providerProfileForm.setValue(
+                    'offersMedicationManagement',
+                    false
+                );
+                providerProfileForm.setValue('acceptedInsurances', []);
+                providerProfileForm.setValue('supervisor', null);
+            }
+        },
+        [providerProfileForm, watchedProfile.designation]
+    );
 
     const onDeleteImage = () => {
         providerProfileForm.setValue('profileImageUrl', null);
@@ -138,9 +153,14 @@ export function ProfileEditor({
                             isSubmittingForm={false}
                             onBack={onBack}
                             onShowProfilePreview={() => {
-                                console.log('show profile preview');
                                 setShowProfilePreview(true);
                             }}
+                            setSupervisor={(supervisor) =>
+                                providerProfileForm.setValue(
+                                    'supervisor',
+                                    supervisor
+                                )
+                            }
                             watchedProfileValues={{
                                 id: watchedProfile.id,
                                 designation: watchedProfile.designation,

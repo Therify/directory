@@ -37,7 +37,6 @@ export const PasswordInput = ({ control }: PasswordInputProps) => (
             <Input
                 allowShowPassword
                 required
-                fullWidth
                 id="password"
                 label="Password"
                 data-testid={TEST_IDS.PASSWORD}

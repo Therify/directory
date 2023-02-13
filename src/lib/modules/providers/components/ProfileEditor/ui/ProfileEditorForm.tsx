@@ -18,6 +18,7 @@ import {
     IdentitySection,
     AboutSection,
     CredentialsSection,
+    NewClientStatusInput,
 } from './inputs';
 import { CloudinaryUploadResult } from '@/lib/modules/media/components/hooks/userCloudinaryWidget';
 import { State, ProviderProfile } from '@/lib/shared/types';
@@ -29,10 +30,9 @@ import { ImageSection } from './inputs/Image';
 
 interface EditorFormProps {
     control: Control<ProviderProfile.ProviderProfile>;
-    defaultValues?: Partial<ProviderProfile.ProviderProfile>;
     isFormValid: boolean;
     isSubmittingForm: boolean;
-    licensedStates?: typeof State.ENTRIES[number][];
+    licensedStates?: (typeof State.ENTRIES)[number][];
     onImageUploadSuccess: (
         error: Error | null,
         result: CloudinaryUploadResult
@@ -43,6 +43,9 @@ interface EditorFormProps {
     onBack?: () => void;
     onShowProfilePreview?: () => void;
     hideFloatingButton?: boolean;
+    setSupervisor: (
+        supervisor: ProviderProfile.ProviderProfile['supervisor']
+    ) => void;
     watchedProfileValues: {
         id: ProviderProfile.ProviderProfile['id'];
         designation: ProviderProfile.ProviderProfile['designation'];
@@ -54,7 +57,6 @@ interface EditorFormProps {
 }
 export const ProfileEditorForm = ({
     control,
-    defaultValues,
     licensedStates,
     onDeleteImage,
     onImageUploadSuccess,
@@ -66,6 +68,7 @@ export const ProfileEditorForm = ({
     onShowProfilePreview,
     hideFloatingButton,
     watchedProfileValues,
+    setSupervisor,
 }: EditorFormProps) => {
     const isNewProfile = !watchedProfileValues.id;
     const theme = useTheme();
@@ -80,7 +83,7 @@ export const ProfileEditorForm = ({
     const saveButtonText = isNewProfile ? 'Create Profile' : 'Save Changes';
     const isTherapist =
         watchedProfileValues.designation === ProfileType.therapist;
-    // TODO: Add supervisor input
+
     return (
         <EditorContainer>
             <EditorForm>
@@ -99,22 +102,28 @@ export const ProfileEditorForm = ({
                 )}
                 <HeaderContainer marginBottom={4}>
                     <H1>Profile Editor</H1>
-                    <PreviewProfileButton
-                        color="secondary"
-                        onClick={() => onShowProfilePreview?.()}
-                    >
-                        Preview Profile
-                    </PreviewProfileButton>
-                    <Button
-                        ref={headerSaveButtonRef}
-                        fullWidth={false}
-                        type="contained"
-                        disabled={!isFormValid || isSubmittingForm}
-                        isLoading={isSubmittingForm}
-                        onClick={() => setConfirmSave(true)}
-                    >
-                        {saveButtonText}
-                    </Button>
+                    <Box display="flex">
+                        <PreviewProfileButton
+                            color="secondary"
+                            onClick={() => onShowProfilePreview?.()}
+                            style={{
+                                marginBottom: 0,
+                                marginRight: theme.spacing(2),
+                            }}
+                        >
+                            Preview Profile
+                        </PreviewProfileButton>
+                        <Button
+                            ref={headerSaveButtonRef}
+                            fullWidth={false}
+                            type="contained"
+                            disabled={!isFormValid || isSubmittingForm}
+                            isLoading={isSubmittingForm}
+                            onClick={() => setConfirmSave(true)}
+                        >
+                            {saveButtonText}
+                        </Button>
+                    </Box>
                 </HeaderContainer>
                 {!hideFloatingButton && (
                     <FloatingButtons
@@ -147,6 +156,13 @@ export const ProfileEditorForm = ({
                     control={control}
                     disabled={isSubmittingForm}
                 />
+                <FormSectionTitle style={{ margin: 0 }}>
+                    New Clients
+                </FormSectionTitle>
+                <NewClientStatusInput
+                    control={control}
+                    disabled={isSubmittingForm}
+                />
                 <ImageSection
                     onDeleteImage={onDeleteImage}
                     onImageUploadError={onImageUploadError}
@@ -161,16 +177,13 @@ export const ProfileEditorForm = ({
                     disabled={isSubmittingForm}
                 />
                 <AboutSection control={control} disabled={isSubmittingForm} />
-                {isTherapist && (
-                    <CredentialsSection
-                        control={control}
-                        defaultValues={{
-                            npiNumber: defaultValues?.npiNumber ?? undefined,
-                        }}
-                        licensedStates={licensedStates}
-                        disabled={isSubmittingForm}
-                    />
-                )}
+                <CredentialsSection
+                    isTherapist={isTherapist}
+                    control={control}
+                    licensedStates={licensedStates}
+                    disabled={isSubmittingForm}
+                    setSupervisor={setSupervisor}
+                />
                 <PricingInputs
                     control={control}
                     offersSlidingScale={watchedProfileValues.offersSlidingScale}

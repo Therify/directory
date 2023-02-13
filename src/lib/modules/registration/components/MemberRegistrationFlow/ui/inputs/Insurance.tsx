@@ -25,7 +25,6 @@ export const InsuranceInput = ({
         }) => (
             <Input
                 required
-                fullWidth
                 id="insurance"
                 label="Insurance"
                 errorMessage={

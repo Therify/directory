@@ -7,7 +7,7 @@ import {
     SelectChangeEvent,
     SelectProps as MuiSelectProps,
 } from '@mui/material';
-import { styled, Theme, useTheme } from '@mui/material/styles';
+import { styled, SxProps, Theme, useTheme } from '@mui/material/styles';
 import { Caption, CAPTION_SIZE } from '../../Typography';
 
 export interface SelectOption {
@@ -24,6 +24,7 @@ interface BaseSelectProps {
     value?: string;
     helperText?: string;
     errorMessage?: string;
+    wrapperSx?: SxProps<Theme>;
 }
 
 type SelectProps = BaseSelectProps &
@@ -51,6 +52,7 @@ export const Select = ({
     placeholder,
     native,
     fullWidth,
+    wrapperSx,
     ...selectProps
 }: SelectProps) => {
     const theme = useTheme();
@@ -68,7 +70,11 @@ export const Select = ({
     };
 
     return (
-        <FormControl fullWidth={fullWidth} error={Boolean(errorMessage)}>
+        <FormControl
+            fullWidth={fullWidth}
+            error={Boolean(errorMessage)}
+            sx={{ marginBottom: theme.spacing(4), ...wrapperSx }}
+        >
             {label && (
                 <InputLabel
                     data-testid={TEST_IDS.LABEL}
