@@ -34,7 +34,7 @@ describe('getProfileByUserId', () => {
             ...mockProviderProfile,
             practiceStartDate: new Date(mockProviderProfile.practiceStartDate!),
             id: mockProviderProfile.id!,
-            supervisor: null as unknown as {},
+            supervisor: mockProviderProfile.supervisor as unknown as {},
             createdAt: new Date('2021-03-01'),
             updatedAt: new Date('2021-03-01'),
         };
