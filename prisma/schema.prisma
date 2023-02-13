@@ -173,7 +173,7 @@ model Practice {
   updatedAt                  DateTime                     @updatedAt @map("updated_at")
   practiceProvider           PracticeProvider[]
   practiceProviderInvitation PracticeProviderInvitation[]
-  PracticeProfile            PracticeProfile[]
+  practiceProfile            PracticeProfile[]
 
   @@map("practices")
 }
