@@ -15,7 +15,11 @@ export default function ProviderProfilePage({
             user={user}
             currentPath={URL_PATHS.MEMBERS.DIRECTORY}
         >
-            <ProviderProfile {...providerProfile} />
+            <ProviderProfile
+                {...providerProfile}
+                member={user}
+                providerHasBeenSelected
+            />
         </MemberNavigationPage>
     );
 }

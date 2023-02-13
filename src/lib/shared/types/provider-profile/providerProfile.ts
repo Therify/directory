@@ -11,7 +11,17 @@ export const schema = ProviderProfileSchema.extend({
     acceptedInsurances: AcceptedInsurance.schema.array(),
     supervisor: ProviderSupervisor.schema.nullable(),
     id: z.string().optional(),
-    practiceStartDate: z.string(),
+    practiceStartDate: z
+        .unknown()
+        .nullable()
+        .transform((value) => {
+            // if is Date, return as string
+            if (value instanceof Date) return value.toISOString();
+            // if is string, return as string
+            if (typeof value === 'string') return value;
+            // if is null, return null
+            if (value === null) return null;
+        }),
 }).omit({
     createdAt: true,
     updatedAt: true,

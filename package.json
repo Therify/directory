@@ -6,6 +6,7 @@
         "postinstall": "yarn prisma:generate",
         "dev:doppler": "doppler run --project=directory --config=dev --token=$DEV_DIRECTORY_DOPPLER_TOKEN -- yarn dev",
         "dev": "next dev",
+        "dev:all": "doppler run -p=directory -c=dev -- run-p dev storybook test:watch prisma:studio stripe-cli:listen",
         "build": "next build",
         "start": "next start",
         "lint": "next lint",

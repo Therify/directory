@@ -38,7 +38,8 @@ export function ProfileEditor({
     const providerProfileForm = useForm<ProviderProfile.ProviderProfile>({
         mode: 'onChange',
         defaultValues: {
-            newClientStatus: NewClientStatus.accepting,
+            newClientStatus:
+                providerProfile?.newClientStatus ?? NewClientStatus.accepting,
             offersInPerson: false,
             offersMedicationManagement: false,
             offersPhoneConsultations: false,

@@ -46,12 +46,12 @@ export function factory({ prisma }: ProvidersServiceParams) {
         }
         const supervisor = rawSupervisor
             ? ProviderSupervisor.validate(rawSupervisor)
-            : undefined;
+            : null;
         const credentials = rawCredentials.map(ProviderCredential.validate);
 
         const profile = {
             ...rawProfile,
-            practiceStartDate: new Date(practiceStartDate),
+            practiceStartDate: practiceStartDate && new Date(practiceStartDate),
             supervisor,
             credentials,
         };
@@ -61,6 +61,7 @@ export function factory({ prisma }: ProvidersServiceParams) {
                 ...ProviderProfileSchema.omit({
                     createdAt: true,
                     updatedAt: true,
+                    supervisor: true,
                 }).parse(profile),
             },
         });

@@ -1,6 +1,5 @@
 import { CelebrationContainer } from '@/lib/shared/components/ui/Containers/CelebrationContainer';
 import { Paragraph } from '@/lib/shared/components/ui/Typography/Paragraph';
-import { ProviderAvailability } from '@/lib/shared/types';
 import { CheckCircle, EventBusy, Timer } from '@mui/icons-material';
 import Box from '@mui/material/Box';
 import { Button } from '@/lib/shared/components/ui/Button';
@@ -17,11 +16,13 @@ interface ConnectionWidgetProps {
     onProviderSelected?: OnProviderSelectedCallback;
     providerHasBeenSelected?: boolean;
     newClientStatus: NewClientStatus;
+    providerName: string;
 }
 
 export const ConnectionWidget = ({
     providerHasBeenSelected,
     newClientStatus,
+    providerName,
 }: ConnectionWidgetProps) => {
     if (providerHasBeenSelected) {
         return (
@@ -37,7 +38,7 @@ export const ConnectionWidget = ({
                         />
                     </Box>
                     <Box>
-                        <Heading>We&apos;ve contacted Provider Name!</Heading>
+                        <Heading>We&apos;ve contacted {providerName}!</Heading>
                         <Description sx={{ color: 'white !important' }}>
                             They&apos;ll reach out to you to schedule time
                         </Description>
@@ -46,11 +47,12 @@ export const ConnectionWidget = ({
             </ProviderSelectedContainer>
         );
     }
-    return displayAvailability(newClientStatus);
+    return displayAvailability(newClientStatus, providerName);
 };
 
 function displayAvailability(
     newClientStatus: NewClientStatus,
+    providerName: string,
     isMobile: boolean = false
 ) {
     switch (newClientStatus) {
@@ -60,15 +62,22 @@ function displayAvailability(
                     newClientStatus={NewClientStatus.accepting}
                 >
                     <Box>
-                        <Heading>Ready to contact ProviderName?</Heading>
+                        <Heading>Ready to contact {providerName}?</Heading>
                         {!isMobile && (
                             <Description>
-                                Notify providerName that you&apos;re interested
-                                in connecting
+                                Notify {providerName} that you&apos;re
+                                interested in connecting
                             </Description>
                         )}
                     </Box>
-                    <Button fullWidth>Select ProviderName</Button>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Button fullWidth>Select {providerName}</Button>
+                    </Box>
                 </AvailabilityContainer>
             );
         case NewClientStatus.not_accepting:
@@ -115,7 +124,7 @@ function displayAvailability(
 
 const ProviderSelectedContainer = styled(CelebrationContainer)(({ theme }) => ({
     padding: '1.688rem 1rem',
-    position: 'absolute',
+    position: 'fixed',
     bottom: 0,
     left: 0,
     width: '100%',
@@ -125,39 +134,48 @@ const ProviderSelectedContainer = styled(CelebrationContainer)(({ theme }) => ({
     },
 }));
 
-const AvailabilityContainer = styled(Box)<{
+const AvailabilityContainer = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'newClientStatus',
+})<{
     newClientStatus: NewClientStatus;
-}>(({ theme, newClientStatus }) => ({
-    padding: '1.688rem 1rem',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    width: '100%',
-    background: 'white',
-    ...(newClientStatus === NewClientStatus.accepting && {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        '& > *:first-child': {
-            marginRight: theme.spacing(10),
+}>(
+    ({ theme, newClientStatus }) => ({
+        boxShadow: theme.shadows[2],
+        padding: '1.688rem 1rem',
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        width: '100%',
+        background: 'white',
+        ...(newClientStatus === NewClientStatus.accepting && {
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            '& > *:first-of-type': {
+                marginRight: theme.spacing(10),
+            },
+        }),
+        ...(newClientStatus === NewClientStatus.not_accepting && {
+            background: theme.palette.error.main,
+            display: 'flex',
+            justifyContent: 'center',
+        }),
+        ...(newClientStatus === NewClientStatus.waitlist && {
+            background: theme.palette.warning.main,
+            display: 'flex',
+            justifyContent: 'center',
+        }),
+        [theme.breakpoints.up('md')]: {
+            minWidth: 570,
+            maxWidth: '100%',
+            position: 'sticky',
+            top: 0,
+            flexDirection: 'column',
+            textAlign: 'center',
         },
     }),
-    ...(newClientStatus === NewClientStatus.not_accepting && {
-        background: theme.palette.error.main,
-        display: 'flex',
-        justifyContent: 'center',
-    }),
-    ...(newClientStatus === NewClientStatus.waitlist && {
-        background: theme.palette.warning.main,
-        display: 'flex',
-        justifyContent: 'center',
-    }),
-    [theme.breakpoints.up('md')]: {
-        position: 'relative',
-        flexDirection: 'column',
-        textAlign: 'center',
-    },
-}));
+    ({}) => ({})
+);
 
 const AvailabilityContents = styled(Stack)(({ theme }) => ({
     display: 'flex',

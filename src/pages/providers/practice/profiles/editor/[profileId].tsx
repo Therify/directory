@@ -83,7 +83,6 @@ export default function PracticeProfileCreatePage() {
                         onSubmit={async (profile) => {
                             if (!user?.userId)
                                 return console.error('User is not logged in');
-
                             return updateProfile({
                                 userId: user.userId,
                                 profile,
