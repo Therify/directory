@@ -278,7 +278,7 @@ model ProviderProfile {
   newClientStatus            NewClientStatus              @map("new_client_status")
   directoryListing           DirectoryListing?
   practiceStartDate          DateTime?                    @map("practice_start_date") @db.Timestamp(6)
-  PracticeProviderInvitation PracticeProviderInvitation[]
+  practiceProviderInvitation PracticeProviderInvitation[]
   memberFavorites            MemberFavorites[]
   practiceProfile            PracticeProfile?
 

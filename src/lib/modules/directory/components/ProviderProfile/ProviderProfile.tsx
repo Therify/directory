@@ -1,3 +1,4 @@
+import { FormValidation } from '@/lib/shared/components/ui';
 import { Avatar, AVATAR_SIZE } from '@/lib/shared/components/ui/Avatar';
 import { Divider } from '@/lib/shared/components/ui/Divider';
 import { PageHeader } from '@/lib/shared/components/ui/PageHeader';
@@ -73,7 +74,9 @@ export function ProviderProfile({
     );
 
     const { years: yearsOfExperience } = intervalToDuration({
-        start: new Date(practiceStartDate),
+        start: FormValidation.validateDateIsValid(practiceStartDate)
+            ? new Date(practiceStartDate)
+            : new Date(),
         end: new Date(),
     });
     const credentialsList = Array.from(

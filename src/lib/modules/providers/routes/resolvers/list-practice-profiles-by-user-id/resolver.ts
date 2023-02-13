@@ -24,6 +24,7 @@ export const resolve: ProcedureResolver<
             errors: [],
         };
     } catch (error) {
+        console.log(error);
         let errorMessage =
             "There was a problem getting your practice's profiles.";
         if (error instanceof Error) {

@@ -18,6 +18,7 @@ import {
     Paragraph,
     PageContentContainer,
     LoadingContainer,
+    Alert,
 } from '@/lib/shared/components/ui';
 import { SideNavigationPage } from '@/lib/shared/components/features/pages';
 import {
@@ -79,7 +80,7 @@ export default function PracticeProfilesPage() {
     const [showNewProfileModal, setShowNewProfileModal] = useState(false);
     const {
         data,
-        error: queryError,
+        error: trpcError,
         isLoading: isLoadingProfiles,
         isRefetching,
         refetch,
@@ -99,8 +100,8 @@ export default function PracticeProfilesPage() {
         profiles: [] as ProviderProfile.ProviderProfile[],
         errors: [] as string[],
     };
-    const [errorMessage] = errors;
-
+    const [queryError] = errors;
+    const errorMessage = trpcError?.message || queryError;
     const isOverPlanCapacity =
         user?.plan?.seats !== undefined &&
         profiles &&
@@ -167,6 +168,9 @@ export default function PracticeProfilesPage() {
                             </Button>
                         </Box>
                     </TitleContainer>
+                    {errorMessage && (
+                        <Alert type="error" title={errorMessage} />
+                    )}
                     <ListTitle marginLeft={5} marginBottom={0}>
                         Provider Name
                     </ListTitle>
