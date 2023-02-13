@@ -95,9 +95,7 @@ export function ProfileEditor({
 
     useEffect(
         function manageSlidingScaleRates() {
-            const minimumRate = parseInt(
-                providerProfileForm.getValues('minimumRate')?.toString() ?? '0'
-            );
+            const minimumRate = providerProfileForm.getValues('minimumRate');
             if (watchedProfile.offersSlidingScale) {
                 providerProfileForm.setValue('maximumRate', minimumRate + 40);
             } else {

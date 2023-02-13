@@ -15,7 +15,7 @@ export const MaximumRateInput = ({
     disabled,
     visible,
 }: MaximumRateInputProps) => {
-    const minimumAcceptableRate = parseInt(minimumRate.toString()) + 5;
+    const minimumAcceptableRate = minimumRate + 10;
     return (
         <Controller
             control={control}
@@ -40,9 +40,11 @@ export const MaximumRateInput = ({
                             greaterThanThreshold: minimumAcceptableRate,
                         }
                     )}
+                    onChange={(e) => {
+                        onChange(parseInt(e.target.value));
+                    }}
                     {...{
                         disabled,
-                        onChange,
                         onBlur,
                         value,
                         name,
