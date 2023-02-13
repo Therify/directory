@@ -3,6 +3,7 @@ import { TransactionV1 } from '@/lib/shared/utils';
 import { ProvidersServiceParams } from '../../../params';
 
 export const transactionDefinition = z.object({
+    validateSeatAvailability: z.unknown(),
     getPractice: z.object({
         practiceId: z.string(),
     }),
@@ -13,9 +14,7 @@ export const transactionDefinition = z.object({
         listingPracticeId: z.string(),
         listingProfileId: z.string(),
     }),
-    createPracticeProviderInvitation: z.object({
-        invitationId: z.string().optional(),
-    }),
+    createPracticeProfile: z.unknown(),
 });
 
 export type CreateProviderProfileForPracticeTransaction =

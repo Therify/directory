@@ -1,3 +1,4 @@
+import { FormValidation } from '@/lib/shared/components/ui';
 import { Avatar, AVATAR_SIZE } from '@/lib/shared/components/ui/Avatar';
 import { Divider } from '@/lib/shared/components/ui/Divider';
 import { PageHeader } from '@/lib/shared/components/ui/PageHeader';
@@ -71,8 +72,11 @@ export function ProviderProfile({
     const isSmallScreen = useMediaQuery((theme: Theme) =>
         theme.breakpoints.down('sm')
     );
+
     const { years: yearsOfExperience } = intervalToDuration({
-        start: practiceStartDate ?? new Date(),
+        start: FormValidation.validateDateIsValid(practiceStartDate)
+            ? new Date(practiceStartDate)
+            : new Date(),
         end: new Date(),
     });
     const credentialsList = Array.from(
@@ -241,7 +245,7 @@ export function ProviderProfile({
                                 description={`${
                                     givenName || 'This provider'
                                 } has been serving people like you since ${getYear(
-                                    practiceStartDate
+                                    new Date(practiceStartDate)
                                 )}`}
                             />
                         )}

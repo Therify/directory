@@ -10,7 +10,6 @@ import {
     GetUserDetailsById,
     GetPracticeByUserId,
 } from '@/lib/modules/users/features';
-import { GetProviderProfileByUserId } from '@/lib/modules/provider-profiles/features';
 import {
     registerProviderResolver,
     registerMemberResolver,
@@ -19,7 +18,6 @@ import {
     getUserDetailsByIdResolver,
     handlePracticeOnboardingResolver,
     getPracticeByUserIdResolver,
-    getProviderProfileByUserIdResolver,
 } from './resolvers';
 import { Context } from '../../../server/context';
 
@@ -39,11 +37,6 @@ export const router = trpc
         input: GetPracticeByUserId.inputSchema,
         output: GetPracticeByUserId.outputSchema,
         resolve: getPracticeByUserIdResolver,
-    })
-    .query(GetProviderProfileByUserId.TRPC_ROUTE, {
-        input: GetProviderProfileByUserId.inputSchema,
-        output: GetProviderProfileByUserId.outputSchema,
-        resolve: getProviderProfileByUserIdResolver,
     })
     .mutation(HandlePracticeOnboarding.TRPC_ROUTE, {
         input: HandlePracticeOnboarding.inputSchema,

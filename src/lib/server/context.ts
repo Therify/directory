@@ -5,12 +5,14 @@ import {
     notificationsService,
     NotificationsService,
 } from '../modules/notifications/service';
+import { ProvidersService } from '../modules/providers/service';
 
 // The app's context - is generated for each incoming request
 export interface Context {
     accounts: AccountsService;
     members: MembersService;
     notifications: NotificationsService;
+    providers: ProvidersService;
 }
 export async function createContext(
     opts?: trpcNext.CreateNextContextOptions
@@ -33,5 +35,6 @@ export async function createContext(
         notifications: notificationsService,
         accounts: AccountsService,
         members: membersService,
+        providers: ProvidersService,
     };
 }

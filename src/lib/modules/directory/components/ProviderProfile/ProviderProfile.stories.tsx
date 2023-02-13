@@ -12,7 +12,7 @@ import {
     Language,
     AgeGroup,
 } from '@/lib/shared/types';
-import { ProfileType } from '@prisma/client';
+import { NewClientStatus, ProfileType } from '@prisma/client';
 import { Meta, StoryObj } from '@storybook/react';
 import { ProviderProfile } from './ProviderProfile';
 
@@ -24,6 +24,7 @@ const meta: Meta<typeof ProviderProfile> = {
 const coach: ProviderProfileType.ProviderProfile = {
     id: 'test-id',
     designation: ProfileType.coach,
+    newClientStatus: NewClientStatus.accepting,
     supervisor: null,
     givenName: 'John',
     surname: 'Doe',
@@ -86,7 +87,7 @@ const coach: ProviderProfileType.ProviderProfile = {
     offersMedicationManagement: true,
     offersPhoneConsultations: true,
     offersVirtual: true,
-    practiceStartDate: new Date('2010-09-01T00:00:00.000Z'),
+    practiceStartDate: '2010-09-01T00:00:00.000Z',
 };
 const therapist: ProviderProfileType.ProviderProfile = {
     id: 'test-id',
@@ -166,7 +167,8 @@ const therapist: ProviderProfileType.ProviderProfile = {
     offersPhoneConsultations: true,
     offersVirtual: true,
     designation: ProfileType.therapist,
-    practiceStartDate: new Date('2010-09-01T00:00:00.000Z'),
+    newClientStatus: NewClientStatus.accepting,
+    practiceStartDate: '2010-09-01T00:00:00.000Z',
 };
 
 export default meta;

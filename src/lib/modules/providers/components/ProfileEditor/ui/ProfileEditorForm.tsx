@@ -30,7 +30,7 @@ import { ImageSection } from './inputs/Image';
 
 interface EditorFormProps {
     control: Control<ProviderProfile.ProviderProfile>;
-    isFormValid: boolean;
+    isSubmitDisabled: boolean;
     isSubmittingForm: boolean;
     licensedStates?: (typeof State.ENTRIES)[number][];
     onImageUploadSuccess: (
@@ -53,6 +53,8 @@ interface EditorFormProps {
         offersSlidingScale: ProviderProfile.ProviderProfile['offersSlidingScale'];
         minimumRate: ProviderProfile.ProviderProfile['minimumRate'];
         givenName: ProviderProfile.ProviderProfile['givenName'];
+        surname: ProviderProfile.ProviderProfile['surname'];
+        supervisor: ProviderProfile.ProviderProfile['supervisor'];
     };
 }
 export const ProfileEditorForm = ({
@@ -63,7 +65,7 @@ export const ProfileEditorForm = ({
     onImageUploadError,
     onSubmitForm,
     isSubmittingForm,
-    isFormValid,
+    isSubmitDisabled,
     onBack,
     onShowProfilePreview,
     hideFloatingButton,
@@ -117,7 +119,7 @@ export const ProfileEditorForm = ({
                             ref={headerSaveButtonRef}
                             fullWidth={false}
                             type="contained"
-                            disabled={!isFormValid || isSubmittingForm}
+                            disabled={isSubmitDisabled}
                             isLoading={isSubmittingForm}
                             onClick={() => setConfirmSave(true)}
                         >
@@ -140,7 +142,7 @@ export const ProfileEditorForm = ({
                         <Button
                             type="contained"
                             size={BUTTON_SIZE.LARGE}
-                            disabled={!isFormValid || isSubmittingForm}
+                            disabled={isSubmitDisabled}
                             isLoading={isSubmittingForm}
                             onClick={() => setConfirmSave(true)}
                         >
@@ -179,6 +181,7 @@ export const ProfileEditorForm = ({
                 <AboutSection control={control} disabled={isSubmittingForm} />
                 <CredentialsSection
                     isTherapist={isTherapist}
+                    supervisor={watchedProfileValues.supervisor}
                     control={control}
                     licensedStates={licensedStates}
                     disabled={isSubmittingForm}
@@ -214,7 +217,7 @@ export const ProfileEditorForm = ({
                     <Button
                         fullWidth
                         type="contained"
-                        disabled={!isFormValid || isSubmittingForm}
+                        disabled={isSubmitDisabled}
                         isLoading={isSubmittingForm}
                         onClick={() => setConfirmSave(true)}
                     >
@@ -228,7 +231,7 @@ export const ProfileEditorForm = ({
                 title={isNewProfile ? 'Create Profile' : 'Update Profile'}
                 message={
                     isNewProfile
-                        ? `Are you sure you want to create this profile for ${watchedProfileValues.givenName}?`
+                        ? `Are you sure you want to create this profile for ${watchedProfileValues.givenName} ${watchedProfileValues.surname}?`
                         : 'Are you sure you want to save these changes?'
                 }
                 fullWidthButtons
