@@ -33,12 +33,13 @@ export const PracticeStartDateInput = ({
                 label="When did you begin practicing?"
                 helperText="Feel free to approximate"
                 onChange={(date) => {
-                    if (
-                        date === null ||
-                        !FormValidation.validateDateIsValid(date)
-                    )
-                        return onChange(null);
-                    onChange(date.toISOString());
+                    if (date === null) return onChange(undefined);
+
+                    onChange(
+                        FormValidation.validateDateIsValid(date)
+                            ? date?.toISOString()
+                            : date?.toDateString() // "Invalid Date" string literal
+                    );
                 }}
                 errorMessage={
                     value !== null
