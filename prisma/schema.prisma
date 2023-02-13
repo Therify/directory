@@ -275,7 +275,7 @@ model ProviderProfile {
   offersPhoneConsultations   Boolean                      @default(false) @map("offers_phone_consultations")
   offersVirtual              Boolean                      @default(true) @map("offers_virtual")
   designation                ProfileType                  @map("profile_type")
-  newClientStatus            NewClientStatus              @map("new_client_status")
+  newClientStatus            NewClientStatus              @default(not_accepting) @map("new_client_status")
   directoryListing           DirectoryListing?
   practiceStartDate          DateTime?                    @map("practice_start_date") @db.Timestamp(6)
   practiceProviderInvitation PracticeProviderInvitation[]
