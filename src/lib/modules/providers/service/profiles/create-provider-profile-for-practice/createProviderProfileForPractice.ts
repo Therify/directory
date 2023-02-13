@@ -6,6 +6,7 @@ import {
     CreateProviderProfile,
     CreatePracticeProfile,
     GetPractice,
+    ValidateSeatAvailability,
 } from './transaction';
 import { CreateProviderProfileForPractice } from '@/lib/modules/providers/features/profiles';
 
@@ -15,6 +16,8 @@ export function factory(context: ProvidersServiceParams) {
             transactionDefinition,
             { ...context },
             {
+                validateSeatAvailability:
+                    ValidateSeatAvailability.factory(params),
                 getPractice: GetPractice.factory(params),
                 createProviderProfile: CreateProviderProfile.factory(params),
                 createDirectoryListing: CreateDirectoryListing.step,
