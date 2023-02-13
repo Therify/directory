@@ -48,6 +48,7 @@ import { DirectoryListingSchema } from '@/lib/shared/schema';
 import { z } from 'zod';
 import { trpc } from '@/lib/shared/utils/trpc';
 import { ProviderProfile } from '@/lib/shared/types';
+import { ListPracticeProfilesByUserId } from '@/lib/modules/providers/features/profiles';
 
 export const getServerSideProps = RBAC.requireProviderAuth(
     withPageAuthRequired()
@@ -67,14 +68,8 @@ const getProfileStatusBadge = (status?: ListingStatus) => {
     }
 };
 
-type ProviderPracticeProfileListItems = Array<
-    ProviderProfile.ProviderProfile & {
-        directoryListing?: z.infer<typeof DirectoryListingSchema>;
-    }
->;
-
 export default function PracticeProfilesPage() {
-    const { user, isLoading } = useTherifyUser();
+    const { user, isLoading: isLoadingUser } = useTherifyUser();
     const router = useRouter();
     const theme = useTheme();
     const [showNewProfileModal, setShowNewProfileModal] = useState(false);
@@ -82,11 +77,9 @@ export default function PracticeProfilesPage() {
         data,
         error: trpcError,
         isLoading: isLoadingProfiles,
-        isRefetching,
-        refetch,
     } = trpc.useQuery(
         [
-            'providers.profiles.list-practice-profiles-by-user-id',
+            `providers.${ListPracticeProfilesByUserId.TRPC_ROUTE}`,
             {
                 userId: user?.userId ?? '',
             },
@@ -100,12 +93,13 @@ export default function PracticeProfilesPage() {
         profiles: [] as ProviderProfile.ProviderProfile[],
         errors: [] as string[],
     };
+    const isLoading = isLoadingUser || isLoadingProfiles;
     const [queryError] = errors;
     const errorMessage = trpcError?.message || queryError;
-    const isOverPlanCapacity =
+    const canCreateProfile =
         user?.plan?.seats !== undefined &&
         profiles &&
-        profiles.length > (user?.plan?.seats ?? 1);
+        profiles.length < user.plan.seats;
 
     useEffect(() => {
         if (user?.isPracticeAdmin === false) {
@@ -124,9 +118,9 @@ export default function PracticeProfilesPage() {
             primaryMenu={[...PRACTICE_ADMIN_MAIN_MENU]}
             secondaryMenu={[...PRACTICE_ADMIN_SECONDARY_MENU]}
             mobileMenu={[...PRACTICE_ADMIN_MOBILE_MENU]}
-            isLoadingUser={isLoading}
+            isLoadingUser={isLoadingUser}
         >
-            <LoadingContainer isLoading={isLoading && isLoadingProfiles}>
+            <LoadingContainer isLoading={isLoading}>
                 <PageContentContainer
                     fillContentSpace
                     paddingX={4}
@@ -141,7 +135,7 @@ export default function PracticeProfilesPage() {
                                 alignItems="center"
                                 justifyContent="flex-start"
                             >
-                                {isOverPlanCapacity && (
+                                {!canCreateProfile && (
                                     <WarningRounded
                                         color="error"
                                         style={{
@@ -151,7 +145,7 @@ export default function PracticeProfilesPage() {
                                 )}
                                 <SeatCount
                                     italic
-                                    isOverPlanCapacity={isOverPlanCapacity}
+                                    isOverPlanCapacity={!canCreateProfile}
                                 >
                                     {profiles.length}{' '}
                                     {user?.plan?.seats &&
@@ -161,20 +155,23 @@ export default function PracticeProfilesPage() {
                             </Box>
                         </Box>
                         <Box className="admin-controls">
-                            <Button
-                                onClick={() => setShowNewProfileModal(true)}
-                            >
-                                New Profile
-                            </Button>
+                            {canCreateProfile && (
+                                <Button
+                                    onClick={() => setShowNewProfileModal(true)}
+                                >
+                                    New Profile
+                                </Button>
+                            )}
                         </Box>
                     </TitleContainer>
                     {errorMessage && (
                         <Alert type="error" title={errorMessage} />
                     )}
-                    <ListTitle marginLeft={5} marginBottom={0}>
-                        Provider Name
-                    </ListTitle>
-                    <List>
+                    <ListTitle>Provider Name</ListTitle>
+                    {profiles.length === 0 && (
+                        <Paragraph>No profiles.</Paragraph>
+                    )}
+                    <ProfileList>
                         {profiles.map((profile) => {
                             const name =
                                 `${profile.givenName} ${profile.surname}`.trim();
@@ -233,34 +230,43 @@ export default function PracticeProfilesPage() {
                                 </ListItem>
                             );
                         })}
-                    </List>
+                    </ProfileList>
                 </PageContentContainer>
             </LoadingContainer>
 
-            <Modal
-                isOpen={showNewProfileModal}
-                onClose={() => setShowNewProfileModal(false)}
-                title="Create New Profile"
-                message="How would you like to create a profile?"
-                fullWidthButtons
-                shouldStackButtons
-                primaryButtonText="Fill out the profile myself"
-                primaryButtonOnClick={() => {
-                    router.push(URL_PATHS.PROVIDERS.PRACTICE.PROFILES_CREATE);
-                }}
-                primaryButtonEndIcon={<AddCircleOutlineRounded />}
-                secondaryButtonText="Invite a provider to create their profile"
-                secondaryButtonOnClick={() => {
-                    router.push(URL_PATHS.PROVIDERS.PRACTICE.PROVIDER_INVITE);
-                }}
-                secondaryButtonEndIcon={<SendRounded />}
-            />
+            {canCreateProfile && (
+                <Modal
+                    isOpen={showNewProfileModal}
+                    onClose={() => setShowNewProfileModal(false)}
+                    title="Create New Profile"
+                    message="How would you like to create a profile?"
+                    fullWidthButtons
+                    shouldStackButtons
+                    primaryButtonText="Fill out the profile myself"
+                    primaryButtonOnClick={() => {
+                        router.push(
+                            URL_PATHS.PROVIDERS.PRACTICE.PROFILES_CREATE
+                        );
+                    }}
+                    primaryButtonEndIcon={<AddCircleOutlineRounded />}
+                    secondaryButtonText="Invite a provider to create their profile"
+                    secondaryButtonOnClick={() => {
+                        router.push(
+                            URL_PATHS.PROVIDERS.PRACTICE.PROVIDER_INVITE
+                        );
+                    }}
+                    secondaryButtonEndIcon={<SendRounded />}
+                />
+            )}
         </SideNavigationPage>
     );
 }
 
 const ListTitle = styled(Paragraph)(({ theme }) => ({
     ...theme.typography.caption,
+    fontWeight: 500,
+    marginLeft: theme.spacing(5),
+    marginBottom: 0,
     color: theme.palette.text.secondary,
 }));
 
@@ -381,4 +387,9 @@ const TitleContainer = styled(Box)(({ theme }) => ({
         display: 'flex',
         justifyContent: 'flex-end',
     },
+}));
+
+const ProfileList = styled(List)(({ theme }) => ({
+    flex: 1,
+    overflowY: 'auto',
 }));
