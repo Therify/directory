@@ -9,7 +9,7 @@ import {
 } from '@/lib/sitemap';
 import { useTherifyUser } from '@/lib/shared/hooks';
 import { RBAC } from '@/lib/shared/utils';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Role } from '@prisma/client';
 import { ProfileEditor } from '@/lib/modules/providers/components/ProfileEditor';
 import { TherifyUser } from '@/lib/shared/types';
@@ -24,13 +24,20 @@ export default function PracticeProfileCreatePage() {
     const { user, isLoading } = useTherifyUser();
     usePracticeAdminProtection(user);
     const router = useRouter();
+    const [createdProfileId, setCreatedProfileId] = useState<string>();
 
     const {
         mutate: createProfileForPractice,
         isLoading: isCreatingProfile,
         error,
     } = trpc.useMutation(
-        `providers.${CreateProviderProfileForPractice.TRPC_ROUTE}`
+        `providers.${CreateProviderProfileForPractice.TRPC_ROUTE}`,
+        {
+            onSuccess: ({ profileId, errors }) => {
+                if (profileId) return setCreatedProfileId(profileId);
+                const [error] = errors;
+            },
+        }
     );
 
     return (
@@ -53,6 +60,7 @@ export default function PracticeProfileCreatePage() {
                     website: 'https://therify.co',
                 }}
                 isSavingProfile={isCreatingProfile}
+                providerProfile={{ id: createdProfileId }}
                 onSubmit={async (profile) => {
                     if (!user?.userId)
                         return console.error('User is not logged in');

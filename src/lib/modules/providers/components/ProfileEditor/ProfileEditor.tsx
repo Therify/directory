@@ -156,8 +156,11 @@ export function ProfileEditor({
                                 onSubmitForm={() => {
                                     onSubmit(providerProfileForm.getValues());
                                 }}
-                                isFormValid={
-                                    providerProfileForm.formState.isValid
+                                isSubmitDisabled={
+                                    !providerProfileForm.formState.isValid ||
+                                    providerProfileForm.formState
+                                        .isSubmitting ||
+                                    !providerProfileForm.formState.isDirty
                                 }
                                 isSubmittingForm={isSavingProfile}
                                 onBack={onBack}
