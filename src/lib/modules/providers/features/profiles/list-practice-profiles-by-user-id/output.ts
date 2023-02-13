@@ -1,8 +1,8 @@
-import { ProviderProfile } from '@/lib/shared/types';
+import { ProviderProfileListing } from '@/lib/shared/types';
 import * as z from 'zod';
 
 export const schema = z.object({
-    profiles: ProviderProfile.schema.array(),
+    profiles: ProviderProfileListing.schema.array(),
     errors: z.array(z.string()),
 });
 

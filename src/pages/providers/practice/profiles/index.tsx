@@ -35,7 +35,7 @@ import { RBAC } from '@/lib/shared/utils';
 import { useEffect, useState } from 'react';
 import { ListingStatus, Role } from '@prisma/client';
 import { styled, useTheme } from '@mui/material/styles';
-import { Box, CircularProgress } from '@mui/material';
+import { Box, CircularProgress, Link } from '@mui/material';
 import {
     EditRounded,
     DeleteRounded,
@@ -50,11 +50,12 @@ import {
 import { DirectoryListingSchema } from '@/lib/shared/schema';
 import { z } from 'zod';
 import { trpc } from '@/lib/shared/utils/trpc';
-import { ProviderProfile } from '@/lib/shared/types';
+import { ProviderProfileListing } from '@/lib/shared/types';
 import {
     ListPracticeProfilesByUserId,
     DeleteProviderProfile,
 } from '@/lib/modules/providers/features/profiles';
+import { error } from '@/lib/shared/components/themes/therify-design-system/colors';
 
 export const getServerSideProps = RBAC.requireProviderAuth(
     withPageAuthRequired()
@@ -80,7 +81,7 @@ export default function PracticeProfilesPage() {
     const theme = useTheme();
     const [showNewProfileModal, setShowNewProfileModal] = useState(false);
     const [profileToDelete, setProfileToDelete] =
-        useState<ProviderProfile.ProviderProfile>();
+        useState<ProviderProfileListing.Type>();
     const {
         data,
         error: trpcError,
@@ -115,7 +116,7 @@ export default function PracticeProfilesPage() {
         });
 
     const { profiles, errors } = data ?? {
-        profiles: [] as ProviderProfile.ProviderProfile[],
+        profiles: [] as ProviderProfileListing.Type[],
         errors: [] as string[],
     };
     const isLoading =
@@ -194,12 +195,28 @@ export default function PracticeProfilesPage() {
                             )}
                         </Box>
                     </TitleContainer>
-                    {errorMessage && (
-                        <Alert type="error" title={errorMessage} />
-                    )}
                     <ListTitle>Provider Name</ListTitle>
-                    {profiles.length === 0 && (
-                        <Paragraph>No profiles.</Paragraph>
+                    {errorMessage && (
+                        <Box width="100%" marginTop={4}>
+                            <Alert type="error" title={errorMessage} />
+                        </Box>
+                    )}
+                    {profiles.length === 0 && !errorMessage && (
+                        <Box marginLeft={5} marginTop={4}>
+                            <Paragraph>
+                                No profiles to show.{' '}
+                                {canCreateProfile && (
+                                    <Link
+                                        aria-label="Create a new profile"
+                                        onClick={() =>
+                                            setShowNewProfileModal(true)
+                                        }
+                                    >
+                                        Create one!
+                                    </Link>
+                                )}
+                            </Paragraph>
+                        </Box>
                     )}
                     <ProfileList>
                         {profiles.map((profile) => {
@@ -339,7 +356,7 @@ const DeleteProfileModal = ({
 }: {
     onClose: () => void;
     onDelete: () => void;
-    profile: ProviderProfile.ProviderProfile;
+    profile: ProviderProfileListing.Type;
     isDeleting: boolean;
 }) => {
     const [value, setValue] = useState('');
@@ -423,7 +440,7 @@ const ProfileActions = ({
     onDelete,
     onInvite,
 }: {
-    profile: ProviderProfile.ProviderProfile & {
+    profile: ProviderProfileListing.Type & {
         directoryListing?: z.infer<typeof DirectoryListingSchema>;
     };
     onDelete: () => void;

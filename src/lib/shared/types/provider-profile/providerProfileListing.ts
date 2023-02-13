@@ -10,8 +10,8 @@ import { AcceptedInsurance } from '../accepted-insurance';
 
 export const schema = ProviderProfileSchema.pick({
     id: true,
-    firstName: true,
-    lastName: true,
+    givenName: true,
+    surname: true,
     maximumRate: true,
     minimumRate: true,
     createdAt: true,
@@ -20,26 +20,29 @@ export const schema = ProviderProfileSchema.pick({
     offersInPerson: true,
     offersVirtual: true,
     specialties: true,
-})
-    .extend({
-        pronouns: Pronoun.schema,
-        credentials: ProviderCredential.schema.array(),
-        acceptedInsurances: AcceptedInsurance.schema.array(),
-        invitation: PracticeProviderInvitationSchema.nullable(),
-        directoryListing: DirectoryListingSchema,
-    })
-    .omit({
+}).extend({
+    pronouns: Pronoun.schema,
+    credentials: ProviderCredential.schema.array(),
+    acceptedInsurances: AcceptedInsurance.schema.array(),
+    invitation: PracticeProviderInvitationSchema.omit({
         createdAt: true,
         updatedAt: true,
-    });
+    }).nullable(),
+    directoryListing: DirectoryListingSchema.omit({
+        createdAt: true,
+        updatedAt: true,
+    }),
+    createdAt: z.string(),
+    updatedAt: z.string(),
+});
 
-export type ProviderProfile = z.infer<typeof schema>;
+export type Type = z.infer<typeof schema>;
 
-export const validate = (value: unknown): ProviderProfile => {
+export const validate = (value: unknown): Type => {
     return schema.parse(value);
 };
 
-export const isValid = (value: unknown): value is ProviderProfile => {
+export const isValid = (value: unknown): value is Type => {
     try {
         validate(value);
         return true;
