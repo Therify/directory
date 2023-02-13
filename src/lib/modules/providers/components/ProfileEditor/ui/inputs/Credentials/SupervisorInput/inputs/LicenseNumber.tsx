@@ -25,15 +25,22 @@ export const LicenseNumberInput = ({
         name="supervisor.supervisorLicense.licenseNumber"
         defaultValue={defaultValue}
         rules={{
-            required: true,
+            required: {
+                value: true,
+                message: 'Supervisor License Number is required',
+            },
         }}
-        render={({ field: { onChange, onBlur, value, name } }) => (
+        render={({
+            field: { onChange, onBlur, value, name },
+            fieldState: { error, isTouched },
+        }) => (
             <Input
                 required
                 label="License Number"
                 fullWidth
                 id="licenseNumber"
                 placeholder="Supervisor License Number"
+                errorMessage={isTouched ? error?.message : undefined}
                 onChange={(e) => {
                     onChange(e);
                     storeLocalData('licenseNumber', e.target.value);

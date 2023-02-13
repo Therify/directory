@@ -26,38 +26,52 @@ interface BaseModalProps {
     allowBackdropClose?: boolean;
     hideBackdrop?: boolean;
 }
+type Color =
+    | 'error'
+    | 'success'
+    | 'inherit'
+    | 'primary'
+    | 'warning'
+    | 'secondary'
+    | 'info';
 
-type PrimaryButtonProps =
+type BasePrimaryButtonProps = {
+    primaryButtonDisabled?: boolean;
+    primaryButtonEndIcon?: ReactNode;
+    primaryButtonStartIcon?: ReactNode;
+    primaryButtonColor?: Color;
+};
+
+type PrimaryButtonProps = (
     | {
           primaryButtonText: string;
           primaryButtonOnClick: () => void;
-          primaryButtonDisabled?: boolean;
-          primaryButtonEndIcon?: ReactNode;
-          primaryButtonStartIcon?: ReactNode;
       }
     | {
           primaryButtonText?: undefined;
           primaryButtonOnClick?: undefined;
-          primaryButtonDisabled?: boolean;
-          primaryButtonEndIcon?: ReactNode;
-          primaryButtonStartIcon?: ReactNode;
-      };
+      }
+) &
+    BasePrimaryButtonProps;
 
-type SecondaryButtonProps =
+type BaseSecondaryButtonProps = {
+    secondaryButtonDisabled?: boolean;
+    secondaryButtonEndIcon?: ReactNode;
+    secondaryButtonStartIcon?: ReactNode;
+    secondaryButtonColor?: Color;
+};
+
+type SecondaryButtonProps = (
     | {
           secondaryButtonText: string;
           secondaryButtonOnClick: () => void;
-          secondaryButtonDisabled?: boolean;
-          secondaryButtonEndIcon?: ReactNode;
-          secondaryButtonStartIcon?: ReactNode;
       }
     | {
           secondaryButtonText?: undefined;
           secondaryButtonOnClick?: undefined;
-          secondaryButtonDisabled?: boolean;
-          secondaryButtonEndIcon?: ReactNode;
-          secondaryButtonStartIcon?: ReactNode;
-      };
+      }
+) &
+    BaseSecondaryButtonProps;
 
 type ModalProps = BaseModalProps & PrimaryButtonProps & SecondaryButtonProps;
 
@@ -89,11 +103,13 @@ export const Modal = ({
     primaryButtonDisabled,
     primaryButtonEndIcon,
     primaryButtonStartIcon,
+    primaryButtonColor,
     secondaryButtonEndIcon,
     secondaryButtonStartIcon,
     secondaryButtonText,
     secondaryButtonOnClick,
     secondaryButtonDisabled,
+    secondaryButtonColor,
     fullWidthButtons,
     shouldStackButtons,
     hideBackdrop,
@@ -192,7 +208,7 @@ export const Modal = ({
                                 fullWidth={fullWidthButtons}
                                 size={BUTTON_SIZE.SMALL}
                                 type={BUTTON_TYPE.OUTLINED}
-                                color="info"
+                                color={secondaryButtonColor ?? 'info'}
                                 onClick={secondaryButtonOnClick}
                                 endIcon={secondaryButtonEndIcon}
                                 startIcon={secondaryButtonStartIcon}
@@ -212,6 +228,7 @@ export const Modal = ({
                         )}
                         {isPrimaryButton && (
                             <Button
+                                color={primaryButtonColor ?? 'primary'}
                                 data-testid={TEST_IDS.PRIMARY_BUTTON}
                                 disabled={primaryButtonDisabled}
                                 fullWidth={fullWidthButtons}

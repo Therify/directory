@@ -14,6 +14,7 @@ interface IdentitySectionProps {
     control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
     licensedStates?: (typeof State.ENTRIES)[number][];
+    supervisor: ProviderProfile.ProviderProfile['supervisor'];
     setSupervisor: (
         supervisor: ProviderProfile.ProviderProfile['supervisor']
     ) => void;
@@ -22,6 +23,7 @@ export const CredentialsSection = ({
     isTherapist,
     control,
     disabled,
+    supervisor,
     licensedStates = [],
     setSupervisor,
 }: IdentitySectionProps) => {
@@ -44,6 +46,7 @@ export const CredentialsSection = ({
                             stateOptions={licensedStates}
                         />
                         <SupervisorInput
+                            supervisor={supervisor}
                             setSupervisor={setSupervisor}
                             control={control}
                             disabled={disabled}

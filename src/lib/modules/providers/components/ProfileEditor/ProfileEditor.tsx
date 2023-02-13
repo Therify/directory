@@ -2,8 +2,14 @@ import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { NewClientStatus, Practice, ProfileType } from '@prisma/client';
 import { styled, SxProps, useTheme } from '@mui/material/styles';
-import { Box, Drawer, useMediaQuery } from '@mui/material';
-import { Button, TwoColumnGrid } from '@/lib/shared/components/ui';
+import { Box, CircularProgress, Drawer, useMediaQuery } from '@mui/material';
+import {
+    Button,
+    H3,
+    LoadingContainer,
+    Modal,
+    TwoColumnGrid,
+} from '@/lib/shared/components/ui';
 import {
     Language,
     Modality,
@@ -17,6 +23,7 @@ import { CloudinaryUploadResult } from '../../../media/components/hooks/userClou
 interface ProfileEditorProps {
     providerProfile?: Partial<ProviderProfile.ProviderProfile>;
     practice: Pick<Practice, 'id' | 'name' | 'city' | 'state' | 'website'>;
+    isSavingProfile: boolean;
     onBack?: () => void;
     onSubmit: (profile: ProviderProfile.ProviderProfile) => Promise<void>;
 }
@@ -24,6 +31,7 @@ interface ProfileEditorProps {
 export function ProfileEditor({
     providerProfile,
     practice,
+    isSavingProfile,
     onBack,
     onSubmit,
 }: ProfileEditorProps) {
@@ -87,13 +95,11 @@ export function ProfileEditor({
 
     useEffect(
         function manageSlidingScaleRates() {
-            const minimumRate = parseInt(
-                providerProfileForm.getValues('minimumRate')?.toString() ?? '0'
-            );
+            const minimumRate = providerProfileForm.getValues('minimumRate');
             if (watchedProfile.offersSlidingScale) {
                 providerProfileForm.setValue('maximumRate', minimumRate + 40);
             } else {
-                providerProfileForm.setValue('maximumRate', minimumRate);
+                providerProfileForm.setValue('maximumRate', null);
             }
         },
         [watchedProfile.offersSlidingScale, providerProfileForm]
@@ -133,51 +139,81 @@ export function ProfileEditor({
     };
 
     return (
-        <TwoColumnGrid
-            fillSpace
-            leftSlotSx={{ ...SLOT_STYLES, position: 'relative' }}
-            rightSlotSx={{ ...SLOT_STYLES, ...HIDDEN_ON_MOBILE }}
-            leftSlot={
-                <>
+        <>
+            <TwoColumnGrid
+                fillSpace
+                leftSlotSx={{ ...SLOT_STYLES, position: 'relative' }}
+                rightSlotSx={{ ...SLOT_STYLES, ...HIDDEN_ON_MOBILE }}
+                leftSlot={
+                    <>
+                        <SlotWrapper>
+                            <ProfileEditorForm
+                                control={providerProfileForm.control}
+                                onDeleteImage={onDeleteImage}
+                                onImageUploadSuccess={onImageUploadSuccess}
+                                onImageUploadError={onImageUploadError}
+                                licensedStates={licensedStates}
+                                onSubmitForm={() => {
+                                    onSubmit(providerProfileForm.getValues());
+                                }}
+                                isSubmitDisabled={
+                                    !providerProfileForm.formState.isValid ||
+                                    providerProfileForm.formState
+                                        .isSubmitting ||
+                                    !providerProfileForm.formState.isDirty
+                                }
+                                isSubmittingForm={isSavingProfile}
+                                onBack={onBack}
+                                onShowProfilePreview={() => {
+                                    setShowProfilePreview(true);
+                                }}
+                                setSupervisor={(supervisor) =>
+                                    providerProfileForm.setValue(
+                                        'supervisor',
+                                        supervisor
+                                    )
+                                }
+                                watchedProfileValues={{
+                                    id: watchedProfile.id,
+                                    designation: watchedProfile.designation,
+                                    givenName: watchedProfile.givenName,
+                                    surname: watchedProfile.surname,
+                                    profileImageUrl:
+                                        watchedProfile.profileImageUrl,
+                                    offersSlidingScale:
+                                        watchedProfile.offersSlidingScale,
+                                    minimumRate: watchedProfile.minimumRate,
+                                    supervisor: watchedProfile.supervisor,
+                                }}
+                            />
+                        </SlotWrapper>
+                        {isMobileView && (
+                            <PreviewDrawer
+                                open={showProfilePreview}
+                                anchor="top"
+                                onClose={() => setShowProfilePreview(false)}
+                            >
+                                <ProviderProfileUi
+                                    practice={practice}
+                                    {...watchedProfile}
+                                    bio={
+                                        watchedProfile.bio ||
+                                        'Tell us about yourself.'
+                                    }
+                                />
+                                <FloatingButton
+                                    color="secondary"
+                                    onClick={() => setShowProfilePreview(false)}
+                                >
+                                    Close
+                                </FloatingButton>
+                            </PreviewDrawer>
+                        )}
+                    </>
+                }
+                rightSlot={
                     <SlotWrapper>
-                        <ProfileEditorForm
-                            control={providerProfileForm.control}
-                            onDeleteImage={onDeleteImage}
-                            onImageUploadSuccess={onImageUploadSuccess}
-                            onImageUploadError={onImageUploadError}
-                            licensedStates={licensedStates}
-                            onSubmitForm={() => {
-                                onSubmit(providerProfileForm.getValues());
-                            }}
-                            isFormValid={providerProfileForm.formState.isValid}
-                            isSubmittingForm={false}
-                            onBack={onBack}
-                            onShowProfilePreview={() => {
-                                setShowProfilePreview(true);
-                            }}
-                            setSupervisor={(supervisor) =>
-                                providerProfileForm.setValue(
-                                    'supervisor',
-                                    supervisor
-                                )
-                            }
-                            watchedProfileValues={{
-                                id: watchedProfile.id,
-                                designation: watchedProfile.designation,
-                                givenName: watchedProfile.givenName,
-                                profileImageUrl: watchedProfile.profileImageUrl,
-                                offersSlidingScale:
-                                    watchedProfile.offersSlidingScale,
-                                minimumRate: watchedProfile.minimumRate,
-                            }}
-                        />
-                    </SlotWrapper>
-                    {isMobileView && (
-                        <PreviewDrawer
-                            open={showProfilePreview}
-                            anchor="top"
-                            onClose={() => setShowProfilePreview(false)}
-                        >
+                        {!isMobileView && (
                             <ProviderProfileUi
                                 practice={practice}
                                 {...watchedProfile}
@@ -186,30 +222,32 @@ export function ProfileEditor({
                                     'Tell us about yourself.'
                                 }
                             />
-                            <FloatingButton
-                                color="secondary"
-                                onClick={() => setShowProfilePreview(false)}
-                            >
-                                Close
-                            </FloatingButton>
-                        </PreviewDrawer>
-                    )}
-                </>
-            }
-            rightSlot={
-                <SlotWrapper>
-                    {!isMobileView && (
-                        <ProviderProfileUi
-                            practice={practice}
-                            {...watchedProfile}
-                            bio={
-                                watchedProfile.bio || 'Tell us about yourself.'
-                            }
-                        />
-                    )}
-                </SlotWrapper>
-            }
-        />
+                        )}
+                    </SlotWrapper>
+                }
+            />
+            <Modal
+                isOpen={isSavingProfile}
+                showCloseButton={false}
+                onClose={() => {}}
+                headerSlot={
+                    <H3 textAlign="center" width="100%">
+                        {watchedProfile.id
+                            ? `Updating ${
+                                  watchedProfile.givenName || 'Provider'
+                              }'s Profile`
+                            : `Creating ${
+                                  watchedProfile.givenName || 'Provider'
+                              }'s Profile`}
+                    </H3>
+                }
+                postBodySlot={
+                    <LoadingContainer isLoading>
+                        <CircularProgress />
+                    </LoadingContainer>
+                }
+            />
+        </>
     );
 }
 const SCROLLBAR_STYLE: SxProps = {

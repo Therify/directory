@@ -6,23 +6,21 @@ interface MaximumRateInputProps {
     control: Control<ProviderProfile.ProviderProfile>;
     minimumRate?: number;
     disabled?: boolean;
-    visible?: boolean;
 }
 
 export const MaximumRateInput = ({
     control,
     minimumRate = 0,
     disabled,
-    visible,
 }: MaximumRateInputProps) => {
-    const minimumAcceptableRate = parseInt(minimumRate.toString()) + 5;
+    const minimumAcceptableRate = minimumRate + 10;
     return (
         <Controller
             control={control}
             name="maximumRate"
             defaultValue={minimumRate}
             rules={{
-                min: visible ? minimumAcceptableRate : undefined,
+                min: minimumAcceptableRate,
             }}
             render={({
                 field: { onChange, onBlur, value, name },
@@ -40,14 +38,15 @@ export const MaximumRateInput = ({
                             greaterThanThreshold: minimumAcceptableRate,
                         }
                     )}
+                    onChange={(e) => {
+                        onChange(parseInt(e.target.value));
+                    }}
                     {...{
                         disabled,
-                        onChange,
                         onBlur,
                         value,
                         name,
                     }}
-                    wrapperSx={!visible ? { display: 'none' } : undefined}
                 />
             )}
         />

@@ -1,14 +1,9 @@
-import { CreateProviderProfileForPractice } from '@/lib/modules/provider-profiles/features';
 import { ListingStatus } from '@prisma/client';
 
 import { CreateProviderProfileForPracticeTransaction } from './definition';
 
-export const factory: (
-    input: CreateProviderProfileForPractice.Input
-) => CreateProviderProfileForPracticeTransaction['createDirectoryListing'] = ({
-    profile,
-}) => {
-    return {
+export const step: CreateProviderProfileForPracticeTransaction['createDirectoryListing'] =
+    {
         async commit(
             { prisma },
             {
@@ -40,4 +35,3 @@ export const factory: (
             });
         },
     };
-};

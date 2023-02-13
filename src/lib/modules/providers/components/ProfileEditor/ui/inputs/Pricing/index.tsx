@@ -36,12 +36,13 @@ export const PricingInputs = ({
                     }
                     disabled={disabled}
                 />
-                <MaximumRateInput
-                    control={control}
-                    disabled={disabled}
-                    minimumRate={minimumRate}
-                    visible={offersSlidingScale}
-                />
+                {offersSlidingScale && (
+                    <MaximumRateInput
+                        control={control}
+                        disabled={disabled}
+                        minimumRate={minimumRate}
+                    />
+                )}
             </PriceScaleContainer>
             <Caption>Your rate in dollars per 45 minute session</Caption>
         </Box>

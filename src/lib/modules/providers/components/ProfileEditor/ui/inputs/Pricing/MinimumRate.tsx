@@ -37,10 +37,12 @@ export const MinimumRateInput = ({
                         greaterThanThreshold: 0,
                     }
                 )}
+                onChange={(e) => {
+                    onChange(parseInt(e.target.value));
+                }}
                 {...{
                     disabled,
                     label,
-                    onChange,
                     onBlur,
                     value,
                     name,

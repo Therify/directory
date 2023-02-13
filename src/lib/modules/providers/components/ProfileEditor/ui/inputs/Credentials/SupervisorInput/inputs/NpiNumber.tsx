@@ -22,12 +22,23 @@ export const NpiNumberInput = ({
         control={control}
         name="supervisor.npiNumber"
         defaultValue=""
-        render={({ field: { onChange, onBlur, value, name } }) => (
+        rules={{
+            required: {
+                value: true,
+                message: 'NPI Number is required',
+            },
+        }}
+        render={({
+            field: { onChange, onBlur, value, name },
+            fieldState: { error, isTouched },
+        }) => (
             <Input
                 fullWidth
+                required
                 id="npiNumber"
                 label="NPI Number"
                 placeholder="Supervisor NPI Number"
+                errorMessage={isTouched ? error?.message : undefined}
                 onChange={(e) => {
                     onChange(e);
                     storeLocalData('npiNumber', e.target.value);
