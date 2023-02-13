@@ -102,14 +102,18 @@ const StateContainer = styled(Box)(({ theme }) => ({
 
     '& .state-zip': {
         display: 'flex',
+        flexDirection: 'column',
         width: '100%',
         margin: 0,
-        [theme.breakpoints.up('md')]: {
-            paddingLeft: theme.spacing(2),
-        },
-        '& > *:first-of-type': {
+        '& > *': {
             flex: 1,
-            marginRight: theme.spacing(4),
+        },
+        [theme.breakpoints.up('md')]: {
+            flexDirection: 'row',
+            paddingLeft: theme.spacing(2),
+            '& > *:first-of-type': {
+                marginRight: theme.spacing(4),
+            },
         },
     },
     '& > *': {

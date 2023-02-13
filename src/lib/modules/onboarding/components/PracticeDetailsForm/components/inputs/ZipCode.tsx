@@ -28,7 +28,6 @@ export const ZipCodeInput = ({
         }) => (
             <Input
                 required
-                fullWidth
                 id="zip-code"
                 placeholder="Zip Code *"
                 type="tel"
