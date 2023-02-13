@@ -1,11 +1,18 @@
 import { factory as getProviderProfileByUserIdFactory } from './getProfileByUserId';
 import { prismaMock } from '@/lib/prisma/__mock__';
-import { NewClientStatus, ProfileType, Role, User } from '@prisma/client';
+import {
+    NewClientStatus,
+    Prisma,
+    ProfileType,
+    Role,
+    User,
+} from '@prisma/client';
 import { generateMock } from '@anatine/zod-mock';
 import { ProvidersServiceParams } from '../../params';
-import { ProviderProfile } from '@/lib/shared/types';
+import { Pronoun, ProviderProfile } from '@/lib/shared/types';
 import { ProviderProfileSchema as ProviderProfileDbSchema } from '@/lib/shared/schema';
 import { z } from 'zod';
+import { mockProviderProfile } from './__mocks__/providerProfile';
 
 const mockUserResult = {
     id: 'test-user-id',
@@ -15,9 +22,7 @@ const mockUserResult = {
     givenName: 'Test',
     surname: 'Jackson',
     createdAt: new Date('2021-03-01'),
-    providerProfile: {
-        id: 'test-provider-id',
-    } as ProviderProfile.ProviderProfile,
+    providerProfile: mockProviderProfile,
 } as unknown as User & { providerProfile: ProviderProfile.ProviderProfile };
 
 describe('getProfileByUserId', () => {
@@ -25,27 +30,23 @@ describe('getProfileByUserId', () => {
         const getProviderProfileByUserId = getProviderProfileByUserIdFactory({
             prisma: prismaMock,
         } as unknown as ProvidersServiceParams);
-        const practiceStartDate = new Date('2021-03-01');
         const mockDbProfile: z.infer<typeof ProviderProfileDbSchema> = {
-            ...generateMock(ProviderProfileDbSchema),
-            practiceStartDate,
-            designation: ProfileType.therapist,
-            newClientStatus: NewClientStatus.accepting,
+            ...mockProviderProfile,
+            practiceStartDate: new Date(mockProviderProfile.practiceStartDate!),
+            id: mockProviderProfile.id!,
+            supervisor: null as unknown as {},
+            createdAt: new Date('2021-03-01'),
+            updatedAt: new Date('2021-03-01'),
         };
         prismaMock.user.findUniqueOrThrow.mockResolvedValue({
             ...mockUserResult,
-            credentials: [],
-            supervisor: null,
             providerProfile: mockDbProfile,
         } as unknown as User & { providerProfile: ProviderProfile.ProviderProfile });
         const result = await getProviderProfileByUserId({
             userId: mockUserResult.id,
         });
         await expect(result).toEqual({
-            profile: {
-                ...mockDbProfile,
-                practiceStartDate: practiceStartDate.toISOString(),
-            },
+            profile: mockProviderProfile,
         });
     });
 
