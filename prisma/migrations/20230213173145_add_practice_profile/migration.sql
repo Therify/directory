@@ -7,8 +7,11 @@ ALTER TABLE "practice_provider_invitations" DROP CONSTRAINT "practice_provider_i
 -- DropIndex
 DROP INDEX "plans_user_id_key";
 
+-- CreateEnum
+CREATE TYPE "NewClientStatus" AS ENUM ('accepting', 'waitlist', 'not_accepting');
+
 -- AlterTable
-ALTER TABLE "provider_profiles" ALTER COLUMN "new_client_status" SET DEFAULT 'not_accepting';
+ALTER TABLE "provider_profiles" ADD COLUMN     "new_client_status" "NewClientStatus" SET DEFAULT 'not_accepting';
 
 -- CreateTable
 CREATE TABLE "practice_profiles" (
