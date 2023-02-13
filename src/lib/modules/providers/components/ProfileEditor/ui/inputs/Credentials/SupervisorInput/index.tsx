@@ -82,6 +82,8 @@ export const SupervisorInput = ({
                 }}
                 style={{ marginBottom: theme.spacing(4) }}
             />
+            {/* // TODO: this components logs an error about uncontrolled inputs
+            becoming controlled */}
             {isSupervised && (
                 <SupervisorForm
                     disabled={disabled}

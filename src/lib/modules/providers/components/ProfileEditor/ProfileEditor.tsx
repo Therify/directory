@@ -99,7 +99,7 @@ export function ProfileEditor({
             if (watchedProfile.offersSlidingScale) {
                 providerProfileForm.setValue('maximumRate', minimumRate + 40);
             } else {
-                providerProfileForm.setValue('maximumRate', minimumRate);
+                providerProfileForm.setValue('maximumRate', null);
             }
         },
         [watchedProfile.offersSlidingScale, providerProfileForm]
