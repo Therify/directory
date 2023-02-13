@@ -53,6 +53,7 @@ interface EditorFormProps {
         offersSlidingScale: ProviderProfile.ProviderProfile['offersSlidingScale'];
         minimumRate: ProviderProfile.ProviderProfile['minimumRate'];
         givenName: ProviderProfile.ProviderProfile['givenName'];
+        surname: ProviderProfile.ProviderProfile['surname'];
         supervisor: ProviderProfile.ProviderProfile['supervisor'];
     };
 }
@@ -230,7 +231,7 @@ export const ProfileEditorForm = ({
                 title={isNewProfile ? 'Create Profile' : 'Update Profile'}
                 message={
                     isNewProfile
-                        ? `Are you sure you want to create this profile for ${watchedProfileValues.givenName}?`
+                        ? `Are you sure you want to create this profile for ${watchedProfileValues.givenName} ${watchedProfileValues.surname}?`
                         : 'Are you sure you want to save these changes?'
                 }
                 fullWidthButtons

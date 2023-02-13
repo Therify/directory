@@ -34,7 +34,11 @@ export default function PracticeProfileCreatePage() {
         `providers.${CreateProviderProfileForPractice.TRPC_ROUTE}`,
         {
             onSuccess: ({ profileId, errors }) => {
-                if (profileId) return setCreatedProfileId(profileId);
+                if (profileId) {
+                    router.push(
+                        `${URL_PATHS.PROVIDERS.PRACTICE.PROFILE_EDITOR}/${profileId}`
+                    );
+                }
                 const [error] = errors;
             },
         }

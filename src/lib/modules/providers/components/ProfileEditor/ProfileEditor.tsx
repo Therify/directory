@@ -177,6 +177,7 @@ export function ProfileEditor({
                                     id: watchedProfile.id,
                                     designation: watchedProfile.designation,
                                     givenName: watchedProfile.givenName,
+                                    surname: watchedProfile.surname,
                                     profileImageUrl:
                                         watchedProfile.profileImageUrl,
                                     offersSlidingScale:
