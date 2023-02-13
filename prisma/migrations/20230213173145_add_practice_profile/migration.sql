@@ -11,7 +11,7 @@ DROP INDEX "plans_user_id_key";
 CREATE TYPE "NewClientStatus" AS ENUM ('accepting', 'waitlist', 'not_accepting');
 
 -- AlterTable
-ALTER TABLE "provider_profiles" ADD COLUMN     "new_client_status" "NewClientStatus" SET DEFAULT 'not_accepting';
+ALTER TABLE "provider_profiles" ADD COLUMN  "new_client_status" "NewClientStatus" DEFAULT 'not_accepting';
 
 -- CreateTable
 CREATE TABLE "practice_profiles" (
