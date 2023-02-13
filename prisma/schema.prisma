@@ -78,7 +78,7 @@ enum ListingStatus {
 model DirectoryListing {
   practice          Practice        @relation(fields: [practiceId], references: [id])
   practiceId        String          @map("practice_id")
-  profile           ProviderProfile @relation(fields: [providerProfileId], references: [id])
+  profile           ProviderProfile @relation(fields: [providerProfileId], references: [id], onDelete: Cascade)
   providerProfileId String          @unique @map("provider_profile_id")
   status            ListingStatus
   createdAt         DateTime        @default(now()) @map("created_at") @db.Timestamp(6)
@@ -194,7 +194,7 @@ model PracticeProvider {
 model PracticeProfile {
   practice   Practice        @relation(fields: [practiceId], references: [id])
   practiceId String          @map("practice_id")
-  profile    ProviderProfile @relation(fields: [profileId], references: [id])
+  profile    ProviderProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
   profileId  String          @unique @map("profile_id")
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -219,7 +219,7 @@ model PracticeProviderInvitation {
   recipientEmail String           @map("recipient_email")
   sender         User             @relation(fields: [senderId], references: [id])
   senderId       String           @map("sender_id")
-  profile        ProviderProfile? @relation(fields: [profileId], references: [id])
+  profile        ProviderProfile? @relation(fields: [profileId], references: [id], onDelete: Cascade)
   profileId      String?          @map("profile_id")
 
   createdAt DateTime @default(now()) @map("created_at")

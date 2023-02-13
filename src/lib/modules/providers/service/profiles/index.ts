@@ -4,6 +4,7 @@ import { ListPracticeProfilesByUserId } from './list-practice-profiles-by-user-i
 import { GetProfileByUserId } from './get-profile-by-user-id';
 import { GetProfileById } from './get-profile-by-id';
 import { UpdateProviderProfile } from './update-provider-profile';
+import { DeleteProviderProfile } from './delete-provider-profile';
 
 export const profilesFactory = (params: ProvidersServiceParams) => ({
     createProfileForPractice: CreateProviceProfileForPractice.factory(params),
@@ -11,4 +12,5 @@ export const profilesFactory = (params: ProvidersServiceParams) => ({
     getProfileByUserId: GetProfileByUserId.factory(params),
     getProfileById: GetProfileById.factory(params),
     updateProviderProfile: UpdateProviderProfile.factory(params),
+    deleteProviderProfile: DeleteProviderProfile.factory(params),
 });

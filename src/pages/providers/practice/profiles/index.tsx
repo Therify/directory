@@ -19,6 +19,9 @@ import {
     PageContentContainer,
     LoadingContainer,
     Alert,
+    Input,
+    CenteredContainer,
+    Divider,
 } from '@/lib/shared/components/ui';
 import { SideNavigationPage } from '@/lib/shared/components/features/pages';
 import {
@@ -32,7 +35,7 @@ import { RBAC } from '@/lib/shared/utils';
 import { useEffect, useState } from 'react';
 import { ListingStatus, Role } from '@prisma/client';
 import { styled, useTheme } from '@mui/material/styles';
-import { Box } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 import {
     EditRounded,
     DeleteRounded,
@@ -48,7 +51,10 @@ import { DirectoryListingSchema } from '@/lib/shared/schema';
 import { z } from 'zod';
 import { trpc } from '@/lib/shared/utils/trpc';
 import { ProviderProfile } from '@/lib/shared/types';
-import { ListPracticeProfilesByUserId } from '@/lib/modules/providers/features/profiles';
+import {
+    ListPracticeProfilesByUserId,
+    DeleteProviderProfile,
+} from '@/lib/modules/providers/features/profiles';
 
 export const getServerSideProps = RBAC.requireProviderAuth(
     withPageAuthRequired()
@@ -73,10 +79,14 @@ export default function PracticeProfilesPage() {
     const router = useRouter();
     const theme = useTheme();
     const [showNewProfileModal, setShowNewProfileModal] = useState(false);
+    const [profileToDelete, setProfileToDelete] =
+        useState<ProviderProfile.ProviderProfile>();
     const {
         data,
         error: trpcError,
         isLoading: isLoadingProfiles,
+        refetch: refetchProfiles,
+        isRefetching: isRefetchingProfiles,
     } = trpc.useQuery(
         [
             `providers.${ListPracticeProfilesByUserId.TRPC_ROUTE}`,
@@ -89,17 +99,37 @@ export default function PracticeProfilesPage() {
             enabled: Boolean(user?.userId),
         }
     );
+
+    const { mutate: deleteProfile, isLoading: isDeletingProfile } =
+        trpc.useMutation(`providers.${DeleteProviderProfile.TRPC_ROUTE}`, {
+            onSuccess: ({ success, errors }) => {
+                if (success) {
+                    refetchProfiles();
+                    setProfileToDelete(undefined);
+                }
+                const [error] = errors;
+                if (error) {
+                    console.error(error);
+                }
+            },
+        });
+
     const { profiles, errors } = data ?? {
         profiles: [] as ProviderProfile.ProviderProfile[],
         errors: [] as string[],
     };
-    const isLoading = isLoadingUser || isLoadingProfiles;
+    const isLoading =
+        isLoadingUser || isLoadingProfiles || isRefetchingProfiles;
     const [queryError] = errors;
     const errorMessage = trpcError?.message || queryError;
     const canCreateProfile =
         user?.plan?.seats !== undefined &&
         profiles &&
         profiles.length < user.plan.seats;
+    const isOverPlanCapacity =
+        user?.plan?.seats !== undefined &&
+        profiles &&
+        profiles.length > user.plan.seats;
 
     useEffect(() => {
         if (user?.isPracticeAdmin === false) {
@@ -135,7 +165,7 @@ export default function PracticeProfilesPage() {
                                 alignItems="center"
                                 justifyContent="flex-start"
                             >
-                                {!canCreateProfile && (
+                                {isOverPlanCapacity && (
                                     <WarningRounded
                                         color="error"
                                         style={{
@@ -145,7 +175,7 @@ export default function PracticeProfilesPage() {
                                 )}
                                 <SeatCount
                                     italic
-                                    isOverPlanCapacity={!canCreateProfile}
+                                    isOverPlanCapacity={isOverPlanCapacity}
                                 >
                                     {profiles.length}{' '}
                                     {user?.plan?.seats &&
@@ -225,7 +255,18 @@ export default function PracticeProfilesPage() {
                                                 {badgeText}
                                             </Badge>
                                         </Box>
-                                        <ProfileActions profile={profile} />
+                                        <ProfileActions
+                                            profile={profile}
+                                            onDelete={() =>
+                                                setProfileToDelete(profile)
+                                            }
+                                            onInvite={() =>
+                                                console.log(
+                                                    'TODO: invite provider for provile: ',
+                                                    profile
+                                                )
+                                            }
+                                        />
                                     </Box>
                                 </ListItem>
                             );
@@ -258,6 +299,19 @@ export default function PracticeProfilesPage() {
                     secondaryButtonEndIcon={<SendRounded />}
                 />
             )}
+            {profileToDelete && (
+                <DeleteProfileModal
+                    profile={profileToDelete}
+                    onClose={() => setProfileToDelete(undefined)}
+                    onDelete={() =>
+                        deleteProfile({
+                            profileId: profileToDelete.id!,
+                            userId: user?.userId!,
+                        })
+                    }
+                    isDeleting={isDeletingProfile}
+                />
+            )}
         </SideNavigationPage>
     );
 }
@@ -276,6 +330,63 @@ const SeatCount = styled(Caption, {
     color: isOverPlanCapacity ? theme.palette.error.main : undefined,
     margin: 0,
 }));
+
+const DeleteProfileModal = ({
+    profile,
+    onClose,
+    onDelete,
+    isDeleting,
+}: {
+    onClose: () => void;
+    onDelete: () => void;
+    profile: ProviderProfile.ProviderProfile;
+    isDeleting: boolean;
+}) => {
+    const [value, setValue] = useState('');
+    const providerName = `${profile.givenName} ${profile.surname}`.trim();
+
+    return (
+        <Modal
+            isOpen
+            onClose={onClose}
+            title="Delete Profile"
+            message={
+                isDeleting
+                    ? 'Deleting profile'
+                    : `Are you sure yout want to delete ${providerName}'s profile? This cannot be undone.`
+            }
+            fullWidthButtons
+            primaryButtonDisabled={isDeleting || value !== providerName}
+            primaryButtonText="Delete"
+            primaryButtonColor="error"
+            primaryButtonOnClick={onDelete}
+            primaryButtonEndIcon={<DeleteRounded />}
+            secondaryButtonText="Cancel"
+            secondaryButtonDisabled={isDeleting}
+            secondaryButtonOnClick={onClose}
+            postBodySlot={
+                isDeleting ? (
+                    <CenteredContainer>
+                        <CircularProgress />
+                    </CenteredContainer>
+                ) : (
+                    <Box width="100%">
+                        <Divider />
+                        <Input
+                            required
+                            fullWidth
+                            label={`Type "${providerName}" to continue`}
+                            placeholder={providerName}
+                            error={value !== '' && value !== providerName}
+                            onChange={(e) => setValue(e.target.value)}
+                            value={value}
+                        />
+                    </Box>
+                )
+            }
+        />
+    );
+};
 
 const getListingAction = (status?: ListingStatus) => {
     switch (status) {
@@ -309,10 +420,14 @@ const getListingAction = (status?: ListingStatus) => {
 
 const ProfileActions = ({
     profile,
+    onDelete,
+    onInvite,
 }: {
     profile: ProviderProfile.ProviderProfile & {
         directoryListing?: z.infer<typeof DirectoryListingSchema>;
     };
+    onDelete: () => void;
+    onInvite: () => void;
 }) => {
     const router = useRouter();
     const theme = useTheme();
@@ -328,16 +443,12 @@ const ProfileActions = ({
         {
             text: 'Delete',
             icon: <DeleteRounded />,
-            onClick: () => {
-                console.log('TODO: handle delete', profile.id);
-            },
+            onClick: onDelete,
         },
         {
             text: 'Invite editor',
             icon: <AddRounded />,
-            onClick: () => {
-                console.log('TODO: handle invite', profile.id);
-            },
+            onClick: onInvite,
         },
         getListingAction(profile.directoryListing?.status),
     ];

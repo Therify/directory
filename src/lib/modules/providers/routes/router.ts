@@ -6,6 +6,7 @@ import {
     createProviderProfileForPracticeResolver,
     getProviderProfileByIdResolver,
     updateProviderProfileResolver,
+    deleteProviderProfileResolver,
 } from './resolvers';
 import { Context } from '@/lib/server/context';
 import {
@@ -14,6 +15,7 @@ import {
     CreateProviderProfileForPractice,
     GetProviderProfileById,
     UpdateProviderProfile,
+    DeleteProviderProfile,
 } from '@/lib/modules/providers/features/profiles';
 
 export const router = trpc
@@ -42,4 +44,9 @@ export const router = trpc
         input: UpdateProviderProfile.inputSchema,
         output: UpdateProviderProfile.outputSchema,
         resolve: updateProviderProfileResolver,
+    })
+    .mutation(DeleteProviderProfile.TRPC_ROUTE, {
+        input: DeleteProviderProfile.inputSchema,
+        output: DeleteProviderProfile.outputSchema,
+        resolve: deleteProviderProfileResolver,
     });
