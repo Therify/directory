@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { Box, CircularProgress } from '@mui/material';
@@ -25,23 +25,33 @@ import { useRegistrationStorage } from './hooks';
 const REGISTRATION_STEPS = ['Registration', 'Payment', 'Onboarding'] as const;
 
 interface ProviderRegistrationFlowProps {
+    formTitle?: ReactNode;
     registerProvider: (providerDetails: RegisterProvider.Input) => void;
     errorMessage?: string;
     clearErrorMessage: () => void;
     isRegisteringProvider: boolean;
     emailValidationUrl: string;
+    isEmailReadOnly?: boolean;
     isRegistrationComplete: boolean;
     role: typeof ROLES.PROVIDER_THERAPIST | typeof ROLES.PROVIDER_COACH;
+    defaultUserValues?: {
+        emailAddress?: string;
+        givenName?: string;
+        surname?: string;
+    };
 }
 
 export const ProviderRegistrationFlow = ({
+    formTitle,
     registerProvider,
     errorMessage,
     isRegisteringProvider,
     isRegistrationComplete,
+    isEmailReadOnly,
     emailValidationUrl,
     clearErrorMessage,
     role,
+    defaultUserValues,
 }: ProviderRegistrationFlowProps) => {
     const isRegistrationSuccessful = isRegistrationComplete && !errorMessage;
     const isRegistering = isRegisteringProvider || isRegistrationSuccessful;
@@ -51,7 +61,11 @@ export const ProviderRegistrationFlow = ({
         useRegistrationStorage();
     const providerDetailsForm = useForm<RegisterProvider.Input>({
         mode: 'onChange',
-        defaultValues: { ...getStoredProviderDetails(), role },
+        defaultValues: {
+            ...getStoredProviderDetails(),
+            ...defaultUserValues,
+            role,
+        },
     });
 
     const handleSubmit = () => {
@@ -101,6 +115,8 @@ export const ProviderRegistrationFlow = ({
                     </CenteredContainer>
                 ) : (
                     <ProviderRegistrationForm
+                        isEmailReadOnly={isEmailReadOnly}
+                        formTitle={formTitle}
                         isEmailUnique={emailsCheckedForUniqueness[emailAddress]}
                         control={providerDetailsForm.control}
                         password={providerDetailsForm.watch('password')}
