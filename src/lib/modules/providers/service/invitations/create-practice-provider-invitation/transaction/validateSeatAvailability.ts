@@ -42,36 +42,37 @@ export const factory: (
             if (isAfter(new Date(), plan.endDate))
                 throw new Error('Plan has expired');
 
-            if (!profileId) return;
-            // Active/Pending invitations without a profileId count towards the seat limit
-            // because they represent the intent for the recipient to create a profile and take a seat.
-            const invitationsCount =
-                await prisma.practiceProviderInvitation.count({
+            if (profileId === undefined) {
+                // Active/Pending invitations without a profileId count towards the seat limit
+                // because they represent the intent for the recipient to create a profile at the practice.
+                const invitationsCount =
+                    await prisma.practiceProviderInvitation.count({
+                        where: {
+                            practice: {
+                                userId: senderId,
+                            },
+                            status: {
+                                in: [
+                                    InvitationStatus.pending,
+                                    InvitationStatus.accepted,
+                                ],
+                            },
+                            profileId: null,
+                        },
+                    });
+                const profilesCount = await prisma.practiceProfile.count({
                     where: {
                         practice: {
                             userId: senderId,
                         },
-                        status: {
-                            in: [
-                                InvitationStatus.pending,
-                                InvitationStatus.accepted,
-                            ],
-                        },
-                        profileId: null,
                     },
                 });
-            const profilesCount = await prisma.practiceProfile.count({
-                where: {
-                    practice: {
-                        userId: senderId,
-                    },
-                },
-            });
 
-            if (invitationsCount + profilesCount >= plan.seats) {
-                throw new Error(
-                    'No seats available. Please upgrade your plan to invite a provider.'
-                );
+                if (invitationsCount + profilesCount >= plan.seats) {
+                    throw new Error(
+                        'No seats available. Please upgrade your plan to invite a provider.'
+                    );
+                }
             }
         },
         rollback() {},

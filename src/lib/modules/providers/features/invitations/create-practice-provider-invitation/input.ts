@@ -6,6 +6,7 @@ export const schema = z.object({
     recipientEmail: PracticeProviderInvitationSchema.shape.recipientEmail,
     senderId: PracticeProviderInvitationSchema.shape.senderId,
     profileId: z.string().optional(),
+    designation: PracticeProviderInvitationSchema.shape.designation,
     expiresInDays: z.number().optional(),
 });
 

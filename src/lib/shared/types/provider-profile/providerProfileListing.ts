@@ -21,15 +21,19 @@ export const schema = ProviderProfileSchema.pick({
     offersInPerson: true,
     offersVirtual: true,
     specialties: true,
+    designation: true,
 }).extend({
     pronouns: Pronoun.schema,
     credentials: ProviderCredential.schema.array(),
     acceptedInsurances: AcceptedInsurance.schema.array(),
-    invitation: PracticeProviderInvitationSchema.omit({
-        createdAt: true,
-        updatedAt: true,
+    invitation: PracticeProviderInvitationSchema.pick({
+        id: true,
+        status: true,
+        recipientEmail: true,
+        expiresAt: true,
     })
         .extend({
+            expiresAt: z.string().nullable(),
             status: z.enum([
                 InvitationStatus.accepted,
                 InvitationStatus.pending,

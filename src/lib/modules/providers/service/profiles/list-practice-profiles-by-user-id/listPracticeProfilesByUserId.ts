@@ -45,6 +45,7 @@ export function factory({ prisma }: ProvidersServiceParams) {
                         id: true,
                         status: true,
                         recipientEmail: true,
+                        expiresAt: true,
                     },
                 },
             },
@@ -52,9 +53,16 @@ export function factory({ prisma }: ProvidersServiceParams) {
         const profiles = rawProfiles.map(
             ({ invitations, createdAt, updatedAt, ...profile }) => {
                 const [invitation] = invitations;
+
                 return ProviderProfileListing.validate({
                     ...profile,
-                    invitation: invitation ?? null,
+                    invitation: invitation
+                        ? {
+                              ...invitation,
+                              expiresAt:
+                                  invitation.expiresAt?.toISOString() ?? null,
+                          }
+                        : null,
                     createdAt: createdAt.toISOString(),
                     updatedAt: updatedAt.toISOString(),
                 });
