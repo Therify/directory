@@ -6,6 +6,7 @@ import Text from './components/Text';
 import Footer from './components/Footer';
 import { fontSize, colors, spacing, screens } from './theme';
 import Link from './components/Link';
+import { ReferralEmailProps } from './schema/referralEmail';
 
 interface GenerateMailToProps {
     memberEmail: string;
@@ -51,24 +52,6 @@ const matchIntroductionStyle = `
     }
   }
 `;
-
-interface ReferralEmailProps {
-    member: {
-        state: string;
-        insurance: string;
-        concerns: string[];
-        givenName: string;
-        surname: string;
-        emailAddress: string;
-    };
-    plan?: {
-        numberOfCoveredSessions: number;
-        planName: string;
-    };
-    provider: {
-        givenName?: string;
-    };
-}
 
 const ReferralEmail = ({ member, plan, provider }: ReferralEmailProps) => {
     const memberConcerns = member.concerns ?? [];
