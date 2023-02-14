@@ -87,7 +87,6 @@ export default function PracticeProfilesPage() {
 
     //TODO: Get practice details
     const practiceId = 'cle33hlxp0005v7s8rrpyfh2q';
-    const [showNewProfileModal, setShowNewProfileModal] = useState(false);
     const [invitationProfile, setInvitationProfile] =
         useState<ProviderProfileListing.Type>();
     const [invitationToDelete, setInvitationToDelete] =
@@ -234,7 +233,12 @@ export default function PracticeProfilesPage() {
                         <Box className="admin-controls">
                             {canCreateProfile && (
                                 <Button
-                                    onClick={() => setShowNewProfileModal(true)}
+                                    onClick={() =>
+                                        router.push(
+                                            URL_PATHS.PROVIDERS.PRACTICE
+                                                .PROFILES_CREATE
+                                        )
+                                    }
                                 >
                                     New Profile
                                 </Button>
@@ -253,9 +257,12 @@ export default function PracticeProfilesPage() {
                                 No profiles to show.{' '}
                                 {canCreateProfile && (
                                     <Link
-                                        aria-label="Create a new profile"
+                                        aria-label="Create a profile"
                                         onClick={() =>
-                                            setShowNewProfileModal(true)
+                                            router.push(
+                                                URL_PATHS.PROVIDERS.PRACTICE
+                                                    .PROFILES_CREATE
+                                            )
                                         }
                                     >
                                         Create one!
@@ -392,30 +399,6 @@ export default function PracticeProfilesPage() {
                 </PageContentContainer>
             </LoadingContainer>
 
-            {canCreateProfile && (
-                <Modal
-                    isOpen={showNewProfileModal}
-                    onClose={() => setShowNewProfileModal(false)}
-                    title="Create New Profile"
-                    message="How would you like to create a profile?"
-                    fullWidthButtons
-                    shouldStackButtons
-                    primaryButtonText="Fill out the profile myself"
-                    primaryButtonOnClick={() => {
-                        router.push(
-                            URL_PATHS.PROVIDERS.PRACTICE.PROFILES_CREATE
-                        );
-                    }}
-                    primaryButtonEndIcon={<AddCircleOutlineRounded />}
-                    secondaryButtonText="Invite a provider to create their profile"
-                    secondaryButtonOnClick={() => {
-                        router.push(
-                            URL_PATHS.PROVIDERS.PRACTICE.PROVIDER_INVITE
-                        );
-                    }}
-                    secondaryButtonEndIcon={<SendRounded />}
-                />
-            )}
             {profileToDelete && (
                 <DeleteProfileModal
                     profile={profileToDelete}
@@ -591,9 +574,6 @@ const DeleteInvitaionModal = ({
     profile: ProviderProfileListing.Type;
     isDeleting: boolean;
 }) => {
-    const [value, setValue] = useState('');
-    const providerName = `${profile.givenName} ${profile.surname}`.trim();
-
     return (
         <Modal
             isOpen
