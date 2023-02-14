@@ -1,5 +1,9 @@
 import { AccountsService } from '@/lib/modules/accounts/service';
 import * as trpcNext from '@trpc/server/adapters/next';
+import {
+    directoryService,
+    DirectoryService,
+} from '@/lib/modules/directory/service';
 import { membersService, MembersService } from '../modules/members/service';
 import {
     notificationsService,
@@ -13,6 +17,7 @@ export interface Context {
     members: MembersService;
     notifications: NotificationsService;
     providers: ProvidersService;
+    directory: DirectoryService;
 }
 export async function createContext(
     opts?: trpcNext.CreateNextContextOptions
@@ -36,5 +41,6 @@ export async function createContext(
         accounts: AccountsService,
         members: membersService,
         providers: ProvidersService,
+        directory: directoryService,
     };
 }

@@ -1,19 +1,23 @@
 import React from 'react';
-import MatchIntroduction from '../MatchIntroduction';
+import ReferralEmail from '../ReferralEmail';
 
 export function withCoveredSession() {
     return (
-        <MatchIntroduction
+        <ReferralEmail
             member={{
                 givenName: 'John',
+                surname: 'Doe',
                 emailAddress: 'john@example.com',
                 state: 'California',
+                concerns: ['Depression', 'Anxiety'],
+                insurance: 'Blue Cross Blue Shield',
             }}
             provider={{
-                giveName: 'Jane',
+                givenName: 'Jane',
             }}
             plan={{
                 numberOfCoveredSessions: 5,
+                planName: 'Gold',
             }}
         />
     );

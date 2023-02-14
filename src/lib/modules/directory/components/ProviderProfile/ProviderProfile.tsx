@@ -74,6 +74,7 @@ export function ProviderProfile({
     languagesSpoken = [],
     credentials = [],
     ageGroups = [],
+    onConnectionRequest,
 }: ProviderProfileProps & ProviderProfileType.ProviderProfile) {
     const isTherapist = designation === ProfileType.therapist;
     const isSmallScreen = useMediaQuery((theme: Theme) =>
@@ -425,7 +426,8 @@ export function ProviderProfile({
                         <ConnectionWidget
                             newClientStatus={newClientStatus}
                             providerName={givenName}
-                            // providerHasBeenSelected={providerHasBeenSelected}
+                            onProviderSelected={onConnectionRequest}
+                            providerHasBeenSelected={providerHasBeenSelected}
                         />
                     </Box>
                 )}

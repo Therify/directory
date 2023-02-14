@@ -23,6 +23,7 @@ export const ConnectionWidget = ({
     providerHasBeenSelected,
     newClientStatus,
     providerName,
+    onProviderSelected,
 }: ConnectionWidgetProps) => {
     if (providerHasBeenSelected) {
         return (
@@ -47,12 +48,17 @@ export const ConnectionWidget = ({
             </ProviderSelectedContainer>
         );
     }
-    return displayAvailability(newClientStatus, providerName);
+    return displayAvailability(
+        newClientStatus,
+        providerName,
+        onProviderSelected
+    );
 };
 
 function displayAvailability(
     newClientStatus: NewClientStatus,
     providerName: string,
+    onProviderSelected?: OnProviderSelectedCallback,
     isMobile: boolean = false
 ) {
     switch (newClientStatus) {
@@ -76,7 +82,19 @@ function displayAvailability(
                             alignItems: 'center',
                         }}
                     >
-                        <Button fullWidth>Select {providerName}</Button>
+                        <Button
+                            fullWidth
+                            onClick={() => {
+                                if (onProviderSelected) {
+                                    onProviderSelected({
+                                        memberId: 'memberId',
+                                        providerId: 'providerId',
+                                    });
+                                }
+                            }}
+                        >
+                            Select {providerName}
+                        </Button>
                     </Box>
                 </AvailabilityContainer>
             );
@@ -129,8 +147,12 @@ const ProviderSelectedContainer = styled(CelebrationContainer)(({ theme }) => ({
     left: 0,
     width: '100%',
     [theme.breakpoints.up('md')]: {
+        minWidth: 570,
+        maxWidth: '100%',
+        position: 'sticky',
+        top: 0,
+        flexDirection: 'column',
         textAlign: 'center',
-        position: 'relative',
     },
 }));
 
