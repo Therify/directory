@@ -22,6 +22,7 @@ import {
     Input,
     CenteredContainer,
     Divider,
+    FormValidation,
 } from '@/lib/shared/components/ui';
 import { SideNavigationPage } from '@/lib/shared/components/features/pages';
 import {
@@ -32,32 +33,30 @@ import {
 } from '@/lib/sitemap';
 import { useTherifyUser } from '@/lib/shared/hooks';
 import { RBAC } from '@/lib/shared/utils';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { InvitationStatus, ListingStatus, Role } from '@prisma/client';
 import { styled, useTheme } from '@mui/material/styles';
-import { Box, CircularProgress, Link } from '@mui/material';
+import { Box, CircularProgress, Link, useMediaQuery } from '@mui/material';
 import {
     EditRounded,
     DeleteRounded,
-    AddRounded,
     WarningRounded,
     VisibilityOffRounded,
     CancelRounded,
     VisibilityRounded,
     SendRounded,
     AddCircleOutlineRounded,
-    CheckCircleRounded,
     PersonAddAlt1Rounded,
+    MailRounded,
+    AccountCircleOutlined,
 } from '@mui/icons-material';
-import { DirectoryListingSchema } from '@/lib/shared/schema';
-import { z } from 'zod';
 import { trpc } from '@/lib/shared/utils/trpc';
 import { ProviderProfileListing } from '@/lib/shared/types';
 import {
     ListPracticeProfilesByUserId,
     DeleteProviderProfile,
 } from '@/lib/modules/providers/features/profiles';
-import { error } from '@/lib/shared/components/themes/therify-design-system/colors';
+import { CreatePracticeProviderInvitation } from '@/lib/modules/providers/features/invitations';
 
 export const getServerSideProps = RBAC.requireProviderAuth(
     withPageAuthRequired()
@@ -81,7 +80,13 @@ export default function PracticeProfilesPage() {
     const { user, isLoading: isLoadingUser } = useTherifyUser();
     const router = useRouter();
     const theme = useTheme();
+    const isMobileWidth = useMediaQuery(theme.breakpoints.down('md'));
+
+    //TODO: Get practice details
+    const practiceId = 'cle33hlxp0005v7s8rrpyfh2q';
     const [showNewProfileModal, setShowNewProfileModal] = useState(false);
+    const [invitationProfile, setInvitationProfile] =
+        useState<ProviderProfileListing.Type>();
     const [profileToDelete, setProfileToDelete] =
         useState<ProviderProfileListing.Type>();
     const {
@@ -116,6 +121,23 @@ export default function PracticeProfilesPage() {
                 }
             },
         });
+
+    const { mutate: createInvitation, isLoading: isCreatingInvitation } =
+        trpc.useMutation(
+            `providers.${CreatePracticeProviderInvitation.TRPC_ROUTE}`,
+            {
+                onSuccess: ({ invitationId, errors }) => {
+                    if (invitationId) {
+                        refetchProfiles();
+                        setInvitationProfile(undefined);
+                    }
+                    const [error] = errors;
+                    if (error) {
+                        console.error(error);
+                    }
+                },
+            }
+        );
 
     const { profiles, errors } = data ?? {
         profiles: [] as ProviderProfileListing.Type[],
@@ -265,22 +287,68 @@ export default function PracticeProfilesPage() {
                                             >
                                                 {name}
                                             </Paragraph>
-                                            <Badge
-                                                size={BADGE_SIZE.SMALL}
-                                                color={badgeColor}
-                                            >
-                                                {badgeText}
-                                            </Badge>
+                                            <BadgeContainer>
+                                                <Badge
+                                                    icon={
+                                                        profile.directoryListing
+                                                            .status ===
+                                                        ListingStatus.listed ? (
+                                                            <VisibilityRounded />
+                                                        ) : (
+                                                            <VisibilityOffRounded />
+                                                        )
+                                                    }
+                                                    size={BADGE_SIZE.SMALL}
+                                                    color={badgeColor}
+                                                >
+                                                    {badgeText}
+                                                </Badge>
+                                                {profile.invitation && (
+                                                    <Badge
+                                                        icon={
+                                                            profile.invitation
+                                                                .status ===
+                                                            InvitationStatus.pending ? (
+                                                                <MailRounded />
+                                                            ) : (
+                                                                <AccountCircleOutlined />
+                                                            )
+                                                        }
+                                                        size={BADGE_SIZE.SMALL}
+                                                        color={
+                                                            profile.invitation
+                                                                .status ===
+                                                            InvitationStatus.pending
+                                                                ? 'warning'
+                                                                : 'success'
+                                                        }
+                                                    >
+                                                        {profile.invitation
+                                                            .status ===
+                                                        InvitationStatus.pending
+                                                            ? 'Invitation Pending'
+                                                            : 'Profile Claimed'}
+                                                    </Badge>
+                                                )}
+                                            </BadgeContainer>
                                         </Box>
                                         <ProfileActions
+                                            isMobileWidth={isMobileWidth}
                                             profile={profile}
                                             onDelete={() =>
                                                 setProfileToDelete(profile)
                                             }
-                                            onView={() =>
-                                                router.push(
-                                                    `${URL_PATHS.DIRECTORY.ROOT}/${profile.id}`
-                                                )
+                                            onListingButtonClick={() =>
+                                                profile.directoryListing
+                                                    .status ===
+                                                ListingStatus.listed
+                                                    ? router.push(
+                                                          `${URL_PATHS.DIRECTORY.ROOT}/${profile.id}`
+                                                      )
+                                                    : console.log(
+                                                          'TODO: list profile: ',
+                                                          profile
+                                                      )
                                             }
                                             onEdit={() =>
                                                 router.push(
@@ -294,10 +362,7 @@ export default function PracticeProfilesPage() {
                                                 )
                                             }
                                             onInvite={() =>
-                                                console.log(
-                                                    'TODO: invite provider for provile: ',
-                                                    profile
-                                                )
+                                                setInvitationProfile(profile)
                                             }
                                         />
                                     </Box>
@@ -345,6 +410,23 @@ export default function PracticeProfilesPage() {
                     isDeleting={isDeletingProfile}
                 />
             )}
+            {invitationProfile && user && (
+                <InvitationModal
+                    profile={invitationProfile}
+                    onClose={() => setInvitationProfile(undefined)}
+                    isLoading={isCreatingInvitation}
+                    onInvite={(recipientEmail: string) =>
+                        createInvitation({
+                            recipientEmail,
+                            expiresInDays: 7,
+                            senderId: user.userId,
+                            profileId: invitationProfile.id,
+                            practiceId,
+                            designation: invitationProfile.designation,
+                        })
+                    }
+                />
+            )}
         </SideNavigationPage>
     );
 }
@@ -364,6 +446,108 @@ const SeatCount = styled(Caption, {
     margin: 0,
 }));
 
+const BadgeContainer = styled(Box)(({ theme }) => ({
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    display: 'none',
+    '& > *:not(:last-child)': {
+        marginRight: theme.spacing(2),
+    },
+    [theme.breakpoints.up('md')]: {
+        display: 'flex',
+    },
+}));
+
+const InvitationModal = ({
+    profile,
+    onClose,
+    onInvite,
+    isLoading,
+}: {
+    onClose: () => void;
+    onInvite: (email: string) => void;
+    profile: ProviderProfileListing.Type;
+    isLoading: boolean;
+}) => {
+    const emailValidationUrl = URL_PATHS.API.ACCOUNTS.IS_EMAIL_UNIQUE;
+    const [emailAddress, setEmailAddress] = useState('');
+    const [emailsCheckedForUniqueness, setEmailsCheckedForUniqueness] =
+        useState<Record<string, boolean>>({});
+    const debounceRef = useRef<number>();
+    const isEmailUnique = !!emailsCheckedForUniqueness[emailAddress];
+    const emailErrorMessage =
+        emailAddress.trim() === '' || isEmailUnique
+            ? undefined
+            : 'Email is already registered with Therify.';
+
+    useEffect(() => {
+        const shouldFetchUniqueness =
+            !!emailAddress &&
+            FormValidation.isValidEmail(emailAddress) &&
+            emailsCheckedForUniqueness[emailAddress] === undefined;
+
+        if (shouldFetchUniqueness) {
+            window.clearTimeout(debounceRef.current);
+            debounceRef.current = window.setTimeout(async () => {
+                const isEmailUnique = await FormValidation.isUniqueEmailFactory(
+                    emailValidationUrl
+                )(emailAddress.toLowerCase().trim());
+                setEmailsCheckedForUniqueness((prev) => ({
+                    ...prev,
+                    [emailAddress]: isEmailUnique,
+                }));
+            }, 500);
+        }
+    }, [emailAddress, emailValidationUrl, emailsCheckedForUniqueness]);
+
+    return (
+        <Modal
+            isOpen
+            onClose={onClose}
+            title="Invite Provider"
+            message={
+                isLoading
+                    ? 'Sending invite to ' + emailAddress
+                    : `Invite a provider to manage ${profile.givenName} ${profile.surname}'s profile. You will still be able to edit the profile.`
+            }
+            fullWidthButtons
+            primaryButtonDisabled={
+                isLoading ||
+                !FormValidation.isValidEmail(emailAddress) ||
+                !isEmailUnique
+            }
+            primaryButtonText="Invite"
+            primaryButtonOnClick={() => onInvite(emailAddress)}
+            primaryButtonEndIcon={<SendRounded />}
+            secondaryButtonText="Cancel"
+            secondaryButtonDisabled={isLoading}
+            secondaryButtonOnClick={onClose}
+            postBodySlot={
+                isLoading ? (
+                    <CenteredContainer>
+                        <CircularProgress />
+                    </CenteredContainer>
+                ) : (
+                    <Box width="100%">
+                        <Input
+                            required
+                            fullWidth
+                            placeholder="Recipient email"
+                            errorMessage={
+                                emailAddress !== '' &&
+                                !FormValidation.isValidEmail(emailAddress)
+                                    ? 'Email is invalid'
+                                    : emailErrorMessage
+                            }
+                            onChange={(e) => setEmailAddress(e.target.value)}
+                            value={emailAddress}
+                        />
+                    </Box>
+                )
+            }
+        />
+    );
+};
 const DeleteProfileModal = ({
     profile,
     onClose,
@@ -461,11 +645,6 @@ const getInvitationAction = ({
     cancel: () => void;
 }) => {
     switch (status) {
-        case InvitationStatus.accepted:
-            return {
-                text: 'Invitation Accepted',
-                icon: <CheckCircleRounded color="success" />,
-            };
         case InvitationStatus.pending:
             return {
                 text: 'Cancel Invitation',
@@ -482,14 +661,16 @@ const getInvitationAction = ({
 };
 const ProfileActions = ({
     profile,
-    onView,
+    isMobileWidth,
+    onListingButtonClick,
     onEdit,
     onDelete,
     onInvite,
     onCancelInvitation,
 }: {
+    isMobileWidth: boolean;
     profile: ProviderProfileListing.Type;
-    onView: () => void;
+    onListingButtonClick: () => void;
     onEdit: () => void;
     onDelete: () => void;
     onInvite: () => void;
@@ -507,11 +688,15 @@ const ProfileActions = ({
             icon: <DeleteRounded />,
             onClick: onDelete,
         },
-        getInvitationAction({
-            status: profile.invitation?.status,
-            invite: onInvite,
-            cancel: onCancelInvitation,
-        }),
+        ...(profile.invitation?.status !== InvitationStatus.accepted
+            ? [
+                  getInvitationAction({
+                      status: profile.invitation?.status,
+                      invite: onInvite,
+                      cancel: onCancelInvitation,
+                  }),
+              ]
+            : []),
         getListingAction(profile.directoryListing?.status),
     ];
     return (
@@ -521,15 +706,21 @@ const ProfileActions = ({
                 alignItems="center"
                 onClick={(event) => event.stopPropagation()}
             >
-                <Button
-                    type={BUTTON_TYPE.OUTLINED}
-                    size={BUTTON_SIZE.SMALL}
-                    color="info"
-                    onClick={onView}
-                    style={{ marginRight: theme.spacing(4) }}
-                >
-                    View
-                </Button>
+                {!isMobileWidth && (
+                    <>
+                        <ListingButton
+                            type={BUTTON_TYPE.OUTLINED}
+                            size={BUTTON_SIZE.SMALL}
+                            color="info"
+                            onClick={onListingButtonClick}
+                        >
+                            {profile.directoryListing.status ===
+                            ListingStatus.unlisted
+                                ? 'Publish to directory'
+                                : 'View'}
+                        </ListingButton>
+                    </>
+                )}
                 <FloatingList
                     listItems={moreItems}
                     sx={{ marginLeft: theme.spacing(4) }}
@@ -557,6 +748,13 @@ const TitleContainer = styled(Box)(({ theme }) => ({
         flex: 1,
         display: 'flex',
         justifyContent: 'flex-end',
+    },
+}));
+const ListingButton = styled(Button)(({ theme }) => ({
+    display: 'none',
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up('md')]: {
+        display: 'inherit',
     },
 }));
 
