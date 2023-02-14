@@ -31,6 +31,9 @@ export const resolve: ProcedureResolver<
         };
     }
 
+    /**
+     *  TODO: Send email to recipient
+     **/
     return {
         invitationId: result.value.createInvitation.invitationId,
         errors: [],
