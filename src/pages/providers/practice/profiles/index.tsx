@@ -33,7 +33,7 @@ import {
 import { useTherifyUser } from '@/lib/shared/hooks';
 import { RBAC } from '@/lib/shared/utils';
 import { useEffect, useState } from 'react';
-import { ListingStatus, Role } from '@prisma/client';
+import { InvitationStatus, ListingStatus, Role } from '@prisma/client';
 import { styled, useTheme } from '@mui/material/styles';
 import { Box, CircularProgress, Link } from '@mui/material';
 import {
@@ -46,6 +46,8 @@ import {
     VisibilityRounded,
     SendRounded,
     AddCircleOutlineRounded,
+    CheckCircleRounded,
+    PersonAddAlt1Rounded,
 } from '@mui/icons-material';
 import { DirectoryListingSchema } from '@/lib/shared/schema';
 import { z } from 'zod';
@@ -224,9 +226,7 @@ export default function PracticeProfilesPage() {
                                 `${profile.givenName} ${profile.surname}`.trim();
                             const { text: badgeText, color: badgeColor } =
                                 getProfileStatusBadge(
-                                    // TODO: Add directory listing to preview profile type
-                                    // profile.directoryListing?.status
-                                    undefined
+                                    profile.directoryListing.status
                                 );
                             return (
                                 <ListItem
@@ -276,6 +276,22 @@ export default function PracticeProfilesPage() {
                                             profile={profile}
                                             onDelete={() =>
                                                 setProfileToDelete(profile)
+                                            }
+                                            onView={() =>
+                                                router.push(
+                                                    `${URL_PATHS.DIRECTORY.ROOT}/${profile.id}`
+                                                )
+                                            }
+                                            onEdit={() =>
+                                                router.push(
+                                                    `${URL_PATHS.PROVIDERS.PRACTICE.PROFILE_EDITOR}/${profile.id}`
+                                                )
+                                            }
+                                            onCancelInvitation={() =>
+                                                console.log(
+                                                    'TODO: cancel invitation for profile: ',
+                                                    profile
+                                                )
                                             }
                                             onInvite={() =>
                                                 console.log(
@@ -435,38 +451,67 @@ const getListingAction = (status?: ListingStatus) => {
     }
 };
 
+const getInvitationAction = ({
+    status,
+    invite,
+    cancel,
+}: {
+    status?: InvitationStatus;
+    invite: () => void;
+    cancel: () => void;
+}) => {
+    switch (status) {
+        case InvitationStatus.accepted:
+            return {
+                text: 'Invitation Accepted',
+                icon: <CheckCircleRounded color="success" />,
+            };
+        case InvitationStatus.pending:
+            return {
+                text: 'Cancel Invitation',
+                icon: <CancelRounded />,
+                onClick: cancel,
+            };
+        default:
+            return {
+                text: 'Invite editor',
+                icon: <PersonAddAlt1Rounded />,
+                onClick: invite,
+            };
+    }
+};
 const ProfileActions = ({
     profile,
+    onView,
+    onEdit,
     onDelete,
     onInvite,
+    onCancelInvitation,
 }: {
-    profile: ProviderProfileListing.Type & {
-        directoryListing?: z.infer<typeof DirectoryListingSchema>;
-    };
+    profile: ProviderProfileListing.Type;
+    onView: () => void;
+    onEdit: () => void;
     onDelete: () => void;
     onInvite: () => void;
+    onCancelInvitation: () => void;
 }) => {
-    const router = useRouter();
     const theme = useTheme();
     const moreItems = [
         {
             text: 'Edit',
             icon: <EditRounded />,
-            onClick: () =>
-                router.push(
-                    `${URL_PATHS.PROVIDERS.PRACTICE.PROFILE_EDITOR}/${profile.id}`
-                ),
+            onClick: onEdit,
         },
         {
             text: 'Delete',
             icon: <DeleteRounded />,
             onClick: onDelete,
         },
-        {
-            text: 'Invite editor',
-            icon: <AddRounded />,
-            onClick: onInvite,
-        },
+        getInvitationAction({
+            status: profile.invitation?.status,
+            invite: onInvite,
+            cancel: onCancelInvitation,
+        }),
         getListingAction(profile.directoryListing?.status),
     ];
     return (
@@ -480,9 +525,7 @@ const ProfileActions = ({
                     type={BUTTON_TYPE.OUTLINED}
                     size={BUTTON_SIZE.SMALL}
                     color="info"
-                    onClick={() =>
-                        router.push(`${URL_PATHS.DIRECTORY.ROOT}/${profile.id}`)
-                    }
+                    onClick={onView}
                     style={{ marginRight: theme.spacing(4) }}
                 >
                     View
