@@ -16,6 +16,7 @@ import { Billing } from './billing';
 import { GetUserDetailsById } from './get-user-details-by-id';
 import { CreateFirebaseAuthToken } from './create-firebase-auth-token';
 import { GetAccountByRegistrationCode } from './get-account-by-registration-code';
+import { RegisterProviderWithInvitation } from './register-provider-with-invitation';
 
 const factoryParams: AccountsServiceParams = {
     prisma,
@@ -26,6 +27,8 @@ const factoryParams: AccountsServiceParams = {
 export const AccountsService = {
     createUser: CreateUser.factory(factoryParams),
     registerProvider: RegisterProvider.factory(factoryParams),
+    registerProviderWithInvitation:
+        RegisterProviderWithInvitation.factory(factoryParams),
     isEmailUnique: IsEmailUnique.factory(factoryParams),
     sendEmailVerification: SendEmailVerification.factory(factoryParams),
     getVerificationEmailStatus:
