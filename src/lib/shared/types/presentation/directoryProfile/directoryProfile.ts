@@ -3,13 +3,15 @@ import { ProviderProfile } from '../../provider-profile';
 
 export const schema = ProviderProfile.schema
     .pick({
-        id: true,
         givenName: true,
         surname: true,
         minimumRate: true,
         maximumRate: true,
         credentials: true,
         profileImageUrl: true,
+    })
+    .extend({
+        id: z.string(),
     })
     .transform((value) => {
         const rate = value.maximumRate

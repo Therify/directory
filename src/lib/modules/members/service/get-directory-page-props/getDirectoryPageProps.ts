@@ -40,21 +40,18 @@ export function factory({ prisma, accountService }: GetDirectoryPageProps) {
             ]
         );
         return {
-            props: {
-                providerProfiles: JSON.parse(
-                    JSON.stringify(
-                        providerProfiles.map(DirectoryProfile.validate)
-                    )
-                ),
-                user: JSON.parse(JSON.stringify(user)),
-                favoriteProfiles: JSON.parse(
-                    JSON.stringify(
-                        memberFavorites.map(
-                            (favorite) => favorite.providerProfile
-                        )
-                    )
-                ),
-            },
+            props: JSON.parse(
+                JSON.stringify({
+                    providerProfiles: providerProfiles.map(
+                        DirectoryProfile.validate
+                    ),
+
+                    user,
+                    favoriteProfiles: memberFavorites.map(
+                        (favorite) => favorite.providerProfile
+                    ),
+                })
+            ),
         };
     };
     return getDirectoryPageProps;

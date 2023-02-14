@@ -5,7 +5,7 @@ import { asSelectOptions } from '@/lib/shared/utils';
 
 interface StateInputProps {
     control: Control<ProviderProfile.ProviderProfile>;
-    defaultValue?: (typeof State.ENTRIES)[number];
+    defaultValue?: typeof State.ENTRIES[number];
     disabled?: boolean;
     storeLocalData: (
         key:
