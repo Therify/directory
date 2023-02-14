@@ -15,6 +15,7 @@ import { ProviderProfile } from '@prisma/client';
 import React from 'react';
 import Lottie from 'react-lottie';
 import ANIMATION_DATA from './favoriteAnimation.json';
+import { DirectoryProfile } from '@/lib/shared/types/presentation';
 
 export const DEFAULT_PROFILE_IMAGE_URL =
     'https://res.cloudinary.com/dbrkfldqn/image/upload/v1675367176/app.therify.co/placeholders/profile_placeholder_aacskl.png' as const;
@@ -25,21 +26,7 @@ export type DirectoryCardProps = {
         callback: (isFavorite: boolean) => void
     ) => () => void;
     onClick?: () => void;
-} & ProviderProfile;
-
-function formatProviderName({
-    givenName,
-    surname,
-}: Pick<ProviderProfile, 'givenName' | 'surname'>) {
-    return `${givenName} ${surname}`;
-}
-
-function formatProviderRate({
-    minimumRate,
-    maximumRate,
-}: Pick<ProviderProfile, 'minimumRate' | 'maximumRate'>) {
-    return maximumRate ? `${minimumRate} - ${maximumRate}` : minimumRate;
-}
+} & DirectoryProfile.DirectoryProfileCard;
 
 const DEFAULT_ANIMATION_OPTIONS = {
     loop: false,
@@ -104,14 +91,12 @@ function renderFavoriteIcon({
 }
 
 export function DirectoryCard({
-    givenName,
-    surname,
+    licenses,
+    providerName,
+    rate,
     profileImageUrl,
-    credentials,
-    minimumRate,
-    maximumRate,
     isFavorite = false,
-    handleFavoriteClicked,
+    handleFavoriteClicked = () => () => {},
     onClick,
 }: DirectoryCardProps) {
     const [isProviderFavorite, setIsProviderFavorite] =
@@ -132,13 +117,7 @@ export function DirectoryCard({
                 <CardContent>
                     <Stack direction="column">
                         <Stack direction="row" justifyContent={'space-between'}>
-                            <Box>
-                                $
-                                {formatProviderRate({
-                                    minimumRate,
-                                    maximumRate,
-                                })}
-                            </Box>
+                            <Box>${rate}</Box>
                             {handleFavoriteClicked && (
                                 <Box>
                                     <CardIcon
@@ -174,16 +153,10 @@ export function DirectoryCard({
                             )}
                         </Stack>
                         <Stack>
-                            <ProviderName>
-                                {formatProviderName({
-                                    givenName,
-                                    surname,
-                                })}
-                            </ProviderName>
-                            {credentials && (
+                            <ProviderName>{providerName}</ProviderName>
+                            {licenses.length > 0 && (
                                 <ProviderCredentials>
-                                    {/* // TODO: What should this be? */}
-                                    {JSON.stringify(credentials)}
+                                    {licenses.join(', ')}
                                 </ProviderCredentials>
                             )}
                         </Stack>

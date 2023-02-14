@@ -16,6 +16,7 @@ export const resolve: ProcedureResolver<
             errors: [],
         };
     } catch (error) {
+        console.log(error);
         let errorMessage = 'Create profile failed.';
         if (error instanceof Error) {
             errorMessage = error.message;

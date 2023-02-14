@@ -41,6 +41,7 @@ model User {
   practice                   Practice?
   memberProfile              MemberProfile?
   selfAssessments            SelfAssessment[]
+  ConnectionRequest          ConnectionRequest[]
 
   @@map("users")
 }
@@ -124,6 +125,7 @@ model Plan {
   stripePriceId        String?         @map("stripe_price_id")
   renews               Boolean         @default(true)
   invoices             StripeInvoice[]
+  coveredSessions      Int             @default(0) @map("covered_sessions")
 
   @@index([stripeCustomerId, stripeSubscriptionId])
   @@map("plans")
@@ -281,6 +283,7 @@ model ProviderProfile {
   practiceProviderInvitation PracticeProviderInvitation[]
   memberFavorites            MemberFavorites[]
   practiceProfile            PracticeProfile?
+  ConnectionRequest          ConnectionRequest[]
 
   @@map("provider_profiles")
 }
@@ -321,4 +324,24 @@ model MemberFavorites {
 
   @@id([memberId, profileId])
   @@map("member_favorites")
+}
+
+enum ConnectionStatus {
+  pending
+  accepted
+  declined
+}
+
+model ConnectionRequest {
+  memberId          String           @map("member_id")
+  profileId         String           @map("profile_id")
+  providerProfile   ProviderProfile  @relation(fields: [profileId], references: [id])
+  member            User             @relation(fields: [memberId], references: [id])
+  connectionMessage String?          @map("connection_message") @db.Text
+  connectionStatus  ConnectionStatus @default(pending) @map("connection_status")
+  createdAt         DateTime         @default(now()) @map("created_at")
+  updatedAt         DateTime         @updatedAt @map("updated_at")
+
+  @@id([memberId, profileId])
+  @@map("connection_requests")
 }

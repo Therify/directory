@@ -32,7 +32,7 @@ interface EditorFormProps {
     control: Control<ProviderProfile.ProviderProfile>;
     isSubmitDisabled: boolean;
     isSubmittingForm: boolean;
-    licensedStates?: (typeof State.ENTRIES)[number][];
+    licensedStates?: typeof State.ENTRIES[number][];
     onImageUploadSuccess: (
         error: Error | null,
         result: CloudinaryUploadResult

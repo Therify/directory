@@ -11,6 +11,7 @@ interface GetDirectoryProfileProps extends MembersServiceParams {
 export interface DirectoryProfilePageProps {
     providerProfile: ProviderProfile.ProviderProfile;
     user: TherifyUser.TherifyUser;
+    providerHasBeenSelected?: boolean;
 }
 
 export function factory({ prisma, accountService }: GetDirectoryProfileProps) {
@@ -26,16 +27,26 @@ export function factory({ prisma, accountService }: GetDirectoryProfileProps) {
                 },
             };
         }
-        const [{ user }, providerProfile] = await Promise.all([
-            accountService.getUserDetailsById({
-                userId: session.user.sub,
-            }),
-            prisma.providerProfile.findUnique({
-                where: {
-                    id: context.query.profileId as string,
-                },
-            }),
-        ]);
+        const [{ user }, providerProfile, connectionRequest] =
+            await Promise.all([
+                accountService.getUserDetailsById({
+                    userId: session.user.sub,
+                }),
+                prisma.providerProfile.findUnique({
+                    where: {
+                        id: context.query.profileId as string,
+                    },
+                }),
+                prisma.connectionRequest.findFirst({
+                    where: {
+                        memberId: session.user.sub,
+                        profileId: context.query.profileId as string,
+                    },
+                    select: {
+                        profileId: true,
+                    },
+                }),
+            ]);
         if (!providerProfile) {
             return {
                 redirect: {
@@ -50,6 +61,7 @@ export function factory({ prisma, accountService }: GetDirectoryProfileProps) {
                     JSON.stringify(ProviderProfile.validate(providerProfile))
                 ),
                 user: JSON.parse(JSON.stringify(user)),
+                providerHasBeenSelected: !!connectionRequest,
             },
         };
     };

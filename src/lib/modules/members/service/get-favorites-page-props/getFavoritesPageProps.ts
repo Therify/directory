@@ -1,3 +1,4 @@
+import { DirectoryProfile } from '@/lib/shared/types/presentation';
 import { TherifyUser } from '@/lib/shared/types/therify-user';
 import { getSession } from '@auth0/nextjs-auth0';
 import { ProviderProfile } from '@prisma/client';
@@ -6,7 +7,7 @@ import { AccountsService } from '../../../accounts/service';
 import { MembersServiceParams } from '../params';
 
 export interface FavoritesPageProps {
-    favoriteProfiles: ProviderProfile[];
+    favoriteProfiles: DirectoryProfile.DirectoryProfileCard[];
     user: TherifyUser.TherifyUser;
 }
 
@@ -45,7 +46,9 @@ export const factory = (params: GetFavoritesPagePropsParams) => {
                 user: JSON.parse(JSON.stringify(user)),
                 favoriteProfiles: JSON.parse(
                     JSON.stringify(
-                        favoriteProfiles.map((f) => f.providerProfile)
+                        favoriteProfiles.map((f) =>
+                            DirectoryProfile.validate(f.providerProfile)
+                        )
                     )
                 ),
             },

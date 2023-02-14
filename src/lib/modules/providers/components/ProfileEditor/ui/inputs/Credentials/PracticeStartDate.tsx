@@ -50,7 +50,7 @@ export const PracticeStartDateInput = ({
                 }
                 onClose={onBlur}
                 onBlur={onBlur}
-                value={new Date(value) ?? null}
+                value={value ? new Date(value) : null}
                 disabled={disabled}
             />
         )}

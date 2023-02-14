@@ -13,7 +13,7 @@ interface IdentitySectionProps {
     isTherapist: boolean;
     control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
-    licensedStates?: (typeof State.ENTRIES)[number][];
+    licensedStates?: typeof State.ENTRIES[number][];
     supervisor: ProviderProfile.ProviderProfile['supervisor'];
     setSupervisor: (
         supervisor: ProviderProfile.ProviderProfile['supervisor']

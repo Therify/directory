@@ -23,7 +23,9 @@ export const factory: (
             const profile = {
                 ...rawProfile,
                 supervisor,
-                practiceStartDate: new Date(practiceStartDate),
+                practiceStartDate: practiceStartDate
+                    ? new Date(practiceStartDate)
+                    : null,
                 credentials,
             };
             const { id: profileId } = await prisma.providerProfile.create({

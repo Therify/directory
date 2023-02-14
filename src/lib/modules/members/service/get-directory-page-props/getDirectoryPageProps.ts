@@ -4,13 +4,14 @@ import { TherifyUser } from '@/lib/shared/types/therify-user';
 import { MembersServiceParams } from '../params';
 import { getSession } from '@auth0/nextjs-auth0';
 import { AccountsService } from '../../../accounts/service/service';
+import { DirectoryProfile } from '@/lib/shared/types/presentation';
 
 interface GetDirectoryPageProps extends MembersServiceParams {
     accountService: typeof AccountsService;
 }
 
 export interface DirectoryPageProps {
-    providerProfiles: ProviderProfile[];
+    providerProfiles: DirectoryProfile.DirectoryProfileCard[];
     user: TherifyUser.TherifyUser;
     favoriteProfiles: ProviderProfile[];
 }
@@ -39,17 +40,18 @@ export function factory({ prisma, accountService }: GetDirectoryPageProps) {
             ]
         );
         return {
-            props: {
-                providerProfiles: JSON.parse(JSON.stringify(providerProfiles)),
-                user: JSON.parse(JSON.stringify(user)),
-                favoriteProfiles: JSON.parse(
-                    JSON.stringify(
-                        memberFavorites.map(
-                            (favorite) => favorite.providerProfile
-                        )
-                    )
-                ),
-            },
+            props: JSON.parse(
+                JSON.stringify({
+                    providerProfiles: providerProfiles.map(
+                        DirectoryProfile.validate
+                    ),
+
+                    user,
+                    favoriteProfiles: memberFavorites.map(
+                        (favorite) => favorite.providerProfile
+                    ),
+                })
+            ),
         };
     };
     return getDirectoryPageProps;
