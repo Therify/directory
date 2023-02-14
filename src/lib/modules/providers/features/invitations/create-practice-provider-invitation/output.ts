@@ -1,7 +1,7 @@
 import * as z from 'zod';
 
 export const schema = z.object({
-    invitaionId: z.string().nullable(),
+    invitationId: z.string().nullable(),
     errors: z.array(z.string()),
 });
 

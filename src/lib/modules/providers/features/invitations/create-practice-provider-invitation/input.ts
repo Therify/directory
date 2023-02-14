@@ -2,11 +2,11 @@ import { PracticeProviderInvitationSchema } from '@/lib/shared/schema';
 import * as z from 'zod';
 
 export const schema = z.object({
-    status: PracticeProviderInvitationSchema.shape.status,
     practiceId: PracticeProviderInvitationSchema.shape.practiceId,
     recipientEmail: PracticeProviderInvitationSchema.shape.recipientEmail,
     senderId: PracticeProviderInvitationSchema.shape.senderId,
-    profileId: PracticeProviderInvitationSchema.shape.profileId,
+    profileId: z.string().optional(),
+    expiresInDays: z.number().optional(),
 });
 
 export type Input = z.infer<typeof schema>;

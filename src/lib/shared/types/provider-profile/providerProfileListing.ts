@@ -7,6 +7,7 @@ import {
 } from '../../schema';
 import { ProviderCredential } from '../provider-credential';
 import { AcceptedInsurance } from '../accepted-insurance';
+import { InvitationStatus } from '@prisma/client';
 
 export const schema = ProviderProfileSchema.pick({
     id: true,
@@ -27,7 +28,14 @@ export const schema = ProviderProfileSchema.pick({
     invitation: PracticeProviderInvitationSchema.omit({
         createdAt: true,
         updatedAt: true,
-    }).nullable(),
+    })
+        .extend({
+            status: z.enum([
+                InvitationStatus.accepted,
+                InvitationStatus.pending,
+            ]),
+        })
+        .nullable(),
     directoryListing: DirectoryListingSchema.omit({
         createdAt: true,
         updatedAt: true,
