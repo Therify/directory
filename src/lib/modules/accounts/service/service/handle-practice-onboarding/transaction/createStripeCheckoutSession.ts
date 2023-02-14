@@ -14,16 +14,8 @@ export const factory = ({
                 customerId: stripeCustomerId,
                 quantity: seatCount,
                 checkoutMode: 'subscription',
-                cancelUrl: `${
-                    process.env.VERCEL_URL
-                        ? `https://${process.env.VERCEL_URL}`
-                        : process.env.APPLICATION_URL
-                }${URL_PATHS.PROVIDERS.ONBOARDING.BILLING}`,
-                successUrl: `${
-                    process.env.VERCEL_URL
-                        ? `https://${process.env.VERCEL_URL}`
-                        : process.env.APPLICATION_URL
-                }${URL_PATHS.PROVIDERS.ONBOARDING.BILLING_SUCCESS}`,
+                cancelUrl: `${process.env.APPLICATION_URL}${URL_PATHS.PROVIDERS.ONBOARDING.BILLING}`,
+                successUrl: `${process.env.APPLICATION_URL}${URL_PATHS.PROVIDERS.ONBOARDING.BILLING_SUCCESS}`,
                 allowPromotionCodes: true,
             });
         if (!checkoutSessionUrl) {
