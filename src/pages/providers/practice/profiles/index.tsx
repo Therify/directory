@@ -56,7 +56,10 @@ import {
     ListPracticeProfilesByUserId,
     DeleteProviderProfile,
 } from '@/lib/modules/providers/features/profiles';
-import { CreatePracticeProviderInvitation } from '@/lib/modules/providers/features/invitations';
+import {
+    CreatePracticeProviderInvitation,
+    DeletePracticeProviderInvitation,
+} from '@/lib/modules/providers/features/invitations';
 
 export const getServerSideProps = RBAC.requireProviderAuth(
     withPageAuthRequired()
@@ -87,8 +90,11 @@ export default function PracticeProfilesPage() {
     const [showNewProfileModal, setShowNewProfileModal] = useState(false);
     const [invitationProfile, setInvitationProfile] =
         useState<ProviderProfileListing.Type>();
+    const [invitationToDelete, setInvitationToDelete] =
+        useState<ProviderProfileListing.Type>();
     const [profileToDelete, setProfileToDelete] =
         useState<ProviderProfileListing.Type>();
+
     const {
         data,
         error: trpcError,
@@ -130,6 +136,22 @@ export default function PracticeProfilesPage() {
                     if (invitationId) {
                         refetchProfiles();
                         setInvitationProfile(undefined);
+                    }
+                    const [error] = errors;
+                    if (error) {
+                        console.error(error);
+                    }
+                },
+            }
+        );
+    const { mutate: deleteInvitation, isLoading: isDeletingInvitation } =
+        trpc.useMutation(
+            `providers.${DeletePracticeProviderInvitation.TRPC_ROUTE}`,
+            {
+                onSuccess: ({ success, errors }) => {
+                    if (success) {
+                        refetchProfiles();
+                        setInvitationToDelete(undefined);
                     }
                     const [error] = errors;
                     if (error) {
@@ -356,10 +378,7 @@ export default function PracticeProfilesPage() {
                                                 )
                                             }
                                             onCancelInvitation={() =>
-                                                console.log(
-                                                    'TODO: cancel invitation for profile: ',
-                                                    profile
-                                                )
+                                                setInvitationToDelete(profile)
                                             }
                                             onInvite={() =>
                                                 setInvitationProfile(profile)
@@ -423,6 +442,19 @@ export default function PracticeProfilesPage() {
                             profileId: invitationProfile.id,
                             practiceId,
                             designation: invitationProfile.designation,
+                        })
+                    }
+                />
+            )}
+            {invitationToDelete && (
+                <DeleteInvitaionModal
+                    profile={invitationToDelete}
+                    onClose={() => setInvitationToDelete(undefined)}
+                    isDeleting={isDeletingInvitation}
+                    onDelete={() =>
+                        deleteInvitation({
+                            invitationId: invitationToDelete.invitation!.id!,
+                            userId: user?.userId!,
                         })
                     }
                 />
@@ -544,6 +576,48 @@ const InvitationModal = ({
                         />
                     </Box>
                 )
+            }
+        />
+    );
+};
+const DeleteInvitaionModal = ({
+    profile,
+    onClose,
+    onDelete,
+    isDeleting,
+}: {
+    onClose: () => void;
+    onDelete: () => void;
+    profile: ProviderProfileListing.Type;
+    isDeleting: boolean;
+}) => {
+    const [value, setValue] = useState('');
+    const providerName = `${profile.givenName} ${profile.surname}`.trim();
+
+    return (
+        <Modal
+            isOpen
+            onClose={onClose}
+            title="Cancel Invitation"
+            message={
+                isDeleting
+                    ? 'Deleting invitation'
+                    : `Are you sure yout want to cancel the invitation sent to ${profile.invitation?.recipientEmail}?`
+            }
+            fullWidthButtons
+            primaryButtonText="Cancel Invite"
+            primaryButtonColor="error"
+            primaryButtonOnClick={onDelete}
+            primaryButtonEndIcon={<CancelRounded />}
+            secondaryButtonText="Back"
+            secondaryButtonDisabled={isDeleting}
+            secondaryButtonOnClick={onClose}
+            postBodySlot={
+                isDeleting ? (
+                    <CenteredContainer>
+                        <CircularProgress />
+                    </CenteredContainer>
+                ) : undefined
             }
         />
     );
