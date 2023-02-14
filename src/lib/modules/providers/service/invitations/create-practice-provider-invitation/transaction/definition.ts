@@ -4,6 +4,7 @@ import { ProvidersServiceParams } from '../../../params';
 
 export const transactionDefinition = z.object({
     validateSeatAvailability: z.unknown(),
+    validateUniqueEmail: z.unknown(),
     getPractice: z.object({
         practiceId: z.string(),
     }),

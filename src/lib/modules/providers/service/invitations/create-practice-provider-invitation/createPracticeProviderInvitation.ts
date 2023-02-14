@@ -4,6 +4,7 @@ import {
     transactionDefinition,
     ValidateSeatAvailability,
     CreateInvitation,
+    ValidateUniqueEmail,
 } from './transaction';
 import { TransactionV1 } from '@/lib/shared/utils';
 import { CreatePracticeProviderInvitation } from '@/lib/modules/providers/features/invitations';
@@ -16,6 +17,7 @@ export function factory(context: ProvidersServiceParams) {
             {
                 validateSeatAvailability:
                     ValidateSeatAvailability.factory(params),
+                validateUniqueEmail: ValidateUniqueEmail.factory(params),
                 getPractice: GetPractice.factory(params),
                 createInvitation: CreateInvitation.factory(params),
             },
