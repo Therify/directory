@@ -21,12 +21,14 @@ interface FloatingListItemProps {
 interface FloatingListProps {
     listItems: FloatingListItemProps[];
     launcherIcon?: React.ReactNode;
+    headerSlot?: React.ReactNode;
     sx?: SxProps<Theme>;
 }
 
 export const FloatingList = ({
     launcherIcon,
     listItems,
+    headerSlot,
     sx,
 }: FloatingListProps) => {
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -69,6 +71,9 @@ export const FloatingList = ({
                     '& .MuiList-root': { width: '275px' },
                 }}
             >
+                {headerSlot && (
+                    <ListItem hoverable={false}>{headerSlot}</ListItem>
+                )}
                 {listItems.map(({ icon, onClick, text }, i) => (
                     <ListItem
                         key={i}
@@ -103,7 +108,9 @@ const Text = styled(ListItemText)(() => ({
     },
 }));
 
-const ListItem = styled(MuiListItem)(({ theme }) => ({
+const ListItem = styled(MuiListItem, {
+    shouldForwardProp: (prop) => prop !== 'hoverable',
+})<{ hoverable?: boolean }>(({ theme, hoverable = true }) => ({
     display: 'flex',
     position: 'relative',
     alignItems: 'center',
@@ -116,7 +123,11 @@ const ListItem = styled(MuiListItem)(({ theme }) => ({
     '& .navigation-icon + .MuiListItemText-root': {
         paddingLeft: theme.spacing(7),
     },
-    '&:hover': {
-        backgroundColor: theme.palette.action.hover,
-    },
+    ...(hoverable
+        ? {
+              '&:hover': {
+                  backgroundColor: theme.palette.action.hover,
+              },
+          }
+        : {}),
 }));

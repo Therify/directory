@@ -23,6 +23,7 @@ import {
     CenteredContainer,
     Divider,
     FormValidation,
+    IconButton,
 } from '@/lib/shared/components/ui';
 import { SideNavigationPage } from '@/lib/shared/components/features/pages';
 import {
@@ -31,7 +32,6 @@ import {
     PRACTICE_ADMIN_MOBILE_MENU,
     URL_PATHS,
 } from '@/lib/sitemap';
-import { useTherifyUser } from '@/lib/shared/hooks';
 import { RBAC } from '@/lib/shared/utils';
 import { useEffect, useRef, useState } from 'react';
 import { InvitationStatus, ListingStatus, Role } from '@prisma/client';
@@ -45,7 +45,7 @@ import {
     CancelRounded,
     VisibilityRounded,
     SendRounded,
-    AddCircleOutlineRounded,
+    AddRounded,
     PersonAddAlt1Rounded,
     MailRounded,
     AccountCircleOutlined,
@@ -60,33 +60,24 @@ import {
     CreatePracticeProviderInvitation,
     DeletePracticeProviderInvitation,
 } from '@/lib/modules/providers/features/invitations';
+import { ProvidersService } from '@/lib/modules/providers/service';
+import { PracticeProfilesPageProps } from '@/lib/modules/providers/service/page-props/get-practice-profiles-page-props/getPracticeProfilesPageProps';
 
 export const getServerSideProps = RBAC.requireProviderAuth(
-    withPageAuthRequired()
+    withPageAuthRequired({
+        getServerSideProps:
+            ProvidersService.pageProps.getPracticeProfilesPageProps,
+    })
 );
-const getProfileStatusBadge = (status?: ListingStatus) => {
-    switch (status) {
-        case ListingStatus.listed:
-            return {
-                text: 'Listed',
-                color: BADGE_COLOR.SUCCESS,
-            };
-        case ListingStatus.pending:
-            return { text: 'Pending Review', color: BADGE_COLOR.WARNING };
-        case ListingStatus.unlisted:
-        default:
-            return { text: 'Unlisted', color: BADGE_COLOR.ERROR };
-    }
-};
 
-export default function PracticeProfilesPage() {
-    const { user, isLoading: isLoadingUser } = useTherifyUser();
+export default function PracticeProfilesPage({
+    user,
+    practice,
+    profiles: loadedProfiles,
+}: PracticeProfilesPageProps) {
     const router = useRouter();
     const theme = useTheme();
     const isMobileWidth = useMediaQuery(theme.breakpoints.down('md'));
-
-    //TODO: Get practice details
-    const practiceId = 'cle33hlxp0005v7s8rrpyfh2q';
     const [invitationProfile, setInvitationProfile] =
         useState<ProviderProfileListing.Type>();
     const [invitationToDelete, setInvitationToDelete] =
@@ -95,21 +86,21 @@ export default function PracticeProfilesPage() {
         useState<ProviderProfileListing.Type>();
 
     const {
-        data,
-        error: trpcError,
+        data: refetchedProfilesData,
         isLoading: isLoadingProfiles,
+        error: trpcError,
         refetch: refetchProfiles,
         isRefetching: isRefetchingProfiles,
     } = trpc.useQuery(
         [
             `providers.${ListPracticeProfilesByUserId.TRPC_ROUTE}`,
             {
-                userId: user?.userId ?? '',
+                userId: user?.userId,
             },
         ],
         {
             refetchOnWindowFocus: false,
-            enabled: Boolean(user?.userId),
+            enabled: false,
         }
     );
 
@@ -160,12 +151,11 @@ export default function PracticeProfilesPage() {
             }
         );
 
-    const { profiles, errors } = data ?? {
-        profiles: [] as ProviderProfileListing.Type[],
+    const { profiles, errors } = refetchedProfilesData ?? {
+        profiles: loadedProfiles ?? [],
         errors: [] as string[],
     };
-    const isLoading =
-        isLoadingUser || isLoadingProfiles || isRefetchingProfiles;
+    const isLoading = isLoadingProfiles || isRefetchingProfiles;
     const [queryError] = errors;
     const errorMessage = trpcError?.message || queryError;
     const canCreateProfile =
@@ -194,12 +184,11 @@ export default function PracticeProfilesPage() {
             primaryMenu={[...PRACTICE_ADMIN_MAIN_MENU]}
             secondaryMenu={[...PRACTICE_ADMIN_SECONDARY_MENU]}
             mobileMenu={[...PRACTICE_ADMIN_MOBILE_MENU]}
-            isLoadingUser={isLoadingUser}
         >
             <LoadingContainer isLoading={isLoading}>
                 <PageContentContainer
                     fillContentSpace
-                    paddingX={4}
+                    paddingX={0}
                     paddingY={8}
                 >
                     <TitleContainer>
@@ -231,18 +220,31 @@ export default function PracticeProfilesPage() {
                             </Box>
                         </Box>
                         <Box className="admin-controls">
-                            {canCreateProfile && (
-                                <Button
-                                    onClick={() =>
-                                        router.push(
-                                            URL_PATHS.PROVIDERS.PRACTICE
-                                                .PROFILES_CREATE
-                                        )
-                                    }
-                                >
-                                    New Profile
-                                </Button>
-                            )}
+                            {canCreateProfile &&
+                                (isMobileWidth ? (
+                                    <IconButton
+                                        onClick={() =>
+                                            router.push(
+                                                URL_PATHS.PROVIDERS.PRACTICE
+                                                    .PROFILES_CREATE
+                                            )
+                                        }
+                                    >
+                                        <AddRounded />
+                                    </IconButton>
+                                ) : (
+                                    <Button
+                                        startIcon={<AddRounded />}
+                                        onClick={() =>
+                                            router.push(
+                                                URL_PATHS.PROVIDERS.PRACTICE
+                                                    .PROFILES_CREATE
+                                            )
+                                        }
+                                    >
+                                        New Profile
+                                    </Button>
+                                ))}
                         </Box>
                     </TitleContainer>
                     <ListTitle>Provider Name</ListTitle>
@@ -258,11 +260,9 @@ export default function PracticeProfilesPage() {
                                 {canCreateProfile && (
                                     <Link
                                         aria-label="Create a profile"
-                                        onClick={() =>
-                                            router.push(
-                                                URL_PATHS.PROVIDERS.PRACTICE
-                                                    .PROFILES_CREATE
-                                            )
+                                        href={
+                                            URL_PATHS.PROVIDERS.PRACTICE
+                                                .PROFILES_CREATE
                                         }
                                     >
                                         Create one!
@@ -275,10 +275,6 @@ export default function PracticeProfilesPage() {
                         {profiles.map((profile) => {
                             const name =
                                 `${profile.givenName} ${profile.surname}`.trim();
-                            const { text: badgeText, color: badgeColor } =
-                                getProfileStatusBadge(
-                                    profile.directoryListing.status
-                                );
                             return (
                                 <ListItem
                                     key={profile.id}
@@ -316,50 +312,9 @@ export default function PracticeProfilesPage() {
                                             >
                                                 {name}
                                             </Paragraph>
-                                            <BadgeContainer>
-                                                <Badge
-                                                    icon={
-                                                        profile.directoryListing
-                                                            .status ===
-                                                        ListingStatus.listed ? (
-                                                            <VisibilityRounded />
-                                                        ) : (
-                                                            <VisibilityOffRounded />
-                                                        )
-                                                    }
-                                                    size={BADGE_SIZE.SMALL}
-                                                    color={badgeColor}
-                                                >
-                                                    {badgeText}
-                                                </Badge>
-                                                {profile.invitation && (
-                                                    <Badge
-                                                        icon={
-                                                            profile.invitation
-                                                                .status ===
-                                                            InvitationStatus.pending ? (
-                                                                <MailRounded />
-                                                            ) : (
-                                                                <AccountCircleOutlined />
-                                                            )
-                                                        }
-                                                        size={BADGE_SIZE.SMALL}
-                                                        color={
-                                                            profile.invitation
-                                                                .status ===
-                                                            InvitationStatus.pending
-                                                                ? 'warning'
-                                                                : 'success'
-                                                        }
-                                                    >
-                                                        {profile.invitation
-                                                            .status ===
-                                                        InvitationStatus.pending
-                                                            ? 'Invitation Sent'
-                                                            : 'Profile Claimed'}
-                                                    </Badge>
-                                                )}
-                                            </BadgeContainer>
+                                            {!isMobileWidth && (
+                                                <Badges profile={profile} />
+                                            )}
                                         </Box>
                                         <ProfileActions
                                             isMobileWidth={isMobileWidth}
@@ -375,7 +330,7 @@ export default function PracticeProfilesPage() {
                                                           `${URL_PATHS.DIRECTORY.ROOT}/${profile.id}`
                                                       )
                                                     : console.log(
-                                                          'TODO: list profile: ',
+                                                          'TODO: Publish profile to directory ',
                                                           profile
                                                       )
                                             }
@@ -423,7 +378,7 @@ export default function PracticeProfilesPage() {
                             expiresInDays: 7,
                             senderId: user.userId,
                             profileId: invitationProfile.id,
-                            practiceId,
+                            practiceId: practice.id,
                             designation: invitationProfile.designation,
                         })
                     }
@@ -464,14 +419,59 @@ const SeatCount = styled(Caption, {
 const BadgeContainer = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     justifyContent: 'flex-start',
-    display: 'none',
+    display: 'flex',
     '& > *:not(:last-child)': {
         marginRight: theme.spacing(2),
     },
-    [theme.breakpoints.up('md')]: {
+}));
+
+const Title = styled(H1)(({ theme }) => ({
+    ...theme.typography.h3,
+    marginBottom: theme.spacing(1),
+}));
+
+const TitleContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    width: '100%',
+    padding: theme.spacing(0, 5),
+    marginBottom: theme.spacing(10),
+    '& div:first-of-type': {
+        flex: 1,
+    },
+    '& div.admin-controls': {
         display: 'flex',
+        justifyContent: 'flex-end',
     },
 }));
+const ListingButton = styled(Button)(({ theme }) => ({
+    display: 'none',
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up('md')]: {
+        display: 'inherit',
+    },
+}));
+
+const ProfileList = styled(List)(({ theme }) => ({
+    flex: 1,
+    overflowY: 'auto',
+}));
+
+const getProfileStatusBadge = (status?: ListingStatus) => {
+    switch (status) {
+        case ListingStatus.listed:
+            return {
+                text: 'Listed',
+                color: BADGE_COLOR.SUCCESS,
+            };
+        case ListingStatus.pending:
+            return { text: 'Pending Review', color: BADGE_COLOR.WARNING };
+        case ListingStatus.unlisted:
+        default:
+            return { text: 'Unlisted', color: BADGE_COLOR.ERROR };
+    }
+};
 
 const InvitationModal = ({
     profile,
@@ -519,11 +519,11 @@ const InvitationModal = ({
         <Modal
             isOpen
             onClose={onClose}
-            title="Invite Provider"
+            title="Profile Invitation"
             message={
                 isLoading
                     ? 'Sending invite to ' + emailAddress
-                    : `Invite a provider to manage ${profile.givenName} ${profile.surname}'s profile. You will still be able to edit the profile.`
+                    : `Invite a provider to claim ${profile.givenName} ${profile.surname}'s profile. This will allow both you and the provider to edit this profile.`
             }
             fullWidthButtons
             primaryButtonDisabled={
@@ -713,6 +713,86 @@ const getInvitationAction = ({
             };
     }
 };
+const Badges = ({ profile }: { profile: ProviderProfileListing.Type }) => {
+    const { text: listingText, color: listingBadgeColor } =
+        getProfileStatusBadge(profile.directoryListing.status);
+    return (
+        <BadgeContainer>
+            <Badge
+                icon={
+                    profile.directoryListing.status === ListingStatus.listed ? (
+                        <VisibilityRounded />
+                    ) : (
+                        <VisibilityOffRounded />
+                    )
+                }
+                size={BADGE_SIZE.SMALL}
+                color={listingBadgeColor}
+            >
+                {listingText}
+            </Badge>
+            {profile.invitation && (
+                <Badge
+                    icon={
+                        profile.invitation.status ===
+                        InvitationStatus.pending ? (
+                            <MailRounded />
+                        ) : (
+                            <AccountCircleOutlined />
+                        )
+                    }
+                    size={BADGE_SIZE.SMALL}
+                    color={
+                        profile.invitation.status === InvitationStatus.pending
+                            ? 'warning'
+                            : 'success'
+                    }
+                >
+                    {profile.invitation.status === InvitationStatus.pending
+                        ? 'Invitation Sent'
+                        : 'Profile Claimed'}
+                </Badge>
+            )}
+        </BadgeContainer>
+    );
+};
+const BadgeIcons = ({ profile }: { profile: ProviderProfileListing.Type }) => {
+    const { text: listingText, color: listingBadgeColor } =
+        getProfileStatusBadge(profile.directoryListing.status);
+    return (
+        <BadgeContainer>
+            <Badge size={BADGE_SIZE.SMALL} color={listingBadgeColor}>
+                <CenteredContainer width="20px" height="20px">
+                    {profile.directoryListing.status ===
+                    ListingStatus.listed ? (
+                        <VisibilityRounded />
+                    ) : (
+                        <VisibilityOffRounded />
+                    )}
+                </CenteredContainer>
+            </Badge>
+            {profile.invitation && (
+                <Badge
+                    size={BADGE_SIZE.SMALL}
+                    color={
+                        profile.invitation.status === InvitationStatus.pending
+                            ? 'warning'
+                            : 'success'
+                    }
+                >
+                    <CenteredContainer width="20px" height="20px">
+                        {profile.invitation.status ===
+                        InvitationStatus.pending ? (
+                            <MailRounded />
+                        ) : (
+                            <AccountCircleOutlined />
+                        )}
+                    </CenteredContainer>
+                </Badge>
+            )}
+        </BadgeContainer>
+    );
+};
 const ProfileActions = ({
     profile,
     isMobileWidth,
@@ -775,7 +855,9 @@ const ProfileActions = ({
                         </ListingButton>
                     </>
                 )}
+                {isMobileWidth && <BadgeIcons profile={profile} />}
                 <FloatingList
+                    headerSlot={isMobileWidth && <Badges profile={profile} />}
                     listItems={moreItems}
                     sx={{ marginLeft: theme.spacing(4) }}
                 />
@@ -783,36 +865,3 @@ const ProfileActions = ({
         </Box>
     );
 };
-
-const Title = styled(H1)(({ theme }) => ({
-    ...theme.typography.h3,
-    marginBottom: theme.spacing(1),
-}));
-
-const TitleContainer = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginBottom: theme.spacing(10),
-    '& div:first-of-type': {
-        flex: 1,
-    },
-    '& div.admin-controls': {
-        flex: 1,
-        display: 'flex',
-        justifyContent: 'flex-end',
-    },
-}));
-const ListingButton = styled(Button)(({ theme }) => ({
-    display: 'none',
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up('md')]: {
-        display: 'inherit',
-    },
-}));
-
-const ProfileList = styled(List)(({ theme }) => ({
-    flex: 1,
-    overflowY: 'auto',
-}));
