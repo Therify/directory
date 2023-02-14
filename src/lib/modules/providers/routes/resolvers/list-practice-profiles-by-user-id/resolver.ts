@@ -1,11 +1,6 @@
 import { Context } from '@/lib/server/context';
 import { ListPracticeProfilesByUserId } from '@/lib/modules/providers/features/profiles';
 import { ProcedureResolver } from '@trpc/server/dist/declarations/src/internals/procedure';
-import {
-    ProviderCredential,
-    ProviderSupervisor,
-    ProviderProfile,
-} from '@/lib/shared/types';
 
 export const resolve: ProcedureResolver<
     Context,

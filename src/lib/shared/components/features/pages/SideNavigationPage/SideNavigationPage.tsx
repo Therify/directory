@@ -23,7 +23,7 @@ export interface SideNavigationPageProps {
     onNavigate: (path: string) => void;
     user?: TherifyUser;
     actionLink?: NavigationLink;
-    isLoadingUser: boolean;
+    isLoadingUser?: boolean;
     children?: React.ReactNode;
 }
 
@@ -35,7 +35,7 @@ export const SideNavigationPage = ({
     onNavigate,
     user,
     actionLink,
-    isLoadingUser,
+    isLoadingUser = false,
     children,
 }: SideNavigationPageProps) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
