@@ -223,6 +223,8 @@ model PracticeProviderInvitation {
   senderId       String           @map("sender_id")
   profile        ProviderProfile? @relation(fields: [profileId], references: [id], onDelete: Cascade)
   profileId      String?          @map("profile_id")
+  expiresAt      DateTime?        @map("expires_at")
+  designation    ProfileType
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -280,7 +282,7 @@ model ProviderProfile {
   newClientStatus            NewClientStatus              @default(not_accepting) @map("new_client_status")
   directoryListing           DirectoryListing?
   practiceStartDate          DateTime?                    @map("practice_start_date") @db.Timestamp(6)
-  practiceProviderInvitation PracticeProviderInvitation[]
+  invitations                PracticeProviderInvitation[]
   memberFavorites            MemberFavorites[]
   practiceProfile            PracticeProfile?
   ConnectionRequest          ConnectionRequest[]

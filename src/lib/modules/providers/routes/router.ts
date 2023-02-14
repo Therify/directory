@@ -7,6 +7,7 @@ import {
     getProviderProfileByIdResolver,
     updateProviderProfileResolver,
     deleteProviderProfileResolver,
+    createPracticeProviderInvitationResolver,
 } from './resolvers';
 import { Context } from '@/lib/server/context';
 import {
@@ -17,6 +18,11 @@ import {
     UpdateProviderProfile,
     DeleteProviderProfile,
 } from '@/lib/modules/providers/features/profiles';
+import {
+    CreatePracticeProviderInvitation,
+    DeletePracticeProviderInvitation,
+} from '@/lib/modules/providers/features/invitations';
+import { deletePracticeProviderInvitationResolver } from './resolvers/delete-practice-provider-invitation';
 
 export const router = trpc
     .router<Context>()
@@ -49,4 +55,14 @@ export const router = trpc
         input: DeleteProviderProfile.inputSchema,
         output: DeleteProviderProfile.outputSchema,
         resolve: deleteProviderProfileResolver,
+    })
+    .mutation(CreatePracticeProviderInvitation.TRPC_ROUTE, {
+        input: CreatePracticeProviderInvitation.inputSchema,
+        output: CreatePracticeProviderInvitation.outputSchema,
+        resolve: createPracticeProviderInvitationResolver,
+    })
+    .mutation(DeletePracticeProviderInvitation.TRPC_ROUTE, {
+        input: DeletePracticeProviderInvitation.inputSchema,
+        output: DeletePracticeProviderInvitation.outputSchema,
+        resolve: deletePracticeProviderInvitationResolver,
     });

@@ -18,6 +18,7 @@ export * from './communities-served';
 export * from './modality';
 export * from './age-group';
 export * from './provider-credential';
+export * from './provider-practice';
 export * from './provider-profile';
 export * from './provider-supervisor';
 export * from './accepted-insurance';
