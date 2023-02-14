@@ -348,7 +348,7 @@ export default function PracticeProfilesPage() {
                                                         {profile.invitation
                                                             .status ===
                                                         InvitationStatus.pending
-                                                            ? 'Invitation Pending'
+                                                            ? 'Invitation Sent'
                                                             : 'Profile Claimed'}
                                                     </Badge>
                                                 )}
@@ -700,7 +700,7 @@ const getListingAction = (status?: ListingStatus) => {
         case ListingStatus.unlisted:
         default:
             return {
-                text: 'List Profile',
+                text: 'Publish Profile',
                 icon: <VisibilityRounded />,
                 onClick: () => {
                     console.log('TODO: handle activate');
