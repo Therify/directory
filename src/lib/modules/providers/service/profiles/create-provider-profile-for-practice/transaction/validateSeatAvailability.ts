@@ -15,8 +15,8 @@ export const factory: (
             // This is because a "seat" is 1:1 with a profile, but an invitation without
             // a profile id assigned represents the intention for a profile to be
             // created when accepted. Therefore, an invitation with no profileId
-            // should take a seat until that invitation is accepted (which creates the profile),
-            // rejected, or expired.
+            // should take a seat until that invitation is accepted (which creates the profile) or
+            // status becomes rejected or expired.
             const { plans } = await prisma.user.findUniqueOrThrow({
                 where: { id: userId },
                 select: {
