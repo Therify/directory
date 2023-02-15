@@ -17,10 +17,7 @@ export const ProvidersService = {
     invitations: invitationsFactory(factoryParams),
     pageProps: pagePropsFactory(factoryParams),
     getProviderTherifyUser: GetProviderTherifyUser.factory(factoryParams),
-    getDashboardProps: GetDashboardProps.factory({
-        ...factoryParams,
-        accountsService: AccountsService,
-    }),
+    getDashboardProps: GetDashboardProps.factory(factoryParams),
 };
 
 export type ProvidersService = typeof ProvidersService;

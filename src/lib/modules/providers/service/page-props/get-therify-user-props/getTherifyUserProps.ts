@@ -23,7 +23,7 @@ export const factory = (params: ProvidersServiceParams) => {
             };
         }
         const getUser = GetProviderTherifyUser.factory(params);
-        const user = await getUser({ userId: session.user.sub });
+        const { user } = await getUser({ userId: session.user.sub });
 
         if (user === null) {
             return {

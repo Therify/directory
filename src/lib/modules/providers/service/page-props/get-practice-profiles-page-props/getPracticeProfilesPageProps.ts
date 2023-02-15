@@ -6,6 +6,7 @@ import { AccountsService } from '@/lib/modules/accounts/service';
 import { profilesFactory } from '@/lib/modules/providers/service/profiles';
 import { ProvidersServiceParams } from '../../params';
 import { practiceFactory } from '../../practice';
+import { GetProviderTherifyUser } from '../../get-provider-therify-user';
 
 export interface PracticeProfilesPageProps {
     profiles: ProviderProfileListing.Type[];
@@ -31,13 +32,12 @@ export const factory = (params: PracticeProfilesPagePropsParams) => {
                 },
             };
         }
+        const getUserDetails = GetProviderTherifyUser.factory(params);
         const { listPracticeProfilesByUserId } = profilesFactory(params);
         const { getPracticeByUserId } = practiceFactory(params);
 
         const [{ user }, { profiles }, { practice }] = await Promise.all([
-            params.accountsService.getUserDetailsById({
-                userId: session.user.sub,
-            }),
+            getUserDetails({ userId: session.user.sub }),
             listPracticeProfilesByUserId({ userId: session.user.sub }),
             getPracticeByUserId({ userId: session.user.sub }),
         ]);

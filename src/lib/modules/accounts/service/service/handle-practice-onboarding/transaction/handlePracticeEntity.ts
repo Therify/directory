@@ -51,7 +51,7 @@ export const factory: HandlePracticeOnboardingEntityFactory = ({
                     phone,
                     email,
                     website,
-                    userId,
+                    practiceOwnerId: userId,
                 },
             });
 

@@ -6,9 +6,9 @@ export const factory =
     ({ prisma }: ProvidersServiceParams) =>
     async ({
         userId,
-    }: GetUserDetailsById.Input): Promise<
-        GetUserDetailsById.Output['user']
-    > => {
+    }: GetUserDetailsById.Input): Promise<{
+        user: GetUserDetailsById.Output['user'];
+    }> => {
         const user = await prisma.user.findUnique({
             where: {
                 id: userId,
@@ -67,7 +67,7 @@ export const factory =
             },
         });
 
-        if (!user) return null;
+        if (!user) return { user: null };
 
         const {
             providerProfile,
@@ -113,17 +113,21 @@ export const factory =
             }
         }
 
-        return TherifyUser.validate({
-            providerProfile,
-            emailAddress,
-            givenName,
-            surname,
-            createdAt: createdAt.toISOString(),
-            roles,
-            accountId,
-            userId,
-            avatarUrl: providerProfile?.profileImageUrl ?? undefined,
-            plan,
-            isPracticeAdmin,
-        });
+        return {
+            user: TherifyUser.validate({
+                providerProfile,
+                emailAddress,
+                givenName,
+                surname,
+                createdAt: createdAt.toISOString(),
+                roles,
+                accountId,
+                userId,
+                plan,
+                isPracticeAdmin,
+                ...(providerProfile?.profileImageUrl
+                    ? { avatarUrl: providerProfile.profileImageUrl }
+                    : {}),
+            }),
+        };
     };

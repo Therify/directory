@@ -7,12 +7,12 @@ export const transactionDefinition = z.object({
         stripeCustomerId: z.string(),
         userId: z.string(),
     }),
-    defendAgainstDuplicatePlans: z.object({
-        hasPlan: z.boolean(),
-    }),
     handlePracticeEntity: z.object({
         practiceId: z.string(),
         created: z.boolean(),
+    }),
+    defendAgainstDuplicatePlans: z.object({
+        hasPlan: z.boolean(),
     }),
     createStripeCheckoutSession: z.object({
         checkoutSessionId: z.string(),
