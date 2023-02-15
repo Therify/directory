@@ -39,17 +39,16 @@ const LOGIN_IMAGES = [
 
 const getUserRedirectPath = (user: TherifyUser.TherifyUser): string => {
     const [role] = user.roles;
-    console.log({ role, user });
     if (role === Role.member) {
-        return URL_PATHS.MEMBERS.HOME;
+        return URL_PATHS.DIRECTORY.MEMBER_DIRECTORY;
     } else if (user.plan === null) {
         return URL_PATHS.PROVIDERS.ONBOARDING.BILLING;
     } else if (user.isPracticeAdmin) {
-        return URL_PATHS.PROVIDERS.PRACTICE.DASHBOARD;
+        return URL_PATHS.PROVIDERS.PRACTICE.PROFILES;
     } else if (role === Role.provider_therapist) {
-        return URL_PATHS.PROVIDERS.THERAPIST.DASHBOARD;
+        return URL_PATHS.PROVIDERS.THERAPIST.PROFILES;
     } else if (role === Role.provider_coach) {
-        return URL_PATHS.PROVIDERS.COACH.DASHBOARD;
+        return URL_PATHS.PROVIDERS.COACH.PROFILES;
     } else {
         return URL_PATHS[404];
     }
