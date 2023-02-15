@@ -3,8 +3,9 @@ import { TransactionDefinition } from '@/lib/shared/utils/transaction/transactio
 import { AccountsServiceParams as Context } from '../../../params';
 
 export const handleGroupPracticePlanPaymentTransactionDefinition = z.object({
-    getTherifyIdentifiers: z.object({
-        therifyUserId: z.string(),
+    getPractice: z.object({
+        practiceId: z.string(),
+        practiceOwnerId: z.string(),
     }),
     createPlanEntity: z.object({
         planId: z.string(),

@@ -8,15 +8,19 @@ import {
     THERAPIST_MOBILE_MENU,
     URL_PATHS,
 } from '@/lib/sitemap';
-import { useTherifyUser } from '@/lib/shared/hooks';
+import { ProvidersService } from '@/lib/modules/providers/service';
+import { ProviderTherifyUserPageProps } from '@/lib/modules/providers/service/page-props/get-therify-user-props';
 import { RBAC } from '@/lib/shared/utils';
 
 export const getServerSideProps = RBAC.requireTherapistAuth(
-    withPageAuthRequired()
+    withPageAuthRequired({
+        getServerSideProps: ProvidersService.pageProps.getTherifyUserPageProps,
+    })
 );
 
-export default function TherapistDashboardPage() {
-    const { user, isLoading } = useTherifyUser();
+export default function TherapistDashboardPage({
+    user,
+}: ProviderTherifyUserPageProps) {
     const router = useRouter();
     return (
         <SideNavigationPage
@@ -26,7 +30,6 @@ export default function TherapistDashboardPage() {
             primaryMenu={[...THERAPIST_MAIN_MENU]}
             secondaryMenu={[...THERAPIST_SECONDARY_MENU]}
             mobileMenu={[...THERAPIST_MOBILE_MENU]}
-            isLoadingUser={isLoading}
         >
             <H1>Therapist Dashboard</H1>
         </SideNavigationPage>

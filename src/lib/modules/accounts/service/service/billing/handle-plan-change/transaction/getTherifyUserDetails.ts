@@ -11,16 +11,20 @@ export const factory: GetTherifyUserDetailsFactory = ({
     stripeCustomerId,
 }) => ({
     async commit({ prisma }) {
-        const { id: therifyUserId } = await prisma.user.findUniqueOrThrow({
-            where: { stripeCustomerId },
-            select: {
-                id: true,
-            },
-        });
+        const { managedPractice, id: practiceOwnerId } =
+            await prisma.user.findUniqueOrThrow({
+                where: { stripeCustomerId },
+                select: {
+                    id: true,
+                    managedPractice: { select: { id: true } },
+                },
+            });
+        const practiceId = managedPractice?.id;
 
-        return {
-            therifyUserId,
-        };
+        if (!practiceId) {
+            throw new Error('No practice found for customer.');
+        }
+        return { practiceId, practiceOwnerId };
     },
     async rollback() {
         return;

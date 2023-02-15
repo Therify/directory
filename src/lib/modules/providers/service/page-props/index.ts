@@ -1,13 +1,8 @@
-import { AccountsService } from '@/lib/modules/accounts/service';
 import { ProvidersServiceParams } from '../params';
-import { GetPracticeProfilesPageProps } from './get-practice-profiles-page-props';
-import { GetProviderInvitationRegistrationPageProps } from './get-provider-invitation-registration-page-props';
+import { GetTherifyUserPageProps } from './get-therify-user-props';
+import { practicePagesFactory } from './practice';
 
 export const pagePropsFactory = (params: ProvidersServiceParams) => ({
-    getPracticeProfilesPageProps: GetPracticeProfilesPageProps.factory({
-        ...params,
-        accountsService: AccountsService,
-    }),
-    getProviderInvitationRegistrationPageProps:
-        GetProviderInvitationRegistrationPageProps.factory(params),
+    getTherifyUserPageProps: GetTherifyUserPageProps.factory(params),
+    practice: practicePagesFactory(params),
 });

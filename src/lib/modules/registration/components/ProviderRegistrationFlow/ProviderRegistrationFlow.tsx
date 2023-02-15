@@ -143,14 +143,16 @@ export const ProviderRegistrationFlow = ({
             </FormContainer>
 
             <ButtonContainer>
-                <Button
-                    isLoading={isRegistering}
-                    disabled={!providerDetailsForm.formState.isValid}
-                    endIcon={<NextIcon />}
-                    onClick={handleSubmit}
-                >
-                    Sign Up
-                </Button>
+                {!isRegistering && (
+                    <Button
+                        isLoading={isRegistering}
+                        disabled={!providerDetailsForm.formState.isValid}
+                        endIcon={<NextIcon />}
+                        onClick={handleSubmit}
+                    >
+                        Sign Up
+                    </Button>
+                )}
             </ButtonContainer>
         </Box>
     );

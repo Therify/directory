@@ -1,7 +1,7 @@
 import { CreateConnectionRequest } from '@/lib/modules/directory/features';
 import { DirectoryServiceParams } from '../param';
-import sendMail from '@/emails';
-import ReferralEmail from '@/emails/ReferralEmail';
+import { VendorInngest } from '@/lib/shared/vendors/inngest/inngest';
+import { SendConnectionRequestEmail } from '@/lib/shared/vendors/inngest';
 
 interface CreateConnectionFactoryParams extends DirectoryServiceParams {}
 
@@ -32,7 +32,7 @@ export const factory = ({ prisma }: CreateConnectionFactoryParams) => {
                             user: true,
                         },
                     }),
-                    prisma.account.findFirstOrThrow({
+                    prisma.account.findFirst({
                         where: {
                             users: {
                                 some: {
@@ -41,7 +41,7 @@ export const factory = ({ prisma }: CreateConnectionFactoryParams) => {
                             },
                         },
                         include: {
-                            plan: {
+                            plans: {
                                 orderBy: {
                                     createdAt: 'desc',
                                 },
@@ -52,42 +52,43 @@ export const factory = ({ prisma }: CreateConnectionFactoryParams) => {
                 ]);
             const { user, state, insurance } = memberProfile;
             let planDetails = undefined;
-            if (account?.plan) {
-                const [plan] = account.plan;
+            if (account?.plans) {
+                const [plan] = account.plans;
                 planDetails = {
                     numberOfCoveredSessions: plan.coveredSessions,
                     planName: account.name,
                 };
             }
-            await sendMail({
-                component: (
-                    <ReferralEmail
-                        member={{
+            await VendorInngest.send(SendConnectionRequestEmail.EVENT_NAME, {
+                data: {
+                    to: [
+                        providerProfile.contactEmail,
+                        user.emailAddress,
+                        'help@therify.co',
+                    ],
+                    props: {
+                        member: {
                             givenName: user.givenName,
                             surname: user.surname,
                             emailAddress: user.emailAddress,
                             state,
                             insurance,
                             concerns: [],
-                        }}
-                        plan={planDetails ?? undefined}
-                        provider={{
+                        },
+                        plan: planDetails ?? undefined,
+                        provider: {
                             givenName: providerProfile.givenName,
-                        }}
-                    />
-                ),
-                to: [
-                    providerProfile.contactEmail,
-                    user.emailAddress,
-                    'help@therify.co',
-                ],
-                subject: `New referral from Therify - ${user.givenName} ${user.surname}`,
+                        },
+                    },
+                    subject: `New referral from Therify - ${user.givenName} ${user.surname}`,
+                },
             });
             return {
                 success: true,
                 errors: [],
             };
         } catch (error) {
+            console.error(error);
             return {
                 success: false,
                 errors: [],

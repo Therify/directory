@@ -2,7 +2,7 @@ import { HandleGroupPracticePlanPayment } from '@/lib/modules/accounts/features/
 import { TransactionV1 } from '@/lib/shared/utils/transaction';
 import { AccountsServiceParams } from '../../params';
 import {
-    GetTherifyIdentifiers,
+    GetPractice,
     handleGroupPracticePlanPaymentTransactionDefinition,
     CreatePlanEntity,
     CreateInvoiceEntity,
@@ -15,7 +15,7 @@ export const factory =
             handleGroupPracticePlanPaymentTransactionDefinition,
             { ...context },
             {
-                getTherifyIdentifiers: GetTherifyIdentifiers.factory(params),
+                getPractice: GetPractice.factory(params),
                 createPlanEntity: CreatePlanEntity.factory(params),
                 createInvoiceEntity: CreateInvoiceEntity.factory(params),
             },

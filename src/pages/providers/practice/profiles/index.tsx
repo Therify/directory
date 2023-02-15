@@ -61,12 +61,12 @@ import {
     DeletePracticeProviderInvitation,
 } from '@/lib/modules/providers/features/invitations';
 import { ProvidersService } from '@/lib/modules/providers/service';
-import { PracticeProfilesPageProps } from '@/lib/modules/providers/service/page-props/get-practice-profiles-page-props/getPracticeProfilesPageProps';
+import { PracticeProfilesPageProps } from '@/lib/modules/providers/service/page-props/practice/get-practice-profiles-page-props/getPracticeProfilesPageProps';
 
 export const getServerSideProps = RBAC.requireProviderAuth(
     withPageAuthRequired({
         getServerSideProps:
-            ProvidersService.pageProps.getPracticeProfilesPageProps,
+            ProvidersService.pageProps.practice.getPracticeProfilesPageProps,
     })
 );
 
@@ -539,7 +539,7 @@ const InvitationModal = ({
             secondaryButtonOnClick={onClose}
             postBodySlot={
                 isLoading ? (
-                    <CenteredContainer>
+                    <CenteredContainer width="100%" paddingY={2}>
                         <CircularProgress />
                     </CenteredContainer>
                 ) : (
@@ -594,7 +594,7 @@ const DeleteInvitaionModal = ({
             secondaryButtonOnClick={onClose}
             postBodySlot={
                 isDeleting ? (
-                    <CenteredContainer>
+                    <CenteredContainer width="100%" paddingY={2}>
                         <CircularProgress />
                     </CenteredContainer>
                 ) : undefined
@@ -637,7 +637,7 @@ const DeleteProfileModal = ({
             secondaryButtonOnClick={onClose}
             postBodySlot={
                 isDeleting ? (
-                    <CenteredContainer>
+                    <CenteredContainer width="100%" paddingY={2}>
                         <CircularProgress />
                     </CenteredContainer>
                 ) : (

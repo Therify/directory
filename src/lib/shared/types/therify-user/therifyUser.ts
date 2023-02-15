@@ -13,13 +13,19 @@ export const schema = z.lazy(() =>
         userId: z.string(),
         avatarUrl: z.string().optional(),
         firebaseToken: z.string().optional(),
+        createdAt: z.string(),
         plan: PlanSchema.pick({
             status: true,
             startDate: true,
             endDate: true,
             renews: true,
             seats: true,
-        }).nullable(),
+        })
+            .extend({
+                startDate: z.string(),
+                endDate: z.string(),
+            })
+            .nullable(),
         isPracticeAdmin: z.boolean(),
     })
 );

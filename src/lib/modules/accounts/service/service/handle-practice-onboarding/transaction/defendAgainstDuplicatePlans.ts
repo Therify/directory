@@ -5,10 +5,10 @@ import { HandlePracticeOnboardingTransaction } from './definition';
 export const factory = (
     input: HandlePracticeOnboarding.Input
 ): HandlePracticeOnboardingTransaction['defendAgainstDuplicatePlans'] => ({
-    async commit({ prisma }, { getUserDetails: { userId } }) {
+    async commit({ prisma }, { handlePracticeEntity: { practiceId } }) {
         const plan = await prisma.plan.findFirst({
             where: {
-                userId,
+                practiceId,
             },
         });
         if (plan !== null) {
