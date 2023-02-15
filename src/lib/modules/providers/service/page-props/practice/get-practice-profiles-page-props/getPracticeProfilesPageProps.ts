@@ -31,12 +31,12 @@ export const factory = (params: ProvidersServiceParams) => {
         }
         const getUserDetails = GetProviderTherifyUser.factory(params);
         const { listPracticeProfilesByUserId } = profilesFactory(params);
-        const { getPracticeByUserId } = practiceFactory(params);
+        const { getPracticeByOwnerId } = practiceFactory(params);
 
         const [{ user }, { profiles }, { practice }] = await Promise.all([
             getUserDetails({ userId: session.user.sub }),
             listPracticeProfilesByUserId({ userId: session.user.sub }),
-            getPracticeByUserId({ userId: session.user.sub }),
+            getPracticeByOwnerId({ userId: session.user.sub }),
         ]);
         if (user === null) {
             return {

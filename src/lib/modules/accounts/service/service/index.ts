@@ -9,7 +9,7 @@ import { AccountsServiceParams } from './params';
 import { IsEmailUnique } from './is-email-unique';
 import { SendEmailVerification } from './send-email-verification';
 import { GetVerificationEmailStatus } from './get-verification-email-status';
-import { GetPracticeByUserId } from './get-practice-by-user-id';
+import { GetPracticeByOwnerId } from './get-practice-by-owner-id';
 import { HandlePracticeOnboarding } from './handle-practice-onboarding';
 import { registerMember } from './register-member';
 import { Billing } from './billing';
@@ -34,7 +34,7 @@ export const AccountsService = {
     getVerificationEmailStatus:
         GetVerificationEmailStatus.factory(factoryParams),
     getUserDetailsById: GetUserDetailsById.factory(factoryParams),
-    getPracticeByUserId: GetPracticeByUserId.factory(factoryParams),
+    getPracticeByOwnerId: GetPracticeByOwnerId.factory(factoryParams),
     handlePracticeOnboarding: HandlePracticeOnboarding.factory(factoryParams),
     registerMember: registerMember,
     createFirebaseAuthToken: CreateFirebaseAuthToken.factory(factoryParams),

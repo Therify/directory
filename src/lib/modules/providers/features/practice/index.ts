@@ -1,1 +1,2 @@
-export * as GetPracticeByUserId from './get-practice-by-user-id';
+export * as GetPracticeByOwnerId from './get-practice-by-owner-id';
+export * as GetPracticeByProviderId from './get-practice-by-provider-id';

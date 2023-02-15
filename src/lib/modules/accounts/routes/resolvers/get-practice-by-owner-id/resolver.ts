@@ -1,17 +1,17 @@
 import { Context } from '@/lib/server/context';
-import { GetPracticeByUserId } from '@/lib/modules/users/features';
+import { GetPracticeByOwnerId } from '@/lib/modules/users/features';
 import { ProcedureResolver } from '@trpc/server/dist/declarations/src/internals/procedure';
 
 export const resolve: ProcedureResolver<
     Context,
-    GetPracticeByUserId.Input,
-    GetPracticeByUserId.Output
+    GetPracticeByOwnerId.Input,
+    GetPracticeByOwnerId.Output
 > = async function resolveGetPlanStatus({
     input,
     ctx,
-}): Promise<GetPracticeByUserId.Output> {
+}): Promise<GetPracticeByOwnerId.Output> {
     try {
-        const { practice } = await ctx.accounts.getPracticeByUserId(input);
+        const { practice } = await ctx.accounts.getPracticeByOwnerId(input);
         return {
             practice,
             errors: [],

@@ -40,12 +40,12 @@ export const factory = (params: ProvidersServiceParams) => {
         }
 
         const getUserDetails = GetProviderTherifyUser.factory(params);
-        const { getPracticeByUserId } = practiceFactory(params);
+        const { getPracticeByOwnerId } = practiceFactory(params);
         const { getProfileById } = profilesFactory(params);
 
         const [{ user }, { practice }, { profile }] = await Promise.all([
             getUserDetails({ userId: session.user.sub }),
-            getPracticeByUserId({ userId: session.user.sub }),
+            getPracticeByOwnerId({ userId: session.user.sub }),
             getProfileById({ profileId: context.query.profileId as string }),
         ]);
         if (user === null) {

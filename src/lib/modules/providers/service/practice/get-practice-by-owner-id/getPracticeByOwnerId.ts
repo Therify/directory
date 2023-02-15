@@ -1,4 +1,4 @@
-import { GetPracticeByUserId } from '@/lib/modules/providers/features/practice';
+import { GetPracticeByOwnerId } from '@/lib/modules/providers/features/practice';
 import { ProviderPractice } from '@/lib/shared/types';
 import { ProvidersServiceParams } from '../../params';
 
@@ -6,8 +6,8 @@ export const factory =
     ({ prisma }: ProvidersServiceParams) =>
     async ({
         userId,
-    }: GetPracticeByUserId.Input): Promise<{
-        practice: GetPracticeByUserId.Output['practice'];
+    }: GetPracticeByOwnerId.Input): Promise<{
+        practice: GetPracticeByOwnerId.Output['practice'];
     }> => {
         const practice = await prisma.practice.findUniqueOrThrow({
             where: {

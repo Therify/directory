@@ -1,20 +1,22 @@
 import { GetServerSideProps } from 'next';
-import { ProviderPractice } from '@/lib/shared/types';
+import { ProviderPractice, ProviderProfile } from '@/lib/shared/types';
 import { TherifyUser } from '@/lib/shared/types/therify-user';
 import { getSession } from '@auth0/nextjs-auth0';
 import { URL_PATHS } from '@/lib/sitemap';
 import { Role } from '@prisma/client';
-import { ProvidersServiceParams } from '../../../params';
-import { practiceFactory } from '../../../practice';
-import { GetProviderTherifyUser } from '../../../get-provider-therify-user';
+import { ProvidersServiceParams } from '../../params';
+import { practiceFactory } from '../../practice';
+import { GetProviderTherifyUser } from '../../get-provider-therify-user';
+import { profilesFactory } from '../../profiles';
 
-export interface PracticeCreateProfilePageProps {
+export interface ProviderProfileEditorPageProps {
     practice: ProviderPractice.Type;
     user: TherifyUser.TherifyUser;
+    profile: ProviderProfile.ProviderProfile;
 }
 
 export const factory = (params: ProvidersServiceParams) => {
-    const getPracticeCreateProfilePageProps: GetServerSideProps<
+    const getPracticeProfileEditorPageProps: GetServerSideProps<
         ProvidersServiceParams
     > = async (context) => {
         const session = await getSession(context.req, context.res);
@@ -26,12 +28,17 @@ export const factory = (params: ProvidersServiceParams) => {
                 },
             };
         }
-        const getUserDetails = GetProviderTherifyUser.factory(params);
-        const { getPracticeByOwnerId } = practiceFactory(params);
 
-        const [{ user }, { practice }] = await Promise.all([
+        const getUserDetails = GetProviderTherifyUser.factory(params);
+        const { getPracticeByProviderId } = practiceFactory(params);
+        const { getProfileByUserId } = profilesFactory(params);
+
+        const [{ user }, { practice }, { profile }] = await Promise.all([
             getUserDetails({ userId: session.user.sub }),
-            getPracticeByOwnerId({ userId: session.user.sub }),
+            getPracticeByProviderId({ userId: session.user.sub }),
+            getProfileByUserId({
+                userId: session.user.sub,
+            }),
         ]);
         if (user === null) {
             return {
@@ -41,22 +48,17 @@ export const factory = (params: ProvidersServiceParams) => {
                 },
             };
         }
-        if (!user.isPracticeAdmin) {
-            const isTherapist = user.roles.includes(Role.provider_therapist);
+        if (!profile) {
             return {
-                redirect: {
-                    destination: isTherapist
-                        ? URL_PATHS.PROVIDERS.THERAPIST.DASHBOARD
-                        : URL_PATHS.PROVIDERS.COACH.DASHBOARD,
-                    permanent: false,
-                },
+                notFound: true,
             };
         }
-        const props: PracticeCreateProfilePageProps = {
+        const props: ProviderProfileEditorPageProps = {
             practice,
+            profile,
             user,
         };
         return JSON.parse(JSON.stringify({ props }));
     };
-    return getPracticeCreateProfilePageProps;
+    return getPracticeProfileEditorPageProps;
 };

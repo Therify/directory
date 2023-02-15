@@ -4,4 +4,5 @@ export const THERAPIST_PATHS = {
     DASHBOARD: '/providers/therapist/dashboard',
     CLIENTS: '/providers/therapist/clients',
     PROFILE_EDITOR: '/providers/therapist/profile/editor',
+    PROFILES: '/providers/therapist/profiles',
 } as const;
