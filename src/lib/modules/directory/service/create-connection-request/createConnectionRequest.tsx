@@ -28,9 +28,6 @@ export const factory = ({ prisma }: CreateConnectionFactoryParams) => {
                         where: {
                             id: profileId,
                         },
-                        include: {
-                            user: true,
-                        },
                     }),
                     prisma.account.findFirst({
                         where: {

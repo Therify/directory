@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-export const schema = z.enum([
+export const ENTRIES = [
     'Addiction',
     'ADHD',
     'Anger',
@@ -27,7 +27,9 @@ export const schema = z.enum([
     'Stress',
     'Trauma or PTSD',
     "Women's Issues",
-]);
+] as const;
+
+export const schema = z.enum(ENTRIES);
 
 export type Issue = z.infer<typeof schema>;
 

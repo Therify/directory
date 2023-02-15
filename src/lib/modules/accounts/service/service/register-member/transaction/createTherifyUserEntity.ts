@@ -32,6 +32,8 @@ export const createTherifyUserEntity: RegisterMemberTransaction['CREATE_THERIFY_
                             create: {
                                 state: input.state,
                                 insurance: input.insurance,
+                                concerns: input.concerns,
+                                goals: input.goals,
                             },
                         },
                     },
@@ -53,6 +55,8 @@ export const createTherifyUserEntity: RegisterMemberTransaction['CREATE_THERIFY_
                         create: {
                             state: input.state,
                             insurance: input.insurance,
+                            concerns: input.concerns,
+                            goals: input.goals,
                         },
                     },
                 },

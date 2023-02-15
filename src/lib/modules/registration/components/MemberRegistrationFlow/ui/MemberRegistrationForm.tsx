@@ -14,6 +14,8 @@ import {
     StateInput,
     TermsAndConditionsInput,
     TEST_IDS,
+    ConcernsInput,
+    GoalsInput,
 } from './inputs';
 import { ROLES } from '@/lib/shared/types/roles';
 import { InsuranceInput } from './inputs/Insurance';
@@ -87,6 +89,8 @@ export const MemberRegistrationForm = ({
                 />
                 <StateInput control={control} />
                 <InsuranceInput control={control} />
+                <GoalsInput control={control} />
+                <ConcernsInput control={control} />
                 <TermsAndConditionsInput control={control} />
             </Form>
         </Box>

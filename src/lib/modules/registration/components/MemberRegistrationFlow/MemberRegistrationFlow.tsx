@@ -54,7 +54,12 @@ export const MemberRegistrationFlow = ({
         useRegistrationStorage();
     const memberDetailsForm = useForm<RegisterMember.Input>({
         mode: 'onChange',
-        defaultValues: { ...getStoredMemberDetails(), role },
+        defaultValues: {
+            ...getStoredMemberDetails(),
+            role,
+            concerns: [],
+            goals: [],
+        },
     });
 
     const handleSubmit = () => {

@@ -11,6 +11,8 @@ export const schema = z
         dateOfBirth: z.string(),
         state: z.string(),
         insurance: z.string(),
+        goals: z.string().array(),
+        concerns: z.string().array(),
         hasAcceptedTermsAndConditions: z.boolean().default(false),
         role: z.enum([ROLES.MEMBER]),
         registrationCode: z.string().optional(),

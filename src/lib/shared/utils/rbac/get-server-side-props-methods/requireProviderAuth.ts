@@ -16,5 +16,5 @@ export const requireProviderAuth =
                 redirect: options?.redirect ?? defaultRedirect,
             };
         }
-        return authCallback(context);
+        return await authCallback(context);
     };

@@ -1,7 +1,9 @@
 import { Control, Controller } from 'react-hook-form';
-import { Input, FormValidation } from '@/lib/shared/components/ui';
+import { Input, FormValidation, Select } from '@/lib/shared/components/ui';
 import { RegisterMember } from '@/lib/modules/registration/features';
 import { TEST_IDS } from './testIds';
+import { asSelectOptions } from '@/lib/shared/utils';
+import { InsuranceProvider } from '@/lib/shared/types';
 
 interface InsuranceInputProps {
     control: Control<RegisterMember.Input>;
@@ -23,10 +25,14 @@ export const InsuranceInput = ({
             field: { onChange, onBlur, value, name },
             fieldState: { error, isTouched },
         }) => (
-            <Input
+            <Select
                 required
                 id="insurance"
                 label="Insurance"
+                options={asSelectOptions(InsuranceProvider.ENTRIES)}
+                sx={{
+                    width: '100%',
+                }}
                 errorMessage={
                     isTouched
                         ? FormValidation.getInsuranceValidationErrorMessage(
