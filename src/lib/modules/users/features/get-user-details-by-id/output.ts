@@ -1,8 +1,8 @@
-import { ProviderProfile, TherifyUser } from '@/lib/shared/types';
 import * as z from 'zod';
+import { TherifyUser } from '@/lib/shared/types';
 
 export const schema = z.object({
-    user: TherifyUser.schema,
+    user: TherifyUser.schema.nullable(),
     errors: z.array(z.string()),
 });
 

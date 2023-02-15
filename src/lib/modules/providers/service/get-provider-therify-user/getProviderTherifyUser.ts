@@ -1,13 +1,13 @@
+import { GetUserDetailsById } from '@/lib/modules/users/features';
 import { TherifyUser } from '@/lib/shared/types';
 import { ProvidersServiceParams } from '../params';
-import { GetProviderTherifyUser } from '../../features/providers';
 
 export const factory =
     ({ prisma }: ProvidersServiceParams) =>
     async ({
         userId,
-    }: GetProviderTherifyUser.Input): Promise<
-        GetProviderTherifyUser.Output['user'] | null
+    }: GetUserDetailsById.Input): Promise<
+        GetUserDetailsById.Output['user']
     > => {
         const user = await prisma.user.findUnique({
             where: {
