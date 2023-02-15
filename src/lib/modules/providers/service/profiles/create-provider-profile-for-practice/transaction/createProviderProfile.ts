@@ -31,9 +31,7 @@ export const factory: (
             const { id: profileId } = await prisma.providerProfile.create({
                 data: {
                     ...ProviderProfileSchema.omit({
-                        // Only require id validation if the id exists on the payload.
-                        // This allows us to parse `create` and `update` profile payloads here.
-                        ...(profile.id ? {} : { id: true }),
+                        id: true,
                         createdAt: true,
                         updatedAt: true,
                         supervisor: true,

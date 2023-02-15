@@ -15,6 +15,7 @@ import {
     Modality,
     AgeGroup,
     ProviderProfile,
+    ProviderPractice,
 } from '@/lib/shared/types';
 import { ProfileEditorForm } from './ui/ProfileEditorForm';
 import { ProviderProfile as ProviderProfileUi } from '../../../directory/components/ProviderProfile';
@@ -22,7 +23,7 @@ import { CloudinaryUploadResult } from '../../../media/components/hooks/userClou
 
 interface ProfileEditorProps {
     providerProfile?: Partial<ProviderProfile.ProviderProfile>;
-    practice: Pick<Practice, 'id' | 'name' | 'city' | 'state' | 'website'>;
+    practice: ProviderPractice.Type;
     isSavingProfile: boolean;
     onBack?: () => void;
     onSubmit: (profile: ProviderProfile.ProviderProfile) => Promise<void>;
