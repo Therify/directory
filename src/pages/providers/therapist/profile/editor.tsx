@@ -1,0 +1,88 @@
+import { useRouter } from 'next/router';
+import { withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { URL_PATHS } from '@/lib/sitemap';
+import { RBAC } from '@/lib/shared/utils';
+import { ProfileEditor } from '@/lib/modules/providers/components/ProfileEditor';
+import { trpc } from '@/lib/shared/utils/trpc';
+import {
+    GetProviderProfileByUserId,
+    UpdateProviderProfile,
+} from '@/lib/modules/providers/features/profiles';
+import { ProvidersService } from '@/lib/modules/providers/service';
+import { ProviderProfileEditorPageProps } from '@/lib/modules/providers/service/page-props/get-provider-profile-editor-page-props';
+import { ProviderNavigationPage } from '@/lib/shared/components/features/pages/ProviderNavigationPage';
+import { LoadingContainer } from '@/lib/shared/components/ui';
+
+export const getServerSideProps = RBAC.requireTherapistAuth(
+    withPageAuthRequired({
+        getServerSideProps:
+            ProvidersService.pageProps.getProviderProfileEditorPageProps,
+    })
+);
+
+export default function TherapistProfileEditorPage({
+    user,
+    profile,
+    practice,
+}: ProviderProfileEditorPageProps) {
+    const router = useRouter();
+
+    const {
+        mutate: updateProfile,
+        isLoading: isUpdatingProfile,
+        // error,
+    } = trpc.useMutation(`providers.${UpdateProviderProfile.TRPC_ROUTE}`, {
+        onSuccess: ({ success, errors }) => {
+            if (success) return refetch();
+            const [error] = errors;
+            if (error) {
+                // TODO: handle profile error
+                console.error(error);
+            }
+        },
+    });
+
+    const {
+        data: refetchedData,
+        isLoading,
+        // error: trpcError,
+        refetch,
+        isRefetching,
+    } = trpc.useQuery(
+        [
+            `providers.${GetProviderProfileByUserId.TRPC_ROUTE}`,
+            {
+                userId: user?.userId,
+            },
+        ],
+        {
+            refetchOnWindowFocus: false,
+            enabled: !!user?.userId,
+        }
+    );
+    const { profile: refetchedProfile } = refetchedData ?? {};
+
+    return (
+        <ProviderNavigationPage
+            currentPath={URL_PATHS.PROVIDERS.THERAPIST.PROFILE_EDITOR}
+            user={user}
+        >
+            <LoadingContainer isLoading={isLoading || isRefetching}>
+                <ProfileEditor
+                    onBack={router.back}
+                    providerProfile={refetchedProfile ?? profile}
+                    practice={practice}
+                    isSavingProfile={isUpdatingProfile}
+                    onSubmit={async (profile) => {
+                        if (!user?.userId)
+                            return console.error('User is not logged in');
+                        return updateProfile({
+                            userId: user.userId,
+                            profile,
+                        });
+                    }}
+                />
+            </LoadingContainer>
+        </ProviderNavigationPage>
+    );
+}

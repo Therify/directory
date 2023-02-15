@@ -28,41 +28,22 @@ export const factory = (params: ProvidersServiceParams) => {
                 },
             };
         }
-        const { profileId: rawProfileId } = context.params ?? {};
-        const profileId = Array.isArray(rawProfileId)
-            ? rawProfileId[0]
-            : rawProfileId;
-
-        if (!profileId) {
-            return {
-                notFound: true,
-            };
-        }
 
         const getUserDetails = GetProviderTherifyUser.factory(params);
-        const { getPracticeByOwnerId } = practiceFactory(params);
-        const { getProfileById } = profilesFactory(params);
+        const { getPracticeByProviderId } = practiceFactory(params);
+        const { getProfileByUserId } = profilesFactory(params);
 
         const [{ user }, { practice }, { profile }] = await Promise.all([
             getUserDetails({ userId: session.user.sub }),
-            getPracticeByOwnerId({ userId: session.user.sub }),
-            getProfileById({ profileId: context.query.profileId as string }),
+            getPracticeByProviderId({ userId: session.user.sub }),
+            getProfileByUserId({
+                userId: session.user.sub,
+            }),
         ]);
         if (user === null) {
             return {
                 redirect: {
                     destination: URL_PATHS.AUTH.LOGIN,
-                    permanent: false,
-                },
-            };
-        }
-        if (!user.isPracticeAdmin) {
-            const isTherapist = user.roles.includes(Role.provider_therapist);
-            return {
-                redirect: {
-                    destination: isTherapist
-                        ? URL_PATHS.PROVIDERS.THERAPIST.DASHBOARD
-                        : URL_PATHS.PROVIDERS.COACH.DASHBOARD,
                     permanent: false,
                 },
             };
