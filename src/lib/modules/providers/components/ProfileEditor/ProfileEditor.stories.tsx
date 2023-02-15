@@ -17,6 +17,7 @@ export const Default: StoryObj<typeof ProfileEditor> = {
     args: {
         onBack: () => console.log('back'),
         practice: {
+            email: 'test@therify.co',
             id: 'test',
             city: 'Nashville',
             state: 'Tennessee',
