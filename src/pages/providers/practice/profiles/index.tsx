@@ -55,6 +55,7 @@ import { ProviderProfileListing } from '@/lib/shared/types';
 import {
     ListPracticeProfilesByUserId,
     DeleteProviderProfile,
+    UpdateDirectoryListing,
 } from '@/lib/modules/providers/features/profiles';
 import {
     CreatePracticeProviderInvitation,
@@ -84,6 +85,8 @@ export default function PracticeProfilesPage({
         useState<ProviderProfileListing.Type>();
     const [profileToDelete, setProfileToDelete] =
         useState<ProviderProfileListing.Type>();
+    const [profileToList, setProfileToList] =
+        useState<ProviderProfileListing.Type>();
 
     const {
         data: refetchedProfilesData,
@@ -110,6 +113,20 @@ export default function PracticeProfilesPage({
                 if (success) {
                     refetchProfiles();
                     setProfileToDelete(undefined);
+                }
+                const [error] = errors;
+                if (error) {
+                    console.error(error);
+                }
+            },
+        });
+
+    const { mutate: updateDirectoryListing, isLoading: isUpdatingLisiting } =
+        trpc.useMutation(`providers.${UpdateDirectoryListing.TRPC_ROUTE}`, {
+            onSuccess: ({ success, errors }) => {
+                if (success) {
+                    refetchProfiles();
+                    setProfileToList(undefined);
                 }
                 const [error] = errors;
                 if (error) {
@@ -175,7 +192,6 @@ export default function PracticeProfilesPage({
                 : router.push(URL_PATHS.PROVIDERS.COACH.DASHBOARD);
         }
     }, [router, user?.isPracticeAdmin, user?.roles]);
-
     return (
         <SideNavigationPage
             currentPath={URL_PATHS.PROVIDERS.PRACTICE.PROFILES}
@@ -323,16 +339,7 @@ export default function PracticeProfilesPage({
                                                 setProfileToDelete(profile)
                                             }
                                             onListingButtonClick={() =>
-                                                profile.directoryListing
-                                                    .status ===
-                                                ListingStatus.listed
-                                                    ? router.push(
-                                                          `${URL_PATHS.DIRECTORY.ROOT}/${profile.id}`
-                                                      )
-                                                    : console.log(
-                                                          'TODO: Publish profile to directory ',
-                                                          profile
-                                                      )
+                                                setProfileToList(profile)
                                             }
                                             onEdit={() =>
                                                 router.push(
@@ -397,6 +404,20 @@ export default function PracticeProfilesPage({
                     }
                 />
             )}
+            {profileToList && (
+                <UpdateListingModal
+                    profile={profileToList}
+                    onClose={() => setProfileToList(undefined)}
+                    isLoading={isUpdatingLisiting}
+                    onUpdate={(status: ListingStatus) =>
+                        updateDirectoryListing({
+                            profileId: profileToList.id!,
+                            status,
+                            userId: user.userId,
+                        })
+                    }
+                />
+            )}
         </SideNavigationPage>
     );
 }
@@ -456,6 +477,12 @@ const ListingButton = styled(Button)(({ theme }) => ({
 const ProfileList = styled(List)(({ theme }) => ({
     flex: 1,
     overflowY: 'auto',
+}));
+
+const ViewListingLink = styled('a')(({ theme }) => ({
+    textDecoration: 'none',
+    margin: 0,
+    padding: 0,
 }));
 
 const getProfileStatusBadge = (status?: ListingStatus) => {
@@ -602,6 +629,56 @@ const DeleteInvitaionModal = ({
         />
     );
 };
+const UpdateListingModal = ({
+    profile: { directoryListing, givenName, surname },
+    onClose,
+    onUpdate,
+    isLoading,
+}: {
+    onClose: () => void;
+    onUpdate: (status: ListingStatus) => void;
+    profile: ProviderProfileListing.Type;
+    isLoading: boolean;
+}) => {
+    const providerName = `${givenName} ${surname}`;
+    const isListed = directoryListing?.status === ListingStatus.listed;
+    const title = isListed
+        ? `Unlist ${providerName}'s profile?`
+        : `Publish ${providerName}'s profile?`;
+    const newStatus = isListed ? ListingStatus.unlisted : ListingStatus.listed;
+    const loadingMessage = isListed
+        ? 'Unlisting profile'
+        : 'Publishing profile';
+    const message = isListed
+        ? 'This will remove it from directory searches, any links to this profile will no longer work, and no future referrals will be sent.'
+        : 'This will make the profile visible to the public and eligible to begin receiving referrals.';
+    return (
+        <Modal
+            isOpen
+            onClose={onClose}
+            showCloseButton={false}
+            title={title}
+            message={isLoading ? loadingMessage : message}
+            fullWidthButtons
+            primaryButtonDisabled={isLoading}
+            primaryButtonText={isListed ? 'Unlist' : 'Publish'}
+            primaryButtonOnClick={() => onUpdate(newStatus)}
+            primaryButtonEndIcon={
+                isListed ? <VisibilityOffRounded /> : <VisibilityRounded />
+            }
+            secondaryButtonText="Cancel"
+            secondaryButtonDisabled={isLoading}
+            secondaryButtonOnClick={onClose}
+            postBodySlot={
+                isLoading ? (
+                    <CenteredContainer width="100%" paddingY={2}>
+                        <CircularProgress />
+                    </CenteredContainer>
+                ) : undefined
+            }
+        />
+    );
+};
 const DeleteProfileModal = ({
     profile,
     onClose,
@@ -659,34 +736,26 @@ const DeleteProfileModal = ({
     );
 };
 
-const getListingAction = (status?: ListingStatus) => {
-    switch (status) {
-        case ListingStatus.listed:
-            return {
-                text: 'Delist Profile',
-                icon: <VisibilityOffRounded />,
-                onClick: () => {
-                    console.log('TODO: handle deactivate');
-                },
-            };
-        case ListingStatus.pending:
-            return {
-                text: 'Cancel Review',
-                icon: <CancelRounded />,
-                onClick: () => {
-                    console.log('TODO: handle cancel review');
-                },
-            };
-        case ListingStatus.unlisted:
-        default:
-            return {
-                text: 'Publish Profile',
-                icon: <VisibilityRounded />,
-                onClick: () => {
-                    console.log('TODO: handle activate');
-                },
-            };
+const getListingAction = ({
+    status,
+    onClick,
+}: {
+    status?: ListingStatus;
+    onClick: () => void;
+}) => {
+    if (status === ListingStatus.listed) {
+        return {
+            text: 'Unlist Profile',
+            icon: <VisibilityOffRounded />,
+            onClick,
+        };
     }
+
+    return {
+        text: 'Publish Profile',
+        icon: <VisibilityRounded />,
+        onClick,
+    };
 };
 
 const getInvitationAction = ({
@@ -811,6 +880,8 @@ const ProfileActions = ({
     onCancelInvitation: () => void;
 }) => {
     const theme = useTheme();
+    const isProfileListed =
+        profile.directoryListing.status === ListingStatus.listed;
     const moreItems = [
         {
             text: 'Edit',
@@ -831,8 +902,12 @@ const ProfileActions = ({
                   }),
               ]
             : []),
-        getListingAction(profile.directoryListing?.status),
+        getListingAction({
+            status: profile.directoryListing?.status,
+            onClick: onListingButtonClick,
+        }),
     ];
+    const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
     return (
         <Box display="flex" justifyContent="flex-end">
             <Box
@@ -842,17 +917,31 @@ const ProfileActions = ({
             >
                 {!isMobileWidth && (
                     <>
-                        <ListingButton
-                            type={BUTTON_TYPE.OUTLINED}
-                            size={BUTTON_SIZE.SMALL}
-                            color="info"
-                            onClick={onListingButtonClick}
-                        >
-                            {profile.directoryListing.status ===
-                            ListingStatus.unlisted
-                                ? 'Publish to directory'
-                                : 'View'}
-                        </ListingButton>
+                        {' '}
+                        {isProfileListed && (
+                            <ViewListingLink
+                                href={`${baseUrl}${URL_PATHS.DIRECTORY.ROOT}/${profile.id}`}
+                                target="_blank"
+                            >
+                                <ListingButton
+                                    type={BUTTON_TYPE.OUTLINED}
+                                    size={BUTTON_SIZE.SMALL}
+                                    color="info"
+                                >
+                                    View
+                                </ListingButton>
+                            </ViewListingLink>
+                        )}
+                        {!isProfileListed && (
+                            <ListingButton
+                                type={BUTTON_TYPE.OUTLINED}
+                                size={BUTTON_SIZE.SMALL}
+                                color="info"
+                                onClick={onListingButtonClick}
+                            >
+                                Publish to directory
+                            </ListingButton>
+                        )}
                     </>
                 )}
                 {isMobileWidth && <BadgeIcons profile={profile} />}
