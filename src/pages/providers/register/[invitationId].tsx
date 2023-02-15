@@ -36,15 +36,6 @@ export default function ProviderInvitationRegistrationPage({
     invitationStatus,
     role,
 }: ProviderRegisterWithInvitationPageProps) {
-    console.log({
-        invitationId,
-        practice,
-        profile,
-        recipientEmail,
-        invitationExpirationDate,
-        invitationStatus,
-        role,
-    });
     const router = useRouter();
     const theme = useTheme();
     const [registrationError, setRegistrationError] = useState<string>();

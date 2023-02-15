@@ -59,7 +59,11 @@ export const EmailAddressInput = ({
                     data-testid={TEST_IDS.EMAIL_ADDRESS}
                     type="email"
                     disabled={disabled}
-                    helperText={helperText}
+                    helperText={
+                        helperText ?? isEmailReadOnly
+                            ? 'Email is read only'
+                            : undefined
+                    }
                     {...{
                         onChange,
                         onBlur,
