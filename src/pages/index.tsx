@@ -4,8 +4,6 @@ import {
     Caption,
     Button,
     H1,
-    Paragraph,
-    LoadingContainer,
     CenteredContainer,
 } from '@/lib/shared/components/ui';
 import Box from '@mui/material/Box';
@@ -14,8 +12,11 @@ import { default as NextImage } from 'next/image';
 import { useRouter } from 'next/router';
 import { URL_PATHS } from '@/lib/sitemap';
 import Link from 'next/link';
+import { GetServerSideProps } from 'next';
+import { getSession } from '@auth0/nextjs-auth0';
+import { AccountsService } from '@/lib/modules/accounts/service';
 import { Role } from '@prisma/client';
-import { useTherifyUser } from '@/lib/shared/hooks';
+import { TherifyUser } from '@/lib/shared/types';
 
 const ABSTRACT_SHAPE_URL =
     'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673455675/app.therify.co/shapes/abstract-shape_fbvcil.svg' as const;
@@ -36,10 +37,58 @@ const LOGIN_IMAGES = [
     'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673453028/app.therify.co/login/3_sssprg.jpg',
 ] as const;
 
+const getUserRedirectPath = (user: TherifyUser.TherifyUser): string => {
+    const [role] = user.roles;
+    console.log({ role, user });
+    if (role === Role.member) {
+        return URL_PATHS.MEMBERS.HOME;
+    } else if (user.plan === null) {
+        return URL_PATHS.PROVIDERS.ONBOARDING.BILLING;
+    } else if (user.isPracticeAdmin) {
+        return URL_PATHS.PROVIDERS.PRACTICE.DASHBOARD;
+    } else if (role === Role.provider_therapist) {
+        return URL_PATHS.PROVIDERS.THERAPIST.DASHBOARD;
+    } else if (role === Role.provider_coach) {
+        return URL_PATHS.PROVIDERS.COACH.DASHBOARD;
+    } else {
+        return URL_PATHS[404];
+    }
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const session = await getSession(context.req, context.res);
+    console.log({ session });
+    if (!session) {
+        return {
+            props: {
+                user: null,
+            },
+        };
+    }
+    const { user } = await AccountsService.getUserDetailsById({
+        userId: session.user.sub,
+    });
+
+    if (!user) {
+        console.info('User not found');
+        return {
+            props: {
+                user: null,
+            },
+        };
+    }
+
+    return {
+        redirect: {
+            destination: getUserRedirectPath(user),
+            permanent: false,
+        },
+    };
+};
+
 export default function Home() {
     const theme = useTheme();
     const router = useRouter();
-    const { user, isLoading } = useTherifyUser();
     const [randomLoginImage, setRandomLoginImage] = useState<string | null>(
         null
     );
@@ -49,96 +98,73 @@ export default function Home() {
         );
     }, []);
 
-    if (user) {
-        const [role] = user.roles;
-        if (role === Role.member) {
-            router.push(URL_PATHS.MEMBERS.HOME);
-        } else if (user.plan === null) {
-            router.push(URL_PATHS.PROVIDERS.ONBOARDING.BILLING);
-        } else if (user.isPracticeAdmin) {
-            router.push(URL_PATHS.PROVIDERS.PRACTICE.DASHBOARD);
-        } else if (role === Role.provider_therapist) {
-            router.push(URL_PATHS.PROVIDERS.THERAPIST.DASHBOARD);
-        } else if (role === Role.provider_coach) {
-            router.push(URL_PATHS.PROVIDERS.COACH.DASHBOARD);
-        }
-    }
-
     return (
-        <LoadingContainer isLoading={isLoading || Boolean(user)}>
-            <TwoColumnGrid
-                fillSpace
-                leftColumnSize={6}
-                rightSlot={
-                    <CenteredContainer fillSpace>
-                        {/*
+        <TwoColumnGrid
+            fillSpace
+            leftColumnSize={6}
+            rightSlot={
+                <CenteredContainer fillSpace>
+                    {/*
                         eslint-disable-next-line jsx-a11y/alt-text
                         */}
-                        <Image fillSpace imageUrl={randomLoginImage} />
-                    </CenteredContainer>
-                }
-                rightSlotSx={{
-                    [theme.breakpoints.down('md')]: {
-                        display: 'none',
-                    },
-                }}
-                leftSlot={
-                    <LoginContainer fillSpace>
-                        <Box maxWidth={480}>
-                            <TherifyLogo
-                                alt="The Official logo of Therify Inc."
-                                src={THERIFY_LOGO_URL}
-                                data-cy="logo"
-                                width={279}
-                                height={96}
-                            />
-                            <Header>
-                                The new standard for inclusive mental healthcare
-                            </Header>
-
-                            <Button
-                                fullWidth
-                                onClick={() =>
-                                    router.push(URL_PATHS.AUTH.LOGIN)
-                                }
-                            >
-                                Login
-                            </Button>
-
-                            <Caption
-                                color="info"
-                                style={{
-                                    marginTop: theme.spacing(8),
-                                }}
-                            >
-                                Dont have an account? <br />
-                                <Link href={URL_PATHS.MEMBERS.REGISTER}>
-                                    Register to Find a Provider
-                                </Link>
-                                <br />
-                                <Link
-                                    href={
-                                        URL_PATHS.PROVIDERS.THERAPIST.REGISTER
-                                    }
-                                >
-                                    Register as a Therapist
-                                </Link>
-                                <br />
-                                <Link href={URL_PATHS.PROVIDERS.COACH.REGISTER}>
-                                    Register as a Coach
-                                </Link>
-                            </Caption>
-                        </Box>
-                        <AbstractShape
-                            height={260}
-                            width={260}
-                            alt="Abstract shape"
-                            src={ABSTRACT_SHAPE_URL}
+                    <Image fillSpace imageUrl={randomLoginImage} />
+                </CenteredContainer>
+            }
+            rightSlotSx={{
+                [theme.breakpoints.down('md')]: {
+                    display: 'none',
+                },
+            }}
+            leftSlot={
+                <LoginContainer fillSpace>
+                    <Box maxWidth={480}>
+                        <TherifyLogo
+                            alt="The Official logo of Therify Inc."
+                            src={THERIFY_LOGO_URL}
+                            data-cy="logo"
+                            width={279}
+                            height={96}
                         />
-                    </LoginContainer>
-                }
-            />
-        </LoadingContainer>
+                        <Header>
+                            The new standard for inclusive mental healthcare
+                        </Header>
+
+                        <Button
+                            fullWidth
+                            onClick={() => router.push(URL_PATHS.AUTH.LOGIN)}
+                        >
+                            Login
+                        </Button>
+
+                        <Caption
+                            color="info"
+                            style={{
+                                marginTop: theme.spacing(8),
+                            }}
+                        >
+                            Dont have an account? <br />
+                            {/* <Link href={URL_PATHS.MEMBERS.REGISTER}>
+                                Register to Find a Provider
+                            </Link> */}
+                            <br />
+                            <Link href={URL_PATHS.PROVIDERS.THERAPIST.REGISTER}>
+                                Register as a Therapist
+                            </Link>
+                            <br />
+                            <Link href={URL_PATHS.PROVIDERS.COACH.REGISTER}>
+                                Register as a Coach
+                            </Link>
+                        </Caption>
+                    </Box>
+                    <AbstractShape
+                        height={260}
+                        width={260}
+                        alt="Abstract shape"
+                        src={ABSTRACT_SHAPE_URL}
+                    />
+                </LoginContainer>
+            }
+        />
     );
 }
 

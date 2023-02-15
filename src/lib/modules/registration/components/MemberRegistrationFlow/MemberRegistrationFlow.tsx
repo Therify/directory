@@ -5,7 +5,6 @@ import { Box, CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import {
     ReportProblemRounded,
-    CheckCircle,
     ArrowForwardRounded as NextIcon,
 } from '@mui/icons-material';
 import {
@@ -15,7 +14,6 @@ import {
     TherifyLogo,
     H3,
     FormValidation,
-    Paragraph,
     Button,
 } from '@/lib/shared/components/ui';
 import { RegisterMember } from '@/lib/modules/registration/features';
@@ -61,7 +59,8 @@ export const MemberRegistrationFlow = ({
             goals: [],
         },
     });
-
+    const isRegistrationSuccessful = isRegistrationComplete && !errorMessage;
+    const isRegistering = isRegisteringMember || isRegistrationSuccessful;
     const handleSubmit = () => {
         // TODO: Store partial on blur
         storeMemberDetails(memberDetailsForm.getValues());
@@ -90,23 +89,6 @@ export const MemberRegistrationFlow = ({
         }
     }, [emailAddress, emailValidationUrl, emailsCheckedForUniqueness]);
 
-    if (isRegistrationComplete && errorMessage === undefined) {
-        return (
-            <FormContainer isError={false}>
-                <CenteredContainer>
-                    <CheckCircle
-                        color="success"
-                        style={{ width: 40, height: 40 }}
-                    />
-                    <H3>
-                        Welcome, {memberDetailsForm.getValues('givenName')}!
-                    </H3>
-                    <Paragraph>Registration successful</Paragraph>
-                </CenteredContainer>
-            </FormContainer>
-        );
-    }
-
     return (
         <Box height="100%" width="100%">
             <HeaderContainer>
@@ -119,7 +101,7 @@ export const MemberRegistrationFlow = ({
                 </StepperContainer>
             </HeaderContainer>
             <FormContainer isError={Boolean(errorMessage)}>
-                {isRegisteringMember ? (
+                {isRegistering ? (
                     <CenteredContainer>
                         <H3>Creating your account...</H3>
                         <CircularProgress />
@@ -153,14 +135,16 @@ export const MemberRegistrationFlow = ({
             </FormContainer>
 
             <ButtonContainer>
-                <Button
-                    isLoading={isRegisteringMember}
-                    disabled={!memberDetailsForm.formState.isValid}
-                    endIcon={<NextIcon />}
-                    onClick={handleSubmit}
-                >
-                    Sign Up
-                </Button>
+                {!isRegistering && (
+                    <Button
+                        isLoading={isRegistering}
+                        disabled={!memberDetailsForm.formState.isValid}
+                        endIcon={<NextIcon />}
+                        onClick={handleSubmit}
+                    >
+                        Sign Up
+                    </Button>
+                )}
             </ButtonContainer>
         </Box>
     );

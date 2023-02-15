@@ -1,23 +1,15 @@
 import { GetServerSideProps } from 'next';
 import { getSession } from '@auth0/nextjs-auth0';
-
 import { URL_PATHS } from '@/lib/sitemap';
 import { TherifyUser } from '@/lib/shared/types';
-import { AccountsService } from '@/lib/modules/accounts/service';
 import { ProvidersServiceParams } from '../../params';
-import { Role } from '@prisma/client';
+import { GetProviderTherifyUser } from '../../get-provider-therify-user';
 
 export interface ProviderDashboardProps {
     user: TherifyUser.TherifyUser;
 }
 
-interface GetDashboardPropsFactoryParams extends ProvidersServiceParams {
-    accountsService: AccountsService;
-}
-
-export const factory = ({
-    accountsService,
-}: GetDashboardPropsFactoryParams) => {
+export const factory = (params: ProvidersServiceParams) => {
     const getProviderDashboardProps: GetServerSideProps<
         ProviderDashboardProps
     > = async (context) => {
@@ -30,8 +22,8 @@ export const factory = ({
                 },
             };
         }
-
-        const { user } = await accountsService.getUserDetailsById({
+        const getUserDetails = GetProviderTherifyUser.factory(params);
+        const { user } = await getUserDetails({
             userId: session.user.sub,
         });
         if (!user) {

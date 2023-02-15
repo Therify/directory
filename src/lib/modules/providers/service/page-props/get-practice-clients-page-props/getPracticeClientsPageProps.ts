@@ -1,4 +1,3 @@
-import { AccountsService } from '@/lib/modules/accounts/service';
 import {
     AccountSchema,
     ConnectionRequestSchema,
@@ -12,6 +11,7 @@ import { TherifyUser } from '@/lib/shared/types';
 import { getSession } from '@auth0/nextjs-auth0';
 import { GetServerSideProps } from 'next';
 import { z } from 'zod';
+import { GetProviderTherifyUser } from '../../get-provider-therify-user';
 import { ProvidersServiceParams } from '../../params';
 
 const queryResultSchema = PracticeProfileSchema.extend({
@@ -92,14 +92,8 @@ export interface PracticeClientsPageProps {
     user: TherifyUser.TherifyUser;
 }
 
-interface GetPracticeClientsPagePropsParams extends ProvidersServiceParams {
-    accountsService: AccountsService;
-}
-
-export const factory = ({
-    accountsService,
-    prisma,
-}: GetPracticeClientsPagePropsParams) => {
+interface GetPracticeClientsPagePropsParams extends ProvidersServiceParams {}
+export const factory = (params: GetPracticeClientsPagePropsParams) => {
     const getPracticeClientsPageProps: GetServerSideProps<
         PracticeClientsPageProps
     > = async (context) => {
@@ -112,14 +106,16 @@ export const factory = ({
                 },
             };
         }
+        const getUserDetails = GetProviderTherifyUser.factory(params);
+        const { prisma } = params;
         const [user, practiceProfiles] = await Promise.all([
-            accountsService.getUserDetailsById({
+            getUserDetails({
                 userId: session.user.sub,
             }),
             prisma.practiceProfile.findMany({
                 where: {
                     practice: {
-                        userId: session.user.sub,
+                        practiceOwnerId: session.user.sub,
                     },
                 },
                 select: {

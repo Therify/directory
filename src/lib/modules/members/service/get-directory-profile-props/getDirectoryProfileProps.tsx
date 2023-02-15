@@ -2,11 +2,7 @@ import { GetServerSideProps } from 'next';
 import { ProviderProfile, TherifyUser } from '@/lib/shared/types';
 import { MembersServiceParams } from '../params';
 import { getSession } from '@auth0/nextjs-auth0';
-import { AccountsService } from '../../../accounts/service/service';
-
-interface GetDirectoryProfileProps extends MembersServiceParams {
-    accountService: typeof AccountsService;
-}
+import { GetMemberTherifyUser } from '../get-member-therify-user';
 
 export interface DirectoryProfilePageProps {
     providerProfile: ProviderProfile.ProviderProfile;
@@ -14,7 +10,7 @@ export interface DirectoryProfilePageProps {
     providerHasBeenSelected?: boolean;
 }
 
-export function factory({ prisma, accountService }: GetDirectoryProfileProps) {
+export function factory({ prisma, ...params }: MembersServiceParams) {
     const getDirectoryProfilePageProps: GetServerSideProps<
         DirectoryProfilePageProps
     > = async (context) => {
@@ -27,9 +23,13 @@ export function factory({ prisma, accountService }: GetDirectoryProfileProps) {
                 },
             };
         }
+        const getTherifyUser = GetMemberTherifyUser.factory({
+            prisma,
+            ...params,
+        });
         const [{ user }, providerProfile, connectionRequest] =
             await Promise.all([
-                accountService.getUserDetailsById({
+                getTherifyUser({
                     userId: session.user.sub,
                 }),
                 prisma.providerProfile.findUnique({

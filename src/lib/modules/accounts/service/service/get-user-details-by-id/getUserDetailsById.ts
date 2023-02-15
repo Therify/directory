@@ -1,4 +1,7 @@
+import { membersService } from '@/lib/modules/members/service';
+import { ProvidersService } from '@/lib/modules/providers/service';
 import { GetUserDetailsById } from '@/lib/modules/users/features';
+import { Role } from '@prisma/client';
 import { AccountsServiceParams } from '../params';
 
 export const factory =
@@ -8,50 +11,20 @@ export const factory =
     }: GetUserDetailsById.Input): Promise<
         Omit<GetUserDetailsById.Output, 'firebaseToken' | 'errors'>
     > => {
-        const { plans, ...user } = await prisma.user.findUniqueOrThrow({
+        const { roles } = await prisma.user.findUniqueOrThrow({
             where: {
                 id: userId,
             },
             select: {
-                id: true,
-                emailAddress: true,
                 roles: true,
-                accountId: true,
-                createdAt: true,
-                givenName: true,
-                surname: true,
-                plans: {
-                    orderBy: {
-                        createdAt: 'desc',
-                    },
-                    take: 1,
-                    select: {
-                        billingUserId: true,
-                        seats: true,
-                        status: true,
-                        startDate: true,
-                        endDate: true,
-                        renews: true,
-                    },
-                },
             },
         });
-        const [newestPlan] = plans;
-
-        return {
-            user: {
-                ...user,
-                userId,
-                isPracticeAdmin: userId === newestPlan?.billingUserId,
-                plan: newestPlan
-                    ? {
-                          seats: newestPlan.seats,
-                          status: newestPlan.status,
-                          startDate: newestPlan.startDate,
-                          endDate: newestPlan.endDate,
-                          renews: newestPlan.renews,
-                      }
-                    : null,
-            },
-        };
+        const [role] = roles;
+        const isProvider =
+            role === Role.provider_coach || role === Role.provider_therapist;
+        if (isProvider) {
+            return await ProvidersService.getTherifyUser({ userId });
+        }
+        console.log('getting user details');
+        return await membersService.getTherifyUser({ userId });
     };

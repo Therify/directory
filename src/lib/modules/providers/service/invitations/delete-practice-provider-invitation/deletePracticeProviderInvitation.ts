@@ -14,7 +14,7 @@ export function factory({ prisma }: ProvidersServiceParams) {
                     id: invitationId,
                     senderId: userId,
                     practice: {
-                        userId,
+                        practiceOwnerId: userId,
                     },
                 },
                 select: {

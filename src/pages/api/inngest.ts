@@ -3,7 +3,10 @@ import demoFn from '@/lib/shared/vendors/inngest/demo';
 import getDirectoryApplicationFn from '@/lib/shared/vendors/inngest/getDirectoryApplication';
 import processDirectoryApplicationFn from '@/lib/shared/vendors/inngest/processApplication';
 import sendWelcomeEmailFn from '@/lib/shared/vendors/inngest/sendWelcomeEmail';
-import { SendConnectionRequestEmail } from '@/lib/shared/vendors/inngest';
+import {
+    SendConnectionRequestEmail,
+    SendJoinPracticeEmail,
+} from '@/lib/shared/vendors/inngest';
 const APP_NAME = 'therify-directory' as const;
 
 export default serve(
@@ -14,6 +17,7 @@ export default serve(
         processDirectoryApplicationFn,
         sendWelcomeEmailFn,
         SendConnectionRequestEmail.inngestFunction,
+        SendJoinPracticeEmail.inngestFunction,
     ],
     {
         signingKey: process.env.INNGEST_SIGNING_KEY,

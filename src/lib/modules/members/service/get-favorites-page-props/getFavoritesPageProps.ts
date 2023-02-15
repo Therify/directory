@@ -1,9 +1,8 @@
 import { DirectoryProfile } from '@/lib/shared/types/presentation';
 import { TherifyUser } from '@/lib/shared/types/therify-user';
 import { getSession } from '@auth0/nextjs-auth0';
-import { ProviderProfile } from '@prisma/client';
 import { GetServerSideProps } from 'next';
-import { AccountsService } from '../../../accounts/service';
+import { GetMemberTherifyUser } from '../get-member-therify-user';
 import { MembersServiceParams } from '../params';
 
 export interface FavoritesPageProps {
@@ -11,11 +10,7 @@ export interface FavoritesPageProps {
     user: TherifyUser.TherifyUser;
 }
 
-interface GetFavoritesPagePropsParams extends MembersServiceParams {
-    accountsService: AccountsService;
-}
-
-export const factory = (params: GetFavoritesPagePropsParams) => {
+export const factory = (params: MembersServiceParams) => {
     const getFavoritesPageProps: GetServerSideProps<
         FavoritesPageProps
     > = async (context) => {
@@ -28,8 +23,9 @@ export const factory = (params: GetFavoritesPagePropsParams) => {
                 },
             };
         }
+        const getTherifyUser = GetMemberTherifyUser.factory(params);
         const [{ user }, favoriteProfiles] = await Promise.all([
-            params.accountsService.getUserDetailsById({
+            getTherifyUser({
                 userId: session.user.sub,
             }),
             params.prisma.memberFavorites.findMany({

@@ -9,11 +9,13 @@ interface EmailInputProps {
     isEmailUnique?: boolean;
     disabled?: boolean;
     helperText?: string;
+    isEmailReadOnly?: boolean;
 }
 
 export const EmailAddressInput = ({
     control,
     defaultValue = '',
+    isEmailReadOnly,
     isEmailUnique,
     disabled,
     helperText,
@@ -47,6 +49,7 @@ export const EmailAddressInput = ({
             return (
                 <Input
                     required
+                    readOnly={isEmailReadOnly}
                     id="emailAddress"
                     label="Email"
                     errorMessage={
@@ -56,7 +59,11 @@ export const EmailAddressInput = ({
                     data-testid={TEST_IDS.EMAIL_ADDRESS}
                     type="email"
                     disabled={disabled}
-                    helperText={helperText}
+                    helperText={
+                        helperText ?? isEmailReadOnly
+                            ? 'Email is read only'
+                            : undefined
+                    }
                     {...{
                         onChange,
                         onBlur,

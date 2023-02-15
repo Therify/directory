@@ -11,7 +11,7 @@ export const factory =
     }> => {
         const practice = await prisma.practice.findUniqueOrThrow({
             where: {
-                userId,
+                practiceOwnerId: userId,
             },
         });
 

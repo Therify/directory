@@ -8,6 +8,7 @@ import {
     ProviderRegistrationFormProps,
 } from './ProviderRegistrationForm';
 import { TEST_IDS } from './inputs/testIds';
+import { Role } from '@prisma/client';
 
 describe('Provider Registration Form', function () {
     let mockForm: ReturnType<typeof useForm<RegisterProvider.Input>>;
@@ -33,6 +34,7 @@ describe('Provider Registration Form', function () {
         isEmailUnique: false,
         isEmailDisabled: false,
         emailHelperText: 'helper text',
+        role: Role.provider_coach,
     };
 
     it('renders', function () {
@@ -77,7 +79,7 @@ describe('Provider Registration Form', function () {
         await user.type(confirmPasswordInput, password);
         await user.type(dobInput, dateOfBirth);
         await user.click(termsCheckbox);
-        const expectedRequest: RegisterProvider.Input = {
+        const expectedRequest: Omit<RegisterProvider.Input, 'role'> = {
             emailAddress: email,
             givenName,
             surname,

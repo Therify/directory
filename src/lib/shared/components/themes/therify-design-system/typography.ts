@@ -147,10 +147,10 @@ export const typography: TypographyOptions = {
         fontSize: '1rem',
         lineHeight: '1.625rem',
         fontWeight: 400,
-        [createTheme().breakpoints.up('md')]: {
-            fontSize: '1.125rem',
-            color: '#000000',
-        },
+        // [createTheme().breakpoints.up('md')]: {
+        //     fontSize: '1.125rem',
+        //     color: '#000000',
+        // },
     },
     body2: {
         // Medium Paragraph
@@ -158,10 +158,10 @@ export const typography: TypographyOptions = {
         fontSize: '1rem',
         lineHeight: '1.75rem',
         fontWeight: 400,
-        [createTheme().breakpoints.up('md')]: {
-            fontSize: '1.125rem',
-            color: '#000000',
-        },
+        // [createTheme().breakpoints.up('md')]: {
+        //     fontSize: '1.125rem',
+        //     color: '#000000',
+        // },
     },
     body3: {
         // Large Paragraph

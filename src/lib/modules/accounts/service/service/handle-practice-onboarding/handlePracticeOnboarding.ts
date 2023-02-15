@@ -19,9 +19,9 @@ export function factory(context: Context) {
             { ...context },
             {
                 getUserDetails: GetUserDetails.factory(params),
+                handlePracticeEntity: HandlePracticeEntity.factory(params),
                 defendAgainstDuplicatePlans:
                     DefendAgainstDuplicatePlans.factory(params),
-                handlePracticeEntity: HandlePracticeEntity.factory(params),
                 createStripeCheckoutSession:
                     CreateStripeCheckoutSession.factory(params),
             },

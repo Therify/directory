@@ -8,14 +8,15 @@ export const factory =
     }: GetPracticeByUserId.Input): Promise<{
         practice: GetPracticeByUserId.Output['practice'];
     }> => {
-        const { practice } = await prisma.user.findUniqueOrThrow({
-            where: {
-                id: userId,
-            },
-            select: {
-                practice: true,
-            },
-        });
+        const { managedPractice: practice } =
+            await prisma.user.findUniqueOrThrow({
+                where: {
+                    id: userId,
+                },
+                select: {
+                    managedPractice: true,
+                },
+            });
 
         return {
             practice,

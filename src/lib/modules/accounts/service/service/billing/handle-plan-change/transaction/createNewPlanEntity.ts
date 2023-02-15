@@ -16,14 +16,17 @@ export const factory: CreateNewPlanEntityFactory = ({
     stripeSubscriptionId,
     stripeCustomerId,
 }) => ({
-    async commit({ prisma }, { getTherifyUserDetails: { therifyUserId } }) {
+    async commit(
+        { prisma },
+        { getTherifyUserDetails: { practiceOwnerId, practiceId } }
+    ) {
         const { id: planId } = await prisma.plan.create({
             data: {
                 startDate,
                 endDate,
                 status: PlanStatus.active,
-                billingUserId: therifyUserId,
-                userId: therifyUserId,
+                billingUserId: practiceOwnerId,
+                practiceId,
                 stripeCustomerId,
                 stripeSubscriptionId,
                 stripePriceId: newStripePriceId,

@@ -2,13 +2,16 @@ import { PlanStatus } from '@prisma/client';
 import { HandlePlanChangeTransaction } from './definition';
 
 export const step: HandlePlanChangeTransaction['invalidatePreviousPlans'] = {
-    async commit({ prisma }, { getTherifyUserDetails: { therifyUserId } }) {
+    async commit(
+        { prisma },
+        { getTherifyUserDetails: { practiceOwnerId, practiceId } }
+    ) {
         const plans = await prisma.plan.findMany({
             select: {
                 id: true,
             },
             where: {
-                billingUserId: therifyUserId,
+                practiceId,
                 status: PlanStatus.active,
             },
         });

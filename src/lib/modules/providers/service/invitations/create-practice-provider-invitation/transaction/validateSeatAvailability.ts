@@ -11,24 +11,30 @@ export const factory: (
 }) => {
     return {
         async commit({ prisma }) {
-            const { plans } = await prisma.user.findUniqueOrThrow({
-                where: { id: senderId },
-                select: {
-                    plans: {
-                        orderBy: {
-                            createdAt: 'desc',
-                        },
-                        take: 1,
-                        select: {
-                            billingUserId: true,
-                            seats: true,
-                            status: true,
-                            endDate: true,
+            const { managedPractice, emailAddress: senderEmail } =
+                await prisma.user.findUniqueOrThrow({
+                    where: { id: senderId },
+                    select: {
+                        emailAddress: true,
+                        managedPractice: {
+                            select: {
+                                plans: {
+                                    orderBy: {
+                                        createdAt: 'desc',
+                                    },
+                                    take: 1,
+                                    select: {
+                                        billingUserId: true,
+                                        seats: true,
+                                        status: true,
+                                        endDate: true,
+                                    },
+                                },
+                            },
                         },
                     },
-                },
-            });
-            const [plan] = plans;
+                });
+            const [plan] = managedPractice?.plans ?? [];
             if (!plan) throw new Error('No plan found for user.');
             if (plan.billingUserId !== senderId)
                 throw new Error('User is not a practice admin.');
@@ -49,7 +55,7 @@ export const factory: (
                     await prisma.practiceProviderInvitation.count({
                         where: {
                             practice: {
-                                userId: senderId,
+                                practiceOwnerId: senderId,
                             },
                             status: {
                                 in: [
@@ -63,7 +69,7 @@ export const factory: (
                 const profilesCount = await prisma.practiceProfile.count({
                     where: {
                         practice: {
-                            userId: senderId,
+                            practiceOwnerId: senderId,
                         },
                     },
                 });
@@ -74,6 +80,9 @@ export const factory: (
                     );
                 }
             }
+            return {
+                senderEmail,
+            };
         },
         rollback() {},
     };

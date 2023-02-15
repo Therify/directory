@@ -8,15 +8,22 @@ export const factory: (
 }) => {
     return {
         async commit({ prisma }) {
-            const { practice } = await prisma.user.findUniqueOrThrow({
+            const { managedPractice } = await prisma.user.findUniqueOrThrow({
                 where: { id: senderId },
                 select: {
-                    practice: true,
+                    managedPractice: {
+                        select: {
+                            id: true,
+                            name: true,
+                        },
+                    },
                 },
             });
-            if (!practice) throw new Error('User is not a practice admin');
+            if (!managedPractice)
+                throw new Error('User is not a practice admin');
             return {
-                practiceId: practice.id,
+                practiceId: managedPractice.id,
+                practiceName: managedPractice.name,
             };
         },
         rollback() {},
