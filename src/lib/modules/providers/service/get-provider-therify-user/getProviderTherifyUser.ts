@@ -20,9 +20,21 @@ export const factory =
                 createdAt: true,
                 roles: true,
                 accountId: true,
-                providerProfile: {
+                managedPractice: {
                     select: {
-                        profileImageUrl: true,
+                        plans: {
+                            orderBy: {
+                                createdAt: 'desc',
+                            },
+                            take: 1,
+                            select: {
+                                status: true,
+                                startDate: true,
+                                endDate: true,
+                                renews: true,
+                                seats: true,
+                            },
+                        },
                     },
                 },
                 practiceProvider: {
@@ -47,13 +59,17 @@ export const factory =
                         },
                     },
                 },
+                providerProfile: {
+                    select: {
+                        profileImageUrl: true,
+                    },
+                },
             },
         });
 
         if (!user) return null;
 
         const {
-            practiceProvider,
             providerProfile,
             emailAddress,
             givenName,
@@ -61,9 +77,41 @@ export const factory =
             createdAt,
             roles,
             accountId,
+            managedPractice,
+            practiceProvider,
         } = user;
-        const { practiceOwnerId, plans } = practiceProvider?.practice ?? {};
-        const plan = plans?.[0];
+
+        let plan: TherifyUser.TherifyUser['plan'] = null;
+        let isPracticeAdmin = false;
+
+        if (managedPractice) {
+            isPracticeAdmin = true;
+            const { plans } = managedPractice;
+            const [newestPlan] = plans;
+            if (newestPlan) {
+                plan = {
+                    ...newestPlan,
+                    startDate: newestPlan.startDate.toISOString(),
+                    endDate: newestPlan.endDate.toISOString(),
+                };
+            }
+        }
+
+        if (practiceProvider) {
+            const {
+                practice: { practiceOwnerId, plans },
+            } = practiceProvider;
+            isPracticeAdmin =
+                Boolean(practiceOwnerId) && userId === practiceOwnerId;
+            const newestPlan = plans?.[0];
+            if (newestPlan) {
+                plan = {
+                    ...newestPlan,
+                    startDate: newestPlan.startDate.toISOString(),
+                    endDate: newestPlan.endDate.toISOString(),
+                };
+            }
+        }
 
         return TherifyUser.validate({
             providerProfile,
@@ -75,13 +123,7 @@ export const factory =
             accountId,
             userId,
             avatarUrl: providerProfile?.profileImageUrl ?? undefined,
-            plan: plan
-                ? {
-                      ...plan,
-                      startDate: plan.startDate.toISOString(),
-                      endDate: plan.endDate.toISOString(),
-                  }
-                : null,
-            isPracticeAdmin: practiceOwnerId && practiceOwnerId === userId,
+            plan,
+            isPracticeAdmin,
         });
     };
