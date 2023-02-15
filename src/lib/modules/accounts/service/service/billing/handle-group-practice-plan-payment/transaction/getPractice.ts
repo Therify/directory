@@ -1,13 +1,13 @@
-import { HandlePlanChange } from '@/lib/modules/accounts/features/billing';
-import { HandlePlanChangeTransaction } from './definition';
+import { HandleGroupPracticePlanPayment } from '@/lib/modules/accounts/features/billing';
+import { HandleGroupPracticePlanPaymentTransaction } from './definition';
 
-interface GetTherifyUserDetailsFactory {
+interface GetTherifyIdentifiersFactory {
     (
-        params: HandlePlanChange.Input
-    ): HandlePlanChangeTransaction['getTherifyUserDetails'];
+        params: HandleGroupPracticePlanPayment.Input
+    ): HandleGroupPracticePlanPaymentTransaction['getPractice'];
 }
 
-export const factory: GetTherifyUserDetailsFactory = ({
+export const factory: GetTherifyIdentifiersFactory = ({
     stripeCustomerId,
 }) => ({
     async commit({ prisma }) {
@@ -20,7 +20,6 @@ export const factory: GetTherifyUserDetailsFactory = ({
                 },
             });
         const practiceId = managedPractice?.id;
-
         if (!practiceId) {
             throw new Error('No practice found for customer.');
         }

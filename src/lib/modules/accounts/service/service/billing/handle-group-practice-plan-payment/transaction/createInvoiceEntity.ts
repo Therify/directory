@@ -17,17 +17,14 @@ export const factory: CreateInvoiceEntityFactory = ({
 }) => ({
     async commit(
         { prisma },
-        {
-            createPlanEntity: { planId },
-            getTherifyIdentifiers: { therifyUserId },
-        }
+        { createPlanEntity: { planId }, getPractice: { practiceOwnerId } }
     ) {
         const invoice = await prisma.stripeInvoice.create({
             data: {
                 planId,
                 status: invoiceStatus,
                 invoiceId,
-                userId: therifyUserId,
+                userId: practiceOwnerId,
                 total: invoiceTotal,
                 amountDue: invoiceAmountDue,
                 amountPaid: invoiceAmountPaid,
