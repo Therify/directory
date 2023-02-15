@@ -19,7 +19,12 @@ export const schema = z.lazy(() =>
             endDate: true,
             renews: true,
             seats: true,
-        }).nullable(),
+        })
+            .extend({
+                startDate: z.string(),
+                endDate: z.string(),
+            })
+            .nullable(),
         isPracticeAdmin: z.boolean(),
     })
 );
