@@ -2,10 +2,12 @@ import { ProviderProfileListing } from '@/lib/shared/types';
 import { TherifyUser } from '@/lib/shared/types/therify-user';
 import { getSession } from '@auth0/nextjs-auth0';
 import { GetServerSideProps } from 'next';
-import { AccountsService } from '@/lib/modules/accounts/service';
 import { profilesFactory } from '@/lib/modules/providers/service/profiles';
-import { ProvidersServiceParams } from '../../params';
-import { practiceFactory } from '../../practice';
+import { URL_PATHS } from '@/lib/sitemap';
+import { ProvidersServiceParams } from '../../../params';
+import { GetProviderTherifyUser } from '../../../get-provider-therify-user';
+import { practiceFactory } from '../../../practice';
+import { Role } from '@prisma/client';
 
 export interface PracticeProfilesPageProps {
     profiles: ProviderProfileListing.Type[];
@@ -13,11 +15,7 @@ export interface PracticeProfilesPageProps {
     user: TherifyUser.TherifyUser;
 }
 
-interface PracticeProfilesPagePropsParams extends ProvidersServiceParams {
-    accountsService: AccountsService;
-}
-
-export const factory = (params: PracticeProfilesPagePropsParams) => {
+export const factory = (params: ProvidersServiceParams) => {
     const getPracticeProfilesPageProps: GetServerSideProps<
         PracticeProfilesPageProps
     > = async (context) => {
@@ -26,25 +24,35 @@ export const factory = (params: PracticeProfilesPagePropsParams) => {
         if (!session) {
             return {
                 redirect: {
-                    destination: '/api/auth/login',
+                    destination: URL_PATHS.AUTH.LOGIN,
                     permanent: false,
                 },
             };
         }
+        const getUserDetails = GetProviderTherifyUser.factory(params);
         const { listPracticeProfilesByUserId } = profilesFactory(params);
         const { getPracticeByUserId } = practiceFactory(params);
 
         const [{ user }, { profiles }, { practice }] = await Promise.all([
-            params.accountsService.getUserDetailsById({
-                userId: session.user.sub,
-            }),
+            getUserDetails({ userId: session.user.sub }),
             listPracticeProfilesByUserId({ userId: session.user.sub }),
             getPracticeByUserId({ userId: session.user.sub }),
         ]);
         if (user === null) {
             return {
                 redirect: {
-                    destination: '/api/auth/login',
+                    destination: URL_PATHS.AUTH.LOGIN,
+                    permanent: false,
+                },
+            };
+        }
+        if (!user.isPracticeAdmin) {
+            const isTherapist = user.roles.includes(Role.provider_therapist);
+            return {
+                redirect: {
+                    destination: isTherapist
+                        ? URL_PATHS.PROVIDERS.THERAPIST.DASHBOARD
+                        : URL_PATHS.PROVIDERS.COACH.DASHBOARD,
                     permanent: false,
                 },
             };

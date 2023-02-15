@@ -5,8 +5,8 @@ import { CreateProviderProfileForPracticeTransaction } from './definition';
 
 export const factory: (
     input: CreateProviderProfileForPractice.Input
-) => CreateProviderProfileForPracticeTransaction['validateSeatAvailability'] = ({
-    userId,
+) => CreateProviderProfileForPracticeTransaction['validateSeatAvailabilityForPractice'] = ({
+    userId: practiceOwnerId,
 }) => {
     return {
         async commit({ prisma }) {
@@ -17,26 +17,33 @@ export const factory: (
             // created when accepted. Therefore, an invitation with no profileId
             // should take a seat until that invitation is accepted (which creates the profile) or
             // status becomes rejected or expired.
-            const { plans } = await prisma.user.findUniqueOrThrow({
-                where: { id: userId },
+            const { managedPractice } = await prisma.user.findUniqueOrThrow({
+                where: { id: practiceOwnerId },
                 select: {
-                    plans: {
-                        orderBy: {
-                            createdAt: 'desc',
-                        },
-                        take: 1,
+                    managedPractice: {
                         select: {
-                            billingUserId: true,
-                            seats: true,
-                            status: true,
-                            endDate: true,
+                            id: true,
+                            plans: {
+                                orderBy: {
+                                    createdAt: 'desc',
+                                },
+                                take: 1,
+                                select: {
+                                    billingUserId: true,
+                                    seats: true,
+                                    status: true,
+                                    endDate: true,
+                                },
+                            },
                         },
                     },
                 },
             });
-            const [plan] = plans;
-            if (!plan) throw new Error('No plan found for user.');
-            if (plan.billingUserId !== userId)
+            if (!managedPractice)
+                throw new Error('User is not a practice admin');
+            const [plan] = managedPractice.plans ?? [];
+            if (!plan) throw new Error('No plan found for practice.');
+            if (plan.billingUserId !== practiceOwnerId)
                 throw new Error('User is not a practice admin.');
 
             const activeStatuses: PlanStatus[] = [
@@ -52,7 +59,7 @@ export const factory: (
                 await prisma.practiceProviderInvitation.count({
                     where: {
                         practice: {
-                            userId,
+                            practiceOwnerId,
                         },
                         status: {
                             in: [
@@ -66,7 +73,7 @@ export const factory: (
             const profilesCount = await prisma.practiceProfile.count({
                 where: {
                     practice: {
-                        userId,
+                        practiceOwnerId,
                     },
                 },
             });
@@ -76,6 +83,9 @@ export const factory: (
                     'No seats available. Please upgrade your plan to create a new profile.'
                 );
             }
+            return {
+                practiceId: managedPractice.id,
+            };
         },
         rollback() {},
     };

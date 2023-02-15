@@ -7,7 +7,10 @@ import {
     Paragraph,
     PARAGRAPH_SIZE,
 } from '@/lib/shared/components/ui/Typography/Paragraph';
-import { ProviderProfile as ProviderProfileType } from '@/lib/shared/types';
+import {
+    ProviderPractice,
+    ProviderProfile as ProviderProfileType,
+} from '@/lib/shared/types';
 import {
     AutoFixHighOutlined,
     BadgeOutlined,
@@ -33,7 +36,7 @@ import { CalloutBanner } from './CalloutBanner';
 import { CriteriaCard, CRITERIA_CARD_TYPES } from './CriteriaCard';
 
 interface ProviderProfileProps {
-    practice?: Pick<Practice, 'id' | 'name' | 'city' | 'state' | 'website'>;
+    practice?: ProviderPractice.Type;
     isFavorited?: boolean;
     isFavoriteLoading?: boolean;
     member?: Record<string, unknown>;

@@ -11,7 +11,7 @@ export function factory({ prisma }: ProvidersServiceParams) {
     }> {
         const practice = await prisma.practice.findUnique({
             where: {
-                userId,
+                practiceOwnerId: userId,
             },
             select: {
                 id: true,

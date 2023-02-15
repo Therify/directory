@@ -7,7 +7,7 @@ export const step: CreateProviderProfileForPracticeTransaction['createDirectoryL
         async commit(
             { prisma },
             {
-                getPractice: { practiceId },
+                validateSeatAvailabilityForPractice: { practiceId },
                 createProviderProfile: { profileId },
             }
         ) {

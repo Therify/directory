@@ -33,15 +33,15 @@ model User {
 
   account                    Account?                     @relation(fields: [accountId], references: [id])
   accountId                  String?                      @unique
-  plans                      Plan[]
   stripeInvoices             StripeInvoice[]
-  practiceProviders          PracticeProvider[]
   practiceProviderInvitation PracticeProviderInvitation[]
   providerProfile            ProviderProfile?
-  practice                   Practice?
-  memberProfile              MemberProfile?
-  selfAssessments            SelfAssessment[]
-  ConnectionRequest          ConnectionRequest[]
+  practiceProvider           PracticeProvider?
+
+  memberProfile     MemberProfile?
+  selfAssessments   SelfAssessment[]
+  ConnectionRequest ConnectionRequest[]
+  managedPractice   Practice?
 
   @@map("users")
 }
@@ -53,9 +53,8 @@ model Account {
   updatedAt          DateTime           @updatedAt @map("updated_at")
   registrationCode   RegistrationCode[]
   registrationCodeId String?            @map("registration_code_id")
-  plan               Plan[]
-  stripeInvoice      StripeInvoice[]
-  practice           Practice[]
+  plans              Plan[]
+  stripeInvoices     StripeInvoice[]
   users              User[]
 
   @@map("accounts")
@@ -111,11 +110,9 @@ model Plan {
   id                   String          @id @default(cuid())
   seats                Int
   account              Account?        @relation(fields: [accountId], references: [id])
-  user                 User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
   startDate            DateTime        @map("start_date")
   endDate              DateTime        @map("end_date")
   accountId            String?         @map("account_id") // Missing account id means individual plan
-  userId               String          @map("user_id") // Missing user id means unclaimed seat
   billingUserId        String?         @map("billing_user_id")
   createdAt            DateTime        @default(now()) @map("created_at")
   updatedAt            DateTime        @updatedAt @map("updated_at")
@@ -126,6 +123,8 @@ model Plan {
   renews               Boolean         @default(true)
   invoices             StripeInvoice[]
   coveredSessions      Int             @default(0) @map("covered_sessions")
+  practice             Practice?       @relation(fields: [practiceId], references: [id])
+  practiceId           String?
 
   @@index([stripeCustomerId, stripeSubscriptionId])
   @@map("plans")
@@ -165,11 +164,9 @@ model Practice {
   email            String
   website          String?
   directoryListing DirectoryListing[]
-  account          Account?           @relation(fields: [accountId], references: [id])
-  accountId        String?            @map("account_id")
-  user             User               @relation(fields: [userId], references: [id])
-  userId           String             @unique @map("user_id")
-  // registrationCode RegistrationCode[] @map("registration_code")
+  practiceOwner    User               @relation(fields: [practiceOwnerId], references: [id])
+  practiceOwnerId  String             @unique @map("practice_owner_id")
+  plans            Plan[]
 
   createdAt                  DateTime                     @default(now()) @map("created_at")
   updatedAt                  DateTime                     @updatedAt @map("updated_at")
@@ -183,8 +180,8 @@ model Practice {
 model PracticeProvider {
   practice   Practice @relation(fields: [practiceId], references: [id])
   practiceId String   @map("practice_id")
-  provider   User     @relation(fields: [userId], references: [id])
-  userId     String   @map("user_id")
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String   @unique @map("user_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

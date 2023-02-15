@@ -5,7 +5,7 @@ export const step: CreateProviderProfileForPracticeTransaction['createPracticePr
         async commit(
             { prisma },
             {
-                getPractice: { practiceId },
+                validateSeatAvailabilityForPractice: { practiceId },
                 createProviderProfile: { profileId },
             }
         ) {
@@ -23,7 +23,7 @@ export const step: CreateProviderProfileForPracticeTransaction['createPracticePr
         rollback(
             { prisma },
             {
-                getPractice: { practiceId },
+                validateSeatAvailabilityForPractice: { practiceId },
                 createProviderProfile: { profileId },
             }
         ) {

@@ -7,47 +7,27 @@ import {
     PRACTICE_ADMIN_MOBILE_MENU,
     URL_PATHS,
 } from '@/lib/sitemap';
-import { useTherifyUser } from '@/lib/shared/hooks';
 import { RBAC } from '@/lib/shared/utils';
-import { useEffect } from 'react';
-import { Role } from '@prisma/client';
 import { ProfileEditor } from '@/lib/modules/providers/components/ProfileEditor';
-import { TherifyUser } from '@/lib/shared/types';
 import { trpc } from '@/lib/shared/utils/trpc';
-import { LoadingContainer } from '@/lib/shared/components/ui';
-import {
-    GetProviderProfileById,
-    UpdateProviderProfile,
-} from '@/lib/modules/providers/features/profiles';
+import { UpdateProviderProfile } from '@/lib/modules/providers/features/profiles';
+import { ProvidersService } from '@/lib/modules/providers/service';
+import { PracticeProfileEditorPageProps } from '@/lib/modules/providers/service/page-props/practice/get-practice-profile-editor-page-props';
 
 export const getServerSideProps = RBAC.requireProviderAuth(
-    withPageAuthRequired()
+    withPageAuthRequired({
+        getServerSideProps:
+            ProvidersService.pageProps.practice
+                .getPracticeProfileEditorPageProps,
+    })
 );
 
-export default function PracticeProfileCreatePage() {
-    const { user, isLoading } = useTherifyUser();
-    usePracticeAdminProtection(user);
+export default function PracticeProfileCreatePage({
+    user,
+    profile,
+    practice,
+}: PracticeProfileEditorPageProps) {
     const router = useRouter();
-    const { profileId } = router.query as { profileId: string };
-
-    const {
-        data,
-        isLoading: isLoadingProfile,
-        error: profileError,
-    } = trpc.useQuery(
-        [`providers.${GetProviderProfileById.TRPC_ROUTE}`, { profileId }],
-        {
-            enabled: !!profileId,
-            refetchOnWindowFocus: false,
-        }
-    );
-
-    const profile = data?.profile;
-    useEffect(() => {
-        if (profile === null) {
-            router.push(URL_PATHS[404]);
-        }
-    }, [profile, router]);
 
     const {
         mutate: updateProfile,
@@ -63,47 +43,20 @@ export default function PracticeProfileCreatePage() {
             primaryMenu={[...PRACTICE_ADMIN_MAIN_MENU]}
             secondaryMenu={[...PRACTICE_ADMIN_SECONDARY_MENU]}
             mobileMenu={[...PRACTICE_ADMIN_MOBILE_MENU]}
-            isLoadingUser={isLoading}
         >
-            <LoadingContainer
-                isLoading={isLoading || isLoadingProfile || !profile}
-            >
-                {profile && (
-                    <ProfileEditor
-                        //  TODO: Get practice from query
-                        providerProfile={profile}
-                        practice={{
-                            id: '1',
-                            name: 'Therify',
-                            city: 'San Francisco',
-                            state: 'CA',
-                            website: 'https://therify.co',
-                        }}
-                        isSavingProfile={isUpdatingProfile}
-                        onSubmit={async (profile) => {
-                            if (!user?.userId)
-                                return console.error('User is not logged in');
-                            return updateProfile({
-                                userId: user.userId,
-                                profile,
-                            });
-                        }}
-                    />
-                )}
-            </LoadingContainer>
+            <ProfileEditor
+                providerProfile={profile}
+                practice={practice}
+                isSavingProfile={isUpdatingProfile}
+                onSubmit={async (profile) => {
+                    if (!user?.userId)
+                        return console.error('User is not logged in');
+                    return updateProfile({
+                        userId: user.userId,
+                        profile,
+                    });
+                }}
+            />
         </SideNavigationPage>
     );
 }
-
-// TODO: Move to server side
-const usePracticeAdminProtection = (user: TherifyUser.TherifyUser | null) => {
-    const router = useRouter();
-    useEffect(() => {
-        if (user?.isPracticeAdmin === false) {
-            const isTherapist = user.roles.includes(Role.provider_therapist);
-            isTherapist
-                ? router.push(URL_PATHS.PROVIDERS.THERAPIST.DASHBOARD)
-                : router.push(URL_PATHS.PROVIDERS.COACH.DASHBOARD);
-        }
-    }, [router, user?.isPracticeAdmin, user?.roles]);
-};

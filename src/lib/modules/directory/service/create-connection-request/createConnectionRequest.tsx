@@ -41,7 +41,7 @@ export const factory = ({ prisma }: CreateConnectionFactoryParams) => {
                             },
                         },
                         include: {
-                            plan: {
+                            plans: {
                                 orderBy: {
                                     createdAt: 'desc',
                                 },
@@ -52,8 +52,8 @@ export const factory = ({ prisma }: CreateConnectionFactoryParams) => {
                 ]);
             const { user, state, insurance } = memberProfile;
             let planDetails = undefined;
-            if (account?.plan) {
-                const [plan] = account.plan;
+            if (account?.plans) {
+                const [plan] = account.plans;
                 planDetails = {
                     numberOfCoveredSessions: plan.coveredSessions,
                     planName: account.name,

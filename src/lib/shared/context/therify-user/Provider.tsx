@@ -3,6 +3,7 @@ import { setCookie, destroyCookie } from 'nookies';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { Context } from './Context';
 import { trpc } from '@/lib/shared/utils/trpc';
+import { GetUserDetailsById } from '@/lib/modules/users/features';
 
 const USER_ROLES_COOKIE_KEY = 'userRoles' as const;
 
@@ -16,7 +17,7 @@ export const Provider = ({ children }: { children: ReactNode }) => {
         refetch,
     } = trpc.useQuery(
         [
-            'accounts.users.get-user-details-by-user-id',
+            `accounts.${GetUserDetailsById.TRPC_ROUTE}`,
             {
                 userId: auth0User?.sub ?? '',
             },
