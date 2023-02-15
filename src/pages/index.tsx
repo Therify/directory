@@ -39,6 +39,7 @@ const LOGIN_IMAGES = [
 
 const getUserRedirectPath = (user: TherifyUser.TherifyUser): string => {
     const [role] = user.roles;
+    console.log({ role, user });
     if (role === Role.member) {
         return URL_PATHS.MEMBERS.HOME;
     } else if (user.plan === null) {
@@ -56,14 +57,6 @@ const getUserRedirectPath = (user: TherifyUser.TherifyUser): string => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const session = await getSession(context.req, context.res);
-    if (!session) {
-        return {
-            redirect: {
-                destination: '/api/auth/login',
-                permanent: false,
-            },
-        };
-    }
     if (!session) {
         return {
             props: {

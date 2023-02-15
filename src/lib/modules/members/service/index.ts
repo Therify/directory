@@ -3,7 +3,6 @@ import { firebaseAdminVendor } from '@/lib/shared/vendors/firebase-admin';
 import { MembersServiceParams } from './params';
 import { selfAssessmentsFactory } from './self-assessments';
 import { GetHomePageProps } from './get-home-page-props';
-import { AccountsService } from '../../accounts/service';
 import { GetDirectoryPageProps } from './get-directory-page-props';
 import { GetDirectoryProfilePageProps } from './get-directory-profile-props';
 import { FavoriteProfile } from './favorite-profile';
@@ -17,22 +16,11 @@ const factoryParams: MembersServiceParams = {
 export const membersService = {
     getTherifyUser: GetMemberTherifyUser.factory(factoryParams),
     selfAssessments: selfAssessmentsFactory(factoryParams),
-    getHomePageProps: GetHomePageProps.factory({
-        ...factoryParams,
-        accountService: AccountsService,
-    }),
-    getDirectoryPageProps: GetDirectoryPageProps.factory({
-        ...factoryParams,
-        accountService: AccountsService,
-    }),
-    getDirectoryProfilePageProps: GetDirectoryProfilePageProps.factory({
-        ...factoryParams,
-        accountService: AccountsService,
-    }),
-    getFavoritesPageProps: GetFavoritesPageProps.factory({
-        ...factoryParams,
-        accountsService: AccountsService,
-    }),
+    getHomePageProps: GetHomePageProps.factory(factoryParams),
+    getDirectoryPageProps: GetDirectoryPageProps.factory(factoryParams),
+    getDirectoryProfilePageProps:
+        GetDirectoryProfilePageProps.factory(factoryParams),
+    getFavoritesPageProps: GetFavoritesPageProps.factory(factoryParams),
     favoriteProfile: FavoriteProfile.factory(factoryParams),
 };
 
