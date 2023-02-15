@@ -26,7 +26,7 @@ export function factory({ prisma }: ProvidersServiceParams) {
                         select: {
                             practice: {
                                 select: {
-                                    userId: true,
+                                    practiceOwnerId: true,
                                 },
                             },
                         },
@@ -34,7 +34,7 @@ export function factory({ prisma }: ProvidersServiceParams) {
                 },
             });
 
-        const practiceOwnerId = practiceProfile?.practice?.userId;
+        const practiceOwnerId = practiceProfile?.practice?.practiceOwnerId;
         const isUserPracticeOwner =
             Boolean(practiceOwnerId) && practiceOwnerId === userId;
         const isUserProfileOwner =
