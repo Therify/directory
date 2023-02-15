@@ -2,11 +2,11 @@ import React from 'react';
 import { MjmlColumn, MjmlSection, MjmlSpacer, MjmlWrapper } from 'mjml-react';
 import BaseLayout from './components/BaseLayout';
 import Button from './components/Button';
-import Footer from './components/Footer';
 import Heading from './components/Heading';
 import Header from './components/Header';
 import Text from './components/Text';
 import { fontSize, colors, spacing, fontFamily, screens } from './theme';
+import Link from './components/Link';
 
 const joinPracticeStyle = `
   .h2 > * {
@@ -74,10 +74,15 @@ const JoinPractice = ({ invitationLink, practiceName }: JoinPracticeProps) => {
                         <Button
                             href={invitationLink}
                             align="center"
-                            cssClass="lg-hidden"
+                            paddingBottom={spacing.s3}
                         >
                             Join Practice
                         </Button>
+                        <Text align="center">
+                            <Link href={invitationLink}>
+                                Follow this link to join {practiceName}
+                            </Link>
+                        </Text>
                         <MjmlSpacer height={spacing.s9} />
                     </MjmlColumn>
                 </MjmlSection>
