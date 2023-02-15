@@ -17,6 +17,6 @@ export const factory: (
                 ],
             });
         },
-        rollback({ auth0 }) {},
+        rollback() {},
     };
 };

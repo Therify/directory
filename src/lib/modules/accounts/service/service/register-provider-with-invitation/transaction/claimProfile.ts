@@ -13,7 +13,6 @@ export const step: RegisterProviderWithInitationTransaction['claimProfile'] = {
                 profileClaimed: false,
             };
         }
-        // TODO: Casecade invite delete when profile deleted
         const profile = await prisma.providerProfile.findUnique({
             where: {
                 id: profileId,
