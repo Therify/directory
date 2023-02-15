@@ -15,6 +15,7 @@ import {
     H3,
     FormValidation,
     Button,
+    Paragraph,
 } from '@/lib/shared/components/ui';
 import { RegisterMember } from '@/lib/modules/registration/features';
 import { ALERT_TYPE } from '@/lib/shared/components/ui/Alert';
@@ -22,6 +23,8 @@ import { ROLES } from '@/lib/shared/types/roles';
 import { MemberRegistrationForm } from './ui';
 import { useRegistrationStorage } from './hooks';
 import { Account } from '@prisma/client';
+import Typography from '@mui/material/Typography';
+import Link from 'next/link';
 
 const REGISTRATION_STEPS = ['Registration', 'Onboarding'] as const;
 
@@ -34,6 +37,7 @@ interface MemberRegistrationFlowProps {
     isRegistrationComplete: boolean;
     role: typeof ROLES.MEMBER;
     account?: Account;
+    hasSeatsAvailable?: boolean;
 }
 
 export const MemberRegistrationFlow = ({
@@ -45,6 +49,7 @@ export const MemberRegistrationFlow = ({
     clearErrorMessage,
     role,
     account,
+    hasSeatsAvailable = false,
 }: MemberRegistrationFlowProps) => {
     const [emailsCheckedForUniqueness, setEmailsCheckedForUniqueness] =
         useState<Record<string, boolean>>({});
@@ -88,6 +93,38 @@ export const MemberRegistrationFlow = ({
             }, 500);
         }
     }, [emailAddress, emailValidationUrl, emailsCheckedForUniqueness]);
+
+    if (!hasSeatsAvailable) {
+        return (
+            <Box height="100%" width="100%">
+                <HeaderContainer>
+                    <Logo />
+                </HeaderContainer>
+                <FormContainer isError={false}>
+                    <CenteredContainer>
+                        <H3>
+                            Sorry,{' '}
+                            <Typography
+                                color="primary"
+                                typography={'h3'}
+                                sx={{ fontWeight: 700, display: 'inline' }}
+                            >
+                                {account?.name}
+                            </Typography>{' '}
+                            is are currently at capacity.
+                        </H3>
+                        <Paragraph>
+                            If you believe this is an error, please contact{' '}
+                            <Link href="mailto:help@therify.co">
+                                help@therify.co
+                            </Link>{' '}
+                            for assistance.
+                        </Paragraph>
+                    </CenteredContainer>
+                </FormContainer>
+            </Box>
+        );
+    }
 
     return (
         <Box height="100%" width="100%">

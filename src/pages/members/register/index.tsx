@@ -16,13 +16,14 @@ import { useRegistrationStorage } from '@/lib/modules/registration/components/Me
 interface Props {
     hasRegistrationCode: boolean;
     registrationCode?: string;
+    hasSeatsAvailable?: boolean;
     account?: Account & {
         createdAt: string;
     };
 }
 
 export default function MemberRegistrationPage(props: Props) {
-    const { hasRegistrationCode, registrationCode, account } = props;
+    const { registrationCode, account, hasSeatsAvailable = false } = props;
     const router = useRouter();
     const [registrationError, setRegistrationError] = useState<string>();
     const { clearRegistrationStorage } = useRegistrationStorage();
@@ -34,7 +35,6 @@ export default function MemberRegistrationPage(props: Props) {
         onSuccess(response, { emailAddress }) {
             if (response.wasSuccessful) {
                 clearRegistrationStorage();
-
                 router.push(
                     `${
                         URL_PATHS.MEMBERS.REGISTER_SUCCESS
@@ -74,6 +74,7 @@ export default function MemberRegistrationPage(props: Props) {
                     isRegistrationComplete={mutation.isSuccess}
                     role={ROLES.MEMBER}
                     account={account}
+                    hasSeatsAvailable={hasSeatsAvailable}
                 />
             </InnerContent>
         </PageContainer>
@@ -105,28 +106,32 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         };
     }
     try {
-        const { account } = await AccountsService.getAccountByRegistrationCode({
-            registrationCode: registrationCode as string,
-        });
+        const { account, hasSeatsAvailable } =
+            await AccountsService.getAccountByRegistrationCode({
+                registrationCode: registrationCode as string,
+            });
         if (account) {
             return {
                 props: {
                     hasRegistrationCode: true,
                     registrationCode: registrationCode as string,
                     account,
+                    hasSeatsAvailable,
                 },
             };
         }
         return {
-            props: {
-                hasRegistrationCode: false,
+            redirect: {
+                destination: '/waiting-list',
+                permanent: false,
             },
         };
     } catch (error) {
         console.error('Member Registration Error:', error);
         return {
-            props: {
-                hasRegistrationCode: false,
+            redirect: {
+                destination: '/waiting-list',
+                permanent: false,
             },
         };
     }
