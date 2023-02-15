@@ -1,16 +1,16 @@
 import { NavigationMenu, TEST_IDS } from './NavigationMenu';
-// import {
-//     THERAPIST_MAIN_MENU,
-//     NavigationMenu as NavigationMenuType,
-//     NavigationIcon,
-// } from '@therify/client/data/sitemap';
 import { renderWithTheme } from '@/lib/shared/components/fixtures';
 import {
     NavigationLink,
     THERAPIST_MAIN_MENU,
+    MEMBER_MAIN_MENU,
     NAVIGATION_ICON,
 } from '@/lib/sitemap';
-const mockMenu = THERAPIST_MAIN_MENU as unknown as NavigationLink[];
+const mockMenu = [
+    // This is a hack to get around the menu bein 1 item long for launch
+    ...THERAPIST_MAIN_MENU,
+    MEMBER_MAIN_MENU[1],
+] as unknown as NavigationLink[];
 describe('NavigationMenu', () => {
     it('should render list items', () => {
         const { getByText } = renderWithTheme(

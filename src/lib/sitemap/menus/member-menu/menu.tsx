@@ -9,8 +9,11 @@ export const MEMBER_MAIN_MENU = [
 ] as const;
 
 export const MEMBER_SECONDARY_MENU = [
-    { ...ACCOUNT, icon: undefined },
+    // { ...ACCOUNT, icon: undefined },
     LOGOUT,
 ] as const;
 
-export const MEMBER_MOBILE_MENU = [...MEMBER_MAIN_MENU, ACCOUNT] as const;
+export const MEMBER_MOBILE_MENU = [
+    ...MEMBER_MAIN_MENU,
+    // ACCOUNT
+] as const;

@@ -4,4 +4,6 @@ export const COACH_PATHS = {
     DASHBOARD: '/providers/coach/dashboard',
     CLIENTS: '/providers/coach/clients',
     PAYMENTS: 'providers/coach/payments',
+    PROFILE_EDITOR: '/providers/coach/profile/editor',
+    PROFILES: '/providers/coach/profiles',
 } as const;
