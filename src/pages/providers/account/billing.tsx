@@ -12,61 +12,65 @@ import {
     CenteredContainer,
 } from '@/lib/shared/components/ui';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { ProviderNavigationPage } from '@/lib/shared/components/features/pages/ProviderNavigationPage';
+import { RBAC } from '@/lib/shared/utils';
+import { ProvidersService } from '@/lib/modules/providers/service';
+import { ProviderBillingPageProps } from '@/lib/modules/providers/service/page-props/get-billing-page-props';
 
+export const getServerSideProps = RBAC.requireProviderAuth(
+    withPageAuthRequired({
+        getServerSideProps: ProvidersService.pageProps.getBillingPageProps,
+    })
+);
 export default function BillingPage({
-    customerPortalUrl,
-}: {
-    customerPortalUrl?: string;
-}) {
+    stripeCustomerPortalUrl,
+    user,
+}: ProviderBillingPageProps) {
     const theme = useTheme();
     return (
-        <Box padding={4}>
-            <H3>Billing and Subscription</H3>
-            <Paragraph>
-                We partner with{' '}
-                <Link
-                    href="https://stripe.com/"
-                    target="_blank"
-                    style={{ color: theme.palette.text.primary }}
-                >
-                    Stripe
-                </Link>{' '}
-                for simplified billing. You can edit subscription and payment
-                settings in Stripe&apos;s customer portal.
-            </Paragraph>
+        <ProviderNavigationPage
+            currentPath="/providers/account/billing"
+            user={user}
+        >
+            <Box padding={4}>
+                <H3>Billing and Subscription</H3>
+                <Paragraph>
+                    We partner with{' '}
+                    <Link
+                        href="https://stripe.com/"
+                        target="_blank"
+                        style={{ color: theme.palette.text.primary }}
+                    >
+                        Stripe
+                    </Link>{' '}
+                    for simplified billing. You can edit subscription and
+                    payment settings in Stripe&apos;s customer portal.
+                </Paragraph>
 
-            {customerPortalUrl ? (
-                <Link
-                    href={customerPortalUrl}
-                    target="_blank"
-                    style={{ textDecoration: 'none' }}
-                >
-                    <Button endIcon={<ArrowIcon />}>
-                        Launch Stripe Customer Portal
-                    </Button>
-                </Link>
-            ) : (
-                <Alert
-                    icon={
-                        <CenteredContainer>
-                            <WarningRounded />
-                        </CenteredContainer>
-                    }
-                    title="Stripe Billing Issue"
-                    type="error"
-                    message="Stripe customer portal URL is not configured. Please reach
+                {stripeCustomerPortalUrl ? (
+                    <Link
+                        href={stripeCustomerPortalUrl}
+                        target="_blank"
+                        style={{ textDecoration: 'none' }}
+                    >
+                        <Button endIcon={<ArrowIcon />}>
+                            Launch Stripe Customer Portal
+                        </Button>
+                    </Link>
+                ) : (
+                    <Alert
+                        icon={
+                            <CenteredContainer>
+                                <WarningRounded />
+                            </CenteredContainer>
+                        }
+                        title="Stripe Billing Issue"
+                        type="error"
+                        message="Stripe customer portal URL is not configured. Please reach
                     out to Therify support."
-                />
-            )}
-        </Box>
+                    />
+                )}
+            </Box>
+        </ProviderNavigationPage>
     );
 }
-
-export const getServerSideProps = () => {
-    return {
-        props: {
-            ...withPageAuthRequired(),
-            customerPortalUrl: process.env.STRIPE_CUSTOMER_PORTAL_URL,
-        },
-    };
-};
