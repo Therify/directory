@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { Control } from 'react-hook-form';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -17,6 +18,7 @@ import {
 import { ROLES } from '@/lib/shared/types/roles';
 
 export interface ProviderRegistrationFormProps {
+    formTitle?: ReactNode;
     defaultValues?: Partial<
         Omit<
             RegisterProvider.Input,
@@ -28,23 +30,28 @@ export interface ProviderRegistrationFormProps {
     isEmailUnique?: boolean;
     isEmailDisabled?: boolean;
     emailHelperText?: string;
+    isEmailReadOnly?: boolean;
     role: typeof ROLES.PROVIDER_THERAPIST | typeof ROLES.PROVIDER_COACH;
 }
 
 export const ProviderRegistrationForm = ({
+    formTitle,
     defaultValues,
     password,
     control,
     isEmailUnique,
     isEmailDisabled,
     emailHelperText,
+    isEmailReadOnly,
 }: ProviderRegistrationFormProps) => {
     if (!control) throw new Error('control is required');
     return (
         <Box width="100%">
-            <Header>
-                Grow your practice &<br /> make an impact
-            </Header>
+            {formTitle ?? (
+                <Header>
+                    Grow your practice &<br /> make an impact
+                </Header>
+            )}
             <Form
                 data-testid={TEST_IDS.FORM}
                 onSubmit={(e) => e.preventDefault()}
@@ -62,6 +69,7 @@ export const ProviderRegistrationForm = ({
                     defaultValue={defaultValues?.emailAddress}
                     isEmailUnique={isEmailUnique}
                     disabled={isEmailDisabled}
+                    isEmailReadOnly={isEmailReadOnly}
                     helperText={emailHelperText}
                 />
                 <DateOfBirthInput

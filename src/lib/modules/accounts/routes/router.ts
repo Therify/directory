@@ -1,6 +1,7 @@
 import * as trpc from '@trpc/server';
 import {
     RegisterProvider,
+    RegisterProviderWithInvitation,
     SendEmailVerification,
     GetVerificationEmailStatus,
     RegisterMember,
@@ -12,6 +13,7 @@ import {
 } from '@/lib/modules/users/features';
 import {
     registerProviderResolver,
+    registerProviderWithInvitationResolver,
     registerMemberResolver,
     sendEmailVerificationResolver,
     getVerificationEmailStatusResolver,
@@ -47,6 +49,11 @@ export const router = trpc
         input: RegisterProvider.inputSchema,
         output: RegisterProvider.outputSchema,
         resolve: registerProviderResolver,
+    })
+    .mutation(RegisterProviderWithInvitation.TRPC_ROUTE, {
+        input: RegisterProviderWithInvitation.inputSchema,
+        output: RegisterProviderWithInvitation.outputSchema,
+        resolve: registerProviderWithInvitationResolver,
     })
     .mutation(RegisterMember.TRPC_ROUTE, {
         input: RegisterMember.inputSchema,
