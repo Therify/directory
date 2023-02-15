@@ -47,13 +47,11 @@ export const ProviderRegistrationForm = ({
     if (!control) throw new Error('control is required');
     return (
         <Box width="100%">
-            <Header>
-                {formTitle ?? (
-                    <>
-                        Grow your practice &<br /> make an impact
-                    </>
-                )}
-            </Header>
+            {formTitle ?? (
+                <Header>
+                    Grow your practice &<br /> make an impact
+                </Header>
+            )}
             <Form
                 data-testid={TEST_IDS.FORM}
                 onSubmit={(e) => e.preventDefault()}

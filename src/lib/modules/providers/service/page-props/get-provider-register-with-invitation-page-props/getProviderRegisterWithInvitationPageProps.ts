@@ -1,30 +1,33 @@
-import { ProviderProfile } from '@/lib/shared/types';
+import { InvitationStatus, ProfileType, Role } from '@prisma/client';
 import { GetServerSideProps } from 'next';
 import { ProvidersServiceParams } from '../../params';
 
-export interface ProviderInvitationRegistrationPageProps {
+export interface ProviderRegisterWithInvitationPageProps {
     profile: {
         givenName: string;
         surname: string;
-        designation: ProviderProfile.ProviderProfile['designation'];
     } | null;
+    role: typeof Role.provider_coach | typeof Role.provider_therapist | null;
     practice: { name: string; id: string } | null;
     recipientEmail: string | null;
     invitationId: string | null;
+    invitationStatus: InvitationStatus | null;
     invitationExpirationDate: string | null;
 }
 
-const NO_INVITATION_FOUND_PROPS: ProviderInvitationRegistrationPageProps = {
+const NO_INVITATION_FOUND_PROPS: ProviderRegisterWithInvitationPageProps = {
     profile: null,
     practice: null,
     recipientEmail: null,
     invitationId: null,
     invitationExpirationDate: null,
+    role: null,
+    invitationStatus: null,
 };
 
 export const factory = (params: ProvidersServiceParams) => {
     const getPracticeProfilesPageProps: GetServerSideProps<
-        ProviderInvitationRegistrationPageProps
+        ProviderRegisterWithInvitationPageProps
     > = async (context) => {
         const { invitationId: rawInvitationId } = context.params ?? {};
         const invitationId = Array.isArray(rawInvitationId)
@@ -37,13 +40,14 @@ export const factory = (params: ProvidersServiceParams) => {
         }
 
         const invitation =
-            await params.prisma.practiceProviderInvitation.findUnique({
+            await params.prisma.practiceProviderInvitation.findFirst({
                 where: {
                     id: invitationId,
                 },
                 select: {
                     recipientEmail: true,
                     expiresAt: true,
+                    status: true,
                     practice: {
                         select: {
                             name: true,
@@ -59,18 +63,34 @@ export const factory = (params: ProvidersServiceParams) => {
                     },
                 },
             });
-        const { profile, practice, recipientEmail } = invitation ?? {};
-        if (!invitation || !profile || !practice || !recipientEmail) {
+        const {
+            profile,
+            practice,
+            recipientEmail,
+            status: invitationStatus,
+        } = invitation ?? {};
+        if (
+            !invitation ||
+            !profile ||
+            !practice ||
+            !recipientEmail ||
+            !invitationStatus
+        ) {
             return {
                 props: NO_INVITATION_FOUND_PROPS,
             };
         }
-
-        const props: ProviderInvitationRegistrationPageProps = {
+        const role =
+            profile.designation === ProfileType.coach
+                ? Role.provider_coach
+                : Role.provider_therapist;
+        const props: ProviderRegisterWithInvitationPageProps = {
             profile,
             practice,
             recipientEmail,
             invitationId,
+            invitationStatus,
+            role,
             invitationExpirationDate:
                 invitation.expiresAt?.toISOString() ?? null,
         };

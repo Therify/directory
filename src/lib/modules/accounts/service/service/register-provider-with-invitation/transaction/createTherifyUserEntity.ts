@@ -22,7 +22,7 @@ export const factory: CreateTherifyUserEntityFactory = ({
         ) {
             if (hasAcceptedTermsAndConditions !== true)
                 throw new Error(
-                    'Terms and conditions must be accepted to register a user.'
+                    'Terms and conditions must be accepted to register.'
                 );
 
             const createdUser = await prisma.user.create({

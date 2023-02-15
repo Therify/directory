@@ -8,7 +8,7 @@ import {
     CreateAuth0User,
     AssignAuth0Roles,
     CreateTherifyUser,
-    AssignPlan,
+    CreatePracticeProvider,
     ClaimProfile,
     AcceptInvitation,
 } from './transaction';
@@ -25,7 +25,7 @@ export function factory(context: Context) {
                 createAuth0User: CreateAuth0User.factory(params),
                 assignAuth0Roles: AssignAuth0Roles.factory(params.role),
                 createTherifyUserEntity: CreateTherifyUser.factory(params),
-                assignPlan: AssignPlan.factory(params),
+                createPracticeProvider: CreatePracticeProvider.factory(params),
                 claimProfile: ClaimProfile.step,
                 acceptInvitation: AcceptInvitation.factory(params),
             },

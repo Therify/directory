@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import { TransactionV1 } from '@/lib/shared/utils';
 import { AccountsServiceParams as Context } from '../../params';
-import { RegisterProvider } from '@/lib/modules/registration/features';
 
 export const transactionDefinition = z.object({
     getInvitation: z.object({
@@ -16,7 +15,7 @@ export const transactionDefinition = z.object({
     createTherifyUserEntity: z.object({
         therifyUserId: z.string(),
     }),
-    assignPlan: z.object({
+    createPracticeProvider: z.object({
         planId: z.string(),
     }),
     claimProfile: z.object({
