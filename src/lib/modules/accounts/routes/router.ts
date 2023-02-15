@@ -9,7 +9,7 @@ import {
 import { HandlePracticeOnboarding } from '@/lib/modules/onboarding/features';
 import {
     GetUserDetailsById,
-    GetPracticeByUserId,
+    GetPracticeByOwnerId,
 } from '@/lib/modules/users/features';
 import {
     registerProviderResolver,
@@ -19,7 +19,7 @@ import {
     getVerificationEmailStatusResolver,
     getUserDetailsByIdResolver,
     handlePracticeOnboardingResolver,
-    getPracticeByUserIdResolver,
+    getPracticeByOwnerIdResolver,
 } from './resolvers';
 import { Context } from '../../../server/context';
 
@@ -35,10 +35,10 @@ export const router = trpc
         output: GetUserDetailsById.outputSchema,
         resolve: getUserDetailsByIdResolver,
     })
-    .query(GetPracticeByUserId.TRPC_ROUTE, {
-        input: GetPracticeByUserId.inputSchema,
-        output: GetPracticeByUserId.outputSchema,
-        resolve: getPracticeByUserIdResolver,
+    .query(GetPracticeByOwnerId.TRPC_ROUTE, {
+        input: GetPracticeByOwnerId.inputSchema,
+        output: GetPracticeByOwnerId.outputSchema,
+        resolve: getPracticeByOwnerIdResolver,
     })
     .mutation(HandlePracticeOnboarding.TRPC_ROUTE, {
         input: HandlePracticeOnboarding.inputSchema,
