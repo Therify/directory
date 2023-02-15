@@ -88,7 +88,7 @@ export default function PracticeProfilesPage({
                 >
                     <TitleContainer>
                         <Box>
-                            <Title>You Profile</Title>
+                            <Title>Your Profile</Title>
                         </Box>
                     </TitleContainer>
                     <ListTitle>Provider Name</ListTitle>
