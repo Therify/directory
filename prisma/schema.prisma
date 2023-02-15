@@ -62,7 +62,7 @@ model Account {
 
 model RegistrationCode {
   id        String  @id @default(cuid())
-  account   Account @relation(fields: [accountId], references: [id])
+  account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
   accountId String  @map("account_id")
 
   @@map("registration_codes")
@@ -76,7 +76,7 @@ enum ListingStatus {
 }
 
 model DirectoryListing {
-  practice          Practice        @relation(fields: [practiceId], references: [id])
+  practice          Practice        @relation(fields: [practiceId], references: [id], onDelete: Cascade)
   practiceId        String          @map("practice_id")
   profile           ProviderProfile @relation(fields: [providerProfileId], references: [id], onDelete: Cascade)
   providerProfileId String          @unique @map("provider_profile_id")
@@ -132,7 +132,7 @@ model Plan {
 
 model StripeInvoice {
   id              String   @id @default(cuid())
-  plan            Plan?    @relation(fields: [planId], references: [id], onDelete: Cascade)
+  plan            Plan?    @relation(fields: [planId], references: [id])
   planId          String?  @map("plan_id")
   invoiceId       String   @map("invoice_id") @db.VarChar(255)
   user            User?    @relation(fields: [userId], references: [id])
@@ -178,7 +178,7 @@ model Practice {
 }
 
 model PracticeProvider {
-  practice   Practice @relation(fields: [practiceId], references: [id])
+  practice   Practice @relation(fields: [practiceId], references: [id], onDelete: Cascade)
   practiceId String   @map("practice_id")
   user       User     @relation(fields: [userId], references: [id])
   userId     String   @unique @map("user_id")
@@ -191,7 +191,7 @@ model PracticeProvider {
 }
 
 model PracticeProfile {
-  practice   Practice        @relation(fields: [practiceId], references: [id])
+  practice   Practice        @relation(fields: [practiceId], references: [id], onDelete: Cascade)
   practiceId String          @map("practice_id")
   profile    ProviderProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
   profileId  String          @unique @map("profile_id")
@@ -213,10 +213,10 @@ enum InvitationStatus {
 model PracticeProviderInvitation {
   id             String           @id @default(cuid())
   status         InvitationStatus
-  practice       Practice         @relation(fields: [practiceId], references: [id])
+  practice       Practice         @relation(fields: [practiceId], references: [id], onDelete: Cascade)
   practiceId     String           @map("practice_id")
   recipientEmail String           @map("recipient_email")
-  sender         User             @relation(fields: [senderId], references: [id])
+  sender         User             @relation(fields: [senderId], references: [id], onDelete: Cascade)
   senderId       String           @map("sender_id")
   profile        ProviderProfile? @relation(fields: [profileId], references: [id], onDelete: Cascade)
   profileId      String?          @map("profile_id")
@@ -318,7 +318,7 @@ model SelfAssessment {
 model MemberFavorites {
   memberId        String          @map("member_id")
   profileId       String          @map("profile_id")
-  providerProfile ProviderProfile @relation(fields: [profileId], references: [id])
+  providerProfile ProviderProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
   createdAt       DateTime        @default(now()) @map("created_at")
 
   @@id([memberId, profileId])
@@ -334,8 +334,8 @@ enum ConnectionStatus {
 model ConnectionRequest {
   memberId          String           @map("member_id")
   profileId         String           @map("profile_id")
-  providerProfile   ProviderProfile  @relation(fields: [profileId], references: [id])
-  member            User             @relation(fields: [memberId], references: [id])
+  providerProfile   ProviderProfile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  member            User             @relation(fields: [memberId], references: [id], onDelete: Cascade)
   connectionMessage String?          @map("connection_message") @db.Text
   connectionStatus  ConnectionStatus @default(pending) @map("connection_status")
   createdAt         DateTime         @default(now()) @map("created_at")
