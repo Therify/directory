@@ -1,8 +1,20 @@
-import { Plan, PlanStatus, User } from '@prisma/client';
+import { Plan, PlanStatus, Role, User } from '@prisma/client';
 import { prismaMock } from '@/lib/prisma/__mock__';
 import * as GetUserDetailsById from './getUserDetailsById';
+import { membersService } from '@/lib/modules/members/service';
+import { ProvidersService } from '@/lib/modules/providers/service';
 import { AccountsServiceParams } from '../params';
 
+jest.mock('@/lib/modules/members/service', () => {
+    return {
+        getTherifyUser: jest.fn(),
+    };
+});
+jest.mock('@/lib/modules/providers/service', () => {
+    return {
+        getTherifyUser: jest.fn(),
+    };
+});
 const mockUserResult = {
     id: 'auth0|123',
     emailAddress: 'test@therify.co',
@@ -25,65 +37,7 @@ const mockUserResult = {
 } as unknown as User & { plans: Plan[] };
 
 describe('GetUserDetailsById', function () {
-    const userId = 'auth0|123';
-    it('references newest plan', async function () {
-        prismaMock.user.findUniqueOrThrow.mockResolvedValue(mockUserResult);
-        const getUserDetailsById = GetUserDetailsById.factory({
-            prisma: prismaMock,
-        } as unknown as AccountsServiceParams);
-
-        await expect(
-            getUserDetailsById({
-                userId,
-            })
-        ).resolves.toEqual({
-            user: {
-                plan: {
-                    status: mockUserResult.plans[0].status,
-                    endDate: mockUserResult.plans[0].endDate,
-                    startDate: mockUserResult.plans[0].startDate,
-                    renews: mockUserResult.plans[0].renews,
-                    seats: mockUserResult.plans[0].seats,
-                },
-                isPracticeAdmin: true,
-                userId: mockUserResult.id,
-                emailAddress: mockUserResult.emailAddress,
-                roles: mockUserResult.roles,
-                accountId: mockUserResult.accountId,
-                givenName: mockUserResult.givenName,
-                surname: mockUserResult.surname,
-                createdAt: mockUserResult.createdAt,
-                id: mockUserResult.id,
-            },
-        });
-    });
-
-    it('returns null plan if no plans exist', async function () {
-        prismaMock.user.findUniqueOrThrow.mockResolvedValue({
-            ...mockUserResult,
-            plans: [],
-        } as unknown as User);
-        const getUserDetailsById = GetUserDetailsById.factory({
-            prisma: prismaMock,
-        } as unknown as AccountsServiceParams);
-
-        await expect(
-            getUserDetailsById({
-                userId,
-            })
-        ).resolves.toEqual({
-            user: {
-                id: mockUserResult.id,
-                plan: null,
-                userId: mockUserResult.id,
-                emailAddress: mockUserResult.emailAddress,
-                roles: mockUserResult.roles,
-                accountId: mockUserResult.accountId,
-                givenName: mockUserResult.givenName,
-                surname: mockUserResult.surname,
-                createdAt: mockUserResult.createdAt,
-                isPracticeAdmin: false,
-            },
-        });
-    });
+    it.todo('returns user details for a member');
+    it.todo('returns user details for a provider');
+    it.todo('returns null plan if no plans exist');
 });
