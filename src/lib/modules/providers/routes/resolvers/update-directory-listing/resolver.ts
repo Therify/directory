@@ -1,14 +1,14 @@
 import { Context } from '@/lib/server/context';
-import { UpdateProviderProfile } from '@/lib/modules/providers/features/profiles';
+import { UpdateDirectoryListing } from '@/lib/modules/providers/features/profiles';
 import { ProcedureResolver } from '@trpc/server/dist/declarations/src/internals/procedure';
 
 export const resolve: ProcedureResolver<
     Context,
-    UpdateProviderProfile.Input,
-    UpdateProviderProfile.Output
-> = async function ({ input, ctx }): Promise<UpdateProviderProfile.Output> {
+    UpdateDirectoryListing.Input,
+    UpdateDirectoryListing.Output
+> = async function ({ input, ctx }): Promise<UpdateDirectoryListing.Output> {
     try {
-        const { success } = await ctx.providers.profiles.updateProviderProfile(
+        const { success } = await ctx.providers.profiles.updateDirectoryListing(
             input
         );
         return {
@@ -17,7 +17,7 @@ export const resolve: ProcedureResolver<
         };
     } catch (error) {
         console.log(error);
-        let errorMessage = 'Update profile failed.';
+        let errorMessage = 'Update directory listing failed.';
         if (error instanceof Error) {
             errorMessage = error.message;
         }
