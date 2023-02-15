@@ -49,7 +49,7 @@ export default function PracticeOnboardingPage() {
 
     const { isLoading: isLoadingPractice, data: practiceData } = trpc.useQuery(
         [
-            'accounts.users.get-practice-by-user-id',
+            'accounts.users.get-practice-by-owner-id',
             {
                 userId: user?.sub ?? '',
             },

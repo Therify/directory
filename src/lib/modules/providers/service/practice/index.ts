@@ -1,6 +1,6 @@
 import { ProvidersServiceParams } from '../params';
-import { GetPracticeByUserId } from './get-practice-by-user-id';
+import { GetPracticeByOwnerId } from './get-practice-by-owner-id';
 
 export const practiceFactory = (params: ProvidersServiceParams) => ({
-    getPracticeByUserId: GetPracticeByUserId.factory(params),
+    getPracticeByOwnerId: GetPracticeByOwnerId.factory(params),
 });
