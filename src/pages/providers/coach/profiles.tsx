@@ -111,7 +111,8 @@ export default function PracticeProfilesPage({
                                     key={profile.id}
                                     onClick={() =>
                                         router.push(
-                                            `${URL_PATHS.PROVIDERS.COACH.PROFILE_EDITOR}/${profile.id}`
+                                            URL_PATHS.PROVIDERS.COACH
+                                                .PROFILE_EDITOR
                                         )
                                     }
                                 >
@@ -149,7 +150,8 @@ export default function PracticeProfilesPage({
                                             profile={profile}
                                             onEdit={() =>
                                                 router.push(
-                                                    `${URL_PATHS.PROVIDERS.COACH.PROFILE_EDITOR}/${profile.id}`
+                                                    URL_PATHS.PROVIDERS.COACH
+                                                        .PROFILE_EDITOR
                                                 )
                                             }
                                         />
