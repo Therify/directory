@@ -7,12 +7,8 @@ import {
     PRACTICE_ADMIN_MOBILE_MENU,
     URL_PATHS,
 } from '@/lib/sitemap';
-import { useTherifyUser } from '@/lib/shared/hooks';
 import { RBAC } from '@/lib/shared/utils';
-import { useEffect, useState } from 'react';
-import { Role } from '@prisma/client';
 import { ProfileEditor } from '@/lib/modules/providers/components/ProfileEditor';
-import { TherifyUser } from '@/lib/shared/types';
 import { trpc } from '@/lib/shared/utils/trpc';
 import { CreateProviderProfileForPractice } from '@/lib/modules/providers/features/profiles';
 import { ProvidersService } from '@/lib/modules/providers/service';

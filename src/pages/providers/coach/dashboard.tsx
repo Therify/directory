@@ -8,13 +8,19 @@ import {
     URL_PATHS,
 } from '@/lib/sitemap';
 import { SideNavigationPage } from '@/lib/shared/components/features/pages';
-import { useTherifyUser } from '@/lib/shared/hooks';
 import { RBAC } from '@/lib/shared/utils';
+import { ProvidersService } from '@/lib/modules/providers/service';
+import { ProviderTherifyUserPageProps } from '@/lib/modules/providers/service/page-props/get-therify-user-props';
 
-export const getServerSideProps = RBAC.requireCoachAuth(withPageAuthRequired());
+export const getServerSideProps = RBAC.requireCoachAuth(
+    withPageAuthRequired({
+        getServerSideProps: ProvidersService.pageProps.getTherifyUserPageProps,
+    })
+);
 
-export default function TherapistDashboardPage() {
-    const { user, isLoading } = useTherifyUser();
+export default function TherapistDashboardPage({
+    user,
+}: ProviderTherifyUserPageProps) {
     const router = useRouter();
     return (
         <SideNavigationPage
@@ -24,7 +30,6 @@ export default function TherapistDashboardPage() {
             primaryMenu={[...COACH_MAIN_MENU]}
             secondaryMenu={[...COACH_SECONDARY_MENU]}
             mobileMenu={[...COACH_MOBILE_MENU]}
-            isLoadingUser={isLoading}
         >
             <H1>Coach Dashboard</H1>
         </SideNavigationPage>

@@ -8,10 +8,7 @@ import {
     URL_PATHS,
 } from '@/lib/sitemap';
 import { RBAC } from '@/lib/shared/utils';
-import { useEffect } from 'react';
-import { Role } from '@prisma/client';
 import { ProfileEditor } from '@/lib/modules/providers/components/ProfileEditor';
-import { TherifyUser } from '@/lib/shared/types';
 import { trpc } from '@/lib/shared/utils/trpc';
 import { UpdateProviderProfile } from '@/lib/modules/providers/features/profiles';
 import { ProvidersService } from '@/lib/modules/providers/service';
@@ -30,7 +27,6 @@ export default function PracticeProfileCreatePage({
     profile,
     practice,
 }: PracticeProfileEditorPageProps) {
-    usePracticeAdminProtection(user);
     const router = useRouter();
 
     const {
