@@ -12,10 +12,11 @@ import {
     CenteredContainer,
 } from '@/lib/shared/components/ui';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
-import { ProviderNavigationPage } from '@/lib/shared/components/features/pages/ProviderNavigationPage';
+
 import { RBAC } from '@/lib/shared/utils';
 import { ProvidersService } from '@/lib/modules/providers/service';
 import { ProviderBillingPageProps } from '@/lib/modules/providers/service/page-props/get-billing-page-props';
+import { PracticeAdminNavigationPage } from '@/lib/shared/components/features/pages/PracticeAdminNavigationPage';
 
 export const getServerSideProps = RBAC.requireProviderAuth(
     withPageAuthRequired({
@@ -28,7 +29,7 @@ export default function BillingPage({
 }: ProviderBillingPageProps) {
     const theme = useTheme();
     return (
-        <ProviderNavigationPage
+        <PracticeAdminNavigationPage
             currentPath="/providers/account/billing"
             user={user}
         >
@@ -71,6 +72,6 @@ export default function BillingPage({
                     />
                 )}
             </Box>
-        </ProviderNavigationPage>
+        </PracticeAdminNavigationPage>
     );
 }
