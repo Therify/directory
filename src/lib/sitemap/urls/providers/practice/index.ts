@@ -5,4 +5,5 @@ export const PRACTICE_PATHS = {
     PROVIDER_INVITE: '/providers/practice/invite',
     PROFILES_CREATE: '/providers/practice/profiles/create',
     PROFILE_EDITOR: '/providers/practice/profiles/editor',
+    JOIN: '/providers/practice/join',
 } as const;

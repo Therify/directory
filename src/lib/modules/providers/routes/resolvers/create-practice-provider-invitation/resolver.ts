@@ -1,6 +1,9 @@
 import { Context } from '@/lib/server/context';
 import { CreatePracticeProviderInvitation } from '@/lib/modules/providers/features/invitations';
 import { ProcedureResolver } from '@trpc/server/dist/declarations/src/internals/procedure';
+import { VendorInngest } from '@/lib/shared/vendors/inngest/inngest';
+import { SendJoinPracticeEmail } from '@/lib/shared/vendors/inngest';
+import { URL_PATHS } from '@/lib/sitemap';
 
 export const resolve: ProcedureResolver<
     Context,
@@ -30,10 +33,21 @@ export const resolve: ProcedureResolver<
             errors: [errorMessage],
         };
     }
+    const { invitationId, recipientEmail } = result.value.createInvitation;
 
-    /**
-     *  TODO: Send email to recipient
-     **/
+    const invitationLink = `${process.env.APPLICATION_URL}${URL_PATHS.PROVIDERS.PRACTICE.JOIN}/${invitationId}`;
+    const practiceName = result.value.getPractice.practiceName;
+
+    await VendorInngest.send(SendJoinPracticeEmail.EVENT_NAME, {
+        data: {
+            to: [recipientEmail, 'help@therify.co'],
+            props: {
+                invitationLink,
+                practiceName,
+            },
+            subject: `Join ${practiceName} on Therify`,
+        },
+    });
     return {
         invitationId: result.value.createInvitation.invitationId,
         errors: [],

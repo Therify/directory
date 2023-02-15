@@ -10,8 +10,11 @@ export const factory: (
     ...input
 }) => {
     return {
-        async commit({ prisma }) {
-            const { id: invitationId } =
+        async commit(
+            { prisma },
+            { validateSeatAvailability: { senderEmail } }
+        ) {
+            const { id: invitationId, recipientEmail } =
                 await prisma.practiceProviderInvitation.create({
                     data: {
                         ...input,
@@ -22,8 +25,11 @@ export const factory: (
                                 : undefined,
                     },
                 });
+
             return {
                 invitationId,
+                recipientEmail,
+                senderEmail,
             };
         },
         rollback({ prisma }, { createInvitation: { invitationId } }) {

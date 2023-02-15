@@ -11,13 +11,19 @@ export const factory: (
             const { managedPractice } = await prisma.user.findUniqueOrThrow({
                 where: { id: senderId },
                 select: {
-                    managedPractice: true,
+                    managedPractice: {
+                        select: {
+                            id: true,
+                            name: true,
+                        },
+                    },
                 },
             });
             if (!managedPractice)
                 throw new Error('User is not a practice admin');
             return {
                 practiceId: managedPractice.id,
+                practiceName: managedPractice.name,
             };
         },
         rollback() {},

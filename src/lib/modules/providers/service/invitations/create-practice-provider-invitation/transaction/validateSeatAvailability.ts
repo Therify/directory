@@ -11,27 +11,29 @@ export const factory: (
 }) => {
     return {
         async commit({ prisma }) {
-            const { managedPractice } = await prisma.user.findUniqueOrThrow({
-                where: { id: senderId },
-                select: {
-                    managedPractice: {
-                        select: {
-                            plans: {
-                                orderBy: {
-                                    createdAt: 'desc',
-                                },
-                                take: 1,
-                                select: {
-                                    billingUserId: true,
-                                    seats: true,
-                                    status: true,
-                                    endDate: true,
+            const { managedPractice, emailAddress: senderEmail } =
+                await prisma.user.findUniqueOrThrow({
+                    where: { id: senderId },
+                    select: {
+                        emailAddress: true,
+                        managedPractice: {
+                            select: {
+                                plans: {
+                                    orderBy: {
+                                        createdAt: 'desc',
+                                    },
+                                    take: 1,
+                                    select: {
+                                        billingUserId: true,
+                                        seats: true,
+                                        status: true,
+                                        endDate: true,
+                                    },
                                 },
                             },
                         },
                     },
-                },
-            });
+                });
             const [plan] = managedPractice?.plans ?? [];
             if (!plan) throw new Error('No plan found for user.');
             if (plan.billingUserId !== senderId)
@@ -78,6 +80,9 @@ export const factory: (
                     );
                 }
             }
+            return {
+                senderEmail,
+            };
         },
         rollback() {},
     };
