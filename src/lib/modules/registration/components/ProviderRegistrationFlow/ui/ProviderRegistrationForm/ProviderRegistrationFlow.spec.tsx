@@ -79,7 +79,7 @@ describe('Provider Registration Form', function () {
         await user.type(confirmPasswordInput, password);
         await user.type(dobInput, dateOfBirth);
         await user.click(termsCheckbox);
-        const expectedRequest: RegisterProvider.Input = {
+        const expectedRequest: Omit<RegisterProvider.Input, 'role'> = {
             emailAddress: email,
             givenName,
             surname,
@@ -87,7 +87,6 @@ describe('Provider Registration Form', function () {
             confirmPassword: password,
             dateOfBirth: new Date('10-10-1990').toISOString(),
             hasAcceptedTermsAndConditions: true,
-            role: Role.provider_coach,
         };
         expect(mockForm.getValues()).toEqual(expectedRequest);
     });
