@@ -10,5 +10,4 @@ export const PROVIDERS_PATHS = {
     ONBOARDING: ONBOARDING_PATHS,
     ACCOUNT: ACCOUNT_LINKS,
     PRACTICE: PRACTICE_PATHS,
-    REGISTER_WITH_INVITATION: '/providers/invitation',
 } as const;
