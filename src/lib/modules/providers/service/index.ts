@@ -16,7 +16,7 @@ export const ProvidersService = {
     profiles: profilesFactory(factoryParams),
     invitations: invitationsFactory(factoryParams),
     pageProps: pagePropsFactory(factoryParams),
-    getProviderTherifyUser: GetProviderTherifyUser.factory(factoryParams),
+    getTherifyUser: GetProviderTherifyUser.factory(factoryParams),
     getDashboardProps: GetDashboardProps.factory(factoryParams),
 };
 

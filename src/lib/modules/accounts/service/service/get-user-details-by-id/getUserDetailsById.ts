@@ -1,3 +1,4 @@
+import { membersService } from '@/lib/modules/members/service';
 import { ProvidersService } from '@/lib/modules/providers/service';
 import { GetUserDetailsById } from '@/lib/modules/users/features';
 import { Role } from '@prisma/client';
@@ -19,10 +20,11 @@ export const factory =
             },
         });
         const [role] = roles;
-        if (role === Role.provider_coach || role === Role.provider_therapist) {
-            return ProvidersService.getProviderTherifyUser({ userId });
+        const isProvider =
+            role === Role.provider_coach || role === Role.provider_therapist;
+        if (isProvider) {
+            return ProvidersService.getTherifyUser({ userId });
         }
 
-        // TODO: get member therify user
-        return { user: null };
+        return membersService.getTherifyUser({ userId });
     };

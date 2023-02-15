@@ -53,8 +53,8 @@ model Account {
   updatedAt          DateTime           @updatedAt @map("updated_at")
   registrationCode   RegistrationCode[]
   registrationCodeId String?            @map("registration_code_id")
-  plan               Plan[]
-  stripeInvoice      StripeInvoice[]
+  plans              Plan[]
+  stripeInvoices     StripeInvoice[]
   users              User[]
 
   @@map("accounts")
