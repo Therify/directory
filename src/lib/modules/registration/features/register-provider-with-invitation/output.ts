@@ -4,7 +4,6 @@ import * as z from 'zod';
 export const successSchema = z.object({
     wasSuccessful: z.literal(true),
     userId: z.string(),
-    auth0UserId: z.string(),
     errors: z.array(z.string()),
 });
 

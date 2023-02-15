@@ -65,7 +65,7 @@ export default function ProviderInvitationRegistrationPage({
                             URL_PATHS.PROVIDERS.COACH.REGISTER_SUCCESS
                         }?email=${encodeURIComponent(
                             emailAddress
-                        )}&user_id=${encodeURIComponent(response.auth0UserId)}`
+                        )}&user_id=${encodeURIComponent(response.userId)}`
                     );
 
                     return;

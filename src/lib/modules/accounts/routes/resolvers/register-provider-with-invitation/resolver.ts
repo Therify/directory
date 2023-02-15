@@ -30,7 +30,6 @@ export const resolve: ProcedureResolver<
     }
     return {
         wasSuccessful: true,
-        auth0UserId: registrationResult.value.createAuth0User.auth0UserId,
         userId: registrationResult.value.createTherifyUserEntity.therifyUserId,
         errors: [],
     };
