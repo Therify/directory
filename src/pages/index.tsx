@@ -57,6 +57,7 @@ const getUserRedirectPath = (user: TherifyUser.TherifyUser): string => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const session = await getSession(context.req, context.res);
+    console.log({ session });
     if (!session) {
         return {
             props: {
@@ -69,6 +70,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     });
 
     if (!user) {
+        console.info('User not found');
         return {
             props: {
                 user: null,
@@ -141,9 +143,9 @@ export default function Home() {
                             }}
                         >
                             Dont have an account? <br />
-                            <Link href={URL_PATHS.MEMBERS.REGISTER}>
+                            {/* <Link href={URL_PATHS.MEMBERS.REGISTER}>
                                 Register to Find a Provider
-                            </Link>
+                            </Link> */}
                             <br />
                             <Link href={URL_PATHS.PROVIDERS.THERAPIST.REGISTER}>
                                 Register as a Therapist

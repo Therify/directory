@@ -98,8 +98,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const { registrationCode } = ctx.query;
     if (!registrationCode) {
         return {
-            props: {
-                hasRegistrationCode: false,
+            redirect: {
+                destination: '/waiting-list',
+                permanent: false,
             },
         };
     }

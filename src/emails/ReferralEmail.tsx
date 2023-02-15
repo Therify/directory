@@ -140,7 +140,7 @@ const ReferralEmail = ({ member, plan, provider }: ReferralEmailProps) => {
                             <span style={{ fontWeight: 500 }}>
                                 A note from Therify
                             </span>
-                            : Please response to Therify members as soon as
+                            : Please respond to Therify members as soon as
                             possible. If you are unable to accept new clients,
                             please refer them back to Therify and update your
                             availability on your Provider Profile.

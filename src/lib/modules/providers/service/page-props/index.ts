@@ -1,4 +1,5 @@
 import { ProvidersServiceParams } from '../params';
+import { GetPracticeClientsPageProps } from './get-practice-clients-page-props';
 import { GetProviderRegisterWithInvitationPageProps } from './get-provider-register-with-invitation-page-props';
 import { GetTherifyUserPageProps } from './get-therify-user-props';
 import { practicePagesFactory } from './practice';
@@ -10,4 +11,7 @@ export const pagePropsFactory = (params: ProvidersServiceParams) => ({
         withInvitationPageProps:
             GetProviderRegisterWithInvitationPageProps.factory(params),
     },
+    getPracticeClientsPageProps: GetPracticeClientsPageProps.factory({
+        ...params,
+    }),
 });

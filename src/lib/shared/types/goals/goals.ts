@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-export const schema = z.enum([
+export const ENTRIES = [
     'Stress Management',
     'Anxiety Management',
     'Reduce Depression',
@@ -9,7 +9,9 @@ export const schema = z.enum([
     'LGBTQ+ Issues',
     'Build Confidence',
     'Anger Management',
-]);
+] as const;
+
+export const schema = z.enum(ENTRIES);
 
 export type Goal = z.infer<typeof schema>;
 

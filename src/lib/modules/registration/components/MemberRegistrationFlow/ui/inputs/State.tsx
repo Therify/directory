@@ -1,7 +1,10 @@
 import { Control, Controller } from 'react-hook-form';
-import { Input, FormValidation } from '@/lib/shared/components/ui';
+import { Input, FormValidation, Select } from '@/lib/shared/components/ui';
 import { RegisterMember } from '@/lib/modules/registration/features';
 import { TEST_IDS } from './testIds';
+import { Autocomplete } from '@mui/material';
+import { State } from '@/lib/shared/types';
+import { asSelectOptions } from '@/lib/shared/utils';
 
 interface StateInputProps {
     control: Control<RegisterMember.Input>;
@@ -20,10 +23,15 @@ export const StateInput = ({ control, defaultValue = '' }: StateInputProps) => (
             field: { onChange, onBlur, value, name },
             fieldState: { error, isTouched },
         }) => (
-            <Input
-                required
+            <Select
                 id="state"
+                data-testid={TEST_IDS.FIRST_NAME}
+                options={asSelectOptions(['New York'])}
+                required
                 label="State"
+                sx={{
+                    width: '100%',
+                }}
                 errorMessage={
                     isTouched
                         ? FormValidation.getStateValidationErrorMessage(
@@ -33,7 +41,6 @@ export const StateInput = ({ control, defaultValue = '' }: StateInputProps) => (
                         : undefined
                 }
                 autoComplete="state"
-                data-testid={TEST_IDS.FIRST_NAME}
                 {...{
                     onChange,
                     onBlur,

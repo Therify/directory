@@ -292,6 +292,8 @@ model MemberProfile {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   state     String
   insurance String
+  concerns  String[]
+  goals     String[]
   userId    String   @unique @map("user_id")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

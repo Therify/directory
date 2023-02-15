@@ -7,3 +7,5 @@ export * from './DateOfBirth';
 export * from './TermsAndConditions';
 export * from './testIds';
 export * from './State';
+export * from './Goals';
+export * from './Concerns';

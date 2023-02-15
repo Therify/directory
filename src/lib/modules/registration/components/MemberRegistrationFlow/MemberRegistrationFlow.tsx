@@ -52,7 +52,12 @@ export const MemberRegistrationFlow = ({
         useRegistrationStorage();
     const memberDetailsForm = useForm<RegisterMember.Input>({
         mode: 'onChange',
-        defaultValues: { ...getStoredMemberDetails(), role },
+        defaultValues: {
+            ...getStoredMemberDetails(),
+            role,
+            concerns: [],
+            goals: [],
+        },
     });
     const isRegistrationSuccessful = isRegistrationComplete && !errorMessage;
     const isRegistering = isRegisteringMember || isRegistrationSuccessful;

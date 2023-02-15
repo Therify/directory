@@ -23,8 +23,8 @@ export const factory =
         const isProvider =
             role === Role.provider_coach || role === Role.provider_therapist;
         if (isProvider) {
-            return ProvidersService.getTherifyUser({ userId });
+            return await ProvidersService.getTherifyUser({ userId });
         }
-
-        return membersService.getTherifyUser({ userId });
+        console.log('getting user details');
+        return await membersService.getTherifyUser({ userId });
     };

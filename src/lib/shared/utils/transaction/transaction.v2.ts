@@ -89,6 +89,7 @@ export function generateTransaction<
                     parsedOutput as Result[keyof Result];
                 completedSteps.push([stepName, transaction]);
             } catch (error) {
+                console.error(`[EXE-TRANSACTION|ERROR]: ${stepName}`, error);
                 while (completedSteps.length) {
                     const completedStep = completedSteps.pop();
                     if (completedStep) {

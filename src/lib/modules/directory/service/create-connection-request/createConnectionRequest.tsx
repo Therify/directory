@@ -11,11 +11,8 @@ export const factory = ({ prisma }: CreateConnectionFactoryParams) => {
     ): Promise<CreateConnectionRequest.Output> {
         const { memberId, profileId } = input;
         try {
-            const [_, memberProfile, providerProfile, account] =
-                await Promise.all([
-                    prisma.connectionRequest.create({
-                        data: input,
-                    }),
+            const [memberProfile, providerProfile, account] = await Promise.all(
+                [
                     prisma.memberProfile.findFirstOrThrow({
                         where: {
                             userId: memberId,
@@ -27,9 +24,6 @@ export const factory = ({ prisma }: CreateConnectionFactoryParams) => {
                     prisma.providerProfile.findFirstOrThrow({
                         where: {
                             id: profileId,
-                        },
-                        include: {
-                            user: true,
                         },
                     }),
                     prisma.account.findFirst({
@@ -49,16 +43,20 @@ export const factory = ({ prisma }: CreateConnectionFactoryParams) => {
                             },
                         },
                     }),
-                ]);
+                ]
+            );
             const { user, state, insurance } = memberProfile;
             let planDetails = undefined;
-            if (account?.plans) {
+            if (account && account.plans.length > 0) {
                 const [plan] = account.plans;
                 planDetails = {
                     numberOfCoveredSessions: plan.coveredSessions,
                     planName: account.name,
                 };
             }
+            await prisma.connectionRequest.create({
+                data: input,
+            });
             await VendorInngest.send(SendConnectionRequestEmail.EVENT_NAME, {
                 data: {
                     to: [
@@ -73,7 +71,7 @@ export const factory = ({ prisma }: CreateConnectionFactoryParams) => {
                             emailAddress: user.emailAddress,
                             state,
                             insurance,
-                            concerns: [],
+                            concerns: memberProfile.concerns,
                         },
                         plan: planDetails ?? undefined,
                         provider: {
