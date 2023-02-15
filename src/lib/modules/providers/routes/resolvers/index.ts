@@ -6,3 +6,4 @@ export { deleteProviderProfileResolver } from './delete-provider-profile';
 export { createProviderProfileForPracticeResolver } from './create-provider-profile-for-practice';
 
 export { createPracticeProviderInvitationResolver } from './create-practice-provider-invitation';
+export { updateDirectoryListingResolver } from './update-directory-listing';
