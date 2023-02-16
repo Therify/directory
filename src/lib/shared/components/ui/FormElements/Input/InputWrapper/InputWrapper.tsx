@@ -133,11 +133,33 @@ const StyledInputWrapper = styled(Box, {
             '& label.MuiFormLabel-root': {
                 display: 'none',
             },
-            '& fieldset legend': {
-                display: 'none',
+            '& fieldset': {
+                ...(whiteBg && {
+                    display: 'none',
+                }),
+                '& legend': {
+                    display: 'none',
+                },
             },
+
             width: '100%',
-            backgroundColor: whiteBg ? theme.palette.grey[50] : undefined,
+            ...(whiteBg && {
+                border: 'none',
+                '&:hover, &:focus-within': {
+                    border: 'none',
+                },
+                '& .MuiFormControl-root': {
+                    border: `1px solid transparent`,
+                    background: theme.palette.background.paper,
+                    borderRadius: theme.shape.borderRadius,
+                    '&:hover': {
+                        border: `1px solid ${theme.palette.grey[200]}`,
+                    },
+                    '&:focus-within, &:focus': {
+                        border: `1px solid ${theme.palette.primary.main}`,
+                    },
+                },
+            }),
         };
     }
 );

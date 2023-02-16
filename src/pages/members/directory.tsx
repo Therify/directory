@@ -72,7 +72,6 @@ function Directory({
                     actionSlot={
                         <>
                             <Select
-                                required
                                 fullWidth
                                 id="insurance"
                                 label="Insurance"
@@ -80,6 +79,9 @@ function Directory({
                                     ...InsuranceProvider.ENTRIES,
                                     "I don't have insurance",
                                 ])}
+                                labelSx={{
+                                    color: 'white',
+                                }}
                                 sx={{
                                     width: '100%',
                                     bgcolor: 'white',
@@ -88,7 +90,6 @@ function Directory({
                             />
                             <InputWrapper
                                 fullWidth
-                                required
                                 label="Your Concerns"
                                 variant="white"
                                 sx={{
