@@ -17,7 +17,7 @@ function formatModalTitle(providerName?: string) {
 }
 function formatModalDescription(providerName?: string) {
     return providerName
-        ? `Consider sharing more about what you’d like to focus on with ${providerName}.`
+        ? `Consider sharing more about what you’d like to focus on with ${providerName} (optional).`
         : 'Consider sharing more about what you’d like to focus on (optional).';
 }
 
