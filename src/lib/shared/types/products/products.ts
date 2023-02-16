@@ -7,7 +7,7 @@ export const PRODUCTS = {
     GROUP_PRACTICE_PLAN: 'group_practice_plan',
 } as const;
 
-export type Product = typeof PRODUCTS[keyof typeof PRODUCTS];
+export type Product = (typeof PRODUCTS)[keyof typeof PRODUCTS];
 
 type ProductIds = {
     PRODUCT_ID: string;
@@ -30,7 +30,7 @@ export const PRODUCTION_PRODUCT_IDS: Record<Product, ProductIds> = {
     [PRODUCTS.GROUP_PRACTICE_PLAN]: {
         PRODUCT_ID: 'prod_N68tLSFmC9RrdQ',
         PRICES: {
-            DEFAULT: 'price_1MLwbRAllox7wzg5WD9jewNh',
+            DEFAULT: 'price_1MbwAQAllox7wzg5jmrDiIdA',
         },
     },
 } as const;
