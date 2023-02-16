@@ -150,7 +150,7 @@ export default function PracticeOnboardingPage() {
                             defaultValues={undefined}
                             control={practiceDetailsForm.control}
                             seatCount={practiceDetailsForm.watch('seatCount')}
-                            baseSeatPrice={42}
+                            baseSeatPrice={39}
                             maximumSeats={35}
                             onInputBlur={() =>
                                 storePracticeDetails(
