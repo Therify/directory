@@ -16,6 +16,7 @@ export const ENTRIES = [
     'LGBTQ+ Issues',
     'Life Transitions',
     "Men's Issues",
+    'Mental Performance',
     'Neurodivergence',
     'Parenting',
     'Pregnancy, Prenatal, or Postpartum Issues',
@@ -46,6 +47,7 @@ export const MAP = {
     LGBTQ_PLUS_ISSUES: 'LGBTQ+ Issues',
     LIFE_TRANSITIONS: 'Life Transitions',
     MENS_ISSUES: "Men's Issues",
+    MENTAL_PERFORMANCE: 'Mental Performance',
     NEURODIVERGENCE: 'Neurodivergence',
     PARENTING: 'Parenting',
     PREGNANCY_PRENATAL_OR_POSTPARTUM_ISSUES:
