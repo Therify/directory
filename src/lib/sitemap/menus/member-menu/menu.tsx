@@ -2,7 +2,7 @@ import { HOME, CONTENT_LIBRARY, FAVORITES, DIRECTORY } from './links';
 import { ACCOUNT, LOGOUT } from '../accountLinks';
 
 export const MEMBER_MAIN_MENU = [
-    HOME,
+    // HOME,
     FAVORITES,
     DIRECTORY,
     CONTENT_LIBRARY,

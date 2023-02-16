@@ -11,13 +11,6 @@ export const resolve: ProcedureResolver<
     input,
     ctx,
 }): Promise<RegisterProvider.Output> {
-    // TODO: Remove once registration opens
-    if (input.emailAddress.split('@')[1] !== 'therify.co') {
-        return {
-            wasSuccessful: false,
-            errors: ['Registration is not open.'],
-        };
-    }
     const registrationResult = await ctx.accounts.registerProvider(input);
     if (registrationResult.isErr()) {
         let errorMessage = 'Registration failed.';
