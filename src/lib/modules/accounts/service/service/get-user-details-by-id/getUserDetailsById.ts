@@ -25,6 +25,5 @@ export const factory =
         if (isProvider) {
             return await ProvidersService.getTherifyUser({ userId });
         }
-        console.log('getting user details');
         return await membersService.getTherifyUser({ userId });
     };

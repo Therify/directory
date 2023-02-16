@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import { ProviderProfile } from '@prisma/client';
+import { ListingStatus, ProviderProfile } from '@prisma/client';
 import { TherifyUser } from '@/lib/shared/types/therify-user';
 import { MembersServiceParams } from '../params';
 import { getSession } from '@auth0/nextjs-auth0';
@@ -25,7 +25,13 @@ export function factory(params: MembersServiceParams) {
                 getTherifyUser({
                     userId: session.user.sub,
                 }),
-                params.prisma.providerProfile.findMany(),
+                params.prisma.providerProfile.findMany({
+                    where: {
+                        directoryListing: {
+                            status: ListingStatus.listed,
+                        },
+                    },
+                }),
                 params.prisma.memberFavorites.findMany({
                     where: {
                         memberId: session.user.sub,
