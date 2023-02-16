@@ -12,7 +12,7 @@ import { styled } from '@mui/material/styles';
 import { ProviderProfile } from '@prisma/client';
 import { useRouter } from 'next/navigation';
 import React from 'react';
-import { InsuranceProvider, Issue } from '@/lib/shared/types';
+import { AreaOfFocus, InsuranceProvider, Issue } from '@/lib/shared/types';
 import { Select } from '@/lib/shared/components/ui/FormElements/Select';
 import { InputWrapper } from '@/lib/shared/components/ui/FormElements/Input/InputWrapper';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -109,64 +109,68 @@ function Directory({
                     }
                     subtitle="Browse our directory to find a provider who sees and understands you."
                     actionSlot={
-                        <Stack
-                            sx={{
-                                direction: {
-                                    xs: 'column',
-                                    md: 'row',
-                                },
-                                spacing: 2,
-                            }}
-                        >
-                            <Select
-                                fullWidth
-                                id="insurance"
-                                label="Filter By Insurance"
-                                options={asSelectOptions(
-                                    InsuranceProvider.ENTRIES
-                                )}
-                                value={selectedInsurance}
-                                onChange={(e) => {
-                                    setSelectedInsurance(e);
-                                }}
-                                labelSx={{
-                                    color: 'white',
-                                }}
+                        <>
+                            <Box
                                 sx={{
-                                    width: '100%',
-                                    bgcolor: 'white',
-                                }}
-                                autoComplete="insurance"
-                            />
-                            <InputWrapper
-                                fullWidth
-                                label="Filter by your Concerns"
-                                variant="white"
-                                sx={{
-                                    marginLeft: '0 !important',
+                                    display: {
+                                        sm: 'flex',
+                                        md: 'grid',
+                                    },
+                                    gridTemplateColumns: '1fr 1fr',
+                                    gridGap: '1rem',
                                 }}
                             >
-                                <Autocomplete
-                                    multiple
-                                    options={Issue.ENTRIES}
-                                    value={selectedIssues}
-                                    onChange={(e, value) => {
-                                        setSelectedIssues(value);
-                                    }}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            label="Your Concerns"
-                                        />
+                                <Select
+                                    fullWidth
+                                    id="insurance"
+                                    label="Filter By Insurance"
+                                    options={asSelectOptions(
+                                        InsuranceProvider.ENTRIES
                                     )}
+                                    value={selectedInsurance}
+                                    onChange={(e) => {
+                                        setSelectedInsurance(e);
+                                    }}
+                                    labelSx={{
+                                        color: 'white',
+                                    }}
+                                    sx={{
+                                        width: '100%',
+                                        bgcolor: 'white',
+                                        minHeight: 57,
+                                    }}
+                                    autoComplete="insurance"
                                 />
-                            </InputWrapper>
+                                <InputWrapper
+                                    fullWidth
+                                    label="Filter by your Concerns"
+                                    variant="white"
+                                    sx={{
+                                        marginLeft: '0 !important',
+                                    }}
+                                >
+                                    <Autocomplete
+                                        multiple
+                                        options={AreaOfFocus.ENTRIES}
+                                        value={selectedIssues}
+                                        onChange={(e, value) => {
+                                            setSelectedIssues(value);
+                                        }}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                label="Your Concerns"
+                                            />
+                                        )}
+                                    />
+                                </InputWrapper>
+                            </Box>
                             {hasFilters && (
                                 <Button onClick={clearFilters} fullWidth>
                                     Clear Filters
                                 </Button>
                             )}
-                        </Stack>
+                        </>
                     }
                 />
                 <ResultsSection>
