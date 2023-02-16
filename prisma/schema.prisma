@@ -32,7 +32,7 @@ model User {
   stripeCustomerId              String?  @unique @map("stripe_customer_id")
 
   account                    Account?                     @relation(fields: [accountId], references: [id])
-  accountId                  String?                      @unique
+  accountId                  String?
   stripeInvoices             StripeInvoice[]
   practiceProviderInvitation PracticeProviderInvitation[]
   providerProfile            ProviderProfile?
