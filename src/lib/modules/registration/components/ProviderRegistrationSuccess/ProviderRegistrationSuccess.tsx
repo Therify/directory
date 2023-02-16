@@ -28,32 +28,32 @@ export const ProviderRegistrationSuccess = ({
 }: ProviderRegistrationSuccessProps) => {
     const theme = useTheme();
     const router = useRouter();
-    const {
-        getVerificationEmailSentStatus,
-        sendVerificationEmail,
-        emailStatus,
-    } = useEmailVerification(userId?.toString());
-    if (!(email && userId)) {
-        return (
-            <CenteredContainer fillSpace>
-                <Box width="100%" maxWidth="800px">
-                    <ErrorAlert
-                        title="Oh no! Something went wrong."
-                        message={
-                            "Looks like you're missing details in your registration link. Try checking the email you registered with to see if you have login instructions from us. If not, try logging in. If that doesn't work, you can alway try registering again."
-                        }
-                    />
-                </Box>
-            </CenteredContainer>
-        );
-    }
+    // const {
+    //     getVerificationEmailSentStatus,
+    //     sendVerificationEmail,
+    //     emailStatus,
+    // } = useEmailVerification(userId?.toString());
+    // if (!(email && userId)) {
+    //     return (
+    //         <CenteredContainer fillSpace>
+    //             <Box width="100%" maxWidth="800px">
+    //                 <ErrorAlert
+    //                     title="Oh no! Something went wrong."
+    //                     message={
+    //                         "Looks like you're missing details in your registration link. Try checking the email you registered with to see if you have login instructions from us. If not, try logging in. If that doesn't work, you can alway try registering again."
+    //                     }
+    //                 />
+    //             </Box>
+    //         </CenteredContainer>
+    //     );
+    // }
 
-    const errorMessage =
-        sendVerificationEmail.error || getVerificationEmailSentStatus.error;
-    const isVerificationEmailSent = emailStatus === 'completed';
+    // const errorMessage =
+    //     sendVerificationEmail.error || getVerificationEmailSentStatus.error;
+    // const isVerificationEmailSent = emailStatus === 'completed';
 
-    const isVerificationEmailLoading =
-        sendVerificationEmail.isLoading || emailStatus === 'pending';
+    // const isVerificationEmailLoading =
+    //     sendVerificationEmail.isLoading || emailStatus === 'pending';
 
     return (
         <CelebrationContainer
@@ -79,15 +79,18 @@ export const ProviderRegistrationSuccess = ({
                 <CheckIcon sx={{ fontSize: 100 }} />
                 <H1>You did it!</H1>
                 <Paragraph>
+                    You have successfully registered with Therify!
+                </Paragraph>
+                {/* <Paragraph>
                     You have successfully registered with Therify! Please check{' '}
                     <b>{email}</b> for instructions on how to verify your
                     account. If you don&apos;t see an email from Therify, check
                     your spam folder. If you still can&apos;t find it, resend
                     your verification email.
-                </Paragraph>
+                </Paragraph> */}
 
                 <Box maxWidth="800px" width="100%" display="flex">
-                    <Button
+                    {/* <Button
                         onClick={() => sendVerificationEmail.send()}
                         isLoading={isVerificationEmailLoading}
                         disabled={isVerificationEmailSent}
@@ -103,7 +106,7 @@ export const ProviderRegistrationSuccess = ({
                         {isVerificationEmailSent
                             ? 'Verification email sent!'
                             : 'Resend verification email'}
-                    </Button>
+                    </Button> */}
                     <Button
                         onClick={() => router.push(URL_PATHS.AUTH.LOGIN)}
                         style={{
@@ -117,8 +120,7 @@ export const ProviderRegistrationSuccess = ({
                     </Button>
                 </Box>
                 <Paragraph style={{ marginTop: theme.spacing(4) }}>
-                    If you need support verifying your email, please contact us
-                    at{' '}
+                    If you need support, please contact us at{' '}
                     <Link
                         href="mailto:help@therify.co?subject=Email%20Verification%20Support"
                         style={{
@@ -130,7 +132,7 @@ export const ProviderRegistrationSuccess = ({
                     </Link>
                     .
                 </Paragraph>
-                {errorMessage && (
+                {/* {errorMessage && (
                     <motion.div
                         initial={{ opacity: 0, scale: 0.7 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -138,7 +140,7 @@ export const ProviderRegistrationSuccess = ({
                     >
                         <ErrorAlert title={errorMessage ?? ''} darker />
                     </motion.div>
-                )}
+                )} */}
             </Box>
         </CelebrationContainer>
     );
