@@ -12,6 +12,8 @@ import { ProvidersService } from '@/lib/modules/providers/service';
 import { ProviderProfileEditorPageProps } from '@/lib/modules/providers/service/page-props/get-provider-profile-editor-page-props';
 import { ProviderNavigationPage } from '@/lib/shared/components/features/pages/ProviderNavigationPage';
 import { LoadingContainer } from '@/lib/shared/components/ui';
+import { useContext } from 'react';
+import { Alerts } from '@/lib/modules/alerts/context';
 
 export const getServerSideProps = RBAC.requireCoachAuth(
     withPageAuthRequired({
@@ -26,26 +28,33 @@ export default function CoachProfileEditorPage({
     practice,
 }: ProviderProfileEditorPageProps) {
     const router = useRouter();
+    const { createAlert } = useContext(Alerts.Context);
 
-    const {
-        mutate: updateProfile,
-        isLoading: isUpdatingProfile,
-        // error,
-    } = trpc.useMutation(`providers.${UpdateProviderProfile.TRPC_ROUTE}`, {
-        onSuccess: ({ success, errors }) => {
-            if (success) return refetch();
-            const [error] = errors;
-            if (error) {
-                // TODO: handle profile error
-                console.error(error);
-            }
-        },
-    });
+    const { mutate: updateProfile, isLoading: isUpdatingProfile } =
+        trpc.useMutation(`providers.${UpdateProviderProfile.TRPC_ROUTE}`, {
+            onSuccess: ({ success, errors }) => {
+                if (success) {
+                    refetch();
+                    createAlert({
+                        type: 'success',
+                        title: 'Profile updated',
+                    });
+                    return;
+                }
+                const [error] = errors;
+                if (error) {
+                    createAlert({
+                        type: 'error',
+                        title: error,
+                    });
+                    console.error(error);
+                }
+            },
+        });
 
     const {
         data: refetchedData,
         isLoading,
-        // error: trpcError,
         refetch,
         isRefetching,
     } = trpc.useQuery(

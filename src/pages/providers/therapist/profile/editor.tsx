@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import { useRouter } from 'next/router';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { URL_PATHS } from '@/lib/sitemap';
@@ -12,6 +13,7 @@ import { ProvidersService } from '@/lib/modules/providers/service';
 import { ProviderProfileEditorPageProps } from '@/lib/modules/providers/service/page-props/get-provider-profile-editor-page-props';
 import { ProviderNavigationPage } from '@/lib/shared/components/features/pages/ProviderNavigationPage';
 import { LoadingContainer } from '@/lib/shared/components/ui';
+import { Alerts } from '@/lib/modules/alerts/context';
 
 export const getServerSideProps = RBAC.requireTherapistAuth(
     withPageAuthRequired({
@@ -26,26 +28,32 @@ export default function TherapistProfileEditorPage({
     practice,
 }: ProviderProfileEditorPageProps) {
     const router = useRouter();
+    const { createAlert } = useContext(Alerts.Context);
 
-    const {
-        mutate: updateProfile,
-        isLoading: isUpdatingProfile,
-        // error,
-    } = trpc.useMutation(`providers.${UpdateProviderProfile.TRPC_ROUTE}`, {
-        onSuccess: ({ success, errors }) => {
-            if (success) return refetch();
-            const [error] = errors;
-            if (error) {
-                // TODO: handle profile error
-                console.error(error);
-            }
-        },
-    });
+    const { mutate: updateProfile, isLoading: isUpdatingProfile } =
+        trpc.useMutation(`providers.${UpdateProviderProfile.TRPC_ROUTE}`, {
+            onSuccess: ({ success, errors }) => {
+                if (success) {
+                    createAlert({
+                        type: 'success',
+                        title: 'Profile updated',
+                    });
+                    return refetch();
+                }
+                const [error] = errors;
+                if (error) {
+                    console.error(error);
+                    createAlert({
+                        type: 'error',
+                        title: error,
+                    });
+                }
+            },
+        });
 
     const {
         data: refetchedData,
         isLoading,
-        // error: trpcError,
         refetch,
         isRefetching,
     } = trpc.useQuery(

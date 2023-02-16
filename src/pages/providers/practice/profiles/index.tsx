@@ -33,7 +33,7 @@ import {
     URL_PATHS,
 } from '@/lib/sitemap';
 import { RBAC } from '@/lib/shared/utils';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { InvitationStatus, ListingStatus, Role } from '@prisma/client';
 import { styled, useTheme } from '@mui/material/styles';
 import { Box, CircularProgress, Link, useMediaQuery } from '@mui/material';
@@ -63,6 +63,7 @@ import {
 } from '@/lib/modules/providers/features/invitations';
 import { ProvidersService } from '@/lib/modules/providers/service';
 import { PracticeProfilesPageProps } from '@/lib/modules/providers/service/page-props/practice/get-practice-profiles-page-props/getPracticeProfilesPageProps';
+import { Alerts } from '@/lib/modules/alerts/context';
 
 export const getServerSideProps = RBAC.requireProviderAuth(
     withPageAuthRequired({
@@ -78,6 +79,7 @@ export default function PracticeProfilesPage({
 }: PracticeProfilesPageProps) {
     const router = useRouter();
     const theme = useTheme();
+    const { createAlert } = useContext(Alerts.Context);
     const isMobileWidth = useMediaQuery(theme.breakpoints.down('md'));
     const [invitationProfile, setInvitationProfile] =
         useState<ProviderProfileListing.Type>();
@@ -113,24 +115,43 @@ export default function PracticeProfilesPage({
                 if (success) {
                     refetchProfiles();
                     setProfileToDelete(undefined);
+                    createAlert({
+                        type: 'success',
+                        title: 'Profile deleted',
+                    });
                 }
                 const [error] = errors;
                 if (error) {
                     console.error(error);
+                    createAlert({
+                        type: 'error',
+                        title: error,
+                    });
                 }
             },
         });
 
     const { mutate: updateDirectoryListing, isLoading: isUpdatingLisiting } =
         trpc.useMutation(`providers.${UpdateDirectoryListing.TRPC_ROUTE}`, {
-            onSuccess: ({ success, errors }) => {
+            onSuccess: ({ success, errors }, { status }) => {
                 if (success) {
                     refetchProfiles();
                     setProfileToList(undefined);
+                    createAlert({
+                        type: 'success',
+                        title:
+                            status === ListingStatus.listed
+                                ? 'Profile published'
+                                : 'Profile unlisted',
+                    });
                 }
                 const [error] = errors;
                 if (error) {
                     console.error(error);
+                    createAlert({
+                        type: 'error',
+                        title: error,
+                    });
                 }
             },
         });
@@ -143,10 +164,18 @@ export default function PracticeProfilesPage({
                     if (invitationId) {
                         refetchProfiles();
                         setInvitationProfile(undefined);
+                        createAlert({
+                            type: 'success',
+                            title: 'Invitation sent',
+                        });
                     }
                     const [error] = errors;
                     if (error) {
                         console.error(error);
+                        createAlert({
+                            type: 'error',
+                            title: error,
+                        });
                     }
                 },
             }
@@ -159,10 +188,18 @@ export default function PracticeProfilesPage({
                     if (success) {
                         refetchProfiles();
                         setInvitationToDelete(undefined);
+                        createAlert({
+                            type: 'success',
+                            title: 'Invitation revoked',
+                        });
                     }
                     const [error] = errors;
                     if (error) {
                         console.error(error);
+                        createAlert({
+                            type: 'error',
+                            title: error,
+                        });
                     }
                 },
             }

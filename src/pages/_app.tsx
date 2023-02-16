@@ -8,6 +8,7 @@ import { TherifyUser, FirebaseClient } from '@/lib/shared/context';
 import { therifyDesignSystem } from '@/lib/shared/components/themes/therify-design-system';
 import { InAppNotificationsContext } from '@/lib/modules/notifications/components/context';
 import { Globals } from '@/lib/shared/components/styles';
+import { Alerts } from '@/lib/modules/alerts/context';
 
 const App: AppType = ({ Component, pageProps }: AppProps) => {
     return (
@@ -17,9 +18,11 @@ const App: AppType = ({ Component, pageProps }: AppProps) => {
                 <TherifyUser.Provider>
                     <FirebaseClient.Provider>
                         <InAppNotificationsContext.Provider>
-                            <ApplicationContainer>
-                                <Component {...pageProps} />
-                            </ApplicationContainer>
+                            <Alerts.Provider>
+                                <ApplicationContainer>
+                                    <Component {...pageProps} />
+                                </ApplicationContainer>
+                            </Alerts.Provider>
                         </InAppNotificationsContext.Provider>
                     </FirebaseClient.Provider>
                 </TherifyUser.Provider>
