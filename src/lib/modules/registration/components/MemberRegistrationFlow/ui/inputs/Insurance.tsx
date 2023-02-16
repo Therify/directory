@@ -29,7 +29,10 @@ export const InsuranceInput = ({
                 required
                 id="insurance"
                 label="Insurance"
-                options={asSelectOptions(InsuranceProvider.ENTRIES)}
+                options={asSelectOptions([
+                    ...InsuranceProvider.ENTRIES,
+                    "I don't have insurance",
+                ])}
                 sx={{
                     width: '100%',
                 }}

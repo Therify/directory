@@ -11,11 +11,11 @@ import Icon, { IconProps } from '@mui/material/Icon';
 import { H4 } from '@/lib/shared/components/ui/Typography/Headers';
 import { Subhead } from '@/lib/shared/components/ui/Typography/Subhead';
 import { Button } from '@/lib/shared/components/ui/Button';
-import { ProviderProfile } from '@prisma/client';
 import React from 'react';
 import Lottie from 'react-lottie';
 import ANIMATION_DATA from './favoriteAnimation.json';
 import { DirectoryProfile } from '@/lib/shared/types/presentation';
+import { Badge } from '@/lib/shared/components/ui';
 
 export const DEFAULT_PROFILE_IMAGE_URL =
     'https://res.cloudinary.com/dbrkfldqn/image/upload/v1675367176/app.therify.co/placeholders/profile_placeholder_aacskl.png' as const;
@@ -93,7 +93,7 @@ function renderFavoriteIcon({
 export function DirectoryCard({
     licenses,
     providerName,
-    rate,
+    designation,
     profileImageUrl,
     isFavorite = false,
     handleFavoriteClicked = () => () => {},
@@ -105,7 +105,14 @@ export function DirectoryCard({
     const [isPaused, setIsPaused] = React.useState(false);
     const [isAnimating, setIsAnimating] = React.useState(false);
     return (
-        <Card>
+        <Card
+            sx={{
+                padding: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+            }}
+        >
             <CardMedia
                 component="img"
                 height={50}
@@ -113,17 +120,34 @@ export function DirectoryCard({
                 image={profileImageUrl ?? DEFAULT_PROFILE_IMAGE_URL}
                 alt="Profile Image"
             />
-            <Box sx={{ padding: 2 }}>
+            <Box
+                sx={{
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                }}
+            >
                 <CardContent>
                     <Stack direction="column">
                         <Stack direction="row" justifyContent={'space-between'}>
-                            <Box>${rate}</Box>
+                            <Box sx={{ mb: 2 }}>
+                                {designation === 'coach' ? (
+                                    <Badge size="small" color="primary-light">
+                                        Mental Health Coach
+                                    </Badge>
+                                ) : (
+                                    <Badge size="small" color="success">
+                                        Therapist
+                                    </Badge>
+                                )}
+                            </Box>
                             {handleFavoriteClicked && (
                                 <Box>
                                     <CardIcon
                                         isFavorite={isProviderFavorite}
                                         onClick={handleFavoriteClicked(
-                                            (isNowFavorited) => {
+                                            (isNowFavorited: boolean) => {
                                                 if (isNowFavorited) {
                                                     setIsProviderFavorite(true);
                                                     setIsStopped(false);
@@ -154,11 +178,9 @@ export function DirectoryCard({
                         </Stack>
                         <Stack>
                             <ProviderName>{providerName}</ProviderName>
-                            {licenses.length > 0 && (
-                                <ProviderCredentials>
-                                    {licenses.join(', ')}
-                                </ProviderCredentials>
-                            )}
+                            <ProviderCredentials>
+                                {licenses.length > 0 && licenses.join(', ')}
+                            </ProviderCredentials>
                         </Stack>
                     </Stack>
                 </CardContent>

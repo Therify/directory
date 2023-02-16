@@ -3,8 +3,8 @@ import { ACCOUNT, LOGOUT } from '../accountLinks';
 
 export const MEMBER_MAIN_MENU = [
     // HOME,
-    FAVORITES,
     DIRECTORY,
+    FAVORITES,
     CONTENT_LIBRARY,
 ] as const;
 

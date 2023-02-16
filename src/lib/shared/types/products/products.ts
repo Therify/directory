@@ -7,7 +7,7 @@ export const PRODUCTS = {
     GROUP_PRACTICE_PLAN: 'group_practice_plan',
 } as const;
 
-export type Product = (typeof PRODUCTS)[keyof typeof PRODUCTS];
+export type Product = typeof PRODUCTS[keyof typeof PRODUCTS];
 
 type ProductIds = {
     PRODUCT_ID: string;

@@ -41,7 +41,7 @@ export const ConnectionWidget = ({
                     <Box>
                         <Heading>We&apos;ve contacted {providerName}!</Heading>
                         <Description sx={{ color: 'white !important' }}>
-                            They&apos;ll reach out to you to schedule time
+                            They&apos;ll reach out to you shortly
                         </Description>
                     </Box>
                 </AvailabilityContents>
@@ -111,10 +111,10 @@ function displayAvailability(
                             <Heading>
                                 I&apos;m not currently accepting clients
                             </Heading>
-                            <Description sx={{ color: 'white !important' }}>
+                            {/* <Description sx={{ color: 'white !important' }}>
                                 To be notified when I&apos;m available, click
                                 here
-                            </Description>
+                            </Description> */}
                         </Box>
                     </AvailabilityContents>
                 </AvailabilityContainer>
@@ -130,9 +130,9 @@ function displayAvailability(
                         </Box>
                         <Box>
                             <Heading>I&apos;m currently at capacity</Heading>
-                            <Description sx={{ color: 'white !important' }}>
+                            {/* <Description sx={{ color: 'white !important' }}>
                                 To be added to my waitlist, click here
-                            </Description>
+                            </Description> */}
                         </Box>
                     </AvailabilityContents>
                 </AvailabilityContainer>

@@ -8,6 +8,7 @@ export interface DirectoryProfilePageProps {
     providerProfile: ProviderProfile.ProviderProfile;
     user: TherifyUser.TherifyUser;
     providerHasBeenSelected?: boolean;
+    isFavorite?: boolean;
 }
 
 export function factory({ prisma, ...params }: MembersServiceParams) {
@@ -27,7 +28,7 @@ export function factory({ prisma, ...params }: MembersServiceParams) {
             prisma,
             ...params,
         });
-        const [{ user }, providerProfile, connectionRequest] =
+        const [{ user }, providerProfile, connectionRequest, favorite] =
             await Promise.all([
                 getTherifyUser({
                     userId: session.user.sub,
@@ -46,6 +47,12 @@ export function factory({ prisma, ...params }: MembersServiceParams) {
                         profileId: true,
                     },
                 }),
+                prisma.memberFavorites.findFirst({
+                    where: {
+                        memberId: session.user.sub,
+                        profileId: context.query.profileId as string,
+                    },
+                }),
             ]);
         if (!providerProfile) {
             return {
@@ -62,6 +69,7 @@ export function factory({ prisma, ...params }: MembersServiceParams) {
                 ),
                 user: JSON.parse(JSON.stringify(user)),
                 providerHasBeenSelected: !!connectionRequest,
+                isFavorite: !!favorite,
             },
         };
     };
