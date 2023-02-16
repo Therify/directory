@@ -29,7 +29,7 @@ import {
 } from '@mui/icons-material';
 import { Box, Chip, Link, Stack, useMediaQuery } from '@mui/material';
 import { styled, Theme } from '@mui/material/styles';
-import { Practice, ProfileType } from '@prisma/client';
+import { ProfileType } from '@prisma/client';
 import { getYear, intervalToDuration } from 'date-fns';
 import { ConnectionWidget } from '../ConnectionWidget/ConnectionWidget';
 import { CalloutBanner } from './CalloutBanner';
@@ -80,6 +80,12 @@ export function ProviderProfile({
     onConnectionRequest,
 }: ProviderProfileProps & ProviderProfileType.ProviderProfile) {
     const isTherapist = designation === ProfileType.therapist;
+    // TODO: Remove `isTherifyTherapist` once we have distributed therapist profiles after launch.
+    //This is a temporary fix to prevent showing "Therify"
+    // as a practice for therapist profiles that are still in the process
+    // of being migrated to their respective practices.
+    const isTherifyTherapist =
+        isTherapist && practice?.name.toLowerCase().includes('therify');
     const isSmallScreen = useMediaQuery((theme: Theme) =>
         theme.breakpoints.down('sm')
     );
@@ -163,7 +169,7 @@ export function ProviderProfile({
                                 {designation === ProfileType.therapist
                                     ? 'Therapist'
                                     : 'Mental Health Coach'}
-                                {practice && (
+                                {practice && !isTherifyTherapist && (
                                     <>
                                         {'  '} at{'  '}
                                         {practice.website ? (
@@ -267,7 +273,7 @@ export function ProviderProfile({
                                     )}`}
                                 />
                             )}
-                        {offersInPerson && practice && (
+                        {offersInPerson && practice && !isTherifyTherapist && (
                             <CalloutBanner
                                 icon={<PersonPinCircleOutlined />}
                                 title={`In-person sessions in ${practice.city}, ${practice.state}`}
