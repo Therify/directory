@@ -123,6 +123,7 @@ export function ProviderProfile({
                     ELEMENT_DIMENSIONS.avatar * 2.5,
                 height: '100%',
                 overflowY: 'auto',
+                paddingBottom: isSmallScreen && member ? 30 : 0,
             }}
         >
             <ProfileBanner>
