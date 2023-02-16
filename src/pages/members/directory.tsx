@@ -58,7 +58,11 @@ function Directory({
             <Container>
                 <PageHeader
                     type="secondary"
-                    title={`We're glad you're here, ${user.givenName}`}
+                    title={
+                        user?.givenName
+                            ? `We're glad you're here, ${user.givenName}`
+                            : `We're glad you're here!`
+                    }
                     subtitle="Browse our directory to find a provider who sees and understands you."
                 />
                 <ResultsSection>
