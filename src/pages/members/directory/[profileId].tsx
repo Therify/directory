@@ -25,13 +25,18 @@ export default function ProviderProfilePage({
     providerProfile,
     user,
     providerHasBeenSelected,
+    isFavorite,
 }: DirectoryProfilePageProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [connectionMessage, setConnectionMessage] = useState('');
+    const [isCurrentlyFavorited, setIsCurrentlyFavorited] = useState(
+        isFavorite ?? false
+    );
     const [isProviderSelected, setIsProviderSelected] = useState(
         providerHasBeenSelected ?? false
     );
     const mutation = trpc.useMutation('directory.create-connection-request');
+    const favorite = trpc.useMutation('members.favorite-profile');
     return (
         <MemberNavigationPage
             user={user}
@@ -40,6 +45,23 @@ export default function ProviderProfilePage({
             <ProviderProfile
                 {...providerProfile}
                 member={user}
+                isFavorited={isFavorite}
+                onFavorite={(setIsFavorite) => () => {
+                    favorite.mutate(
+                        {
+                            profileId: providerProfile.id!,
+                            memberId: user.userId,
+                            isFavorite: isCurrentlyFavorited,
+                        },
+                        {
+                            onSuccess: ({ isFavorite }) =>
+                                setIsFavorite(isFavorite),
+                            onSettled() {
+                                setIsCurrentlyFavorited(!isCurrentlyFavorited);
+                            },
+                        }
+                    );
+                }}
                 providerHasBeenSelected={isProviderSelected}
                 onConnectionRequest={() => {
                     setIsModalOpen(true);

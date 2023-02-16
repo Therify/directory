@@ -27,33 +27,107 @@ import {
     ChurchOutlined,
     PersonPinCircleOutlined,
 } from '@mui/icons-material';
-import { Box, Chip, Link, Stack, useMediaQuery } from '@mui/material';
+import {
+    Box,
+    Chip,
+    Icon,
+    IconProps,
+    Link,
+    Stack,
+    useMediaQuery,
+} from '@mui/material';
 import { styled, Theme } from '@mui/material/styles';
 import { ProfileType } from '@prisma/client';
 import { getYear, intervalToDuration } from 'date-fns';
 import { ConnectionWidget } from '../ConnectionWidget/ConnectionWidget';
 import { CalloutBanner } from './CalloutBanner';
 import { CriteriaCard, CRITERIA_CARD_TYPES } from './CriteriaCard';
-
+import Lottie from 'react-lottie';
+import ANIMATION_DATA from '../DirectoryCard/favoriteAnimation.json';
+import Favorite from '@mui/icons-material/Favorite';
+import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
+import React from 'react';
 interface ProviderProfileProps {
     practice?: ProviderPractice.Type;
     isFavorited?: boolean;
     isFavoriteLoading?: boolean;
     member?: Record<string, unknown>;
     providerHasBeenSelected?: boolean;
-    onFavorite?: () => Promise<void>;
+    onFavorite?: (callback: (isFavorite: boolean) => void) => () => void;
     onShare?: () => void;
     onConnectionRequest?: () => void;
+}
+
+const DEFAULT_ANIMATION_OPTIONS = {
+    loop: false,
+    animationData: ANIMATION_DATA,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice',
+        overflow: 'visible',
+    },
+};
+
+interface RenderFavoriteAnimationProps {
+    isStopped: boolean;
+    isPaused: boolean;
+    callback: () => void;
+}
+function renderFavoriteAnimation({
+    isStopped,
+    isPaused,
+    callback,
+}: RenderFavoriteAnimationProps) {
+    return (
+        <Lottie
+            options={DEFAULT_ANIMATION_OPTIONS}
+            isStopped={isStopped}
+            isPaused={isPaused}
+            eventListeners={[
+                {
+                    eventName: 'complete',
+                    callback,
+                },
+            ]}
+        />
+    );
+}
+
+interface RenderFavoriteIconProps {
+    isFavorite: boolean;
+    isStopped: boolean;
+    isPaused: boolean;
+    callback: () => void;
+    isAnimating: boolean;
+}
+
+function renderFavoriteIcon({
+    isFavorite,
+    isPaused,
+    isStopped,
+    callback,
+    isAnimating,
+}: RenderFavoriteIconProps) {
+    if (isAnimating) {
+        return renderFavoriteAnimation({
+            isStopped,
+            isPaused,
+            callback,
+        });
+    }
+    if (isFavorite) {
+        return <Favorite />;
+    }
+    return <FavoriteBorder />;
 }
 
 export function ProviderProfile({
     practice,
     onShare,
-    onFavorite,
+    onFavorite = () => () => {},
     providerHasBeenSelected = false,
     member = undefined,
     isFavoriteLoading,
-    isFavorited,
+    isFavorited = false,
     designation,
     profileImageUrl = null,
     givenName = 'Your Name',
@@ -79,6 +153,11 @@ export function ProviderProfile({
     ageGroups = [],
     onConnectionRequest,
 }: ProviderProfileProps & ProviderProfileType.ProviderProfile) {
+    const [isProviderFavorite, setIsProviderFavorite] =
+        React.useState(isFavorited);
+    const [isStopped, setIsStopped] = React.useState(false);
+    const [isPaused, setIsPaused] = React.useState(false);
+    const [isAnimating, setIsAnimating] = React.useState(false);
     const isTherapist = designation === ProfileType.therapist;
     // TODO: Remove `isTherifyTherapist` once we have distributed therapist profiles after launch.
     //This is a temporary fix to prevent showing "Therify"
@@ -156,6 +235,39 @@ export function ProviderProfile({
                             alignItems="baseline"
                             spacing={2}
                         >
+                            {onFavorite && (
+                                <Box>
+                                    <CardIcon
+                                        isFavorite={isProviderFavorite}
+                                        onClick={onFavorite(
+                                            (isNowFavorited: boolean) => {
+                                                if (isNowFavorited) {
+                                                    setIsProviderFavorite(true);
+                                                    setIsStopped(false);
+                                                    setIsPaused(false);
+                                                    setIsAnimating(true);
+                                                }
+                                                setIsProviderFavorite(
+                                                    isNowFavorited
+                                                );
+                                            }
+                                        )}
+                                    >
+                                        {renderFavoriteIcon({
+                                            isFavorite: isProviderFavorite,
+                                            isStopped,
+                                            isPaused,
+                                            isAnimating,
+                                            callback: () => {
+                                                console.log('complete');
+                                                setIsAnimating(false);
+                                                setIsStopped(true);
+                                                setIsPaused(true);
+                                            },
+                                        })}
+                                    </CardIcon>
+                                </Box>
+                            )}
                             <ProviderName>
                                 {givenName} {surname}
                             </ProviderName>
@@ -523,4 +635,33 @@ const ProviderAttribute = styled('li')(({ theme }) => ({
 
 const AttributeText = styled(Paragraph)(({ theme }) => ({
     maxWidth: '65ch',
+}));
+
+interface CardIconProps extends IconProps {
+    isFavorite?: boolean;
+}
+
+const CardIcon = styled(Icon, {
+    shouldForwardProp: (prop) => prop !== 'isFavorite',
+})<CardIconProps>(({ theme, isFavorite }) => ({
+    transition: 'transform 0.2s',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'visible',
+    color: isFavorite ? theme.palette.error.main : theme.palette.grey[500],
+    '&:hover': {
+        transform: 'scale(1.1)',
+        cursor: 'pointer',
+    },
+    '& > div[aria-label="animation"]': {
+        overflow: 'visible !important',
+        '& > svg': {
+            overflow: 'visible !important',
+            width: '75px !important',
+            height: '75px !important',
+            position: 'relative',
+            top: '-25px',
+        },
+    },
 }));
