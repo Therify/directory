@@ -5,6 +5,8 @@ import {
     FormValidation,
 } from '@/lib/shared/components/ui';
 import { HandlePracticeOnboarding } from '@/lib/modules/onboarding/features';
+import { asSelectOptions } from '@/lib/shared/utils';
+import { State } from '@/lib/shared/types';
 
 interface StateInputProps {
     control: Control<HandlePracticeOnboarding.Input>;
@@ -12,11 +14,11 @@ interface StateInputProps {
     onInputBlur: () => void;
     disabled?: boolean;
 }
-const options: SelectOption[] = [{ value: 'NY', displayText: 'New York' }];
+const options: SelectOption[] = asSelectOptions(State.ENTRIES);
 
 export const StateInput = ({
     control,
-    defaultValue = '',
+    defaultValue = State.MAP.NEW_YORK,
     onInputBlur,
     disabled,
 }: StateInputProps) => (

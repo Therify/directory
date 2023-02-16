@@ -21,6 +21,14 @@ export const ZipCodeInput = ({
         defaultValue={defaultValue}
         rules={{
             required: true,
+            minLength: {
+                value: 5,
+                message: 'Zip Code must be 5 characters',
+            },
+            maxLength: {
+                value: 5,
+                message: 'Zip Code must be 5 characters',
+            },
         }}
         render={({
             field: { onChange, onBlur, value, name },
@@ -33,7 +41,8 @@ export const ZipCodeInput = ({
                 type="tel"
                 errorMessage={
                     isTouched
-                        ? FormValidation.getNameValidationErrorMessage(
+                        ? error?.message ??
+                          FormValidation.getNameValidationErrorMessage(
                               error?.type as FormValidation.NameValidationType,
                               'Zip Code'
                           )
