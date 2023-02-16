@@ -3,7 +3,7 @@ import * as z from 'zod';
 export const schema = z.object({
     id: z.string(),
     title: z.string(),
-    message: z.string(),
+    message: z.string().optional(),
     type: z.enum(['success', 'error', 'info', 'warning']),
     requireInteraction: z.boolean().optional(),
 });

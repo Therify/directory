@@ -61,7 +61,7 @@ export const Provider = ({ children }: { children: ReactNode }) => {
         >
             <>
                 {children}
-                <AlertContainer>
+                <AlertContainer hasAlerts={alerts.length > 0}>
                     <AlertManager alerts={alerts} removeAlert={removeAlert} />
                 </AlertContainer>
             </>
@@ -69,15 +69,25 @@ export const Provider = ({ children }: { children: ReactNode }) => {
     );
 };
 
-const AlertContainer = styled(Box)(({ theme }) => ({
-    position: 'fixed',
-    top: theme.spacing(4),
-    right: theme.spacing(20),
-    zIndex: theme.zIndex.snackbar,
-    [theme.breakpoints.up('md')]: {
-        top: theme.spacing(20),
-        right: theme.spacing(20),
-    },
-}));
+const AlertContainer = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'hasAlerts',
+})<{ hasAlerts: boolean }>(({ theme, hasAlerts }) => {
+    const headerHeight = '100px';
+    return {
+        position: 'fixed',
+        bottom: theme.spacing(4),
+        left: '10%',
+        width: '80%',
+        zIndex: hasAlerts ? theme.zIndex.snackbar : -1,
+        margin: 'auto',
+        [theme.breakpoints.up('md')]: {
+            maxWidth: '280px',
+            bottom: 'inherit',
+            left: 'inherit',
+            top: `calc(${headerHeight} + ${theme.spacing(6)})`,
+            right: theme.spacing(6),
+        },
+    };
+});
 
 const createRandomId = () => Math.random().toString(36).substring(2);
