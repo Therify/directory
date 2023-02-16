@@ -16,5 +16,5 @@ export const CLIENTS: NavigationLink = {
 export const PROFILE_EDITOR: NavigationLink = {
     icon: NAVIGATION_ICON.PROFILE_EDITOR,
     displayName: 'Profile',
-    path: URL_PATHS.PROVIDERS.THERAPIST.PROFILE_EDITOR,
+    path: URL_PATHS.PROVIDERS.THERAPIST.PROFILES,
 } as const;
