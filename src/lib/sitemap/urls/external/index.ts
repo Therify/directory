@@ -6,6 +6,6 @@ export const EXTERNAL_URLS = {
         ABOUT: 'https://therify.co/about',
     },
     VIMEO: {
-        CHANNEL: 'https://vimeo.com/user/193734284/folder/14788097',
+        CHANNEL: 'https://vimeo.com/user193734284',
     },
 } as const;
