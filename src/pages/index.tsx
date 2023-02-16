@@ -141,17 +141,14 @@ export default function Home() {
                                 marginTop: theme.spacing(8),
                             }}
                         >
-                            Dont have an account? <br />
-                            {/* <Link href={URL_PATHS.MEMBERS.REGISTER}>
-                                Register to Find a Provider
-                            </Link> */}
-                            <br />
-                            <Link href={URL_PATHS.PROVIDERS.THERAPIST.REGISTER}>
-                                Register as a Therapist
-                            </Link>
-                            <br />
-                            <Link href={URL_PATHS.PROVIDERS.COACH.REGISTER}>
-                                Register as a Coach
+                            Learn more about{' '}
+                            <Link
+                                href={URL_PATHS.EXTERNAL.THERIFY_CO.HOME}
+                                style={{
+                                    color: theme.palette.text.primary,
+                                }}
+                            >
+                                Therify
                             </Link>
                         </Caption>
                     </Box>
