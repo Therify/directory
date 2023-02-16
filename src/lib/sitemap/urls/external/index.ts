@@ -5,4 +5,7 @@ export const EXTERNAL_URLS = {
         FOR_EMPLOYERS: 'https://therify.co/employers',
         ABOUT: 'https://therify.co/about',
     },
+    VIMEO: {
+        CHANNEL: 'https://vimeo.com/user/193734284/folder/14788097',
+    },
 } as const;
