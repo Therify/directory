@@ -13,6 +13,8 @@ import { trpc } from '@/lib/shared/utils/trpc';
 import { UpdateProviderProfile } from '@/lib/modules/providers/features/profiles';
 import { ProvidersService } from '@/lib/modules/providers/service';
 import { PracticeProfileEditorPageProps } from '@/lib/modules/providers/service/page-props/practice/get-practice-profile-editor-page-props';
+import { useContext } from 'react';
+import { Alerts } from '@/lib/modules/alerts/context';
 
 export const getServerSideProps = RBAC.requireProviderAuth(
     withPageAuthRequired({
@@ -28,12 +30,31 @@ export default function PracticeProfileCreatePage({
     practice,
 }: PracticeProfileEditorPageProps) {
     const router = useRouter();
+    const { createAlert } = useContext(Alerts.Context);
 
     const {
         mutate: updateProfile,
         isLoading: isUpdatingProfile,
         error,
-    } = trpc.useMutation(`providers.${UpdateProviderProfile.TRPC_ROUTE}`);
+    } = trpc.useMutation(`providers.${UpdateProviderProfile.TRPC_ROUTE}`, {
+        onSuccess: ({ success, errors }) => {
+            if (success) {
+                createAlert({
+                    type: 'success',
+                    title: 'Profile updated',
+                });
+                return;
+            }
+            const [error] = errors;
+            if (error) {
+                console.error(error);
+                createAlert({
+                    type: 'error',
+                    title: error,
+                });
+            }
+        },
+    });
 
     return (
         <SideNavigationPage

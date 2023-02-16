@@ -13,6 +13,8 @@ import { trpc } from '@/lib/shared/utils/trpc';
 import { CreateProviderProfileForPractice } from '@/lib/modules/providers/features/profiles';
 import { ProvidersService } from '@/lib/modules/providers/service';
 import { PracticeCreateProfilePageProps } from '@/lib/modules/providers/service/page-props/practice/get-practice-create-profile-page-props';
+import { Alerts } from '@/lib/modules/alerts/context';
+import { useContext } from 'react';
 
 export const getServerSideProps = RBAC.requireProviderAuth(
     withPageAuthRequired({
@@ -27,7 +29,7 @@ export default function PracticeProfileCreatePage({
     practice,
 }: PracticeCreateProfilePageProps) {
     const router = useRouter();
-
+    const { createAlert } = useContext(Alerts.Context);
     const {
         mutate: createProfileForPractice,
         isLoading: isCreatingProfile,
@@ -37,11 +39,22 @@ export default function PracticeProfileCreatePage({
         {
             onSuccess: ({ profileId, errors }) => {
                 if (profileId) {
-                    router.push(
+                    createAlert({
+                        type: 'success',
+                        title: 'Profile created!',
+                    });
+                    return router.push(
                         `${URL_PATHS.PROVIDERS.PRACTICE.PROFILE_EDITOR}/${profileId}`
                     );
                 }
                 const [error] = errors;
+                if (error) {
+                    createAlert({
+                        type: 'error',
+                        title: error,
+                    });
+                    console.error(error);
+                }
             },
         }
     );

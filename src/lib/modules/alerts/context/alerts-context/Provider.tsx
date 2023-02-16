@@ -23,15 +23,16 @@ export const Provider = ({ children }: { children: ReactNode }) => {
         });
     };
 
-    const createAlert: CreateAlert = (alert) => {
+    const createAlert: CreateAlert = ({ durationSeconds, ...alert }) => {
         if (typeof window === 'undefined') return;
+        const timeoutDuration = (durationSeconds ?? 3) * 1000;
         const alertWithId = { ...alert, id: createRandomId() };
         setAlerts((alerts) => [...alerts, alertWithId]);
 
         if (!alert.requireInteraction) {
             const timeout = window?.setTimeout(() => {
                 removeAlert(alertWithId.id);
-            }, 5000);
+            }, timeoutDuration);
 
             setAlertTimeoutMap((alertTimeoutMap) => ({
                 ...alertTimeoutMap,
@@ -61,7 +62,7 @@ export const Provider = ({ children }: { children: ReactNode }) => {
         >
             <>
                 {children}
-                <AlertContainer hasAlerts={alerts.length > 0}>
+                <AlertContainer>
                     <AlertManager alerts={alerts} removeAlert={removeAlert} />
                 </AlertContainer>
             </>
@@ -69,16 +70,14 @@ export const Provider = ({ children }: { children: ReactNode }) => {
     );
 };
 
-const AlertContainer = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'hasAlerts',
-})<{ hasAlerts: boolean }>(({ theme, hasAlerts }) => {
+const AlertContainer = styled(Box)(({ theme }) => {
     const headerHeight = '100px';
     return {
         position: 'fixed',
         bottom: theme.spacing(4),
         left: '10%',
         width: '80%',
-        zIndex: hasAlerts ? theme.zIndex.snackbar : -1,
+        zIndex: theme.zIndex.snackbar,
         margin: 'auto',
         [theme.breakpoints.up('md')]: {
             maxWidth: '280px',
