@@ -123,7 +123,7 @@ function Directory({
                                 <Select
                                     fullWidth
                                     id="insurance"
-                                    label="Filter By Insurance"
+                                    label="Filter by Insurance"
                                     options={asSelectOptions(
                                         InsuranceProvider.ENTRIES
                                     )}
