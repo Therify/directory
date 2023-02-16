@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { NewClientStatus, Practice, ProfileType } from '@prisma/client';
 import { styled, SxProps, useTheme } from '@mui/material/styles';
@@ -17,6 +17,7 @@ import {
     ProviderProfile,
     ProviderPractice,
 } from '@/lib/shared/types';
+import { Alerts } from '@/lib/modules/alerts/context';
 import { ProfileEditorForm } from './ui/ProfileEditorForm';
 import { ProviderProfile as ProviderProfileUi } from '../../../directory/components/ProviderProfile';
 import { CloudinaryUploadResult } from '../../../media/components/hooks/userCloudinaryWidget';
@@ -63,6 +64,7 @@ export function ProfileEditor({
         },
     });
     const theme = useTheme();
+    const { createAlert } = useContext(Alerts.Context);
     const [showProfilePreview, setShowProfilePreview] = useState(false);
     const isMobileView = useMediaQuery(theme.breakpoints.down('md'));
     const watchedProfile = providerProfileForm.watch();
@@ -125,7 +127,10 @@ export function ProfileEditor({
         providerProfileForm.setValue('profileImageUrl', null);
     };
     const onImageUploadError = (error: Error | string) => {
-        // TODO: handle error
+        createAlert({
+            type: 'error',
+            title: 'There was an error uploading your image.',
+        });
         console.error(error);
         return;
     };
