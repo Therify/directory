@@ -58,8 +58,8 @@ function Directory({
             <Container>
                 <PageHeader
                     type="secondary"
-                    title="Find a provider that sees & understands you"
-                    subtitle="Our providers are licensed and ready to provide the care you deserve"
+                    title={`We're glad you're here, ${user.givenName}`}
+                    subtitle="Browse our directory to find a provider who sees and understands you."
                 />
                 <ResultsSection>
                     {providerProfiles.map((profile) => {
