@@ -4,7 +4,7 @@ import { PageHeader } from '@/lib/shared/components/ui/PageHeader';
 import { membersService } from '@/lib/modules/members/service';
 import { DirectoryPageProps } from '@/lib/modules/members/service/get-directory-page-props/getDirectoryPageProps';
 import { URL_PATHS } from '@/lib/sitemap/urlPaths';
-import { RBAC } from '@/lib/shared/utils';
+import { asSelectOptions, RBAC } from '@/lib/shared/utils';
 import { trpc } from '@/lib/shared/utils/trpc';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import Box from '@mui/material/Box';
@@ -12,6 +12,11 @@ import { styled } from '@mui/material/styles';
 import { ProviderProfile } from '@prisma/client';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import { InsuranceProvider, Issue } from '@/lib/shared/types';
+import { Select } from '@/lib/shared/components/ui/FormElements/Select';
+import { InputWrapper } from '@/lib/shared/components/ui/FormElements/Input/InputWrapper';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
 
 const STATES = ['New York', 'New Jersey'] as const;
 
@@ -64,6 +69,45 @@ function Directory({
                             : `We're glad you're here!`
                     }
                     subtitle="Browse our directory to find a provider who sees and understands you."
+                    actionSlot={
+                        <>
+                            <Select
+                                required
+                                fullWidth
+                                id="insurance"
+                                label="Insurance"
+                                options={asSelectOptions([
+                                    ...InsuranceProvider.ENTRIES,
+                                    "I don't have insurance",
+                                ])}
+                                sx={{
+                                    width: '100%',
+                                    bgcolor: 'white',
+                                }}
+                                autoComplete="insurance"
+                            />
+                            <InputWrapper
+                                fullWidth
+                                required
+                                label="Your Concerns"
+                                variant="white"
+                                sx={{
+                                    marginLeft: '0 !important',
+                                }}
+                            >
+                                <Autocomplete
+                                    multiple
+                                    options={Issue.ENTRIES}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="Your Concerns"
+                                        />
+                                    )}
+                                />
+                            </InputWrapper>
+                        </>
+                    }
                 />
                 <ResultsSection>
                     {providerProfiles.map((profile) => {

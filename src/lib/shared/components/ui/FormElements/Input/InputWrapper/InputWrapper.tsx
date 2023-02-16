@@ -55,6 +55,7 @@ export const InputWrapper = ({
                     data-testid={TEST_IDS.LABEL}
                     id={id}
                     required={required}
+                    isWhiteBg={variant === 'white'}
                 >
                     {label}
                 </InputLabel>
@@ -90,11 +91,13 @@ export const InputLabel = ({
     children,
     required,
     shrink = true,
+    isWhiteBg = false,
     ...props
 }: {
     id?: string;
     children: ReactNode;
     required?: boolean;
+    isWhiteBg?: boolean;
 } & InputLabelProps) => {
     const theme = useTheme();
     return (
@@ -106,7 +109,7 @@ export const InputLabel = ({
             style={{
                 fontSize: theme.typography.caption.fontSize,
                 position: 'relative',
-                color: theme.palette.grey[600],
+                color: isWhiteBg ? 'white' : theme.palette.grey[600],
                 transform: 'none',
                 marginBottom: theme.spacing(4),
             }}
@@ -134,6 +137,7 @@ const StyledInputWrapper = styled(Box, {
                 display: 'none',
             },
             width: '100%',
+            backgroundColor: whiteBg ? theme.palette.grey[50] : undefined,
         };
     }
 );
