@@ -1,4 +1,5 @@
 import { getUrls } from '@/lib/shared/utils';
+import nookies from 'nookies';
 import { handleLogout, LogoutHandlerError } from '@auth0/nextjs-auth0';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -8,6 +9,7 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
         await handleLogout(req, res, {
             returnTo: returnTo,
         });
+        nookies.destroy({ res }, 'userRoles');
         res.end();
     } catch (error) {
         if (error instanceof LogoutHandlerError) {

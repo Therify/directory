@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import nookies, { destroyCookie } from 'nookies';
 import { TwoColumnGrid } from '@/lib/shared/components/ui/Grids/TwoColumnGrid';
 import {
     Caption,
@@ -56,7 +57,6 @@ const getUserRedirectPath = (user: TherifyUser.TherifyUser): string => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const session = await getSession(context.req, context.res);
-    console.log({ session });
     if (!session) {
         return {
             props: {
@@ -69,12 +69,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     });
 
     if (!user) {
-        console.info('User not found');
         return {
             props: {
                 user: null,
             },
         };
+    }
+    const cookies = nookies.get(context);
+    if (!cookies.userRoles) {
+        nookies.set(context, 'userRoles', user.roles.join(','), {
+            maxAge: 30 * 24 * 60 * 60,
+            path: '/',
+        });
     }
 
     return {
@@ -85,7 +91,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
 };
 
-export default function Home() {
+export default function Home({
+    user,
+}: {
+    user: TherifyUser.TherifyUser | null;
+}) {
     const theme = useTheme();
     const router = useRouter();
     const [randomLoginImage, setRandomLoginImage] = useState<string | null>(
@@ -96,6 +106,11 @@ export default function Home() {
             LOGIN_IMAGES[Math.floor(Math.random() * LOGIN_IMAGES.length)]
         );
     }, []);
+    useEffect(() => {
+        if (user === null) {
+            destroyCookie(null, 'userRoles');
+        }
+    }, [user]);
 
     return (
         <TwoColumnGrid
