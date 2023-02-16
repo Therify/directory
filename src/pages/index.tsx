@@ -18,7 +18,6 @@ import { getSession } from '@auth0/nextjs-auth0';
 import { AccountsService } from '@/lib/modules/accounts/service';
 import { Role } from '@prisma/client';
 import { TherifyUser } from '@/lib/shared/types';
-import { useTherifyUser } from '@/lib/shared/hooks';
 
 const ABSTRACT_SHAPE_URL =
     'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673455675/app.therify.co/shapes/abstract-shape_fbvcil.svg' as const;
