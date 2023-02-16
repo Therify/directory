@@ -1,12 +1,31 @@
-import { Autocomplete, Select, TextField, useMediaQuery } from '@mui/material';
+import { Autocomplete, TextField, useMediaQuery } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import Box, { BoxProps } from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import { PageHeader } from '@/lib/shared/components/ui/PageHeader';
 import { Button } from '@/lib/shared/components/ui/Button';
 import { Filter, FilterList } from '@mui/icons-material';
+import { SelectOption, Select } from '@/lib/shared/components/ui';
 
-export function ProviderSearchControls() {
+export interface FilterOption {
+    name: string;
+    options: SelectOption[];
+}
+interface ProviderSearchControlsProps {
+    primaryFilters: FilterOption[];
+    secondaryFilters: FilterOption[];
+    mobileFilters: FilterOption[];
+    onChange: (
+        filter: FilterOption['name'],
+        value: SelectOption['value']
+    ) => void;
+}
+
+export function ProviderSearchControls({
+    primaryFilters,
+    secondaryFilters,
+    onChange,
+}: ProviderSearchControlsProps) {
     const isSmallScreen = useMediaQuery((theme: Theme) =>
         theme.breakpoints.down('sm')
     );
@@ -28,7 +47,22 @@ export function ProviderSearchControls() {
                         maxWidth: 1200,
                     }}
                 >
-                    <Box
+                    {primaryFilters.map((filter) => (
+                        <Box
+                            key={filter.name}
+                            sx={{
+                                gridColumn: 'span 2',
+                                display: 'flex',
+                            }}
+                        >
+                            <Select
+                                id={filter.name}
+                                label={filter.name}
+                                options={filter.options}
+                            />
+                        </Box>
+                    ))}
+                    {/* <Box
                         sx={{
                             gridColumn: 'span 2',
                             display: 'flex',
@@ -36,11 +70,11 @@ export function ProviderSearchControls() {
                     >
                         State
                     </Box>
-                    <Box sx={{ bgColor: 'white' }}>Modality</Box>
-                    <Box sx={{ bgColor: 'white' }}>Availability</Box>
+                    <Box sx={{ background: 'white' }}>Modality</Box>
+                    <Box sx={{ background: 'white' }}>Availability</Box>
                     <Box
                         sx={{
-                            bgColor: 'white',
+                            background: 'white',
                             gridColumn: {
                                 xs: 'span 2',
                                 md: 'span 1',
@@ -51,7 +85,7 @@ export function ProviderSearchControls() {
                     </Box>
                     <Box
                         sx={{
-                            bgColor: 'white',
+                            background: 'white',
                             display: {
                                 xs: 'none',
                                 md: 'block',
@@ -62,7 +96,7 @@ export function ProviderSearchControls() {
                     </Box>
                     <Box
                         sx={{
-                            bgColor: 'white',
+                            background: 'white',
                             display: {
                                 xs: 'none',
                                 md: 'block',
@@ -73,7 +107,7 @@ export function ProviderSearchControls() {
                     </Box>
                     <Box
                         sx={{
-                            bgColor: 'white',
+                            background: 'white',
                             gridColumn: {
                                 xs: 'span 2',
                                 md: 'span 1',
@@ -81,7 +115,7 @@ export function ProviderSearchControls() {
                         }}
                     >
                         More filters
-                    </Box>
+                    </Box> */}
                 </Box>
             }
         />
@@ -113,9 +147,9 @@ const InputContainer = styled(Box)<InputContainerProps>(
     })
 );
 
-const StyledSelect = styled(Select)(({ theme }) => ({
-    background: 'white',
-}));
+// const StyledSelect = styled(Select)(({ theme }) => ({
+//     background: 'white',
+// }));
 
 const MoreFiltersButton = styled(Button)(({ theme }) => ({
     background: 'white',
