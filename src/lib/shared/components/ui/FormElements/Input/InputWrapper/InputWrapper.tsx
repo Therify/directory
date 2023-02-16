@@ -55,6 +55,7 @@ export const InputWrapper = ({
                     data-testid={TEST_IDS.LABEL}
                     id={id}
                     required={required}
+                    isWhiteBg={variant === 'white'}
                 >
                     {label}
                 </InputLabel>
@@ -90,11 +91,13 @@ export const InputLabel = ({
     children,
     required,
     shrink = true,
+    isWhiteBg = false,
     ...props
 }: {
     id?: string;
     children: ReactNode;
     required?: boolean;
+    isWhiteBg?: boolean;
 } & InputLabelProps) => {
     const theme = useTheme();
     return (
@@ -106,7 +109,7 @@ export const InputLabel = ({
             style={{
                 fontSize: theme.typography.caption.fontSize,
                 position: 'relative',
-                color: theme.palette.grey[600],
+                color: isWhiteBg ? 'white' : theme.palette.grey[600],
                 transform: 'none',
                 marginBottom: theme.spacing(4),
             }}
@@ -130,10 +133,33 @@ const StyledInputWrapper = styled(Box, {
             '& label.MuiFormLabel-root': {
                 display: 'none',
             },
-            '& fieldset legend': {
-                display: 'none',
+            '& fieldset': {
+                ...(whiteBg && {
+                    display: 'none',
+                }),
+                '& legend': {
+                    display: 'none',
+                },
             },
+
             width: '100%',
+            ...(whiteBg && {
+                border: 'none',
+                '&:hover, &:focus-within': {
+                    border: 'none',
+                },
+                '& .MuiFormControl-root': {
+                    border: `1px solid transparent`,
+                    background: theme.palette.background.paper,
+                    borderRadius: theme.shape.borderRadius,
+                    '&:hover': {
+                        border: `1px solid ${theme.palette.grey[200]}`,
+                    },
+                    '&:focus-within, &:focus': {
+                        border: `1px solid ${theme.palette.primary.main}`,
+                    },
+                },
+            }),
         };
     }
 );

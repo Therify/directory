@@ -14,6 +14,13 @@ export default function Document() {
                     src="https://widget.Cloudinary.com/v2.0/global/all.js"
                     type="text/javascript"
                 />
+                <script
+                    type="text/javascript"
+                    id="hs-script-loader"
+                    async
+                    defer
+                    src="//js.hs-scripts.com/20498458.js"
+                ></script>
             </Head>
             <body>
                 <Main />

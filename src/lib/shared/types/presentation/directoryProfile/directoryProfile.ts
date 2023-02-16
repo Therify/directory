@@ -11,6 +11,7 @@ export const schema = ProviderProfile.schema
         profileImageUrl: true,
         designation: true,
         acceptedInsurances: true,
+        specialties: true,
     })
     .extend({
         id: z.string(),
@@ -24,10 +25,17 @@ export const schema = ProviderProfile.schema
             profileImageUrl: value.profileImageUrl,
             designation: value.designation,
             providerName: `${value.givenName} ${value.surname}`,
+            specialties: value.specialties,
             licenses: Array.from(
                 new Set(value.credentials.map((credential) => credential.type))
             ),
-            acceptedInsurances: value.acceptedInsurances,
+            acceptedInsurances: Array.from(
+                new Set(
+                    value.acceptedInsurances.flatMap(
+                        ({ insurances }) => insurances
+                    )
+                )
+            ),
             licensedStates: Array.from(
                 new Set(value.credentials.map((credential) => credential.state))
             ),
