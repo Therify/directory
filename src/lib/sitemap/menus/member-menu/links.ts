@@ -22,5 +22,6 @@ export const DIRECTORY: NavigationLink = {
 export const CONTENT_LIBRARY: NavigationLink = {
     icon: NAVIGATION_ICON.LIBRARY,
     displayName: 'Library',
-    path: URL_PATHS.CONTENT.LIBRARY,
+    path: URL_PATHS.EXTERNAL.VIMEO.CHANNEL,
+    // path: URL_PATHS.MEMBERS.CONTENT.LIBRARY,
 } as const;

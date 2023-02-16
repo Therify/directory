@@ -1,3 +1,3 @@
 export const CONTENT_PATHS = {
-    LIBRARY: '/content/library',
+    LIBRARY: '/members/content/library',
 } as const;

@@ -50,7 +50,14 @@ export const TopNavigationBar = ({
                         );
                         return (
                             <LinkItem key={link.path}>
-                                <Link href={link.path}>
+                                <Link
+                                    href={link.path}
+                                    target={
+                                        link.path.startsWith('http')
+                                            ? '_blank'
+                                            : undefined
+                                    }
+                                >
                                     {link.displayName}
                                     {isPathActive && (
                                         <ActiveTab
