@@ -119,7 +119,6 @@ function Directory({
                             }}
                         >
                             <Select
-                                required
                                 fullWidth
                                 id="insurance"
                                 label="Filter By Insurance"
@@ -130,6 +129,9 @@ function Directory({
                                 onChange={(e) => {
                                     setSelectedInsurance(e);
                                 }}
+                                labelSx={{
+                                    color: 'white',
+                                }}
                                 sx={{
                                     width: '100%',
                                     bgcolor: 'white',
@@ -138,7 +140,6 @@ function Directory({
                             />
                             <InputWrapper
                                 fullWidth
-                                required
                                 label="Filter by your Concerns"
                                 variant="white"
                                 sx={{

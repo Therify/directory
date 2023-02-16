@@ -25,6 +25,7 @@ interface BaseSelectProps {
     helperText?: string;
     errorMessage?: string;
     wrapperSx?: SxProps<Theme>;
+    labelSx?: SxProps<Theme>;
 }
 
 type SelectProps = BaseSelectProps &
@@ -52,6 +53,7 @@ export const Select = ({
     placeholder,
     native,
     fullWidth,
+    labelSx,
     wrapperSx,
     ...selectProps
 }: SelectProps) => {
@@ -80,11 +82,12 @@ export const Select = ({
                     data-testid={TEST_IDS.LABEL}
                     id={`${id}-label`}
                     shrink
-                    style={{
+                    sx={{
                         fontSize: 14,
                         position: 'relative',
                         color: theme.palette.grey[600],
                         transform: 'none',
+                        ...labelSx,
                     }}
                 >
                     {label}{' '}
