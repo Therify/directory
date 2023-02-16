@@ -17,8 +17,11 @@ import { Select } from '@/lib/shared/components/ui/FormElements/Select';
 import { InputWrapper } from '@/lib/shared/components/ui/FormElements/Input/InputWrapper';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-
-const STATES = ['New York', 'New Jersey'] as const;
+import { Button } from '@/lib/shared/components/ui/Button';
+import ArrowUpward from '@mui/icons-material/ArrowUpward';
+import { useIntersectionObserver } from 'usehooks-ts';
+import { AnimatePresence, motion } from 'framer-motion';
+import Stack from '@mui/material/Stack';
 
 type JSONSafeProviderProfile = Omit<
     ProviderProfile,
@@ -27,9 +30,6 @@ type JSONSafeProviderProfile = Omit<
     createdAt: string;
     updatedAt: string;
 };
-interface Props {
-    results: JSONSafeProviderProfile[];
-}
 
 export const getServerSideProps = RBAC.requireMemberAuth(
     withPageAuthRequired({
@@ -42,6 +42,31 @@ function Directory({
     user,
     favoriteProfiles = [],
 }: DirectoryPageProps) {
+    const [localProfiles, setLocalProfiles] =
+        React.useState<DirectoryPageProps['providerProfiles']>(
+            providerProfiles
+        );
+    const [selectedInsurance, setSelectedInsurance] =
+        React.useState<string>('');
+    const [selectedIssues, setSelectedIssues] = React.useState<string[]>([]);
+    React.useEffect(() => {
+        const filteredProfiles = providerProfiles.filter(
+            (profile: DirectoryPageProps['providerProfiles'][number]) => {
+                const insuranceMatch = selectedInsurance
+                    ? profile.acceptedInsurances.includes(
+                          selectedInsurance as InsuranceProvider.InsuranceProvider
+                      )
+                    : true;
+                const issueMatch = selectedIssues.length
+                    ? selectedIssues.some((issue) =>
+                          profile.specialties.includes(issue as Issue.Issue)
+                      )
+                    : true;
+                return insuranceMatch && issueMatch;
+            }
+        );
+        setLocalProfiles(filteredProfiles);
+    }, [selectedInsurance, selectedIssues, providerProfiles]);
     const router = useRouter();
     const mutation = trpc.useMutation('members.favorite-profile');
     const [favoriteProfilesMap, setFavoriteProfilesMap] = React.useState<{
@@ -55,6 +80,19 @@ function Directory({
             {}
         )
     );
+    const pageHeaderRef = React.useRef<HTMLDivElement>(null);
+    const entry = useIntersectionObserver(pageHeaderRef, {});
+    const isHeaderVisible = !!entry?.isIntersecting;
+    const scrollToTop = React.useCallback(() => {
+        pageHeaderRef.current?.scrollIntoView({
+            behavior: 'smooth',
+        });
+    }, []);
+    const clearFilters = React.useCallback(() => {
+        setSelectedInsurance('');
+        setSelectedIssues([]);
+    }, []);
+    const hasFilters = selectedInsurance || selectedIssues.length > 0;
     return (
         <MemberNavigationPage
             currentPath={URL_PATHS.MEMBERS.DIRECTORY}
@@ -63,6 +101,7 @@ function Directory({
             <Container>
                 <PageHeader
                     type="secondary"
+                    ref={pageHeaderRef}
                     title={
                         user?.givenName
                             ? `We're glad you're here, ${user.givenName}`
@@ -70,16 +109,27 @@ function Directory({
                     }
                     subtitle="Browse our directory to find a provider who sees and understands you."
                     actionSlot={
-                        <>
+                        <Stack
+                            sx={{
+                                direction: {
+                                    xs: 'column',
+                                    md: 'row',
+                                },
+                                spacing: 2,
+                            }}
+                        >
                             <Select
                                 required
                                 fullWidth
                                 id="insurance"
-                                label="Insurance"
-                                options={asSelectOptions([
-                                    ...InsuranceProvider.ENTRIES,
-                                    "I don't have insurance",
-                                ])}
+                                label="Filter By Insurance"
+                                options={asSelectOptions(
+                                    InsuranceProvider.ENTRIES
+                                )}
+                                value={selectedInsurance}
+                                onChange={(e) => {
+                                    setSelectedInsurance(e);
+                                }}
                                 sx={{
                                     width: '100%',
                                     bgcolor: 'white',
@@ -89,7 +139,7 @@ function Directory({
                             <InputWrapper
                                 fullWidth
                                 required
-                                label="Your Concerns"
+                                label="Filter by your Concerns"
                                 variant="white"
                                 sx={{
                                     marginLeft: '0 !important',
@@ -98,6 +148,10 @@ function Directory({
                                 <Autocomplete
                                     multiple
                                     options={Issue.ENTRIES}
+                                    value={selectedIssues}
+                                    onChange={(e, value) => {
+                                        setSelectedIssues(value);
+                                    }}
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
@@ -106,11 +160,16 @@ function Directory({
                                     )}
                                 />
                             </InputWrapper>
-                        </>
+                            {hasFilters && (
+                                <Button onClick={clearFilters} fullWidth>
+                                    Clear Filters
+                                </Button>
+                            )}
+                        </Stack>
                     }
                 />
                 <ResultsSection>
-                    {providerProfiles.map((profile) => {
+                    {localProfiles.map((profile) => {
                         const isCurrentlyFavorite =
                             favoriteProfilesMap[profile.id] ?? false;
                         return (
@@ -148,12 +207,33 @@ function Directory({
                         );
                     })}
                 </ResultsSection>
+                <AnimatePresence>
+                    {!isHeaderVisible && (
+                        <motion.div
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -10 }}
+                        >
+                            <ScrollToTopButton onClick={scrollToTop}>
+                                <ArrowUpward />
+                            </ScrollToTopButton>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </Container>
         </MemberNavigationPage>
     );
 }
 
-const FilterSection = styled(Box)(({ theme }) => ({}));
+const ScrollToTopButton = styled(Button)(({ theme }) => ({
+    position: 'fixed',
+    bottom: theme.spacing(4),
+    left: theme.spacing(4),
+    transition: 'all 0.2s ease-in-out',
+    '&:hover': {
+        transform: 'scale(1.1)',
+    },
+}));
 
 const ResultsSection = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -169,6 +249,7 @@ const Container = styled(Box)(({ theme }) => ({
     margin: '0 auto',
     padding: theme.spacing(4),
     overflowY: 'auto',
+    position: 'relative',
 }));
 
 export default Directory;

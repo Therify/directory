@@ -1,3 +1,4 @@
+import React from 'react';
 import Box from '@mui/material/Box';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled, Theme } from '@mui/material/styles';
@@ -34,17 +35,20 @@ export type PageHeaderProps = {
     containerProps?: BoxProps;
 } & Omit<TypographyProps, 'variant'>;
 
-export function PageHeader({
-    title,
-    subtitle,
-    titleElement = 'h1',
-    subtitleElement = 'h2',
-    type = 'primary',
-    actionSlot,
-    containerProps,
-}: PageHeaderProps) {
+export const PageHeader = React.forwardRef(function PageHeader(
+    {
+        title,
+        subtitle,
+        titleElement = 'h1',
+        subtitleElement = 'h2',
+        type = 'primary',
+        actionSlot,
+        containerProps,
+    }: PageHeaderProps,
+    ref
+) {
     return (
-        <StyledHeader as={'header'} type={type} {...containerProps}>
+        <StyledHeader ref={ref} as={'header'} type={type} {...containerProps}>
             {type === 'abstract1' && <PrimaryAbstractImage />}
             {type === 'abstract2' && <SecondaryAbstractImage />}
             <Stack spacing={4}>
@@ -62,7 +66,7 @@ export function PageHeader({
             </Stack>
         </StyledHeader>
     );
-}
+});
 
 const TYPE_TO_COLOR_MAP: Record<
     'primary' | 'secondary' | 'info' | 'abstract1' | 'abstract2',
