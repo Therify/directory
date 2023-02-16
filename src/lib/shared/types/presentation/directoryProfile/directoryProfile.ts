@@ -22,7 +22,7 @@ export const schema = ProviderProfile.schema
         return {
             id: value.id,
             profileImageUrl: value.profileImageUrl,
-            disignation: value.designation,
+            designation: value.designation,
             providerName: `${value.givenName} ${value.surname}`,
             licenses: Array.from(
                 new Set(value.credentials.map((credential) => credential.type))
