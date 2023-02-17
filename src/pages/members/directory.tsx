@@ -21,7 +21,6 @@ import { Button } from '@/lib/shared/components/ui/Button';
 import ArrowUpward from '@mui/icons-material/ArrowUpward';
 import { useIntersectionObserver } from 'usehooks-ts';
 import { AnimatePresence, motion } from 'framer-motion';
-import Stack from '@mui/material/Stack';
 
 type JSONSafeProviderProfile = Omit<
     ProviderProfile,
