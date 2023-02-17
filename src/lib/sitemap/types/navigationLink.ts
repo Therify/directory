@@ -5,4 +5,5 @@ export interface NavigationLink {
     displayName: string;
     icon?: NavigationIcon;
     disabled?: boolean;
+    isExternal?: boolean;
 }

@@ -6,11 +6,12 @@ export const CAPTION_SIZE = {
     NORMAL: 'normal',
 } as const;
 
-export type CaptionSize = typeof CAPTION_SIZE[keyof typeof CAPTION_SIZE];
+export type CaptionSize = (typeof CAPTION_SIZE)[keyof typeof CAPTION_SIZE];
 
 interface CaptionProps {
     size?: CaptionSize;
     italic?: boolean;
+    secondary?: boolean;
 }
 
 const getCaptionStyle = ({
@@ -29,10 +30,12 @@ const getCaptionStyle = ({
     }
 };
 export const Caption = styled(MuiParagraph, {
-    shouldForwardProp: (prop) => 'italic' !== prop && 'size' !== prop,
-})<CaptionProps>(({ theme, size = CAPTION_SIZE.NORMAL, italic }) => {
+    shouldForwardProp: (prop) =>
+        'italic' !== prop && 'size' !== prop && 'secondary' !== prop,
+})<CaptionProps>(({ theme, size = CAPTION_SIZE.NORMAL, italic, secondary }) => {
     return {
         ...getCaptionStyle({ size, theme }),
         fontStyle: italic ? 'italic' : undefined,
+        color: secondary ? theme.palette.text.secondary : undefined,
     };
 });

@@ -19,6 +19,13 @@ export const DIRECTORY: NavigationLink = {
     path: URL_PATHS.DIRECTORY.MEMBER_DIRECTORY,
 } as const;
 
+export const THERIFY_WEBSITE: NavigationLink = {
+    icon: NAVIGATION_ICON.THERIFY_ICON,
+    displayName: 'Therify Website',
+    path: URL_PATHS.EXTERNAL.THERIFY_CO.HOME,
+    isExternal: true,
+} as const;
+
 export const CONTENT_LIBRARY: NavigationLink = {
     icon: NAVIGATION_ICON.LIBRARY,
     displayName: 'Content Library',
