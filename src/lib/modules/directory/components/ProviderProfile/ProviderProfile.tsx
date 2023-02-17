@@ -300,7 +300,7 @@ export function ProviderProfile({
                             </Paragraph>
                         </ProviderCredentials>
                         <ProviderState>
-                            {credentials.length > 0 && (
+                            {credentials.length > 0 && isTherapist && (
                                 <SecondaryText>
                                     Licensed in {licensedStates}
                                 </SecondaryText>
