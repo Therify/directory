@@ -195,368 +195,388 @@ export function ProviderProfile({
     ).sort();
 
     return (
-        <ProfileContainer
-            sx={{
-                minHeight:
-                    ELEMENT_DIMENSIONS.headerHeight +
-                    ELEMENT_DIMENSIONS.avatar * 2.5,
-                height: '100%',
-                overflowY: 'auto',
-                paddingBottom: isSmallScreen && member ? 30 : 0,
-            }}
-        >
-            <ProfileBanner>
-                <PageHeader
-                    type="abstract1"
-                    title={''}
-                    containerProps={{
-                        sx: {
-                            height: ELEMENT_DIMENSIONS.headerHeight,
-                        },
-                    }}
-                />
-                <Avatar
-                    size={ELEMENT_DIMENSIONS.avatar}
-                    src={profileImageUrl ?? undefined}
-                    sx={{ position: 'absolute', top: '50%' }}
-                />
-            </ProfileBanner>
-            <ProfileWrapper>
-                <ProfileContent
-                    sx={{
-                        marginTop:
-                            ELEMENT_DIMENSIONS.avatar *
-                            ELEMENT_DIMENSIONS.contentMarginTop,
-                    }}
-                >
-                    <ProviderTitle spacing={-2}>
-                        <ProviderNameContainer
-                            direction={'row'}
-                            alignItems="baseline"
-                            spacing={2}
-                        >
-                            <ProviderName>
-                                {givenName} {surname}
-                            </ProviderName>
-                            {pronouns && (
-                                <SecondaryText size="small">
-                                    ({pronouns})
-                                </SecondaryText>
-                            )}
-                        </ProviderNameContainer>
-                        <ProviderCredentials>
-                            <Paragraph>
-                                {designation === ProfileType.therapist
-                                    ? 'Therapist'
-                                    : 'Mental Health Coach'}
-                                {practice && !isTherifyTherapist && (
-                                    <>
-                                        {'  '} at{'  '}
-                                        {practice.website ? (
-                                            <PracticeLink
-                                                href={practice.website}
-                                                target="_blank"
-                                            >
-                                                {practice.name}
-                                            </PracticeLink>
-                                        ) : (
-                                            practice.name
-                                        )}
-                                    </>
-                                )}
-                            </Paragraph>
-                        </ProviderCredentials>
-                        <ProviderState>
-                            {credentials.length > 0 && isTherapist && (
-                                <SecondaryText>
-                                    Licensed in {licensedStates}
-                                </SecondaryText>
-                            )}
-                        </ProviderState>
-                    </ProviderTitle>
-                    <Box
-                        display="flex"
-                        justifyContent="space-between"
-                        alignItems="center"
+        <ScrollBox>
+            <ProfileContainer
+                sx={{
+                    minHeight:
+                        ELEMENT_DIMENSIONS.headerHeight +
+                        ELEMENT_DIMENSIONS.avatar * 2.5,
+                    paddingBottom: 30,
+                }}
+            >
+                <ProfileBanner>
+                    <PageHeader
+                        type="abstract1"
+                        title={''}
+                        containerProps={{
+                            sx: {
+                                height: ELEMENT_DIMENSIONS.headerHeight,
+                            },
+                        }}
+                    />
+                    <Avatar
+                        size={ELEMENT_DIMENSIONS.avatar}
+                        src={profileImageUrl ?? undefined}
+                        sx={{ position: 'absolute', top: '50%' }}
+                    />
+                </ProfileBanner>
+                <ProfileWrapper>
+                    <ProfileContent
+                        sx={{
+                            marginTop:
+                                ELEMENT_DIMENSIONS.avatar *
+                                ELEMENT_DIMENSIONS.contentMarginTop,
+                        }}
                     >
-                        <SessionTypeContainer>
-                            {offersInPerson && (
-                                <SessionTypeChip
-                                    label="In-person"
-                                    size="small"
-                                    icon={<ChairOutlined />}
-                                    variant="outlined"
-                                    color="primary"
-                                />
-                            )}
-                            {offersVirtual && (
-                                <SessionTypeChip
-                                    label="Virtual"
-                                    size="small"
-                                    icon={<VideoCameraFrontOutlined />}
-                                    variant="outlined"
-                                    color="primary"
-                                />
-                            )}
-                        </SessionTypeContainer>
-                        <Box>
-                            {/* TODO: Handle Share */}
-                            {onFavorite && (
-                                <Box>
-                                    <CardIcon
-                                        isFavorite={isProviderFavorite}
-                                        onClick={onFavorite(
-                                            (isNowFavorited: boolean) => {
-                                                if (isNowFavorited) {
-                                                    setIsProviderFavorite(true);
-                                                    setIsStopped(false);
-                                                    setIsPaused(false);
-                                                    setIsAnimating(true);
+                        <ProviderTitle spacing={-2}>
+                            <ProviderNameContainer
+                                direction={'row'}
+                                alignItems="baseline"
+                                spacing={2}
+                            >
+                                <ProviderName>
+                                    {givenName} {surname}
+                                </ProviderName>
+                                {pronouns && (
+                                    <SecondaryText size="small">
+                                        ({pronouns})
+                                    </SecondaryText>
+                                )}
+                            </ProviderNameContainer>
+                            <ProviderCredentials>
+                                <Paragraph>
+                                    {designation === ProfileType.therapist
+                                        ? 'Therapist'
+                                        : 'Mental Health Coach'}
+                                    {practice && !isTherifyTherapist && (
+                                        <>
+                                            {'  '} at{'  '}
+                                            {practice.website ? (
+                                                <PracticeLink
+                                                    href={practice.website}
+                                                    target="_blank"
+                                                >
+                                                    {practice.name}
+                                                </PracticeLink>
+                                            ) : (
+                                                practice.name
+                                            )}
+                                        </>
+                                    )}
+                                </Paragraph>
+                            </ProviderCredentials>
+                            <ProviderState>
+                                {credentials.length > 0 && isTherapist && (
+                                    <SecondaryText>
+                                        Licensed in {licensedStates}
+                                    </SecondaryText>
+                                )}
+                            </ProviderState>
+                        </ProviderTitle>
+                        <Box
+                            display="flex"
+                            justifyContent="space-between"
+                            alignItems="center"
+                        >
+                            <SessionTypeContainer>
+                                {offersInPerson && (
+                                    <SessionTypeChip
+                                        label="In-person"
+                                        size="small"
+                                        icon={<ChairOutlined />}
+                                        variant="outlined"
+                                        color="primary"
+                                    />
+                                )}
+                                {offersVirtual && (
+                                    <SessionTypeChip
+                                        label="Virtual"
+                                        size="small"
+                                        icon={<VideoCameraFrontOutlined />}
+                                        variant="outlined"
+                                        color="primary"
+                                    />
+                                )}
+                            </SessionTypeContainer>
+                            <Box>
+                                {/* TODO: Handle Share */}
+                                {onFavorite && (
+                                    <Box>
+                                        <CardIcon
+                                            isFavorite={isProviderFavorite}
+                                            onClick={onFavorite(
+                                                (isNowFavorited: boolean) => {
+                                                    if (isNowFavorited) {
+                                                        setIsProviderFavorite(
+                                                            true
+                                                        );
+                                                        setIsStopped(false);
+                                                        setIsPaused(false);
+                                                        setIsAnimating(true);
+                                                    }
+                                                    setIsProviderFavorite(
+                                                        isNowFavorited
+                                                    );
                                                 }
-                                                setIsProviderFavorite(
-                                                    isNowFavorited
-                                                );
-                                            }
-                                        )}
-                                    >
-                                        {renderFavoriteIcon({
-                                            isFavorite: isProviderFavorite,
-                                            isStopped,
-                                            isPaused,
-                                            isAnimating,
-                                            callback: () => {
-                                                console.log('complete');
-                                                setIsAnimating(false);
-                                                setIsStopped(true);
-                                                setIsPaused(true);
-                                            },
-                                        })}
-                                    </CardIcon>
-                                </Box>
-                            )}
+                                            )}
+                                        >
+                                            {renderFavoriteIcon({
+                                                isFavorite: isProviderFavorite,
+                                                isStopped,
+                                                isPaused,
+                                                isAnimating,
+                                                callback: () => {
+                                                    console.log('complete');
+                                                    setIsAnimating(false);
+                                                    setIsStopped(true);
+                                                    setIsPaused(true);
+                                                },
+                                            })}
+                                        </CardIcon>
+                                    </Box>
+                                )}
+                            </Box>
                         </Box>
-                    </Box>
-                    <ProviderVideo />
-                    <ProviderMatchCriteria>
-                        {isTherapist && allAcceptedInsurances.length > 0 && (
-                            <CriteriaCard
-                                type={CRITERIA_CARD_TYPES.INSURANCE}
-                                sx={{
-                                    minWidth: {
-                                        xs: 235,
-                                        md: 338,
-                                    },
-                                }}
-                                items={allAcceptedInsurances}
-                            />
-                        )}
-                        {specialties.length > 0 && (
-                            <CriteriaCard
-                                type={CRITERIA_CARD_TYPES.SPECIALTIES}
-                                sx={{
-                                    minWidth: {
-                                        xs: 235,
-                                        md: 338,
-                                    },
-                                }}
-                                items={specialties}
-                            />
-                        )}
-                    </ProviderMatchCriteria>
-                    <Box>
-                        {practiceStartDate &&
-                            yearsOfExperience !== undefined &&
-                            yearsOfExperience > 0 && (
+                        <ProviderVideo />
+                        <ProviderMatchCriteria>
+                            {isTherapist &&
+                                allAcceptedInsurances.length > 0 && (
+                                    <CriteriaCard
+                                        type={CRITERIA_CARD_TYPES.INSURANCE}
+                                        sx={{
+                                            minWidth: {
+                                                xs: 235,
+                                                md: 338,
+                                            },
+                                        }}
+                                        items={allAcceptedInsurances}
+                                    />
+                                )}
+                            {specialties.length > 0 && (
+                                <CriteriaCard
+                                    type={CRITERIA_CARD_TYPES.SPECIALTIES}
+                                    sx={{
+                                        minWidth: {
+                                            xs: 235,
+                                            md: 338,
+                                        },
+                                    }}
+                                    items={specialties}
+                                />
+                            )}
+                        </ProviderMatchCriteria>
+                        <Box>
+                            {practiceStartDate &&
+                                yearsOfExperience !== undefined &&
+                                yearsOfExperience > 0 && (
+                                    <CalloutBanner
+                                        icon={<VerifiedOutlined />}
+                                        title={`${
+                                            yearsOfExperience > 10
+                                                ? '10+'
+                                                : yearsOfExperience
+                                        } ${
+                                            yearsOfExperience === 1
+                                                ? 'year'
+                                                : 'years'
+                                        } of experience`}
+                                        description={`${
+                                            givenName || 'This provider'
+                                        } has been serving people like you since ${getYear(
+                                            new Date(practiceStartDate)
+                                        )}`}
+                                    />
+                                )}
+                            {offersInPerson &&
+                                practice &&
+                                !isTherifyTherapist && (
+                                    <CalloutBanner
+                                        icon={<PersonPinCircleOutlined />}
+                                        title={`In-person sessions in ${practice.city}, ${practice.state}`}
+                                        description={`In-person sessions available at ${practice.name}`}
+                                    />
+                                )}
+                            {offersPhoneConsultations && (
                                 <CalloutBanner
-                                    icon={<VerifiedOutlined />}
-                                    title={`${
-                                        yearsOfExperience > 10
-                                            ? '10+'
-                                            : yearsOfExperience
-                                    } ${
-                                        yearsOfExperience === 1
-                                            ? 'year'
-                                            : 'years'
-                                    } of experience`}
+                                    icon={<PhoneOutlined />}
+                                    title="Free intro phone consultations"
                                     description={`${
                                         givenName || 'This provider'
-                                    } has been serving people like you since ${getYear(
-                                        new Date(practiceStartDate)
-                                    )}`}
+                                    } offers a free 15 min phone consultation to get started`}
                                 />
                             )}
-                        {offersInPerson && practice && !isTherifyTherapist && (
-                            <CalloutBanner
-                                icon={<PersonPinCircleOutlined />}
-                                title={`In-person sessions in ${practice.city}, ${practice.state}`}
-                                description={`In-person sessions available at ${practice.name}`}
-                            />
-                        )}
-                        {offersPhoneConsultations && (
-                            <CalloutBanner
-                                icon={<PhoneOutlined />}
-                                title="Free intro phone consultations"
-                                description={`${
-                                    givenName || 'This provider'
-                                } offers a free 15 min phone consultation to get started`}
-                            />
-                        )}
-                        {offersMedicationManagement && isTherapist && (
-                            <CalloutBanner
-                                icon={<MedicationOutlined />}
-                                title="Offers medication management"
-                                description="Licensed to prescribe medication in treatment"
-                            />
-                        )}
-                    </Box>
+                            {offersMedicationManagement && isTherapist && (
+                                <CalloutBanner
+                                    icon={<MedicationOutlined />}
+                                    title="Offers medication management"
+                                    description="Licensed to prescribe medication in treatment"
+                                />
+                            )}
+                        </Box>
 
-                    <ProviderDetails spacing={8}>
-                        <Paragraph bold noMargin size={PARAGRAPH_SIZE.LARGE}>
-                            About Me
-                        </Paragraph>
-                        <AttributeText sx={{ whiteSpace: 'pre-line' }}>
-                            {bio}
-                        </AttributeText>
-                        {practiceNotes && (
-                            <>
-                                <Paragraph noMargin bold>
-                                    My approach to{' '}
-                                    {isTherapist
-                                        ? 'therapy'
-                                        : 'mental health coaching'}
-                                </Paragraph>
-                                <AttributeText sx={{ whiteSpace: 'pre-line' }}>
-                                    {practiceNotes}
-                                </AttributeText>
-                            </>
-                        )}
-                        {idealClientDescription && (
-                            <>
-                                <Paragraph noMargin bold>
-                                    My ideal client
-                                </Paragraph>
-                                <AttributeText sx={{ whiteSpace: 'pre-line' }}>
-                                    {idealClientDescription}
-                                </AttributeText>
-                            </>
-                        )}
-                        <Divider />
-                        <Paragraph
-                            size={PARAGRAPH_SIZE.LARGE}
-                            sx={{ fontWeight: 'bold' }}
-                        >
-                            More about {givenName}
-                        </Paragraph>
-                        <ul>
-                            {/* Todo! We don't currently capture this information */}
-                            {/* <ProviderAttribute>
+                        <ProviderDetails spacing={8}>
+                            <Paragraph
+                                bold
+                                noMargin
+                                size={PARAGRAPH_SIZE.LARGE}
+                            >
+                                About Me
+                            </Paragraph>
+                            <AttributeText sx={{ whiteSpace: 'pre-line' }}>
+                                {bio}
+                            </AttributeText>
+                            {practiceNotes && (
+                                <>
+                                    <Paragraph noMargin bold>
+                                        My approach to{' '}
+                                        {isTherapist
+                                            ? 'therapy'
+                                            : 'mental health coaching'}
+                                    </Paragraph>
+                                    <AttributeText
+                                        sx={{ whiteSpace: 'pre-line' }}
+                                    >
+                                        {practiceNotes}
+                                    </AttributeText>
+                                </>
+                            )}
+                            {idealClientDescription && (
+                                <>
+                                    <Paragraph noMargin bold>
+                                        My ideal client
+                                    </Paragraph>
+                                    <AttributeText
+                                        sx={{ whiteSpace: 'pre-line' }}
+                                    >
+                                        {idealClientDescription}
+                                    </AttributeText>
+                                </>
+                            )}
+                            <Divider />
+                            <Paragraph
+                                size={PARAGRAPH_SIZE.LARGE}
+                                sx={{ fontWeight: 'bold' }}
+                            >
+                                More about {givenName}
+                            </Paragraph>
+                            <ul>
+                                {/* Todo! We don't currently capture this information */}
+                                {/* <ProviderAttribute>
                             <SchoolOutlined />
                             <Paragraph>
                                 Education: MA (Master of Arts) at Oakland
                                 University
                             </Paragraph>
                         </ProviderAttribute> */}
-                            {credentials.length > 0 && (
+                                {credentials.length > 0 && (
+                                    <ProviderAttribute>
+                                        <BadgeOutlined />
+                                        <AttributeText>
+                                            License{' '}
+                                            {credentials.length === 1
+                                                ? 'type'
+                                                : 'types'}
+                                            : {credentialsList}
+                                        </AttributeText>
+                                    </ProviderAttribute>
+                                )}
+                                {gender && (
+                                    <ProviderAttribute>
+                                        <Man4Outlined />
+                                        <AttributeText>
+                                            Gender: {gender}
+                                        </AttributeText>
+                                    </ProviderAttribute>
+                                )}
+                                {ethnicity.length > 0 && (
+                                    <ProviderAttribute>
+                                        <PublicOutlined />
+                                        <AttributeText>
+                                            Ethnicity: {ethnicity.join(', ')}
+                                        </AttributeText>
+                                    </ProviderAttribute>
+                                )}
                                 <ProviderAttribute>
-                                    <BadgeOutlined />
+                                    <TranslateOutlined />
                                     <AttributeText>
-                                        License{' '}
-                                        {credentials.length === 1
-                                            ? 'type'
-                                            : 'types'}
-                                        : {credentialsList}
+                                        Speaks: {languagesSpoken.join(', ')}
                                     </AttributeText>
                                 </ProviderAttribute>
-                            )}
-                            {gender && (
-                                <ProviderAttribute>
-                                    <Man4Outlined />
-                                    <AttributeText>
-                                        Gender: {gender}
-                                    </AttributeText>
-                                </ProviderAttribute>
-                            )}
-                            {ethnicity.length > 0 && (
-                                <ProviderAttribute>
-                                    <PublicOutlined />
-                                    <AttributeText>
-                                        Ethnicity: {ethnicity.join(', ')}
-                                    </AttributeText>
-                                </ProviderAttribute>
-                            )}
-                            <ProviderAttribute>
-                                <TranslateOutlined />
-                                <AttributeText>
-                                    Speaks: {languagesSpoken.join(', ')}
-                                </AttributeText>
-                            </ProviderAttribute>
-                            {ageGroups.length > 0 && (
-                                <ProviderAttribute>
-                                    <PeopleOutlined />
-                                    <AttributeText>
-                                        Works with: {ageGroups.join(', ')}
-                                    </AttributeText>
-                                </ProviderAttribute>
-                            )}
-                            {communitiesServed.length > 0 && (
-                                <ProviderAttribute>
-                                    <Diversity1Outlined />
-                                    <AttributeText>
-                                        Serves Communities:{' '}
-                                        {communitiesServed.join(', ')}
-                                    </AttributeText>
-                                </ProviderAttribute>
-                            )}
-                            {religions.length > 0 && (
-                                <ProviderAttribute>
-                                    <ChurchOutlined />
-                                    <AttributeText>
-                                        Faith-based service:{' '}
-                                        {religions.join(', ')}
-                                    </AttributeText>
-                                </ProviderAttribute>
-                            )}
-                            {specialties.length > 0 && (
-                                <ProviderAttribute>
-                                    <AutoFixHighOutlined />
-                                    <AttributeText>
-                                        Specialties: {specialties.join(', ')}
-                                    </AttributeText>
-                                </ProviderAttribute>
-                            )}
-                        </ul>
-                    </ProviderDetails>
-                </ProfileContent>
-                {member && (
-                    <Box
-                        sx={{
-                            padding: {
-                                sm: 0,
-                                md: 4,
-                            },
-                            display: {
-                                sm: 'none',
-                                md: 'block',
-                            },
-                            paddingTop: {
-                                sm: 0,
-                                md: ELEMENT_DIMENSIONS.avatar / 2,
-                            },
-                        }}
-                    >
-                        <ConnectionWidget
-                            newClientStatus={newClientStatus}
-                            providerName={givenName}
-                            onProviderSelected={onConnectionRequest}
-                            providerHasBeenSelected={providerHasBeenSelected}
-                        />
-                    </Box>
-                )}
-            </ProfileWrapper>
-        </ProfileContainer>
+                                {ageGroups.length > 0 && (
+                                    <ProviderAttribute>
+                                        <PeopleOutlined />
+                                        <AttributeText>
+                                            Works with: {ageGroups.join(', ')}
+                                        </AttributeText>
+                                    </ProviderAttribute>
+                                )}
+                                {communitiesServed.length > 0 && (
+                                    <ProviderAttribute>
+                                        <Diversity1Outlined />
+                                        <AttributeText>
+                                            Serves Communities:{' '}
+                                            {communitiesServed.join(', ')}
+                                        </AttributeText>
+                                    </ProviderAttribute>
+                                )}
+                                {religions.length > 0 && (
+                                    <ProviderAttribute>
+                                        <ChurchOutlined />
+                                        <AttributeText>
+                                            Faith-based service:{' '}
+                                            {religions.join(', ')}
+                                        </AttributeText>
+                                    </ProviderAttribute>
+                                )}
+                                {specialties.length > 0 && (
+                                    <ProviderAttribute>
+                                        <AutoFixHighOutlined />
+                                        <AttributeText>
+                                            Specialties:{' '}
+                                            {specialties.join(', ')}
+                                        </AttributeText>
+                                    </ProviderAttribute>
+                                )}
+                            </ul>
+                        </ProviderDetails>
+                    </ProfileContent>
+                    {member && (
+                        <Box
+                            sx={{
+                                padding: {
+                                    sm: 0,
+                                    md: 4,
+                                },
+                                display: {
+                                    sm: 'none',
+                                    md: 'block',
+                                },
+                                paddingTop: {
+                                    sm: 0,
+                                    md: ELEMENT_DIMENSIONS.avatar / 2,
+                                },
+                            }}
+                        >
+                            <ConnectionWidget
+                                newClientStatus={newClientStatus}
+                                providerName={givenName}
+                                onProviderSelected={onConnectionRequest}
+                                providerHasBeenSelected={
+                                    providerHasBeenSelected
+                                }
+                            />
+                        </Box>
+                    )}
+                </ProfileWrapper>
+            </ProfileContainer>
+        </ScrollBox>
     );
 }
-
+const ScrollBox = styled(Box)(({ theme }) => ({
+    overflowY: 'auto',
+    height: '100%',
+    width: '100%',
+}));
 const ProfileContainer = styled(Box)(({ theme }) => ({
     maxWidth: theme.breakpoints.values.lg,
     margin: '0 auto',

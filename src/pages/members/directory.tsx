@@ -21,7 +21,6 @@ import { Button } from '@/lib/shared/components/ui/Button';
 import ArrowUpward from '@mui/icons-material/ArrowUpward';
 import { useIntersectionObserver } from 'usehooks-ts';
 import { AnimatePresence, motion } from 'framer-motion';
-import Stack from '@mui/material/Stack';
 
 type JSONSafeProviderProfile = Omit<
     ProviderProfile,
@@ -98,138 +97,150 @@ function Directory({
             currentPath={URL_PATHS.MEMBERS.DIRECTORY}
             user={user}
         >
-            <Container>
-                <PageHeader
-                    type="secondary"
-                    ref={pageHeaderRef}
-                    title={
-                        user?.givenName
-                            ? `We're glad you're here, ${user.givenName}`
-                            : `We're glad you're here!`
-                    }
-                    subtitle="Browse our directory to find a provider who sees and understands you."
-                    actionSlot={
-                        <>
-                            <Box
-                                sx={{
-                                    display: {
-                                        sm: 'flex',
-                                        md: 'grid',
-                                    },
-                                    gridTemplateColumns: '1fr 1fr',
-                                    gridGap: '1rem',
-                                }}
-                            >
-                                <Select
-                                    fullWidth
-                                    id="insurance"
-                                    label="Filter by Insurance"
-                                    options={asSelectOptions(
-                                        InsuranceProvider.ENTRIES
-                                    )}
-                                    value={selectedInsurance}
-                                    onChange={(e) => {
-                                        setSelectedInsurance(e);
-                                    }}
-                                    labelSx={{
-                                        color: 'white',
-                                    }}
+            <ScrollBox>
+                <Container>
+                    <PageHeader
+                        type="secondary"
+                        ref={pageHeaderRef}
+                        title={
+                            user?.givenName
+                                ? `We're glad you're here, ${user.givenName}`
+                                : `We're glad you're here!`
+                        }
+                        subtitle="Browse our directory to find a provider who sees and understands you."
+                        actionSlot={
+                            <>
+                                <Box
                                     sx={{
-                                        width: '100%',
-                                        bgcolor: 'white',
-                                        minHeight: 57,
-                                    }}
-                                    autoComplete="insurance"
-                                />
-                                <InputWrapper
-                                    fullWidth
-                                    label="Filter by your Concerns"
-                                    variant="white"
-                                    sx={{
-                                        marginLeft: '0 !important',
+                                        display: {
+                                            sm: 'flex',
+                                            md: 'grid',
+                                        },
+                                        gridTemplateColumns: '1fr 1fr',
+                                        gridGap: '1rem',
                                     }}
                                 >
-                                    <Autocomplete
-                                        multiple
-                                        options={AreaOfFocus.ENTRIES}
-                                        value={selectedIssues}
-                                        onChange={(e, value) => {
-                                            setSelectedIssues(value);
-                                        }}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                label="Your Concerns"
-                                            />
+                                    <Select
+                                        fullWidth
+                                        id="insurance"
+                                        label="Filter by Insurance"
+                                        options={asSelectOptions(
+                                            InsuranceProvider.ENTRIES
                                         )}
+                                        value={selectedInsurance}
+                                        onChange={(e) => {
+                                            setSelectedInsurance(e);
+                                        }}
+                                        labelSx={{
+                                            color: 'white',
+                                        }}
+                                        sx={{
+                                            width: '100%',
+                                            bgcolor: 'white',
+                                            minHeight: 57,
+                                        }}
+                                        autoComplete="insurance"
                                     />
-                                </InputWrapper>
-                            </Box>
-                            {hasFilters && (
-                                <Button onClick={clearFilters} fullWidth>
-                                    Clear Filters
-                                </Button>
-                            )}
-                        </>
-                    }
-                />
-                <ResultsSection>
-                    {localProfiles.map((profile) => {
-                        const isCurrentlyFavorite =
-                            favoriteProfilesMap[profile.id] ?? false;
-                        return (
-                            <DirectoryCard
-                                {...profile}
-                                key={profile.id}
-                                onClick={() => {
-                                    router.push(
-                                        `/members/directory/${profile.id}`
-                                    );
-                                }}
-                                isFavorite={isCurrentlyFavorite}
-                                handleFavoriteClicked={(setIsFavorite) =>
-                                    () => {
-                                        mutation.mutate(
-                                            {
-                                                profileId: profile.id,
-                                                memberId: user.userId,
-                                                isFavorite: isCurrentlyFavorite,
-                                            },
-                                            {
-                                                onSuccess: ({ isFavorite }) =>
-                                                    setIsFavorite(isFavorite),
-                                                onSettled: () => {
-                                                    setFavoriteProfilesMap({
-                                                        ...favoriteProfilesMap,
-                                                        [profile.id]:
-                                                            !isCurrentlyFavorite,
-                                                    });
-                                                },
-                                            }
+                                    <InputWrapper
+                                        fullWidth
+                                        label="Filter by your Concerns"
+                                        variant="white"
+                                        sx={{
+                                            marginLeft: '0 !important',
+                                        }}
+                                    >
+                                        <Autocomplete
+                                            multiple
+                                            options={AreaOfFocus.ENTRIES}
+                                            value={selectedIssues}
+                                            onChange={(e, value) => {
+                                                setSelectedIssues(value);
+                                            }}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    {...params}
+                                                    label="Your Concerns"
+                                                />
+                                            )}
+                                        />
+                                    </InputWrapper>
+                                </Box>
+                                {hasFilters && (
+                                    <Button onClick={clearFilters} fullWidth>
+                                        Clear Filters
+                                    </Button>
+                                )}
+                            </>
+                        }
+                    />
+                    <ResultsSection>
+                        {localProfiles.map((profile) => {
+                            const isCurrentlyFavorite =
+                                favoriteProfilesMap[profile.id] ?? false;
+                            return (
+                                <DirectoryCard
+                                    {...profile}
+                                    key={profile.id}
+                                    onClick={() => {
+                                        router.push(
+                                            `/members/directory/${profile.id}`
                                         );
                                     }}
-                            />
-                        );
-                    })}
-                </ResultsSection>
-                <AnimatePresence>
-                    {!isHeaderVisible && (
-                        <motion.div
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -10 }}
-                        >
-                            <ScrollToTopButton onClick={scrollToTop}>
-                                <ArrowUpward />
-                            </ScrollToTopButton>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-            </Container>
+                                    isFavorite={isCurrentlyFavorite}
+                                    handleFavoriteClicked={(setIsFavorite) =>
+                                        () => {
+                                            mutation.mutate(
+                                                {
+                                                    profileId: profile.id,
+                                                    memberId: user.userId,
+                                                    isFavorite:
+                                                        isCurrentlyFavorite,
+                                                },
+                                                {
+                                                    onSuccess: ({
+                                                        isFavorite,
+                                                    }) =>
+                                                        setIsFavorite(
+                                                            isFavorite
+                                                        ),
+                                                    onSettled: () => {
+                                                        setFavoriteProfilesMap({
+                                                            ...favoriteProfilesMap,
+                                                            [profile.id]:
+                                                                !isCurrentlyFavorite,
+                                                        });
+                                                    },
+                                                }
+                                            );
+                                        }}
+                                />
+                            );
+                        })}
+                    </ResultsSection>
+                    <AnimatePresence>
+                        {!isHeaderVisible && (
+                            <motion.div
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -10 }}
+                            >
+                                <ScrollToTopButton onClick={scrollToTop}>
+                                    <ArrowUpward />
+                                </ScrollToTopButton>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </Container>
+            </ScrollBox>
         </MemberNavigationPage>
     );
 }
-
+const ScrollBox = styled(Box)(({ theme }) => ({
+    height: '100%',
+    width: '100%',
+    overflowY: 'auto',
+    position: 'relative',
+}));
 const ScrollToTopButton = styled(Button)(({ theme }) => ({
     position: 'fixed',
     bottom: theme.spacing(4),
@@ -250,10 +261,8 @@ const ResultsSection = styled(Box)(({ theme }) => ({
 
 const Container = styled(Box)(({ theme }) => ({
     maxWidth: theme.breakpoints.values.lg,
-    height: '100%',
     margin: '0 auto',
     padding: theme.spacing(4),
-    overflowY: 'auto',
     position: 'relative',
 }));
 

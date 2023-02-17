@@ -14,7 +14,7 @@ export const TopNavigationLayout = ({
             height="100%"
             display="flex"
             flexDirection="column"
-            overflow="none"
+            overflow="hidden"
         >
             {navigationSlot}
             <Box flexGrow={1} overflow="hidden">
