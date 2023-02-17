@@ -145,6 +145,7 @@ export function DirectoryCard({
                             {handleFavoriteClicked && (
                                 <Box>
                                     <CardIcon
+                                        title={`Add ${providerName} to your favorite providers`}
                                         isFavorite={isProviderFavorite}
                                         onClick={handleFavoriteClicked(
                                             (isNowFavorited: boolean) => {

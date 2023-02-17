@@ -303,6 +303,7 @@ export function ProviderProfile({
                                 {onFavorite && (
                                     <Box>
                                         <CardIcon
+                                            title={`Add ${givenName} to your favorite providers`}
                                             isFavorite={isProviderFavorite}
                                             onClick={onFavorite(
                                                 (isNowFavorited: boolean) => {
