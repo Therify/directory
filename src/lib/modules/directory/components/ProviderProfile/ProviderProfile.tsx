@@ -123,7 +123,7 @@ function renderFavoriteIcon({
 export function ProviderProfile({
     practice,
     onShare,
-    onFavorite = () => () => {},
+    onFavorite,
     providerHasBeenSelected = false,
     member = undefined,
     isFavoriteLoading,
@@ -235,39 +235,6 @@ export function ProviderProfile({
                             alignItems="baseline"
                             spacing={2}
                         >
-                            {onFavorite && (
-                                <Box>
-                                    <CardIcon
-                                        isFavorite={isProviderFavorite}
-                                        onClick={onFavorite(
-                                            (isNowFavorited: boolean) => {
-                                                if (isNowFavorited) {
-                                                    setIsProviderFavorite(true);
-                                                    setIsStopped(false);
-                                                    setIsPaused(false);
-                                                    setIsAnimating(true);
-                                                }
-                                                setIsProviderFavorite(
-                                                    isNowFavorited
-                                                );
-                                            }
-                                        )}
-                                    >
-                                        {renderFavoriteIcon({
-                                            isFavorite: isProviderFavorite,
-                                            isStopped,
-                                            isPaused,
-                                            isAnimating,
-                                            callback: () => {
-                                                console.log('complete');
-                                                setIsAnimating(false);
-                                                setIsStopped(true);
-                                                setIsPaused(true);
-                                            },
-                                        })}
-                                    </CardIcon>
-                                </Box>
-                            )}
                             <ProviderName>
                                 {givenName} {surname}
                             </ProviderName>
@@ -334,7 +301,39 @@ export function ProviderProfile({
                         </SessionTypeContainer>
                         <Box>
                             {/* TODO: Handle Share */}
-                            {/* TODO: Handle Favorite */}
+                            {onFavorite && (
+                                <Box>
+                                    <CardIcon
+                                        isFavorite={isProviderFavorite}
+                                        onClick={onFavorite(
+                                            (isNowFavorited: boolean) => {
+                                                if (isNowFavorited) {
+                                                    setIsProviderFavorite(true);
+                                                    setIsStopped(false);
+                                                    setIsPaused(false);
+                                                    setIsAnimating(true);
+                                                }
+                                                setIsProviderFavorite(
+                                                    isNowFavorited
+                                                );
+                                            }
+                                        )}
+                                    >
+                                        {renderFavoriteIcon({
+                                            isFavorite: isProviderFavorite,
+                                            isStopped,
+                                            isPaused,
+                                            isAnimating,
+                                            callback: () => {
+                                                console.log('complete');
+                                                setIsAnimating(false);
+                                                setIsStopped(true);
+                                                setIsPaused(true);
+                                            },
+                                        })}
+                                    </CardIcon>
+                                </Box>
+                            )}
                         </Box>
                     </Box>
                     <ProviderVideo />
