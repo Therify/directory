@@ -1,4 +1,5 @@
 import { NavigationLink } from '@/lib/sitemap';
+import { LaunchRounded } from '@mui/icons-material';
 import {
     ListItem,
     Avatar,
@@ -50,6 +51,7 @@ export const NavListItem = ({
                 </Badge>
             )}
             {!hideText && <Text primary={link.displayName} />}
+            {!hideText && link.isExternal && <LaunchRounded color="info" />}
         </NavItem>
     );
 };

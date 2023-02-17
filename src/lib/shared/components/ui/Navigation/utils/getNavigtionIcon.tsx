@@ -17,6 +17,7 @@ import {
     FavoriteBorderRounded,
     PersonSearchOutlined,
 } from '@mui/icons-material';
+import { TherifyIcon } from '../../Logo';
 
 export const getNavigationIcon = (iconName?: NavigationIcon) => {
     switch (iconName) {
@@ -50,7 +51,12 @@ export const getNavigationIcon = (iconName?: NavigationIcon) => {
             return FavoriteBorderRounded;
         case NAVIGATION_ICON.DIRECTORY:
             return PersonSearchOutlined;
+        case NAVIGATION_ICON.THERIFY_ICON:
+            return TherifyLogoIcon;
+
         default:
             return null;
     }
 };
+
+const TherifyLogoIcon = () => <TherifyIcon style={{ width: '24px' }} />;

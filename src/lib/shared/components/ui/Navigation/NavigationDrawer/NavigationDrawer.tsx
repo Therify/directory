@@ -7,10 +7,13 @@ import {
     AVATAR_SIZE,
     IconButton,
     BUTTON_TYPE,
+    Caption,
 } from '@/lib/shared/components/ui';
 import { NavigationLink } from '@/lib/sitemap';
 import { TherifyUser } from '@/lib/shared/types/therify-user';
 import { NavigationMenu } from '../NavigationMenu';
+import { Role } from '@prisma/client';
+import { getYear } from 'date-fns';
 
 interface NavigationDrawerProps {
     currentPath: string;
@@ -45,8 +48,15 @@ export const NavigationDrawer = ({
                     src={user?.avatarUrl}
                     sx={{ marginBottom: 4 }}
                 />
-                {/* TODO: Get Name */}
-                <H5 style={{ marginBottom: 2 }}>{user?.emailAddress}</H5>
+                {user && (
+                    <>
+                        <H5 style={{ marginBottom: 2 }}>{user?.givenName}</H5>
+                        <Caption secondary>
+                            {getUserRoleName(user)} since{' '}
+                            {getYear(new Date(user.createdAt))}
+                        </Caption>
+                    </>
+                )}
             </MenuHeader>
             <NavigationMenu
                 menu={navigationMenu}
@@ -58,6 +68,20 @@ export const NavigationDrawer = ({
             <BottomContentContainer>{children}</BottomContentContainer>
         </Drawer>
     );
+};
+
+const getUserRoleName = (user: TherifyUser.TherifyUser) => {
+    const { roles, isPracticeAdmin } = user;
+    if (isPracticeAdmin) {
+        return 'Practice Owner';
+    }
+    if (roles.includes(Role.provider_therapist)) {
+        return 'Therapist';
+    }
+    if (roles.includes(Role.provider_coach)) {
+        return 'Coach';
+    }
+    return 'Member';
 };
 
 const Drawer = styled(MuiDrawer)(({ theme }) => ({

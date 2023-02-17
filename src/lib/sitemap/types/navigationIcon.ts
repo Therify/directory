@@ -15,7 +15,8 @@ export const NAVIGATION_ICON = {
     PROFILE_EDITOR: 'profile-editor',
     REFERRAL: 'referral',
     THERAPY: 'therapy',
+    THERIFY_ICON: 'therify-icon',
 } as const;
 
 export type NavigationIcon =
-    typeof NAVIGATION_ICON[keyof typeof NAVIGATION_ICON];
+    (typeof NAVIGATION_ICON)[keyof typeof NAVIGATION_ICON];
