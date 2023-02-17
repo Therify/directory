@@ -201,8 +201,7 @@ export function ProviderProfile({
                     minHeight:
                         ELEMENT_DIMENSIONS.headerHeight +
                         ELEMENT_DIMENSIONS.avatar * 2.5,
-
-                    paddingBottom: isSmallScreen && member ? 30 : 0,
+                    paddingBottom: 30,
                 }}
             >
                 <ProfileBanner>
