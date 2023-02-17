@@ -51,10 +51,7 @@ export const NavigationDrawer = ({
                 {user && (
                     <>
                         <H5 style={{ marginBottom: 2 }}>{user?.givenName}</H5>
-                        <Caption secondary>
-                            {getUserRoleName(user)} since{' '}
-                            {getYear(new Date(user.createdAt))}
-                        </Caption>
+                        <Caption secondary>{getUserCaption(user)}</Caption>
                     </>
                 )}
             </MenuHeader>
@@ -70,7 +67,7 @@ export const NavigationDrawer = ({
     );
 };
 
-const getUserRoleName = (user: TherifyUser.TherifyUser) => {
+const getUserCaption = (user: TherifyUser.TherifyUser) => {
     const { roles, isPracticeAdmin } = user;
     if (isPracticeAdmin) {
         return 'Practice Owner';
@@ -79,9 +76,9 @@ const getUserRoleName = (user: TherifyUser.TherifyUser) => {
         return 'Therapist';
     }
     if (roles.includes(Role.provider_coach)) {
-        return 'Coach';
+        return 'Mental Health Coach';
     }
-    return 'Member';
+    return `Member since ${getYear(new Date(user.createdAt))}`;
 };
 
 const Drawer = styled(MuiDrawer)(({ theme }) => ({
