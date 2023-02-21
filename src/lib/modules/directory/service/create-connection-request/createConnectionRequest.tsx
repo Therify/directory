@@ -1,5 +1,5 @@
 import { CreateConnectionRequest } from '@/lib/modules/directory/features';
-import { DirectoryServiceParams } from '../param';
+import { DirectoryServiceParams } from '../params';
 import { VendorInngest } from '@/lib/shared/vendors/inngest/inngest';
 import { SendConnectionRequestEmail } from '@/lib/shared/vendors/inngest';
 
