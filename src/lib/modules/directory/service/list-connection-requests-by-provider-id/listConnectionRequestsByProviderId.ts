@@ -1,5 +1,6 @@
 import { ListConnectionRequestsByProviderId } from '@/lib/modules/directory/features';
 import { ConnectionRequest } from '@/lib/shared/types';
+import { isArray } from 'util';
 import { DirectoryServiceParams } from '../params';
 
 export function factory({ prisma }: DirectoryServiceParams) {
@@ -22,7 +23,11 @@ export function factory({ prisma }: DirectoryServiceParams) {
         const connectionRequests = await prisma.connectionRequest.findMany({
             where: {
                 profileId,
-                ...(status ? { connectionStatus: status } : {}),
+                ...(status
+                    ? Array.isArray(status)
+                        ? { connectionStatus: { in: status } }
+                        : { connectionStatus: status }
+                    : {}),
             },
             select: {
                 connectionStatus: true,

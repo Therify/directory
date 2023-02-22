@@ -5,6 +5,8 @@ import { RBAC } from '@/lib/shared/utils';
 import { ProviderNavigationPage } from '@/lib/shared/components/features/pages/ProviderNavigationPage';
 import { ProviderClientsPageProps } from '@/lib/modules/providers/service/page-props/get-clients-page-props/getProviderClientsPageProps';
 import { ProviderClientListPage } from '@/lib/shared/components/features/pages/ProviderClientListPage/ProviderClientListPage';
+import { ConnectionRequest } from '@/lib/shared/types';
+import { ProfileType } from '@prisma/client';
 
 export const getServerSideProps = RBAC.requireTherapistAuth(
     withPageAuthRequired({
@@ -23,7 +25,23 @@ export default function TherapistClientsPage({
             user={user}
         >
             <ProviderClientListPage
-                connectionRequests={connectionRequests ?? []}
+                designation={ProfileType.therapist}
+                connectionRequests={
+                    connectionRequests
+                        ? ([
+                              ...connectionRequests,
+                              {
+                                  ...connectionRequests[0],
+                                  connectionStatus: 'accepted',
+                              },
+                              {
+                                  ...connectionRequests[0],
+                                  connectionStatus: 'denied',
+                              },
+                              ...connectionRequests,
+                          ] as ConnectionRequest.Type[])
+                        : []
+                }
             />
         </ProviderNavigationPage>
     );

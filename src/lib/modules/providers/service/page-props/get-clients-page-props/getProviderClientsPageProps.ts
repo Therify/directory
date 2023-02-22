@@ -2,6 +2,7 @@ import { directoryService } from '@/lib/modules/directory/service';
 import { TherifyUser, ConnectionRequest } from '@/lib/shared/types';
 import { URL_PATHS } from '@/lib/sitemap';
 import { getSession } from '@auth0/nextjs-auth0';
+import { ConnectionStatus } from '@prisma/client';
 import { GetServerSideProps } from 'next';
 import { GetProviderTherifyUser } from '../../get-provider-therify-user';
 import { ProvidersServiceParams } from '../../params';
@@ -37,6 +38,7 @@ export const factory = (params: ProvidersServiceParams) => {
             }),
             directoryService.listConnectionRequestsByProviderId({
                 userId: session.user.sub,
+                status: [ConnectionStatus.pending, ConnectionStatus.accepted],
             }),
         ]);
         if (user === null) {

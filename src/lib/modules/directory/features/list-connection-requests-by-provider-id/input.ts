@@ -3,7 +3,9 @@ import * as z from 'zod';
 
 export const schema = z.object({
     userId: z.string(),
-    status: ConnectionRequestSchema.shape.connectionStatus.optional(),
+    status: ConnectionRequestSchema.shape.connectionStatus
+        .or(ConnectionRequestSchema.shape.connectionStatus.array())
+        .optional(),
 });
 
 export type Input = z.infer<typeof schema>;
