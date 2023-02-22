@@ -19,4 +19,4 @@ export const NAVIGATION_ICON = {
 } as const;
 
 export type NavigationIcon =
-    (typeof NAVIGATION_ICON)[keyof typeof NAVIGATION_ICON];
+    typeof NAVIGATION_ICON[keyof typeof NAVIGATION_ICON];

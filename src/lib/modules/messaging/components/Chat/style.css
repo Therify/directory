@@ -1,8 +1,8 @@
 .str-chat {
     --str-chat__border-radius-circle: 6px;
-  }
-  
-  .str-chat__theme-light {
+}
+
+.str-chat__theme-light {
     --str-chat__primary-color: #009688;
     --str-chat__active-primary-color: #004d40;
     --str-chat__surface-color: #f5f5f5;
@@ -10,9 +10,9 @@
     --str-chat__primary-surface-color: #fff;
     --str-chat__primary-surface-color-low-emphasis: #edf7f7;
     --str-chat__avatar-background-color: #bf360c;
-  }
-  
-  .str-chat__theme-dark {
+}
+
+.str-chat__theme-dark {
     --str-chat__primary-color: #26a69a;
     --str-chat__active-primary-color: #00796b;
     --str-chat__surface-color: #424242;
@@ -20,13 +20,13 @@
     --str-chat__primary-surface-color: #00695c;
     --str-chat__primary-surface-color-low-emphasis: #004d40;
     --str-chat__avatar-background-color: #ff7043;
-  }
-  
-  .str-chat__theme-round {
+}
+
+.str-chat__theme-round {
     --str-chat__border-radius-circle: 999px;
-  }
-  
-  .str-chat__theme-square {
+}
+
+.str-chat__theme-square {
     --str-chat__primary-color: #009688;
     --str-chat__active-primary-color: #004d40;
     --str-chat__surface-color: #fff;
@@ -37,27 +37,26 @@
     --str-chat__secondary-background-color: red;
     --str-chat__surface-color: #fff;
     --str-chat__secondary-surface-color: #fff;
-  }
-  
-  .str-chat__channel-list {
+}
+
+.str-chat__channel-list {
     background: white !important;
-  }
-  
-  .str-chat__channel-list-messenger {
+}
+
+.str-chat__channel-list-messenger {
     background: white !important;
-  }
-  
-  .str-chat {
+}
+
+.str-chat {
     height: 100% !important;
-  }
-  
-  .str-chat__channel-list.str-chat__channel-list-react {
+}
+
+.str-chat__channel-list.str-chat__channel-list-react {
     display: none;
-  }
-  
-  @media (min-width: 750px) {
+}
+
+@media (min-width: 750px) {
     .str-chat__channel-list.str-chat__channel-list-react {
-      display: initial;
+        display: initial;
     }
-  }
-  
+}
