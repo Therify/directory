@@ -15,6 +15,7 @@ export const schema = z.object({
         surname: z.string(),
         emailAddress: z.string(),
         memberProfile: z.object({
+            // TODO: add insurance
             concerns: z.array(z.string()),
             goals: z.array(z.string()),
             state: z.enum(STATES),

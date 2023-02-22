@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { ConnectionRequest } from '@/lib/shared/types';
-import { ListItem, Stack, Link, Box, useMediaQuery } from '@mui/material';
+import { Stack, Link, Box, useMediaQuery } from '@mui/material';
 import { styled, Theme } from '@mui/material/styles';
 import { formatReimbursementRequestUrl } from '@/lib/shared/utils';
 import {
     List,
     H1,
     Paragraph,
+    PARAGRAPH_SIZE,
     FloatingList,
     Avatar,
     Button,
@@ -17,6 +18,8 @@ import {
     Badge,
     BADGE_SIZE,
     BADGE_COLOR,
+    ListItem,
+    DisplayModal,
 } from '@/lib/shared/components/ui';
 import {
     MailOutline,
@@ -32,8 +35,6 @@ import { ConnectionStatus, ProfileType } from '@prisma/client';
 
 const REIMBURSEMENT_REQUEST_URL =
     'https://hipaa.jotform.com/221371005584146?' as const;
-
-const CLIENT_LIST_ACTIONS = ['Reimbursement Request'] as const;
 
 interface ProviderClientListPageProps {
     connectionRequests: ConnectionRequest.Type[];
@@ -101,14 +102,8 @@ export function ProviderClientListPage({
                                         connectionRequest
                                     )
                                 }
-                                onView={
-                                    !isCoach
-                                        ? () => {
-                                              console.log(
-                                                  'TODO: implement view'
-                                              );
-                                          }
-                                        : undefined
+                                onView={() =>
+                                    setTargetConnection(connectionRequest)
                                 }
                                 onOpenChat={
                                     isCoach
@@ -124,6 +119,36 @@ export function ProviderClientListPage({
                     })}
                 </ClientList>
             )}
+            {!confirmAction && targetConnection && (
+                <DisplayModal
+                    isOpen
+                    title={`${targetConnection.member.givenName} ${targetConnection.member.surname}`}
+                    onClose={clearConfirmationModal}
+                    fullWidthButtons
+                    secondaryButtonText="Close"
+                    secondaryButtonOnClick={clearConfirmationModal}
+                >
+                    <Paragraph bold size={PARAGRAPH_SIZE.LARGE}>
+                        Located in
+                    </Paragraph>
+                    <Paragraph size={PARAGRAPH_SIZE.SMALL}>
+                        {targetConnection.member.memberProfile.state}
+                    </Paragraph>
+                    <Paragraph bold size={PARAGRAPH_SIZE.LARGE}>
+                        Concerns
+                    </Paragraph>
+                    <Paragraph size={PARAGRAPH_SIZE.SMALL}>
+                        {targetConnection.member.memberProfile.concerns}
+                    </Paragraph>
+                    <Paragraph bold size={PARAGRAPH_SIZE.LARGE}>
+                        Goals
+                    </Paragraph>
+                    <Paragraph size={PARAGRAPH_SIZE.SMALL}>
+                        {targetConnection.member.memberProfile.goals}
+                    </Paragraph>
+                </DisplayModal>
+            )}
+
             {confirmAction && targetConnection && (
                 <Modal
                     isOpen
@@ -199,7 +224,7 @@ const MemberName = styled(Paragraph)(({ theme }) => ({
     margin: 0,
 }));
 
-const MemberEmailAddress = styled(Link)(({ theme }) => ({
+const MemberEmailAddress = styled('p')(({ theme }) => ({
     ...theme.typography.body1,
     color: theme.palette.text.primary,
     textDecoration: 'none',
@@ -207,6 +232,11 @@ const MemberEmailAddress = styled(Link)(({ theme }) => ({
     alignItems: 'center',
     flex: 1,
     maxWidth: '100%',
+    '& a': {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     '& div': {
         flex: 1,
         maxWidth: '100%',
@@ -218,6 +248,9 @@ const MemberEmailAddress = styled(Link)(({ theme }) => ({
     '& svg': {
         color: theme.palette.grey[400],
         marginRight: theme.spacing(2),
+        '&:hover': {
+            color: theme.palette.primary.main,
+        },
     },
 }));
 const CellContainer = styled(Box)(({ theme }) => ({
@@ -275,7 +308,7 @@ const ClientListItem = ({
                   },
               ]
             : []),
-        ...(onView
+        ...(!onOpenChat
             ? [
                   {
                       icon: <PreviewRounded />,
@@ -315,6 +348,7 @@ const ClientListItem = ({
         <ListItem
             key={connectionRequest.member.id}
             sx={{ width: '100%', paddingX: 0 }}
+            onClick={onView}
         >
             <ClientListItemContainer>
                 <CellContainer>
@@ -342,49 +376,55 @@ const ClientListItem = ({
                     )}
                 </CellContainer>
                 <CellContainer>
-                    <MemberEmailAddress
-                        href={`mailto:${connectionRequest.member.emailAddress}`}
-                        target="_blank"
-                    >
-                        <MailOutline />
+                    <MemberEmailAddress>
+                        <Link
+                            title={`Send email to ${connectionRequest.member.givenName}`}
+                            onClick={(e) => e.stopPropagation()}
+                            href={`mailto:${connectionRequest.member.emailAddress}`}
+                            target="_blank"
+                        >
+                            <MailOutline />
+                        </Link>
                         <Box>{connectionRequest.member.emailAddress}</Box>
                     </MemberEmailAddress>
                 </CellContainer>
                 <CellContainer>
-                    {!isSmallScreen && (
-                        <ActionButtons
-                            connectionRequest={connectionRequest}
-                            onAccept={onAccept}
-                            onDecline={onDecline}
-                            onView={onView}
-                            onOpenChat={onOpenChat}
+                    <Box display="flex" onClick={(e) => e.stopPropagation()}>
+                        {!isSmallScreen && (
+                            <ActionButtons
+                                connectionRequest={connectionRequest}
+                                onAccept={onAccept}
+                                onDecline={onDecline}
+                                onView={onView}
+                                onOpenChat={onOpenChat}
+                            />
+                        )}
+                        {isPending && isSmallScreen && (
+                            <CircleRounded
+                                color="warning"
+                                sx={{
+                                    height: '12px',
+                                    width: '12px',
+                                }}
+                            />
+                        )}
+                        <FloatingList
+                            sx={{ marginLeft: 2 }}
+                            headerSlot={
+                                isPending &&
+                                isSmallScreen && (
+                                    <Badge
+                                        color={BADGE_COLOR.WARNING}
+                                        icon={<PendingOutlined />}
+                                        size={BADGE_SIZE.SMALL}
+                                    >
+                                        Pending
+                                    </Badge>
+                                )
+                            }
+                            listItems={actionList}
                         />
-                    )}
-                    {isPending && isSmallScreen && (
-                        <CircleRounded
-                            color="warning"
-                            sx={{
-                                height: '12px',
-                                width: '12px',
-                            }}
-                        />
-                    )}
-                    <FloatingList
-                        sx={{ marginLeft: 2 }}
-                        headerSlot={
-                            isPending &&
-                            isSmallScreen && (
-                                <Badge
-                                    color={BADGE_COLOR.WARNING}
-                                    icon={<PendingOutlined />}
-                                    size={BADGE_SIZE.SMALL}
-                                >
-                                    Pending
-                                </Badge>
-                            )
-                        }
-                        listItems={actionList}
-                    />
+                    </Box>
                 </CellContainer>
             </ClientListItemContainer>
         </ListItem>
@@ -431,7 +471,7 @@ const ActionButtons = ({
             )}
             {isAccepted && (
                 <>
-                    {onView && (
+                    {!onOpenChat && (
                         <Button
                             size="small"
                             color="info"
