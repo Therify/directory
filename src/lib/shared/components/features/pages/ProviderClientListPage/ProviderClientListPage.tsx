@@ -388,43 +388,41 @@ const ClientListItem = ({
                         <Box>{connectionRequest.member.emailAddress}</Box>
                     </MemberEmailAddress>
                 </CellContainer>
-                <CellContainer>
-                    <Box display="flex" onClick={(e) => e.stopPropagation()}>
-                        {!isSmallScreen && (
-                            <ActionButtons
-                                connectionRequest={connectionRequest}
-                                onAccept={onAccept}
-                                onDecline={onDecline}
-                                onView={onView}
-                                onOpenChat={onOpenChat}
-                            />
-                        )}
-                        {isPending && isSmallScreen && (
-                            <CircleRounded
-                                color="warning"
-                                sx={{
-                                    height: '12px',
-                                    width: '12px',
-                                }}
-                            />
-                        )}
-                        <FloatingList
-                            sx={{ marginLeft: 2 }}
-                            headerSlot={
-                                isPending &&
-                                isSmallScreen && (
-                                    <Badge
-                                        color={BADGE_COLOR.WARNING}
-                                        icon={<PendingOutlined />}
-                                        size={BADGE_SIZE.SMALL}
-                                    >
-                                        Pending
-                                    </Badge>
-                                )
-                            }
-                            listItems={actionList}
+                <CellContainer onClick={(e) => e.stopPropagation()}>
+                    {!isSmallScreen && (
+                        <ActionButtons
+                            connectionRequest={connectionRequest}
+                            onAccept={onAccept}
+                            onDecline={onDecline}
+                            onView={onView}
+                            onOpenChat={onOpenChat}
                         />
-                    </Box>
+                    )}
+                    {isPending && isSmallScreen && (
+                        <CircleRounded
+                            color="warning"
+                            sx={{
+                                height: '12px',
+                                width: '12px',
+                            }}
+                        />
+                    )}
+                    <FloatingList
+                        sx={{ marginLeft: 2 }}
+                        headerSlot={
+                            isPending &&
+                            isSmallScreen && (
+                                <Badge
+                                    color={BADGE_COLOR.WARNING}
+                                    icon={<PendingOutlined />}
+                                    size={BADGE_SIZE.SMALL}
+                                >
+                                    Pending
+                                </Badge>
+                            )
+                        }
+                        listItems={actionList}
+                    />
                 </CellContainer>
             </ClientListItemContainer>
         </ListItem>
