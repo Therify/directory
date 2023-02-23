@@ -68,7 +68,7 @@ export function ProviderClientListPage({
     return (
         <PageContainer>
             <Title>Clients</Title>
-            <ListItem sx={{ width: '100%' }}>
+            <ListItem sx={{ width: '100%', '& > div': { paddingY: 0 } }}>
                 <ClientListItemContainer paddingBottom={0}>
                     <CellContainer>
                         <Caption margin={0}>Name</Caption>
