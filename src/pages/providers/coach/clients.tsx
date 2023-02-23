@@ -30,7 +30,7 @@ export default function CoachClientsPage({
     );
     const { createAlert } = useContext(Alerts.Context);
     const [confirmAction, setConfirmAction] = useState<'accept' | 'decline'>();
-    const [declineMessage, setDeclineMessage] = useState('');
+    const [updateMessage, setUpdateMessage] = useState('');
     const [targetConnection, setTargetConnection] =
         useState<ConnectionRequest.Type>();
 
@@ -125,7 +125,7 @@ export default function CoachClientsPage({
                     ? ConnectionStatus.accepted
                     : ConnectionStatus.declined,
             userId: user.userId,
-            declineMessage: action === 'decline' ? declineMessage : undefined,
+            message: updateMessage.trim() === '' ? updateMessage : undefined,
         });
 
     return (
@@ -180,17 +180,23 @@ export default function CoachClientsPage({
                                 <CircularProgress />
                             </CenteredContainer>
                         ) : (
-                            confirmAction === 'decline' && (
-                                <Textarea
-                                    fullWidth
-                                    label="Reason for declining (optional)"
-                                    placeholder="Let them know why you cannot accept at this time"
-                                    value={declineMessage}
-                                    onChange={(e) =>
-                                        setDeclineMessage(e.target.value)
-                                    }
-                                />
-                            )
+                            <Textarea
+                                fullWidth
+                                label={
+                                    confirmAction === 'accept'
+                                        ? 'Share any additional details here (optional)'
+                                        : 'Reason for declining (optional)'
+                                }
+                                placeholder={
+                                    confirmAction === 'accept'
+                                        ? 'Let them know about any unique next steps'
+                                        : 'Let them know why you cannot accept at this time'
+                                }
+                                value={updateMessage}
+                                onChange={(e) =>
+                                    setUpdateMessage(e.target.value)
+                                }
+                            />
                         )
                     }
                 />

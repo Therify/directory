@@ -8,8 +8,7 @@ export function factory({ prisma }: DirectoryServiceParams) {
         memberId,
         userId,
         connectionStatus,
-    }: // declineMessage,
-    UpdateConnectionRequestStatus.Input): Promise<
+    }: UpdateConnectionRequestStatus.Input): Promise<
         Omit<UpdateConnectionRequestStatus.Output, 'errors'>
     > {
         const connectionRequest =
