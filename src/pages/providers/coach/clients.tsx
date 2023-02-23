@@ -7,24 +7,24 @@ import { ProviderClientsPageProps } from '@/lib/modules/providers/service/page-p
 import { ProviderClientListPage } from '@/lib/shared/components/features/pages/ProviderClientListPage/ProviderClientListPage';
 import { ProfileType } from '@prisma/client';
 
-export const getServerSideProps = RBAC.requireTherapistAuth(
+export const getServerSideProps = RBAC.requireCoachAuth(
     withPageAuthRequired({
         getServerSideProps:
             ProvidersService.pageProps.getProviderClientsPageProps,
     })
 );
 
-export default function TherapistClientsPage({
+export default function CoachClientsPage({
     user,
     connectionRequests,
 }: ProviderClientsPageProps) {
     return (
         <ProviderNavigationPage
-            currentPath={URL_PATHS.PROVIDERS.THERAPIST.CLIENTS}
+            currentPath={URL_PATHS.PROVIDERS.COACH.CLIENTS}
             user={user}
         >
             <ProviderClientListPage
-                designation={ProfileType.therapist}
+                designation={ProfileType.coach}
                 connectionRequests={connectionRequests ?? []}
             />
         </ProviderNavigationPage>
