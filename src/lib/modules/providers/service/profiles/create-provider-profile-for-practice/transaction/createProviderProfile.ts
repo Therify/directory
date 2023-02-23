@@ -17,7 +17,7 @@ export const factory: (
         async commit({ prisma }) {
             const supervisor = rawSupervisor
                 ? ProviderSupervisor.validate(rawSupervisor)
-                : null;
+                : {};
             const credentials = rawCredentials.map(ProviderCredential.validate);
 
             const profile = {
@@ -34,7 +34,6 @@ export const factory: (
                         id: true,
                         createdAt: true,
                         updatedAt: true,
-                        supervisor: true,
                     }).parse(profile),
                 },
             });
