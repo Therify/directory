@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ConnectionRequest } from '@/lib/shared/types';
 import { Stack, Link, Box, useMediaQuery } from '@mui/material';
-import { styled, Theme } from '@mui/material/styles';
+import { styled, Theme, useTheme } from '@mui/material/styles';
 import { formatReimbursementRequestUrl } from '@/lib/shared/utils';
 import {
     List,
@@ -53,6 +53,7 @@ export function ProviderClientListPage({
     onAcceptConnectionRequest,
     onDeclineConnectionRequest,
 }: ProviderClientListPageProps) {
+    const theme = useTheme();
     const isCoach = designation === ProfileType.coach;
     const isSmallScreen = useMediaQuery((theme: Theme) =>
         theme.breakpoints.down('md')
@@ -75,7 +76,9 @@ export function ProviderClientListPage({
                 </ClientListItemContainer>
             </ListItem>
             {!hasConnectionRequests && (
-                <Paragraph>Your new referrals will appear here!</Paragraph>
+                <Paragraph style={{ color: theme.palette.text.secondary }}>
+                    No clients to show. Your future referrals will appear here!
+                </Paragraph>
             )}
             {hasConnectionRequests && (
                 <ClientList>
