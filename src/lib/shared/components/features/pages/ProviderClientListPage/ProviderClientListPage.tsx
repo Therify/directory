@@ -135,16 +135,24 @@ export function ProviderClientListPage({
                         {targetConnection.member.memberProfile.state}
                     </Paragraph>
                     <Paragraph bold size={PARAGRAPH_SIZE.LARGE}>
+                        Insurance Provider
+                    </Paragraph>
+                    <Paragraph size={PARAGRAPH_SIZE.SMALL}>
+                        {targetConnection.member.memberProfile.insurance}
+                    </Paragraph>
+                    <Paragraph bold size={PARAGRAPH_SIZE.LARGE}>
                         Concerns
                     </Paragraph>
                     <Paragraph size={PARAGRAPH_SIZE.SMALL}>
-                        {targetConnection.member.memberProfile.concerns}
+                        {targetConnection.member.memberProfile.concerns.join(
+                            ', '
+                        )}
                     </Paragraph>
                     <Paragraph bold size={PARAGRAPH_SIZE.LARGE}>
                         Goals
                     </Paragraph>
                     <Paragraph size={PARAGRAPH_SIZE.SMALL}>
-                        {targetConnection.member.memberProfile.goals}
+                        {targetConnection.member.memberProfile.goals.join(', ')}
                     </Paragraph>
                 </DisplayModal>
             )}

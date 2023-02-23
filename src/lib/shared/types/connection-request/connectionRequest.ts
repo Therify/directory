@@ -3,6 +3,7 @@ import { ENTRIES as STATES } from '../state';
 import { ConnectionRequestSchema, PlanSchema } from '../../schema';
 import { ProviderProfile } from '../provider-profile';
 import { convertNestedDatesToISOString } from '../../utils';
+import { ENTRIES as INSURANCE_PROVIDERS } from '../insuranceProvider';
 
 export const schema = z.object({
     connectionStatus: ConnectionRequestSchema.shape.connectionStatus,
@@ -15,7 +16,7 @@ export const schema = z.object({
         surname: z.string(),
         emailAddress: z.string(),
         memberProfile: z.object({
-            // TODO: add insurance
+            insurance: z.enum(INSURANCE_PROVIDERS),
             concerns: z.array(z.string()),
             goals: z.array(z.string()),
             state: z.enum(STATES),
