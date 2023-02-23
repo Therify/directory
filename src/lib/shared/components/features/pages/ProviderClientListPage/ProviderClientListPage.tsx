@@ -12,8 +12,6 @@ import {
     Avatar,
     Button,
     AVATAR_SIZE,
-    Modal,
-    Textarea,
     Caption,
     Badge,
     BADGE_SIZE,
