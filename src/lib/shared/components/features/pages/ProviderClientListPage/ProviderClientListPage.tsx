@@ -232,7 +232,7 @@ const MemberName = styled(Paragraph)(({ theme }) => ({
     margin: 0,
 }));
 
-const MemberEmailAddress = styled('p')(({ theme }) => ({
+const MemberEmailAddress = styled(Box)(({ theme }) => ({
     ...theme.typography.body1,
     color: theme.palette.text.primary,
     textDecoration: 'none',
@@ -245,7 +245,7 @@ const MemberEmailAddress = styled('p')(({ theme }) => ({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    '& div': {
+    '& p': {
         flex: 1,
         maxWidth: '100%',
         overflow: 'hidden',
@@ -393,7 +393,9 @@ const ClientListItem = ({
                         >
                             <MailOutline />
                         </Link>
-                        <Box>{connectionRequest.member.emailAddress}</Box>
+                        <Paragraph noMargin>
+                            {connectionRequest.member.emailAddress}
+                        </Paragraph>
                     </MemberEmailAddress>
                 </CellContainer>
                 <CellContainer onClick={(e) => e.stopPropagation()}>
