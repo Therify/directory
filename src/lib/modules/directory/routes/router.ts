@@ -1,7 +1,13 @@
 import { Context } from '@/lib/server/context';
 import * as trpc from '@trpc/server';
-import { CreateConnectionRequest } from '../features';
-import { createConnectionRequestResolver } from './resolvers/create-connection-request';
+import {
+    CreateConnectionRequest,
+    UpdateConnectionRequestStatus,
+} from '../features';
+import {
+    createConnectionRequestResolver,
+    updateConnectionRequestStatusResolver,
+} from './resolvers';
 
 export const router = trpc
     .router<Context>()
@@ -9,4 +15,9 @@ export const router = trpc
         input: CreateConnectionRequest.inputSchema,
         output: CreateConnectionRequest.outputSchema,
         resolve: createConnectionRequestResolver,
+    })
+    .mutation(UpdateConnectionRequestStatus.TRPC_ROUTE, {
+        input: UpdateConnectionRequestStatus.inputSchema,
+        output: UpdateConnectionRequestStatus.outputSchema,
+        resolve: updateConnectionRequestStatusResolver,
     });

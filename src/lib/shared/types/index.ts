@@ -24,3 +24,4 @@ export * from './provider-profile';
 export * from './provider-supervisor';
 export * from './accepted-insurance';
 export * from './provider-availability';
+export * from './connection-request';

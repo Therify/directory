@@ -1,5 +1,5 @@
 import { Chip } from '@mui/material';
-import { styled, Theme, useTheme } from '@mui/material/styles';
+import { styled, SxProps, Theme, useTheme } from '@mui/material/styles';
 import {
     CSSProperties,
     JSXElementConstructor,
@@ -14,14 +14,14 @@ export const BADGE_SIZE = {
     LARGE: 'large',
 } as const;
 
-export type BadgeSize = typeof BADGE_SIZE[keyof typeof BADGE_SIZE];
+export type BadgeSize = (typeof BADGE_SIZE)[keyof typeof BADGE_SIZE];
 
 export const BADGE_TYPE = {
     CONTAINED: 'contained',
     OUTLINED: 'outlined',
 } as const;
 
-export type BadgeType = typeof BADGE_TYPE[keyof typeof BADGE_TYPE];
+export type BadgeType = (typeof BADGE_TYPE)[keyof typeof BADGE_TYPE];
 
 export const BADGE_COLOR = {
     PRIMARY: 'primary',
@@ -33,7 +33,7 @@ export const BADGE_COLOR = {
     ERROR: 'error',
 } as const;
 
-export type BadgeColor = typeof BADGE_COLOR[keyof typeof BADGE_COLOR];
+export type BadgeColor = (typeof BADGE_COLOR)[keyof typeof BADGE_COLOR];
 
 export const TEST_IDS = {
     BADGE: 'badge',
@@ -45,6 +45,7 @@ interface BadgeProps {
     type?: BadgeType;
     icon?: ReactElement<unknown, string | JSXElementConstructor<unknown>>;
     style?: CSSProperties;
+    sx?: SxProps<Theme>;
 }
 
 const getBadgeSize = (size: BadgeSize, theme: Theme) => {
@@ -173,6 +174,7 @@ export const Badge = ({
     icon,
     style,
     children,
+    sx,
 }: PropsWithChildren<BadgeProps>) => {
     const theme = useTheme();
     const colorStyles = getBadgeColor({ color, type, theme });
@@ -185,11 +187,12 @@ export const Badge = ({
             label={children}
             iconColor={colorStyles.color}
             iconSize={sizeStyles.fontSize}
-            style={{
+            sx={{
                 ...colorStyles,
                 ...sizeStyles,
-                ...style,
+                ...sx,
             }}
+            style={style}
         />
     );
 };

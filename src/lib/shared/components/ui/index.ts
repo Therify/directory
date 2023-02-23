@@ -32,7 +32,7 @@ export * from './Layout';
 export { TherifyIcon, TherifyLogo } from './Logo';
 export { List, TEST_IDS as LIST_TEST_IDS } from './List';
 export { ListItem } from './ListItem';
-export { Modal, TEST_IDS as MODAL_TEST_IDS } from './Modal';
+export { Modal, DisplayModal, TEST_IDS as MODAL_TEST_IDS } from './Modal';
 export * from './Navigation';
 export { PricingTable } from './PricingTable';
 export type { PricingTableFeature } from './PricingTable';

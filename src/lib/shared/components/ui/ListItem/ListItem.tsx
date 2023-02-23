@@ -18,10 +18,11 @@ export const ListItem = ({
     rightSlot,
     children,
     onClick,
+    ...listItemProps
 }: PropsWithChildren<ListItemProps & MuiListItemProps>) => {
     const isClickable = Boolean(onClick);
     return (
-        <Item onClick={() => onClick?.()}>
+        <Item onClick={() => onClick?.()} {...listItemProps}>
             <InnerItem isClickable={isClickable}>
                 {leftSlot && <LeftSlot>{leftSlot}</LeftSlot>}
                 <ContentWrapper>{children}</ContentWrapper>
