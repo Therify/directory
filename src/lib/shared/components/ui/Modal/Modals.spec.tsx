@@ -1,7 +1,7 @@
 import { fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithTheme } from '../../fixtures/renderWithTheme';
-import { Modal, TEST_IDS } from './index';
+import { Modal, TEST_IDS } from './Modal';
 
 describe('Modal', () => {
     it('renders when open', () => {

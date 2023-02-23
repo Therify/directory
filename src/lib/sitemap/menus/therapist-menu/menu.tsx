@@ -1,5 +1,6 @@
 import {
-    //  DASHBOARD, CLIENTS,
+    //  DASHBOARD,
+    CLIENTS,
     PROFILE_EDITOR,
 } from './links';
 import {
@@ -10,7 +11,8 @@ import {
 
 export const THERAPIST_MAIN_MENU = [
     // DASHBOARD,
-    // CLIENTS,
+    // TODO [feat:provider-clients-page]: Remove this when ready for prod
+    ...(process.env.NODE_ENV === 'development' ? [CLIENTS] : []),
     PROFILE_EDITOR,
 ] as const;
 

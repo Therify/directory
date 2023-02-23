@@ -18,7 +18,7 @@ interface BaseModalProps {
     postBodySlot?: ReactNode;
     title?: string;
     message?: string;
-    alignContenCenter?: boolean;
+    alignContentCenter?: boolean;
     showCloseButton?: boolean;
     closeButtonDisabled?: boolean;
     fullWidthButtons?: boolean;
@@ -95,7 +95,7 @@ export const Modal = ({
     onClose,
     allowBackdropClose = true,
     style,
-    alignContenCenter,
+    alignContentCenter,
     showCloseButton = true,
     closeButtonDisabled,
     primaryButtonText,
@@ -115,7 +115,7 @@ export const Modal = ({
     hideBackdrop,
 }: ModalProps) => {
     const theme = useTheme();
-    const horizontalAlignment = alignContenCenter ? 'center' : 'flex-start';
+    const horizontalAlignment = alignContentCenter ? 'center' : 'flex-start';
     const isPrimaryButton = Boolean(primaryButtonText && primaryButtonOnClick);
     const isSecondaryButton = Boolean(
         secondaryButtonText && secondaryButtonOnClick
@@ -158,7 +158,7 @@ export const Modal = ({
                         {headerSlot}
                     </Box>
                 )}
-                <Box textAlign={alignContenCenter ? 'center' : 'left'}>
+                <Box textAlign={alignContentCenter ? 'center' : 'left'}>
                     {title && (
                         <Paragraph
                             data-testid={TEST_IDS.TITLE}

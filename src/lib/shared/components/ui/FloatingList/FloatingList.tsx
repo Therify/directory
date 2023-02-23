@@ -47,8 +47,6 @@ export const FloatingList = ({
             <IconButton
                 type={BUTTON_TYPE.TEXT}
                 color="info"
-                aria-label="Navigation options"
-                aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={handleOpenNavMenu}
             >
