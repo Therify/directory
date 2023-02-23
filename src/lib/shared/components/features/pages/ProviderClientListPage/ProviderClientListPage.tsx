@@ -30,6 +30,7 @@ import {
     PreviewRounded,
 } from '@mui/icons-material';
 import { ConnectionStatus, ProfileType } from '@prisma/client';
+import { format } from 'date-fns';
 
 const REIMBURSEMENT_REQUEST_URL =
     'https://hipaa.jotform.com/221371005584146?' as const;
@@ -52,6 +53,7 @@ export function ProviderClientListPage({
     onDeclineConnectionRequest,
 }: ProviderClientListPageProps) {
     const theme = useTheme();
+    console.log(connectionRequests);
     const isCoach = designation === ProfileType.coach;
     const isSmallScreen = useMediaQuery((theme: Theme) =>
         theme.breakpoints.down('md')
@@ -62,25 +64,29 @@ export function ProviderClientListPage({
     return (
         <PageContainer>
             <Title>Clients</Title>
-            <ListItem sx={{ width: '100%', '& > div': { paddingY: 0 } }}>
-                <ClientListItemContainer paddingBottom={0}>
-                    <CellContainer>
-                        <Caption margin={0}>Name</Caption>
-                    </CellContainer>
-                    <CellContainer>
-                        <Caption margin={0}>Email</Caption>
-                    </CellContainer>
-                    <CellContainer></CellContainer>
-                </ClientListItemContainer>
-            </ListItem>
-            {!hasConnectionRequests && (
-                <Paragraph style={{ color: theme.palette.text.secondary }}>
-                    No clients to show. Your future referrals will appear here!
-                </Paragraph>
-            )}
-            {hasConnectionRequests && (
-                <ClientList>
-                    {connectionRequests.map((connectionRequest) => {
+            <ClientList>
+                <ListItem sx={{ width: '100%', '& > div': { paddingY: 0 } }}>
+                    <ClientListItemContainer paddingBottom={0}>
+                        <CellContainer>
+                            <Caption margin={0}>Name</Caption>
+                        </CellContainer>
+                        <CellContainer>
+                            <Caption margin={0}>Email</Caption>
+                        </CellContainer>
+                        <CellContainer>
+                            <Caption margin={0}>Account</Caption>
+                        </CellContainer>
+                        <CellContainer></CellContainer>
+                    </ClientListItemContainer>
+                </ListItem>
+                {!hasConnectionRequests && (
+                    <Paragraph style={{ color: theme.palette.text.secondary }}>
+                        No clients to show. Your future referrals will appear
+                        here!
+                    </Paragraph>
+                )}
+                {hasConnectionRequests &&
+                    connectionRequests.map((connectionRequest) => {
                         return (
                             <ClientListItem
                                 key={connectionRequest.member.id}
@@ -109,8 +115,7 @@ export function ProviderClientListPage({
                             />
                         );
                     })}
-                </ClientList>
-            )}
+            </ClientList>
             {targetConnection && (
                 <DisplayModal
                     isOpen
@@ -123,11 +128,33 @@ export function ProviderClientListPage({
                     }
                 >
                     <Paragraph bold size={PARAGRAPH_SIZE.LARGE}>
+                        Account
+                    </Paragraph>
+                    <Paragraph size={PARAGRAPH_SIZE.SMALL}>
+                        {targetConnection.member.account.name}
+                    </Paragraph>
+                    <Paragraph bold size={PARAGRAPH_SIZE.LARGE}>
+                        Therify Coverage
+                    </Paragraph>
+                    <Paragraph size={PARAGRAPH_SIZE.SMALL}>
+                        {targetConnection.member.plan
+                            ? `${
+                                  targetConnection.member.plan.coveredSessions
+                              } covered sessions through ${format(
+                                  new Date(
+                                      targetConnection.member.plan.endDate
+                                  ),
+                                  'MMMM DD, yyyy'
+                              )}`
+                            : 'No covered sessions'}
+                    </Paragraph>
+                    <Paragraph bold size={PARAGRAPH_SIZE.LARGE}>
                         Contact
                     </Paragraph>
                     <Link
                         href={'mailto:' + targetConnection.member.emailAddress}
                         target="_blank"
+                        sx={{ color: theme.palette.text.secondary }}
                     >
                         <Paragraph size={PARAGRAPH_SIZE.SMALL}>
                             {targetConnection.member.emailAddress}
@@ -238,23 +265,30 @@ const CellContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     flexWrap: 'wrap',
+    paddingRight: theme.spacing(2),
     '&:nth-of-type(1)': {
         flex: 1,
         [theme.breakpoints.up('md')]: {
-            width: '30%',
+            width: '25%',
         },
     },
     '&:nth-of-type(2)': {
         display: 'none',
         [theme.breakpoints.up('md')]: {
-            width: '30%',
+            width: '25%',
             display: 'flex',
         },
     },
     '&:nth-of-type(3)': {
-        width: '40%',
+        display: 'none',
+        [theme.breakpoints.up('md')]: {
+            width: '25%',
+            display: 'flex',
+        },
+    },
+    '&:nth-of-type(4)': {
+        width: '25%',
         justifyContent: 'flex-end',
-        paddingLeft: theme.spacing(2),
     },
 }));
 
@@ -273,7 +307,10 @@ const ClientListItem = ({
     onView?: () => void;
     onOpenChat?: () => void;
 }) => {
-    const isPending = connectionRequest.connectionStatus === 'pending';
+    const isPending =
+        connectionRequest.connectionStatus === ConnectionStatus.pending;
+    const isAccepted =
+        connectionRequest.connectionStatus === ConnectionStatus.accepted;
     const mobileActions = [
         ...(isPending
             ? [
@@ -293,7 +330,7 @@ const ClientListItem = ({
             ? [
                   {
                       icon: <PreviewRounded />,
-                      text: 'View',
+                      text: ' View Member Details',
                       onClick: onView,
                   },
               ]
@@ -310,19 +347,23 @@ const ClientListItem = ({
     ];
     const actionList = [
         ...(isSmallScreen ? mobileActions : []),
-        {
-            text: 'Reimbursement Request',
-            icon: <PaidOutlined />,
-            onClick: () => {
-                window.open(
-                    formatReimbursementRequestUrl(
-                        REIMBURSEMENT_REQUEST_URL,
-                        connectionRequest
-                    ),
-                    '_blank'
-                );
-            },
-        },
+        ...(isAccepted
+            ? [
+                  {
+                      text: 'Reimbursement Request',
+                      icon: <PaidOutlined />,
+                      onClick: () => {
+                          window.open(
+                              formatReimbursementRequestUrl(
+                                  REIMBURSEMENT_REQUEST_URL,
+                                  connectionRequest
+                              ),
+                              '_blank'
+                          );
+                      },
+                  },
+              ]
+            : []),
     ];
 
     return (
@@ -371,6 +412,11 @@ const ClientListItem = ({
                         </Paragraph>
                     </MemberEmailAddress>
                 </CellContainer>
+                <CellContainer>
+                    <Paragraph noMargin>
+                        {connectionRequest.member.account.name}
+                    </Paragraph>
+                </CellContainer>
                 <CellContainer onClick={(e) => e.stopPropagation()}>
                     {!isSmallScreen && (
                         <ActionButtons
@@ -390,22 +436,24 @@ const ClientListItem = ({
                             }}
                         />
                     )}
-                    <FloatingList
-                        sx={{ marginLeft: 2 }}
-                        headerSlot={
-                            isPending &&
-                            isSmallScreen && (
-                                <Badge
-                                    color={BADGE_COLOR.WARNING}
-                                    icon={<PendingOutlined />}
-                                    size={BADGE_SIZE.SMALL}
-                                >
-                                    Pending
-                                </Badge>
-                            )
-                        }
-                        listItems={actionList}
-                    />
+                    {actionList.length > 0 && (
+                        <FloatingList
+                            sx={{ marginLeft: 2 }}
+                            headerSlot={
+                                isPending &&
+                                isSmallScreen && (
+                                    <Badge
+                                        color={BADGE_COLOR.WARNING}
+                                        icon={<PendingOutlined />}
+                                        size={BADGE_SIZE.SMALL}
+                                    >
+                                        Pending
+                                    </Badge>
+                                )
+                            }
+                            listItems={actionList}
+                        />
+                    )}
                 </CellContainer>
             </ClientListItemContainer>
         </ListItem>
@@ -459,7 +507,7 @@ const ActionButtons = ({
                             type="outlined"
                             onClick={onView}
                         >
-                            View
+                            View Member
                         </Button>
                     )}
                     {onOpenChat && (
