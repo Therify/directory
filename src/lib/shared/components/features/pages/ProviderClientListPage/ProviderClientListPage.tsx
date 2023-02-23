@@ -178,13 +178,14 @@ export function ProviderClientListPage({
 /* ---------------------------- Styled components --------------------------- */
 
 const PageContainer = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(10),
     width: '100%',
 }));
 
 const Title = styled(H1)(({ theme }) => ({
     ...theme.typography.h3,
     marginBottom: theme.spacing(1),
+    marginTop: theme.spacing(10),
+    marginLeft: theme.spacing(5),
 }));
 
 const ClientList = styled(List)(({ theme }) => ({
