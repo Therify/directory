@@ -30,10 +30,6 @@ export const factory =
         }
 
         return {
-            profile: ProviderProfile.validate({
-                ...providerProfile,
-                practiceStartDate:
-                    providerProfile.practiceStartDate?.toISOString(),
-            }),
+            profile: ProviderProfile.validate(providerProfile),
         };
     };
