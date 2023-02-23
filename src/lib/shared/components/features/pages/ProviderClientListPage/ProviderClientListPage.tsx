@@ -39,11 +39,19 @@ const REIMBURSEMENT_REQUEST_URL =
 interface ProviderClientListPageProps {
     connectionRequests: ConnectionRequest.Type[];
     designation: ProfileType;
+    onAcceptConnectionRequest: (
+        connectionRequest: ConnectionRequest.Type
+    ) => void;
+    onDeclineConnectionRequest: (
+        connectionRequest: ConnectionRequest.Type
+    ) => void;
 }
 
 export function ProviderClientListPage({
     connectionRequests,
     designation,
+    onAcceptConnectionRequest,
+    onDeclineConnectionRequest,
 }: ProviderClientListPageProps) {
     const isCoach = designation === ProfileType.coach;
     const isSmallScreen = useMediaQuery((theme: Theme) =>
@@ -52,19 +60,6 @@ export function ProviderClientListPage({
     const hasConnectionRequests = connectionRequests.length > 0;
     const [targetConnection, setTargetConnection] =
         useState<ConnectionRequest.Type>();
-    const [confirmAction, setConfirmAction] = useState<'accept' | 'decline'>();
-    const [declineReason, setDeclineReason] = useState('');
-    const setUpConfirmationModal = (
-        action: 'accept' | 'decline',
-        target: ConnectionRequest.Type
-    ) => {
-        setTargetConnection(target);
-        setConfirmAction(action);
-    };
-    const clearConfirmationModal = () => {
-        setTargetConnection(undefined);
-        setConfirmAction(undefined);
-    };
     return (
         <PageContainer>
             <Title>Clients</Title>
@@ -91,14 +86,10 @@ export function ProviderClientListPage({
                                 isSmallScreen={isSmallScreen}
                                 connectionRequest={connectionRequest}
                                 onAccept={() =>
-                                    setUpConfirmationModal(
-                                        'accept',
-                                        connectionRequest
-                                    )
+                                    onAcceptConnectionRequest(connectionRequest)
                                 }
                                 onDecline={() =>
-                                    setUpConfirmationModal(
-                                        'decline',
+                                    onDeclineConnectionRequest(
                                         connectionRequest
                                     )
                                 }
@@ -119,15 +110,28 @@ export function ProviderClientListPage({
                     })}
                 </ClientList>
             )}
-            {!confirmAction && targetConnection && (
+            {targetConnection && (
                 <DisplayModal
                     isOpen
                     title={`${targetConnection.member.givenName} ${targetConnection.member.surname}`}
-                    onClose={clearConfirmationModal}
+                    onClose={() => setTargetConnection(undefined)}
                     fullWidthButtons
                     secondaryButtonText="Close"
-                    secondaryButtonOnClick={clearConfirmationModal}
+                    secondaryButtonOnClick={() =>
+                        setTargetConnection(undefined)
+                    }
                 >
+                    <Paragraph bold size={PARAGRAPH_SIZE.LARGE}>
+                        Contact
+                    </Paragraph>
+                    <Link
+                        href={'mailto:' + targetConnection.member.emailAddress}
+                        target="_blank"
+                    >
+                        <Paragraph size={PARAGRAPH_SIZE.SMALL}>
+                            {targetConnection.member.emailAddress}
+                        </Paragraph>
+                    </Link>
                     <Paragraph bold size={PARAGRAPH_SIZE.LARGE}>
                         Located in
                     </Paragraph>
@@ -154,50 +158,17 @@ export function ProviderClientListPage({
                     <Paragraph size={PARAGRAPH_SIZE.SMALL}>
                         {targetConnection.member.memberProfile.goals.join(', ')}
                     </Paragraph>
+                    {targetConnection.connectionMessage && (
+                        <>
+                            <Paragraph bold size={PARAGRAPH_SIZE.LARGE}>
+                                Message
+                            </Paragraph>
+                            <Paragraph size={PARAGRAPH_SIZE.SMALL}>
+                                {targetConnection.connectionMessage}
+                            </Paragraph>
+                        </>
+                    )}
                 </DisplayModal>
-            )}
-
-            {confirmAction && targetConnection && (
-                <Modal
-                    isOpen
-                    title={
-                        confirmAction === 'accept'
-                            ? 'Accept new client?'
-                            : 'Decline new client'
-                    }
-                    message={
-                        confirmAction === 'accept'
-                            ? `Accepting ${targetConnection.member.givenName} will notify them that you are ready to start working together.`
-                            : undefined
-                    }
-                    onClose={clearConfirmationModal}
-                    fullWidthButtons
-                    primaryButtonColor={
-                        confirmAction === 'accept' ? 'primary' : 'error'
-                    }
-                    primaryButtonText={
-                        confirmAction === 'accept' ? 'Accept' : 'Decline'
-                    }
-                    primaryButtonOnClick={() => {
-                        console.log('TODO: implement accept/decline');
-                        clearConfirmationModal();
-                    }}
-                    secondaryButtonText="Cancel"
-                    secondaryButtonOnClick={clearConfirmationModal}
-                    postBodySlot={
-                        confirmAction === 'decline' && (
-                            <Textarea
-                                fullWidth
-                                label="Reason for declining (optional)"
-                                placeholder="Let them know why you may not be a great fit at this time"
-                                value={declineReason}
-                                onChange={(e) =>
-                                    setDeclineReason(e.target.value)
-                                }
-                            />
-                        )
-                    }
-                />
             )}
         </PageContainer>
     );

@@ -34,7 +34,7 @@ export const schema = z.object({
             .nullable(),
     }),
     providerProfile: z.object({
-        id: ProviderProfile.schema.shape.id,
+        id: z.string(),
         givenName: ProviderProfile.schema.shape.givenName,
         surname: ProviderProfile.schema.shape.surname,
         practice: z.object({
