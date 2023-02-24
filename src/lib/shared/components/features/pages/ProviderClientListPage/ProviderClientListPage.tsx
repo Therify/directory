@@ -62,7 +62,18 @@ export function ProviderClientListPage({
         useState<ConnectionRequest.Type>();
     return (
         <PageContainer>
-            <Title>Clients</Title>
+            <Box
+                marginBottom={theme.spacing(1)}
+                marginTop={theme.spacing(10)}
+                marginX={theme.spacing(5)}
+            >
+                <Title>Clients</Title>
+                {hasConnectionRequests && (
+                    <Paragraph color="text-secondary">
+                        Select a client to see their plan details
+                    </Paragraph>
+                )}
+            </Box>
             <ClientList>
                 <ListItem sx={{ width: '100%', '& > div': { paddingY: 0 } }}>
                     <ClientListItemContainer paddingBottom={0}>
@@ -216,9 +227,6 @@ const PageContainer = styled(Box)(({ theme }) => ({
 
 const Title = styled(H1)(({ theme }) => ({
     ...theme.typography.h3,
-    marginBottom: theme.spacing(1),
-    marginTop: theme.spacing(10),
-    marginLeft: theme.spacing(5),
 }));
 
 const ClientList = styled(List)(({ theme }) => ({
