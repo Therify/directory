@@ -86,7 +86,7 @@ export function ProviderClientListPage({
                             }}
                         >
                             No clients to show. Your future referrals will
-                            appear here!
+                            appear here.
                         </Paragraph>
                     </Box>
                 )}
