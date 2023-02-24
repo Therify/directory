@@ -53,7 +53,6 @@ export function ProviderClientListPage({
     onDeclineConnectionRequest,
 }: ProviderClientListPageProps) {
     const theme = useTheme();
-    console.log(connectionRequests);
     const isCoach = designation === ProfileType.coach;
     const isSmallScreen = useMediaQuery((theme: Theme) =>
         theme.breakpoints.down('md')
