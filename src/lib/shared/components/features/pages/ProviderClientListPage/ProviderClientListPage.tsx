@@ -134,19 +134,20 @@ export function ProviderClientListPage({
                         {targetConnection.member.account.name}
                     </Paragraph>
                     <Paragraph bold size={PARAGRAPH_SIZE.LARGE}>
-                        Therify Coverage
+                        Payment
                     </Paragraph>
                     <Paragraph size={PARAGRAPH_SIZE.SMALL}>
-                        {targetConnection.member.plan
-                            ? `${
+                        {targetConnection.member.plan &&
+                        targetConnection.member.plan.coveredSessions > 0
+                            ? `${targetConnection.member.givenName} has ${
                                   targetConnection.member.plan.coveredSessions
-                              } covered sessions through ${format(
+                              } covered sessions from Therify until ${format(
                                   new Date(
                                       targetConnection.member.plan.endDate
                                   ),
-                                  'MMMM DD, yyyy'
+                                  'MMMM dd, yyyy'
                               )}`
-                            : 'No covered sessions'}
+                            : 'No covered sessions. They will likely be using their insurance benefit to cover session costs or will pay out of pocket.'}
                     </Paragraph>
                     <Paragraph bold size={PARAGRAPH_SIZE.LARGE}>
                         Contact
