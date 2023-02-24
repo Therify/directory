@@ -79,10 +79,16 @@ export function ProviderClientListPage({
                     </ClientListItemContainer>
                 </ListItem>
                 {!hasConnectionRequests && (
-                    <Paragraph style={{ color: theme.palette.text.secondary }}>
-                        No clients to show. Your future referrals will appear
-                        here!
-                    </Paragraph>
+                    <Box margin={5}>
+                        <Paragraph
+                            style={{
+                                color: theme.palette.text.secondary,
+                            }}
+                        >
+                            No clients to show. Your future referrals will
+                            appear here!
+                        </Paragraph>
+                    </Box>
                 )}
                 {hasConnectionRequests &&
                     connectionRequests.map((connectionRequest) => {
