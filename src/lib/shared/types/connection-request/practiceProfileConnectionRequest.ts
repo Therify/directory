@@ -3,7 +3,10 @@ import { convertNestedDatesToISOString } from '../../utils';
 import { schema as connectionRequestSchema } from './connectionRequest';
 
 export const schema = z.object({
-    providerProfile: connectionRequestSchema.shape.providerProfile,
+    practice: connectionRequestSchema.shape.providerProfile.shape.practice,
+    providerProfile: connectionRequestSchema.shape.providerProfile.omit({
+        practice: true,
+    }),
     connectionRequests: connectionRequestSchema
         .omit({ providerProfile: true })
         .array(),
