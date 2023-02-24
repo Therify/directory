@@ -159,14 +159,17 @@ export const DisplayModal = ({
                 <Box
                     flex={1}
                     textAlign={alignContentCenter ? 'center' : 'left'}
+                    overflow="hidden"
+                    display="flex"
+                    flexDirection="column"
                 >
                     {title && (
                         <>
                             <H4 data-testid={TEST_IDS.TITLE}>{title}</H4>
-                            <Divider />
+                            <Divider style={{ marginBottom: 0 }} />
                         </>
                     )}
-                    <Box flex={1} overflow="auto">
+                    <Box flex={1} overflow="auto" paddingY={2}>
                         {children}
                     </Box>
                 </Box>
