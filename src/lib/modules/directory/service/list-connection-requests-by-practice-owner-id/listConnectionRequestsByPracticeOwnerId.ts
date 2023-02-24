@@ -1,14 +1,12 @@
 import { ListConnectionRequestsByPracticeOwnerId } from '@/lib/modules/directory/features';
-import { PracticeProfileConnectionRequest } from '@/lib/shared/types';
+import { PracticeProfileConnectionRequests } from '@/lib/shared/types';
 import { DirectoryServiceParams } from '../params';
 
 export function factory({ prisma }: DirectoryServiceParams) {
     return async function listConnectionRequestsByProviderId({
         practiceOwnerId,
         status,
-    }: ListConnectionRequestsByPracticeOwnerId.Input): Promise<
-        PracticeProfileConnectionRequest.Type[]
-    > {
+    }: ListConnectionRequestsByPracticeOwnerId.Input): Promise<PracticeProfileConnectionRequests.Type> {
         const practice = await prisma.practice.findFirstOrThrow({
             where: {
                 practiceOwnerId,
@@ -106,12 +104,15 @@ export function factory({ prisma }: DirectoryServiceParams) {
             };
         }, {});
 
-        return practiceProfiles.map(({ profile: providerProfile }) =>
-            PracticeProfileConnectionRequest.validate({
-                providerProfile,
-                practice,
-                connectionRequests: connectionsByProfileId[providerProfile.id],
-            })
-        );
+        return PracticeProfileConnectionRequests.validate({
+            practice,
+            profileConnectionRequests: practiceProfiles.map(
+                ({ profile: providerProfile }) => ({
+                    providerProfile,
+                    connectionRequests:
+                        connectionsByProfileId[providerProfile.id],
+                })
+            ),
+        });
     };
 }

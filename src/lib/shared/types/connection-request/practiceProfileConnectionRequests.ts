@@ -2,14 +2,17 @@ import * as z from 'zod';
 import { convertNestedDatesToISOString } from '../../utils';
 import { schema as connectionRequestSchema } from './connectionRequest';
 
-export const schema = z.object({
-    practice: connectionRequestSchema.shape.providerProfile.shape.practice,
+const profileConnectionRequests = z.object({
     providerProfile: connectionRequestSchema.shape.providerProfile.omit({
         practice: true,
     }),
     connectionRequests: connectionRequestSchema
         .omit({ providerProfile: true })
         .array(),
+});
+export const schema = z.object({
+    practice: connectionRequestSchema.shape.providerProfile.shape.practice,
+    profileConnectionRequests: profileConnectionRequests.array(),
 });
 
 export type Type = z.infer<typeof schema>;

@@ -1,8 +1,8 @@
-import { PracticeProfileConnectionRequest } from '@/lib/shared/types';
+import { PracticeProfileConnectionRequests } from '@/lib/shared/types';
 import * as z from 'zod';
 
 export const schema = z.object({
-    connectionRequests: PracticeProfileConnectionRequest.schema.array(),
+    connectionRequests: PracticeProfileConnectionRequests.schema.array(),
     errors: z.array(z.string()),
 });
 

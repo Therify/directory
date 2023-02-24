@@ -1,2 +1,2 @@
 export * as ConnectionRequest from './connectionRequest';
-export * as PracticeProfileConnectionRequest from './practiceProfileConnectionRequest';
+export * as PracticeProfileConnectionRequests from './practiceProfileConnectionRequests';
