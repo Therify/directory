@@ -11,7 +11,7 @@ import { GetProviderTherifyUser } from '../../get-provider-therify-user';
 import { ProvidersServiceParams } from '../../params';
 
 export interface PracticeClientsPageProps {
-    connectionRequests: PracticeProfileConnectionRequests.Type;
+    practiceConnectionRequests: PracticeProfileConnectionRequests.Type;
     user: TherifyUser.TherifyUser;
 }
 
@@ -35,7 +35,7 @@ export const factory = (params: ProvidersServiceParams) => {
             };
         }
         const getUserDetails = GetProviderTherifyUser.factory(params);
-        const [{ user }, connectionRequests] = await Promise.all([
+        const [{ user }, practiceConnectionRequests] = await Promise.all([
             getUserDetails({
                 userId: session.user.sub,
             }),
@@ -53,7 +53,7 @@ export const factory = (params: ProvidersServiceParams) => {
             };
         }
         const props: PracticeClientsPageProps = {
-            connectionRequests,
+            practiceConnectionRequests,
             user,
         };
         return {

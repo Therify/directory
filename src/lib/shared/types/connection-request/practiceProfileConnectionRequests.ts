@@ -1,11 +1,17 @@
 import * as z from 'zod';
 import { convertNestedDatesToISOString } from '../../utils';
+import { ProviderProfile } from '../provider-profile';
 import { schema as connectionRequestSchema } from './connectionRequest';
 
 const profileConnectionRequests = z.object({
-    providerProfile: connectionRequestSchema.shape.providerProfile.omit({
-        practice: true,
-    }),
+    providerProfile: connectionRequestSchema.shape.providerProfile
+        .omit({
+            practice: true,
+        })
+        .extend({
+            profileImageUrl: ProviderProfile.schema.shape.profileImageUrl,
+            designation: ProviderProfile.schema.shape.designation,
+        }),
     connectionRequests: connectionRequestSchema
         .omit({ providerProfile: true })
         .array(),
