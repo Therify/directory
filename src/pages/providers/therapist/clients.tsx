@@ -11,8 +11,13 @@ import { UpdateConnectionRequestStatus } from '@/lib/modules/directory/features'
 import { useContext, useState } from 'react';
 import { Alerts } from '@/lib/modules/alerts/context';
 import { ConnectionRequest } from '@/lib/shared/types';
-import { CenteredContainer, Modal, Textarea } from '@/lib/shared/components/ui';
-import { CircularProgress } from '@mui/material';
+import {
+    CenteredContainer,
+    Modal,
+    Textarea,
+    Divider,
+} from '@/lib/shared/components/ui';
+import { CircularProgress, Box } from '@mui/material';
 
 export const getServerSideProps = RBAC.requireTherapistAuth(
     withPageAuthRequired({
@@ -180,23 +185,26 @@ export default function TherapistClientsPage({
                                 <CircularProgress />
                             </CenteredContainer>
                         ) : (
-                            <Textarea
-                                fullWidth
-                                label={
-                                    confirmAction === 'accept'
-                                        ? 'Share any additional details here (optional)'
-                                        : 'Reason for declining (optional)'
-                                }
-                                placeholder={
-                                    confirmAction === 'accept'
-                                        ? 'Let them know about any unique next steps'
-                                        : 'Let them know why you cannot accept at this time'
-                                }
-                                value={updateMessage}
-                                onChange={(e) =>
-                                    setUpdateMessage(e.target.value)
-                                }
-                            />
+                            <Box width="100%">
+                                {confirmAction === 'accept' && <Divider />}
+                                <Textarea
+                                    fullWidth
+                                    label={
+                                        confirmAction === 'accept'
+                                            ? 'Share any additional details here (optional)'
+                                            : 'Reason for declining (optional)'
+                                    }
+                                    placeholder={
+                                        confirmAction === 'accept'
+                                            ? 'Let them know about any unique next steps'
+                                            : 'Let them know why you cannot accept at this time'
+                                    }
+                                    value={updateMessage}
+                                    onChange={(e) =>
+                                        setUpdateMessage(e.target.value)
+                                    }
+                                />
+                            </Box>
                         )
                     }
                 />

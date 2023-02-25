@@ -274,7 +274,7 @@ export default function PracticeClientsPage({
                                 </CenteredContainer>
                             ) : (
                                 <Box width="100%">
-                                    <Divider />
+                                    {confirmAction === 'accept' && <Divider />}
                                     <Textarea
                                         fullWidth
                                         label={
