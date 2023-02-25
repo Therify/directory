@@ -60,6 +60,60 @@ export function PracticeClientListPage({
     onDeclineConnectionRequest,
 }: PracticeClientListPageProps) {
     const { profileConnectionRequests, practice } = practiceConnectionRequests;
+    const { pendingConnectionRequests, acceptedConnectionRequests } =
+        profileConnectionRequests.reduce<{
+            pendingConnectionRequests: PracticeProfileConnectionRequests.Type['profileConnectionRequests'];
+            acceptedConnectionRequests: PracticeProfileConnectionRequests.Type['profileConnectionRequests'];
+        }>(
+            (acc, profile) => {
+                const { connectionRequests } = profile;
+                const pendingConnectionRequest: typeof connectionRequests = [];
+                const acceptedConnectionRequest: typeof connectionRequests = [];
+
+                connectionRequests.forEach((connectionRequest) => {
+                    if (
+                        connectionRequest.connectionStatus ===
+                        ConnectionStatus.pending
+                    ) {
+                        pendingConnectionRequest.push(connectionRequest);
+                    }
+                    if (
+                        connectionRequest.connectionStatus ===
+                        ConnectionStatus.accepted
+                    ) {
+                        acceptedConnectionRequest.push(connectionRequest);
+                    }
+                });
+
+                return {
+                    pendingConnectionRequests: [
+                        ...acc.pendingConnectionRequests,
+                        ...(pendingConnectionRequest.length > 0
+                            ? [
+                                  {
+                                      ...profile,
+                                      connectionRequests:
+                                          pendingConnectionRequest,
+                                  },
+                              ]
+                            : []),
+                    ],
+                    acceptedConnectionRequests: [
+                        ...acc.acceptedConnectionRequests,
+                        ...(acceptedConnectionRequest.length > 0
+                            ? [
+                                  {
+                                      ...profile,
+                                      connectionRequests:
+                                          acceptedConnectionRequest,
+                                  },
+                              ]
+                            : []),
+                    ],
+                };
+            },
+            { pendingConnectionRequests: [], acceptedConnectionRequests: [] }
+        );
     const theme = useTheme();
     const isSmallScreen = useMediaQuery((theme: Theme) =>
         theme.breakpoints.down('md')
@@ -109,67 +163,92 @@ export function PracticeClientListPage({
                     </Box>
                 )}
                 {hasConnectionRequests &&
-                    profileConnectionRequests.map((profileConnection) => {
-                        const { connectionRequests, providerProfile } =
-                            profileConnection;
-                        const isCoach =
-                            providerProfile.designation === ProfileType.coach;
-                        return (
-                            <div key={providerProfile.id}>
-                                {isSmallScreen && (
-                                    <ListItem disablePadding>
-                                        <H3
-                                            style={{
-                                                margin: 0,
-                                                fontSize: '1.25rem',
-                                            }}
-                                        >
-                                            {providerProfile.givenName}{' '}
-                                            {providerProfile.surname}
-                                        </H3>
-                                    </ListItem>
-                                )}
-                                {connectionRequests.map((connectionRequest) => (
-                                    <ClientListItem
-                                        key={connectionRequest.member.id}
-                                        providerProfile={providerProfile}
-                                        practice={practice}
-                                        isSmallScreen={isSmallScreen}
-                                        connectionRequest={connectionRequest}
-                                        onAccept={() =>
-                                            onAcceptConnectionRequest({
-                                                memberId:
-                                                    connectionRequest.member.id,
-                                                profileId: providerProfile.id,
-                                            })
-                                        }
-                                        onDecline={() =>
-                                            onDeclineConnectionRequest({
-                                                memberId:
-                                                    connectionRequest.member.id,
-                                                profileId: providerProfile.id,
-                                            })
-                                        }
-                                        onView={() =>
-                                            setTargetConnection(
-                                                connectionRequest
+                    [pendingConnectionRequests, acceptedConnectionRequests].map(
+                        (requests) =>
+                            requests.map((profileConnection) => {
+                                const { connectionRequests, providerProfile } =
+                                    profileConnection;
+                                const isCoach =
+                                    providerProfile.designation ===
+                                    ProfileType.coach;
+                                return (
+                                    <div key={providerProfile.id}>
+                                        {isSmallScreen && (
+                                            <ListItem disablePadding>
+                                                <H3
+                                                    style={{
+                                                        margin: 0,
+                                                        fontSize: '1.25rem',
+                                                    }}
+                                                >
+                                                    {providerProfile.givenName}{' '}
+                                                    {providerProfile.surname}
+                                                </H3>
+                                            </ListItem>
+                                        )}
+                                        {connectionRequests.map(
+                                            (connectionRequest) => (
+                                                <ClientListItem
+                                                    key={
+                                                        connectionRequest.member
+                                                            .id
+                                                    }
+                                                    providerProfile={
+                                                        providerProfile
+                                                    }
+                                                    practice={practice}
+                                                    isSmallScreen={
+                                                        isSmallScreen
+                                                    }
+                                                    connectionRequest={
+                                                        connectionRequest
+                                                    }
+                                                    onAccept={() =>
+                                                        onAcceptConnectionRequest(
+                                                            {
+                                                                memberId:
+                                                                    connectionRequest
+                                                                        .member
+                                                                        .id,
+                                                                profileId:
+                                                                    providerProfile.id,
+                                                            }
+                                                        )
+                                                    }
+                                                    onDecline={() =>
+                                                        onDeclineConnectionRequest(
+                                                            {
+                                                                memberId:
+                                                                    connectionRequest
+                                                                        .member
+                                                                        .id,
+                                                                profileId:
+                                                                    providerProfile.id,
+                                                            }
+                                                        )
+                                                    }
+                                                    onView={() =>
+                                                        setTargetConnection(
+                                                            connectionRequest
+                                                        )
+                                                    }
+                                                    onOpenChat={
+                                                        // TODO: Should practice admins be able to access chat?
+                                                        isCoach
+                                                            ? () => {
+                                                                  console.log(
+                                                                      'TODO: implement chat'
+                                                                  );
+                                                              }
+                                                            : undefined
+                                                    }
+                                                />
                                             )
-                                        }
-                                        onOpenChat={
-                                            // TODO: Should practice admins be able to access chat?
-                                            isCoach
-                                                ? () => {
-                                                      console.log(
-                                                          'TODO: implement chat'
-                                                      );
-                                                  }
-                                                : undefined
-                                        }
-                                    />
-                                ))}
-                            </div>
-                        );
-                    })}
+                                        )}
+                                    </div>
+                                );
+                            })
+                    )}
             </ClientList>
             {targetConnection && (
                 <DisplayModal
