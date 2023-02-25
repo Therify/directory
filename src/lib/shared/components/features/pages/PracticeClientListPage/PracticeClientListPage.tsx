@@ -119,8 +119,11 @@ export function PracticeClientListPage({
         theme.breakpoints.down('md')
     );
     const hasConnectionRequests = profileConnectionRequests.length > 0;
-    const [targetConnection, setTargetConnection] =
-        useState<ProfileConnectionRequest>();
+    const [targetConnection, setTargetConnection] = useState<
+        ProfileConnectionRequest & {
+            providerProfile: ConnectionProviderProfile;
+        }
+    >();
     return (
         <PageContainer>
             <Box
@@ -129,11 +132,6 @@ export function PracticeClientListPage({
                 marginX={theme.spacing(5)}
             >
                 <Title>Clients</Title>
-                {hasConnectionRequests && (
-                    <Paragraph color="text-secondary">
-                        Select a client to see their plan details
-                    </Paragraph>
-                )}
             </Box>
             <ClientList>
                 <ListItem sx={{ width: '100%', '& > div': { paddingY: 0 } }}>
@@ -164,90 +162,109 @@ export function PracticeClientListPage({
                 )}
                 {hasConnectionRequests &&
                     [pendingConnectionRequests, acceptedConnectionRequests].map(
-                        (requests) =>
-                            requests.map((profileConnection) => {
-                                const { connectionRequests, providerProfile } =
-                                    profileConnection;
-                                const isCoach =
-                                    providerProfile.designation ===
-                                    ProfileType.coach;
-                                return (
-                                    <div key={providerProfile.id}>
-                                        {isSmallScreen && (
-                                            <ListItem disablePadding>
-                                                <H3
-                                                    style={{
-                                                        margin: 0,
-                                                        fontSize: '1.25rem',
-                                                    }}
-                                                >
-                                                    {providerProfile.givenName}{' '}
-                                                    {providerProfile.surname}
-                                                </H3>
-                                            </ListItem>
-                                        )}
-                                        {connectionRequests.map(
-                                            (connectionRequest) => (
-                                                <ClientListItem
-                                                    key={
-                                                        connectionRequest.member
-                                                            .id
-                                                    }
-                                                    providerProfile={
-                                                        providerProfile
-                                                    }
-                                                    practice={practice}
-                                                    isSmallScreen={
-                                                        isSmallScreen
-                                                    }
-                                                    connectionRequest={
-                                                        connectionRequest
-                                                    }
-                                                    onAccept={() =>
-                                                        onAcceptConnectionRequest(
-                                                            {
-                                                                memberId:
-                                                                    connectionRequest
-                                                                        .member
-                                                                        .id,
-                                                                profileId:
-                                                                    providerProfile.id,
+                        (requests, i) => {
+                            const isRequests = requests.length > 0;
+                            const isPendingRequests = i === 0;
+                            return (
+                                <>
+                                    {isPendingRequests && isRequests && (
+                                        <Badge
+                                            color="warning"
+                                            style={{
+                                                margin: theme.spacing(5, 5, 2),
+                                            }}
+                                        >
+                                            Referrals awaiting response
+                                        </Badge>
+                                    )}
+                                    {!isPendingRequests && isRequests && (
+                                        <Badge
+                                            color="neutral-light"
+                                            style={{
+                                                margin: theme.spacing(5, 5, 2),
+                                            }}
+                                        >
+                                            Your Clients
+                                        </Badge>
+                                    )}
+                                    {requests.map((profileConnection) => {
+                                        const {
+                                            connectionRequests,
+                                            providerProfile,
+                                        } = profileConnection;
+                                        const isCoach =
+                                            providerProfile.designation ===
+                                            ProfileType.coach;
+                                        return (
+                                            <div key={providerProfile.id}>
+                                                {connectionRequests.map(
+                                                    (connectionRequest) => (
+                                                        <ClientListItem
+                                                            key={
+                                                                connectionRequest
+                                                                    .member.id
                                                             }
-                                                        )
-                                                    }
-                                                    onDecline={() =>
-                                                        onDeclineConnectionRequest(
-                                                            {
-                                                                memberId:
-                                                                    connectionRequest
-                                                                        .member
-                                                                        .id,
-                                                                profileId:
-                                                                    providerProfile.id,
+                                                            providerProfile={
+                                                                providerProfile
                                                             }
-                                                        )
-                                                    }
-                                                    onView={() =>
-                                                        setTargetConnection(
-                                                            connectionRequest
-                                                        )
-                                                    }
-                                                    onOpenChat={
-                                                        // TODO: Should practice admins be able to access chat?
-                                                        isCoach
-                                                            ? () => {
-                                                                  console.log(
-                                                                      'TODO: implement chat'
-                                                                  );
-                                                              }
-                                                            : undefined
-                                                    }
-                                                />
-                                            )
-                                        )}
-                                    </div>
-                                );
-                            })
+                                                            practice={practice}
+                                                            isSmallScreen={
+                                                                isSmallScreen
+                                                            }
+                                                            connectionRequest={
+                                                                connectionRequest
+                                                            }
+                                                            onAccept={() =>
+                                                                onAcceptConnectionRequest(
+                                                                    {
+                                                                        memberId:
+                                                                            connectionRequest
+                                                                                .member
+                                                                                .id,
+                                                                        profileId:
+                                                                            providerProfile.id,
+                                                                    }
+                                                                )
+                                                            }
+                                                            onDecline={() =>
+                                                                onDeclineConnectionRequest(
+                                                                    {
+                                                                        memberId:
+                                                                            connectionRequest
+                                                                                .member
+                                                                                .id,
+                                                                        profileId:
+                                                                            providerProfile.id,
+                                                                    }
+                                                                )
+                                                            }
+                                                            onView={() =>
+                                                                setTargetConnection(
+                                                                    {
+                                                                        ...connectionRequest,
+                                                                        providerProfile,
+                                                                    }
+                                                                )
+                                                            }
+                                                            onOpenChat={
+                                                                // TODO: Should practice admins be able to access chat?
+                                                                isCoach
+                                                                    ? () => {
+                                                                          console.log(
+                                                                              'TODO: implement chat'
+                                                                          );
+                                                                      }
+                                                                    : undefined
+                                                            }
+                                                        />
+                                                    )
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </>
+                            );
+                        }
                     )}
             </ClientList>
             {targetConnection && (
@@ -256,11 +273,54 @@ export function PracticeClientListPage({
                     title={`${targetConnection.member.givenName} ${targetConnection.member.surname}`}
                     onClose={() => setTargetConnection(undefined)}
                     fullWidthButtons
-                    secondaryButtonText="Close"
-                    secondaryButtonOnClick={() =>
-                        setTargetConnection(undefined)
+                    secondaryButtonText={
+                        targetConnection.connectionStatus ===
+                        ConnectionStatus.pending
+                            ? 'Decline'
+                            : 'Close'
+                    }
+                    secondaryButtonOnClick={() => {
+                        setTargetConnection(undefined);
+                        if (
+                            targetConnection.connectionStatus ===
+                            ConnectionStatus.pending
+                        ) {
+                            return onDeclineConnectionRequest({
+                                memberId: targetConnection.member.id,
+                                profileId: targetConnection.providerProfile.id,
+                            });
+                        }
+                    }}
+                    primaryButtonText={
+                        targetConnection.connectionStatus ===
+                        ConnectionStatus.pending
+                            ? 'Accept'
+                            : undefined
+                    }
+                    primaryButtonOnClick={
+                        targetConnection.connectionStatus ===
+                        ConnectionStatus.pending
+                            ? () => {
+                                  setTargetConnection(undefined);
+                                  onAcceptConnectionRequest({
+                                      memberId: targetConnection.member.id,
+                                      profileId:
+                                          targetConnection.providerProfile.id,
+                                  });
+                              }
+                            : undefined
                     }
                 >
+                    <Paragraph bold size={PARAGRAPH_SIZE.LARGE}>
+                        {targetConnection.connectionStatus ===
+                        ConnectionStatus.pending
+                            ? 'Requested Provider'
+                            : 'Provider'}
+                    </Paragraph>
+                    <Paragraph size={PARAGRAPH_SIZE.SMALL}>
+                        {targetConnection.providerProfile.givenName}{' '}
+                        {targetConnection.providerProfile.surname}
+                    </Paragraph>
                     <Paragraph bold size={PARAGRAPH_SIZE.LARGE}>
                         Account
                     </Paragraph>
@@ -364,35 +424,6 @@ const MemberName = styled(Paragraph)(({ theme }) => ({
     margin: 0,
 }));
 
-const MemberEmailAddress = styled(Box)(({ theme }) => ({
-    ...theme.typography.body1,
-    color: theme.palette.text.primary,
-    textDecoration: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    flex: 1,
-    maxWidth: '100%',
-    '& a': {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    '& p': {
-        flex: 1,
-        maxWidth: '100%',
-        overflow: 'hidden',
-        whiteSpace: 'nowrap',
-        textOverflow: 'ellipsis',
-        alignItems: 'center',
-    },
-    '& svg': {
-        color: theme.palette.grey[400],
-        marginRight: theme.spacing(2),
-        '&:hover': {
-            color: theme.palette.primary.main,
-        },
-    },
-}));
 const CellContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -548,7 +579,7 @@ const ClientListItem = ({
                             icon={<PendingOutlined />}
                             size={BADGE_SIZE.SMALL}
                         >
-                            Pending
+                            New
                         </Badge>
                     )}
                 </CellContainer>
@@ -592,7 +623,7 @@ const ClientListItem = ({
                                         icon={<PendingOutlined />}
                                         size={BADGE_SIZE.SMALL}
                                     >
-                                        Pending
+                                        New Referral
                                     </Badge>
                                 )
                             }
