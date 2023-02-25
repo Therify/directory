@@ -88,6 +88,15 @@ export function factory({ prisma }: DirectoryServiceParams) {
             },
         });
 
+        const profilesById = practiceProfiles.reduce<
+            Record<string, (typeof practiceProfiles)[number]['profile']>
+        >((acc, { profile }) => {
+            return {
+                ...acc,
+                [profile.id]: profile,
+            };
+        }, {});
+
         const connectionsByProfileId = connectionRequests.reduce<
             Record<string, typeof connectionRequests>
         >((acc, connection) => {
@@ -108,13 +117,29 @@ export function factory({ prisma }: DirectoryServiceParams) {
 
         return PracticeProfileConnectionRequests.validate({
             practice,
-            profileConnectionRequests: practiceProfiles.map(
-                ({ profile: providerProfile }) => ({
-                    providerProfile,
-                    connectionRequests:
-                        connectionsByProfileId[providerProfile.id],
-                })
-            ),
+            profileConnectionRequests: Object.entries(connectionsByProfileId)
+                .map(([profileId, connectionRequests]) => ({
+                    providerProfile: profilesById[profileId],
+                    connectionRequests: connectionRequests
+                        .map((connection) => ({
+                            ...connection,
+                            member: {
+                                ...connection.member,
+                                plan:
+                                    connection.member.account?.plans[0] ?? null,
+                            },
+                        }))
+                        .sort((a, b) => {
+                            return a.member.givenName.localeCompare(
+                                b.member.givenName
+                            );
+                        }),
+                }))
+                .sort((a, b) => {
+                    return a.providerProfile.givenName.localeCompare(
+                        b.providerProfile.givenName
+                    );
+                }),
         });
     };
 }
