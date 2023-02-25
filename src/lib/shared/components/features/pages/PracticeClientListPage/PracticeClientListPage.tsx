@@ -291,25 +291,23 @@ export function PracticeClientListPage({
                             });
                         }
                     }}
-                    primaryButtonText={
-                        targetConnection.connectionStatus ===
-                        ConnectionStatus.pending
-                            ? 'Accept'
-                            : undefined
-                    }
-                    primaryButtonOnClick={
-                        targetConnection.connectionStatus ===
-                        ConnectionStatus.pending
-                            ? () => {
+                    {...(targetConnection.connectionStatus ===
+                    ConnectionStatus.pending
+                        ? {
+                              primaryButtonText: 'Accept',
+                              primaryButtonOnClick: () => {
                                   setTargetConnection(undefined);
                                   onAcceptConnectionRequest({
                                       memberId: targetConnection.member.id,
                                       profileId:
                                           targetConnection.providerProfile.id,
                                   });
-                              }
-                            : undefined
-                    }
+                              },
+                          }
+                        : {
+                              primaryButtonText: undefined,
+                              primaryButtonOnClick: undefined,
+                          })}
                 >
                     <Paragraph bold size={PARAGRAPH_SIZE.LARGE}>
                         {targetConnection.connectionStatus ===
