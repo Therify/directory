@@ -3,7 +3,7 @@ import { convertNestedDatesToISOString } from '../../utils';
 import { ProviderProfile } from '../provider-profile';
 import { schema as connectionRequestSchema } from './connectionRequest';
 
-const profileConnectionRequests = z.object({
+const profileConnectionRequest = z.object({
     providerProfile: connectionRequestSchema.shape.providerProfile
         .omit({
             practice: true,
@@ -18,7 +18,7 @@ const profileConnectionRequests = z.object({
 });
 export const schema = z.object({
     practice: connectionRequestSchema.shape.providerProfile.shape.practice,
-    profileConnectionRequests: profileConnectionRequests.array(),
+    profileConnectionRequests: profileConnectionRequest.array(),
 });
 
 export type Type = z.infer<typeof schema>;

@@ -3,7 +3,7 @@ import { PracticeProfileConnectionRequests } from '@/lib/shared/types';
 import { DirectoryServiceParams } from '../params';
 
 export function factory({ prisma }: DirectoryServiceParams) {
-    return async function listConnectionRequestsByProviderId({
+    return async function listConnectionRequestsByPracticeOwnerId({
         practiceOwnerId,
         status,
     }: ListConnectionRequestsByPracticeOwnerId.Input): Promise<PracticeProfileConnectionRequests.Type> {
