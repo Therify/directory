@@ -90,6 +90,80 @@ export default function PracticeClientsPage({
         setConfirmAction(undefined);
     };
 
+    const handleSuccess = ({
+        connectionStatus,
+        memberId,
+        profileId,
+    }: {
+        connectionStatus: ConnectionStatus;
+        profileId: string;
+        memberId: string;
+    }) => {
+        createAlert({
+            type: 'success',
+            title:
+                connectionStatus === ConnectionStatus.accepted
+                    ? `${
+                          confirmationConnectionRequest?.member.givenName ??
+                          'The member'
+                      } is now a client!`
+                    : `Declined successfully`,
+        });
+        if (connectionStatus === ConnectionStatus.accepted) {
+            // Update the connection request status
+            return setPracticeConnectionRequests({
+                ...practiceConnectionRequests,
+                profileConnectionRequests:
+                    practiceConnectionRequests.profileConnectionRequests.map(
+                        (profile) => {
+                            if (profile.providerProfile.id !== profileId)
+                                return profile;
+                            return {
+                                ...profile,
+                                connectionRequests:
+                                    profile.connectionRequests.map((cr) => {
+                                        if (
+                                            cr.member.id === memberId &&
+                                            profile.providerProfile.id ===
+                                                profileId
+                                        ) {
+                                            return {
+                                                ...cr,
+                                                connectionStatus,
+                                            };
+                                        }
+                                        return cr;
+                                    }),
+                            };
+                        }
+                    ),
+            });
+        }
+        // Remove the declined connection request
+        return setPracticeConnectionRequests({
+            ...practiceConnectionRequests,
+            profileConnectionRequests:
+                practiceConnectionRequests.profileConnectionRequests.filter(
+                    (profile) => {
+                        if (profile.providerProfile.id !== profileId)
+                            return profile;
+                        const updatedProfile = {
+                            ...profile,
+                            connectionRequests:
+                                profile.connectionRequests.filter((cr) => {
+                                    const isDeclinedRequest =
+                                        cr.member.id == memberId &&
+                                        profile.providerProfile.id ===
+                                            profileId;
+                                    return !isDeclinedRequest;
+                                }),
+                        };
+                        return updatedProfile.connectionRequests.length > 0;
+                    }
+                ),
+        });
+    };
+
     const { mutate: updateConnectionRequestStatus, isLoading } =
         trpc.useMutation(
             `directory.${UpdateConnectionRequestStatus.TRPC_ROUTE}`,
@@ -100,85 +174,10 @@ export default function PracticeClientsPage({
                 ) => {
                     clearConfirmationModal();
                     if (success) {
-                        createAlert({
-                            type: 'success',
-                            title:
-                                connectionStatus === ConnectionStatus.accepted
-                                    ? `${
-                                          confirmationConnectionRequest?.member
-                                              .givenName ?? 'The member'
-                                      } is now a client!`
-                                    : `Declined successfully`,
-                        });
-                        if (connectionStatus === ConnectionStatus.accepted) {
-                            return setPracticeConnectionRequests({
-                                ...practiceConnectionRequests,
-                                profileConnectionRequests:
-                                    practiceConnectionRequests.profileConnectionRequests.map(
-                                        (profile) => {
-                                            if (
-                                                profile.providerProfile.id !==
-                                                profileId
-                                            )
-                                                return profile;
-                                            return {
-                                                ...profile,
-                                                connectionRequests:
-                                                    profile.connectionRequests.map(
-                                                        (cr) => {
-                                                            if (
-                                                                cr.member.id ===
-                                                                    memberId &&
-                                                                profile
-                                                                    .providerProfile
-                                                                    .id ===
-                                                                    profileId
-                                                            ) {
-                                                                return {
-                                                                    ...cr,
-                                                                    connectionStatus,
-                                                                };
-                                                            }
-                                                            return cr;
-                                                        }
-                                                    ),
-                                            };
-                                        }
-                                    ),
-                            });
-                        }
-                        return setPracticeConnectionRequests({
-                            ...practiceConnectionRequests,
-                            profileConnectionRequests:
-                                practiceConnectionRequests.profileConnectionRequests.filter(
-                                    (profile) => {
-                                        if (
-                                            profile.providerProfile.id !==
-                                            profileId
-                                        )
-                                            return profile;
-                                        const updatedProfile = {
-                                            ...profile,
-                                            connectionRequests:
-                                                profile.connectionRequests.filter(
-                                                    (cr) => {
-                                                        const isDeclinedRequest =
-                                                            cr.member.id ==
-                                                                memberId &&
-                                                            profile
-                                                                .providerProfile
-                                                                .id ===
-                                                                profileId;
-                                                        return !isDeclinedRequest;
-                                                    }
-                                                ),
-                                        };
-                                        return (
-                                            updatedProfile.connectionRequests
-                                                .length > 0
-                                        );
-                                    }
-                                ),
+                        return handleSuccess({
+                            connectionStatus,
+                            memberId,
+                            profileId,
                         });
                     }
                     const [error] = errors;
