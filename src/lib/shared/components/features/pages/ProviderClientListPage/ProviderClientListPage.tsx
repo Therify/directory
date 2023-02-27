@@ -28,6 +28,7 @@ import {
     DoNotDisturbAltRounded,
     CheckCircleOutlineRounded,
     PreviewRounded,
+    PersonRemoveOutlined,
 } from '@mui/icons-material';
 import { ConnectionStatus, ProfileType } from '@prisma/client';
 import { format } from 'date-fns';
@@ -35,15 +36,15 @@ import { format } from 'date-fns';
 const REIMBURSEMENT_REQUEST_URL =
     'https://hipaa.jotform.com/221371005584146?' as const;
 
+type HandleConnectionRequestAction = (
+    connectionRequest: ConnectionRequest.Type
+) => void;
 interface ProviderClientListPageProps {
     connectionRequests: ConnectionRequest.Type[];
     designation: ProfileType;
-    onAcceptConnectionRequest: (
-        connectionRequest: ConnectionRequest.Type
-    ) => void;
-    onDeclineConnectionRequest: (
-        connectionRequest: ConnectionRequest.Type
-    ) => void;
+    onAcceptConnectionRequest: HandleConnectionRequestAction;
+    onDeclineConnectionRequest: HandleConnectionRequestAction;
+    onTerminateConnectionRequest: HandleConnectionRequestAction;
 }
 
 export function ProviderClientListPage({
@@ -51,6 +52,7 @@ export function ProviderClientListPage({
     designation,
     onAcceptConnectionRequest,
     onDeclineConnectionRequest,
+    onTerminateConnectionRequest,
 }: ProviderClientListPageProps) {
     const theme = useTheme();
     const isCoach = designation === ProfileType.coach;
@@ -68,11 +70,6 @@ export function ProviderClientListPage({
                 marginX={theme.spacing(5)}
             >
                 <Title>Clients</Title>
-                {hasConnectionRequests && (
-                    <Paragraph color="text-secondary">
-                        Select a client to see their plan details
-                    </Paragraph>
-                )}
             </Box>
             <ClientList>
                 <ListItem sx={{ width: '100%', '& > div': { paddingY: 0 } }}>
@@ -113,6 +110,11 @@ export function ProviderClientListPage({
                                 }
                                 onDecline={() =>
                                     onDeclineConnectionRequest(
+                                        connectionRequest
+                                    )
+                                }
+                                onTerminate={() =>
+                                    onTerminateConnectionRequest(
                                         connectionRequest
                                     )
                                 }
@@ -311,6 +313,7 @@ const ClientListItem = ({
     isSmallScreen,
     onAccept,
     onDecline,
+    onTerminate,
     onView,
     onOpenChat,
 }: {
@@ -318,6 +321,7 @@ const ClientListItem = ({
     isSmallScreen?: boolean;
     onAccept: () => void;
     onDecline: () => void;
+    onTerminate: () => void;
     onView?: () => void;
     onOpenChat?: () => void;
 }) => {
@@ -375,6 +379,11 @@ const ClientListItem = ({
                               '_blank'
                           );
                       },
+                  },
+                  {
+                      text: 'Remove Client',
+                      icon: <PersonRemoveOutlined />,
+                      onClick: onTerminate,
                   },
               ]
             : []),

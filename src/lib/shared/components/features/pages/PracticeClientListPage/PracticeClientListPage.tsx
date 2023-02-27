@@ -19,18 +19,17 @@ import {
     ListItem,
     DisplayModal,
     IconButton,
-    H3,
 } from '@/lib/shared/components/ui';
 import {
     MailOutline,
     PaidOutlined,
     PendingOutlined,
-    ChatBubbleOutlineRounded,
     CircleRounded,
     DoNotDisturbAltRounded,
     CheckCircleOutlineRounded,
     PreviewRounded,
     EmailOutlined,
+    PersonRemoveOutlined,
 } from '@mui/icons-material';
 import { ConnectionStatus, ProfileType } from '@prisma/client';
 import { format } from 'date-fns';
@@ -42,22 +41,22 @@ type ProfileConnectionRequest =
     PracticeProfileConnectionRequests.Type['profileConnectionRequests'][number]['connectionRequests'][number];
 type ConnectionProviderProfile =
     PracticeProfileConnectionRequests.Type['profileConnectionRequests'][number]['providerProfile'];
+type ConnectionActionHandler = (ids: {
+    memberId: string;
+    profileId: string;
+}) => void;
 interface PracticeClientListPageProps {
     practiceConnectionRequests: PracticeProfileConnectionRequests.Type;
-    onAcceptConnectionRequest: (input: {
-        memberId: string;
-        profileId: string;
-    }) => void;
-    onDeclineConnectionRequest: (input: {
-        memberId: string;
-        profileId: string;
-    }) => void;
+    onAcceptConnectionRequest: ConnectionActionHandler;
+    onDeclineConnectionRequest: ConnectionActionHandler;
+    onTerminateConnectionRequest: ConnectionActionHandler;
 }
 
 export function PracticeClientListPage({
     practiceConnectionRequests,
     onAcceptConnectionRequest,
     onDeclineConnectionRequest,
+    onTerminateConnectionRequest,
 }: PracticeClientListPageProps) {
     const { profileConnectionRequests, practice } = practiceConnectionRequests;
     const { pendingConnectionRequests, acceptedConnectionRequests } =
@@ -192,9 +191,6 @@ export function PracticeClientListPage({
                                             connectionRequests,
                                             providerProfile,
                                         } = profileConnection;
-                                        const isCoach =
-                                            providerProfile.designation ===
-                                            ProfileType.coach;
                                         return (
                                             <div key={providerProfile.id}>
                                                 {connectionRequests.map(
@@ -238,6 +234,18 @@ export function PracticeClientListPage({
                                                                     }
                                                                 )
                                                             }
+                                                            onTerminate={() =>
+                                                                onTerminateConnectionRequest(
+                                                                    {
+                                                                        memberId:
+                                                                            connectionRequest
+                                                                                .member
+                                                                                .id,
+                                                                        profileId:
+                                                                            providerProfile.id,
+                                                                    }
+                                                                )
+                                                            }
                                                             onView={() =>
                                                                 setTargetConnection(
                                                                     {
@@ -245,16 +253,6 @@ export function PracticeClientListPage({
                                                                         providerProfile,
                                                                     }
                                                                 )
-                                                            }
-                                                            onOpenChat={
-                                                                // TODO: Should practice admins be able to access chat?
-                                                                isCoach
-                                                                    ? () => {
-                                                                          console.log(
-                                                                              'TODO: implement chat'
-                                                                          );
-                                                                      }
-                                                                    : undefined
                                                             }
                                                         />
                                                     )
@@ -461,7 +459,7 @@ const ClientListItem = ({
     onAccept,
     onDecline,
     onView,
-    onOpenChat,
+    onTerminate,
     onEmail,
 }: {
     connectionRequest: ProfileConnectionRequest;
@@ -471,7 +469,7 @@ const ClientListItem = ({
     onAccept: () => void;
     onDecline: () => void;
     onView?: () => void;
-    onOpenChat?: () => void;
+    onTerminate?: () => void;
     onEmail?: () => void;
 }) => {
     const isPending =
@@ -497,25 +495,13 @@ const ClientListItem = ({
                       onClick: onEmail,
                   },
               ]
-            : []),
-        ...(!onOpenChat
-            ? [
+            : [
                   {
                       icon: <PreviewRounded />,
                       text: ' View Member Details',
                       onClick: onView,
                   },
-              ]
-            : []),
-        ...(onOpenChat
-            ? [
-                  {
-                      icon: <ChatBubbleOutlineRounded />,
-                      text: 'Chat',
-                      onClick: onOpenChat,
-                  },
-              ]
-            : []),
+              ]),
     ];
     const actionList = [
         ...(isSmallScreen ? mobileActions : []),
@@ -545,6 +531,15 @@ const ClientListItem = ({
                           );
                       },
                   },
+                  ...(onTerminate
+                      ? [
+                            {
+                                icon: <PersonRemoveOutlined />,
+                                text: 'Remove Client',
+                                onClick: onTerminate,
+                            },
+                        ]
+                      : []),
               ]
             : []),
     ];
@@ -598,7 +593,6 @@ const ClientListItem = ({
                             onAccept={onAccept}
                             onDecline={onDecline}
                             onView={onView}
-                            onOpenChat={onOpenChat}
                         />
                     )}
                     {isPending && isSmallScreen && (
@@ -639,13 +633,11 @@ const ActionButtons = ({
     onAccept,
     onDecline,
     onView,
-    onOpenChat,
 }: {
     connectionRequest: ProfileConnectionRequest;
     onAccept: () => void;
     onDecline: () => void;
     onView?: () => void;
-    onOpenChat?: () => void;
 }) => {
     const isPending =
         connectionRequest.connectionStatus === ConnectionStatus.pending;
@@ -686,28 +678,14 @@ const ActionButtons = ({
                 </>
             )}
             {isAccepted && (
-                <>
-                    {!onOpenChat && (
-                        <Button
-                            size="small"
-                            color="info"
-                            type="outlined"
-                            onClick={onView}
-                        >
-                            View Member
-                        </Button>
-                    )}
-                    {onOpenChat && (
-                        <Button
-                            size="small"
-                            color="info"
-                            type="outlined"
-                            onClick={onOpenChat}
-                        >
-                            Chat
-                        </Button>
-                    )}
-                </>
+                <Button
+                    size="small"
+                    color="info"
+                    type="outlined"
+                    onClick={onView}
+                >
+                    View Member
+                </Button>
             )}
         </>
     );
