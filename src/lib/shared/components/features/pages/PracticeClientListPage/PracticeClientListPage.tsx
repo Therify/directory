@@ -166,7 +166,7 @@ export function PracticeClientListPage({
                             const isRequests = requests.length > 0;
                             const isPendingRequests = i === 0;
                             return (
-                                <>
+                                <Box width="100%" key={i}>
                                     {isPendingRequests && isRequests && (
                                         <Badge
                                             color="warning"
@@ -262,7 +262,7 @@ export function PracticeClientListPage({
                                             </div>
                                         );
                                     })}
-                                </>
+                                </Box>
                             );
                         }
                     )}
