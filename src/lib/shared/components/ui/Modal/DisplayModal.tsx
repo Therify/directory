@@ -152,6 +152,7 @@ export const DisplayModal = ({
                         marginBottom={isBodyContent ? theme.spacing(4) : 0}
                         display="flex"
                         justifyContent={horizontalAlignment}
+                        paddingX={theme.spacing(6)}
                     >
                         {headerSlot}
                     </Box>
@@ -164,12 +165,12 @@ export const DisplayModal = ({
                     flexDirection="column"
                 >
                     {title && (
-                        <>
+                        <Box paddingX={theme.spacing(6)}>
                             <H4 data-testid={TEST_IDS.TITLE}>{title}</H4>
                             <Divider style={{ marginBottom: 0 }} />
-                        </>
+                        </Box>
                     )}
-                    <Box flex={1} overflow="auto" paddingY={2}>
+                    <Box flex={1} overflow="auto" paddingY={2} paddingX={6}>
                         {children}
                     </Box>
                 </Box>
@@ -183,6 +184,7 @@ export const DisplayModal = ({
                         flexDirection={
                             shouldStackButtons ? 'column-reverse' : 'row'
                         }
+                        paddingX={theme.spacing(6)}
                     >
                         {isSecondaryButton && (
                             <Button
@@ -244,5 +246,5 @@ const getBaseStyle = (theme: Theme) => ({
     bgcolor: 'background.paper',
     borderRadius: '6px',
     boxShadow: 24,
-    p: theme.spacing(6),
+    paddingY: theme.spacing(6),
 });
