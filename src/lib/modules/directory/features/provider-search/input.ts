@@ -1,6 +1,8 @@
+import { State } from '@/lib/shared/types';
 import * as z from 'zod';
 
 export const schema = z.object({
+    state: z.enum(State.ENTRIES),
     memberPreferences: z
         .object({
             insuranceProvider: z.string().optional(),
@@ -9,7 +11,6 @@ export const schema = z.object({
             languages: z.string().array().optional(),
         })
         .optional(),
-    state: z.string().optional(),
     insuranceProvider: z.string().optional(),
     gender: z.string().optional(),
     specialties: z.string().array().optional(),
