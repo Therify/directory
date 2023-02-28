@@ -32,13 +32,10 @@ export const useProviderConnectionRequests = (
                     if (success) {
                         createAlert({
                             type: 'success',
-                            title:
-                                connectionStatus === ConnectionStatus.accepted
-                                    ? `${confirmationConnectionRequest?.connectionRequest.member.givenName} is now your client!`
-                                    : connectionStatus ===
-                                      ConnectionStatus.terminated
-                                    ? `${confirmationConnectionRequest?.connectionRequest.member.givenName} is no longer your client`
-                                    : `Declined successfully`,
+                            title: getSuccessAlertText(
+                                connectionStatus,
+                                confirmationConnectionRequest?.connectionRequest
+                            ),
                         });
                         setConfirmationConnectionRequest(undefined);
                         if (connectionStatus === ConnectionStatus.accepted) {
@@ -119,4 +116,23 @@ export const useProviderConnectionRequests = (
         setConfirmationConnectionRequest,
         confirmationConnectionRequest,
     };
+};
+
+const getSuccessAlertText = (
+    status: ConnectionStatus,
+    connectionRequest?: ConnectionRequest.Type
+) => {
+    switch (status) {
+        case ConnectionStatus.accepted:
+            return `${
+                connectionRequest?.member.givenName ?? 'Member'
+            } is now your client!`;
+        case ConnectionStatus.terminated:
+            return `${
+                connectionRequest?.member.givenName ?? 'Member'
+            } is no longer your client`;
+        case ConnectionStatus.declined:
+        default:
+            return `Declined successfully`;
+    }
 };
