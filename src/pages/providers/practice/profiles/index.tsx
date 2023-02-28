@@ -154,6 +154,15 @@ export default function PracticeProfilesPage({
                     });
                 }
             },
+            onError: (error) => {
+                console.error(error);
+                createAlert({
+                    type: 'error',
+                    title:
+                        error?.message ??
+                        'There was an issue updating the directory listing',
+                });
+            },
         });
 
     const { mutate: createInvitation, isLoading: isCreatingInvitation } =
@@ -177,6 +186,15 @@ export default function PracticeProfilesPage({
                             title: error,
                         });
                     }
+                },
+                onError: (error) => {
+                    console.error(error);
+                    createAlert({
+                        type: 'error',
+                        title:
+                            error?.message ??
+                            'There was an issue sending the invitation',
+                    });
                 },
             }
         );

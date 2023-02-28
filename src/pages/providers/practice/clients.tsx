@@ -16,7 +16,7 @@ import { trpc } from '@/lib/shared/utils/trpc';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { Box, CircularProgress } from '@mui/material';
 import { ConnectionStatus } from '@prisma/client';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 
 export const getServerSideProps = RBAC.requireProviderAuth(
     withPageAuthRequired({
@@ -24,9 +24,12 @@ export const getServerSideProps = RBAC.requireProviderAuth(
             ProvidersService.pageProps.getPracticeClientsPageProps,
     })
 );
-type ProfileConnectionRequest =
-    PracticeProfileConnectionRequests.Type['profileConnectionRequests'][number]['connectionRequests'][number];
-
+type ConfirmationConnectionRequest =
+    | (PracticeProfileConnectionRequests.Type['profileConnectionRequests'][number]['connectionRequests'][number] & {
+          profile: PracticeProfileConnectionRequests.Type['profileConnectionRequests'][number]['providerProfile'];
+      })
+    | undefined;
+type ConnectionAction = 'accept' | 'decline' | 'terminate';
 export default function PracticeClientsPage({
     practiceConnectionRequests: basePracticeConnectionRequests,
     user,
@@ -34,61 +37,46 @@ export default function PracticeClientsPage({
     const { createAlert } = useContext(Alerts.Context);
     const [practiceConnectionRequests, setPracticeConnectionRequests] =
         useState(basePracticeConnectionRequests);
-    const [confirmAction, setConfirmAction] = useState<'accept' | 'decline'>();
     const [updateMessage, setUpdateMessage] = useState('');
-    const [confirmationConnectionRequest, setConfirmationConnectionRequest] =
-        useState<
-            ProfileConnectionRequest & {
-                profile: PracticeProfileConnectionRequests.Type['profileConnectionRequests'][number]['providerProfile'];
-            }
-        >();
     const [targetConnection, setTargetConnection] = useState<{
-        memberId: string;
-        profileId: string;
+        action: ConnectionAction;
+        ids: {
+            memberId: string;
+            profileId: string;
+        };
     }>();
+    const closeModal = () => {
+        setUpdateMessage('');
+        setTargetConnection(undefined);
+    };
 
-    useEffect(() => {
-        if (targetConnection === undefined)
-            return setConfirmationConnectionRequest(undefined);
-        const confirmationProvider =
-            practiceConnectionRequests?.profileConnectionRequests.find(
-                (connection) => {
-                    return (
-                        connection.providerProfile.id ===
-                        targetConnection?.profileId
-                    );
-                }
+    const confirmationConnectionRequest: ConfirmationConnectionRequest =
+        useMemo(() => {
+            if (targetConnection === undefined) return undefined;
+            const provider =
+                practiceConnectionRequests?.profileConnectionRequests.find(
+                    (connection) => {
+                        return (
+                            connection.providerProfile.id ===
+                            targetConnection?.ids.profileId
+                        );
+                    }
+                );
+            const connectionRequest = provider?.connectionRequests.find(
+                (memberRequests) =>
+                    memberRequests.member.id === targetConnection?.ids.memberId
             );
-        const connectionRequest = confirmationProvider?.connectionRequests.find(
-            (memberRequests) =>
-                memberRequests.member.id === targetConnection?.memberId
-        );
-        const confirmationPayload =
-            !!confirmationProvider?.providerProfile && !!connectionRequest
+            return provider?.providerProfile !== undefined &&
+                connectionRequest !== undefined
                 ? {
                       ...connectionRequest,
-                      profile: confirmationProvider.providerProfile,
+                      profile: provider.providerProfile,
                   }
                 : undefined;
-
-        setConfirmationConnectionRequest(confirmationPayload);
-    }, [
-        practiceConnectionRequests?.profileConnectionRequests,
-        targetConnection,
-    ]);
-
-    const setUpConfirmationModal = (
-        action: 'accept' | 'decline',
-        request: { memberId: string; profileId: string }
-    ) => {
-        setTargetConnection(request);
-        setConfirmAction(action);
-    };
-
-    const clearConfirmationModal = () => {
-        setTargetConnection(undefined);
-        setConfirmAction(undefined);
-    };
+        }, [
+            practiceConnectionRequests?.profileConnectionRequests,
+            targetConnection,
+        ]);
 
     const handleSuccess = ({
         connectionStatus,
@@ -107,6 +95,11 @@ export default function PracticeClientsPage({
                           confirmationConnectionRequest?.member.givenName ??
                           'The member'
                       } is now a client!`
+                    : connectionStatus === ConnectionStatus.terminated
+                    ? `Removed ${
+                          confirmationConnectionRequest?.member.givenName ??
+                          'the member'
+                      } as a client`
                     : `Declined successfully`,
         });
         if (connectionStatus === ConnectionStatus.accepted) {
@@ -139,7 +132,7 @@ export default function PracticeClientsPage({
                     ),
             });
         }
-        // Remove the declined connection request
+        // Remove the declined or terminated connection request
         return setPracticeConnectionRequests({
             ...practiceConnectionRequests,
             profileConnectionRequests:
@@ -172,14 +165,14 @@ export default function PracticeClientsPage({
                     { success, errors },
                     { memberId, profileId, connectionStatus }
                 ) => {
-                    clearConfirmationModal();
                     if (success) {
-                        return handleSuccess({
+                        handleSuccess({
                             connectionStatus,
                             memberId,
                             profileId,
                         });
                     }
+                    closeModal();
                     const [error] = errors;
                     if (error) {
                         console.error(error);
@@ -190,7 +183,7 @@ export default function PracticeClientsPage({
                     }
                 },
                 onError: (error) => {
-                    clearConfirmationModal();
+                    closeModal();
                     console.error(error);
                     const errorMessage =
                         error instanceof Error
@@ -204,19 +197,24 @@ export default function PracticeClientsPage({
             }
         );
 
-    const handleUpdateConnectionRequest = (
-        { memberId, profileId }: { memberId: string; profileId: string },
-        action: 'accept' | 'decline'
-    ) =>
+    const handleUpdateConnectionRequest = ({
+        ids: { memberId, profileId },
+        action,
+    }: {
+        ids: { memberId: string; profileId: string };
+        action: ConnectionAction;
+    }) =>
         updateConnectionRequestStatus({
             memberId,
             profileId,
             connectionStatus:
                 action === 'accept'
                     ? ConnectionStatus.accepted
+                    : action === 'terminate'
+                    ? ConnectionStatus.terminated
                     : ConnectionStatus.declined,
             userId: user.userId,
-            message: updateMessage.trim() === '' ? updateMessage : undefined,
+            message: updateMessage.trim() !== '' ? updateMessage : undefined,
         });
     return (
         <PracticeAdminNavigationPage
@@ -226,77 +224,131 @@ export default function PracticeClientsPage({
             {practiceConnectionRequests && (
                 <PracticeClientListPage
                     practiceConnectionRequests={practiceConnectionRequests}
-                    onAcceptConnectionRequest={(input) => {
-                        setUpConfirmationModal('accept', input);
-                    }}
-                    onDeclineConnectionRequest={(input) => {
-                        setUpConfirmationModal('decline', input);
-                    }}
+                    onAcceptConnectionRequest={(ids) =>
+                        setTargetConnection({
+                            action: 'accept',
+                            ids,
+                        })
+                    }
+                    onDeclineConnectionRequest={(ids) =>
+                        setTargetConnection({
+                            action: 'decline',
+                            ids,
+                        })
+                    }
+                    onTerminateConnectionRequest={(ids) =>
+                        setTargetConnection({
+                            action: 'terminate',
+                            ids,
+                        })
+                    }
                 />
             )}
-            {confirmAction &&
-                targetConnection &&
-                confirmationConnectionRequest && (
-                    <Modal
-                        isOpen
-                        title={
-                            confirmAction === 'accept'
-                                ? 'Accept new client?'
-                                : 'Decline new client'
-                        }
-                        message={
-                            confirmAction === 'accept' && !isLoading
-                                ? `Accepting ${confirmationConnectionRequest.member.givenName} will notify them that ${confirmationConnectionRequest.profile.givenName} is ready to start working with them.`
-                                : undefined
-                        }
-                        onClose={clearConfirmationModal}
-                        fullWidthButtons
-                        primaryButtonColor={
-                            confirmAction === 'accept' ? 'primary' : 'error'
-                        }
-                        primaryButtonText={
-                            confirmAction === 'accept' ? 'Accept' : 'Decline'
-                        }
-                        primaryButtonOnClick={() => {
-                            handleUpdateConnectionRequest(
-                                targetConnection,
-                                confirmAction
-                            );
-                        }}
-                        primaryButtonDisabled={isLoading}
-                        secondaryButtonText="Cancel"
-                        secondaryButtonDisabled={isLoading}
-                        secondaryButtonOnClick={clearConfirmationModal}
-                        postBodySlot={
-                            isLoading ? (
-                                <CenteredContainer width="100%">
-                                    <CircularProgress />
-                                </CenteredContainer>
-                            ) : (
-                                <Box width="100%">
-                                    {confirmAction === 'accept' && <Divider />}
-                                    <Textarea
-                                        fullWidth
-                                        label={
-                                            confirmAction === 'accept'
-                                                ? 'Share any additional details here (optional)'
-                                                : 'Reason for declining (optional)'
-                                        }
-                                        placeholder={
-                                            confirmAction === 'accept'
-                                                ? 'Let them know about any unique next steps'
-                                                : 'Let them know why you cannot accept at this time'
-                                        }
-                                        value={updateMessage}
-                                        onChange={(e) =>
-                                            setUpdateMessage(e.target.value)
-                                        }
-                                    />
-                                </Box>
-                            )
-                        }
-                    />
-                )}
+            {targetConnection && confirmationConnectionRequest && (
+                <ConfirmationModal
+                    action={targetConnection.action}
+                    connectionRequest={confirmationConnectionRequest}
+                    onClose={closeModal}
+                    onPrimaryButtonClick={() => {
+                        handleUpdateConnectionRequest(targetConnection);
+                    }}
+                    isLoading={isLoading}
+                    textAreaValue={updateMessage}
+                    onTextAreaChange={(message) => setUpdateMessage(message)}
+                />
+            )}
         </PracticeAdminNavigationPage>
     );
 }
+
+const ConfirmationModal = (props: {
+    action: ConnectionAction;
+    connectionRequest: Exclude<ConfirmationConnectionRequest, undefined>;
+    isLoading: boolean;
+    textAreaValue: string;
+    onTextAreaChange: (message: string) => void;
+    onClose: () => void;
+    onPrimaryButtonClick: () => void;
+}) => {
+    const {
+        title,
+        message,
+        primaryButtonColor,
+        primaryButtonText,
+        textareaLabel,
+        textareaPlaceholder,
+    } = getConfirmationModalContent(props.action, props.connectionRequest);
+    return (
+        <Modal
+            isOpen
+            title={title}
+            message={message}
+            onClose={props.onClose}
+            fullWidthButtons
+            primaryButtonColor={primaryButtonColor}
+            primaryButtonText={primaryButtonText}
+            primaryButtonOnClick={props.onPrimaryButtonClick}
+            primaryButtonDisabled={props.isLoading}
+            secondaryButtonText="Cancel"
+            secondaryButtonDisabled={props.isLoading}
+            secondaryButtonOnClick={props.onClose}
+            postBodySlot={
+                props.isLoading ? (
+                    <CenteredContainer width="100%">
+                        <CircularProgress />
+                    </CenteredContainer>
+                ) : (
+                    <Box width="100%">
+                        <Divider />
+                        <Textarea
+                            fullWidth
+                            label={textareaLabel}
+                            helperText="* This note will be shared with the client."
+                            placeholder={textareaPlaceholder}
+                            value={props.textAreaValue}
+                            onChange={(e) =>
+                                props.onTextAreaChange(e.target.value)
+                            }
+                        />
+                    </Box>
+                )
+            }
+        />
+    );
+};
+
+const getConfirmationModalContent = (
+    action: ConnectionAction,
+    connectionRequst: Exclude<ConfirmationConnectionRequest, undefined>
+) => {
+    switch (action) {
+        case 'decline':
+            return {
+                title: 'Decline New Client',
+                message: `Declining ${connectionRequst.member.givenName} will notify them that ${connectionRequst.profile.givenName} is unable to accept them as a client at this time.`,
+                primaryButtonColor: 'error' as const,
+                primaryButtonText: 'Decline',
+                textareaLabel: 'Reason for declining (optional)',
+                textareaPlaceholder: `Let them know why ${connectionRequst.profile.givenName} cannot accept at this time`,
+            };
+        case 'terminate':
+            return {
+                title: 'End Client Relationship',
+                message: `Removing ${connectionRequst.member.givenName} as a client will notify them that ${connectionRequst.profile.givenName} is no longer able to provide services.`,
+                primaryButtonColor: 'error' as const,
+                primaryButtonText: 'Remove Client',
+                textareaLabel: 'Note to client (optional)',
+                textareaPlaceholder: `Let them know why ${connectionRequst.profile.givenName} is no longer able to provide services`,
+            };
+        case 'accept':
+        default:
+            return {
+                title: 'Accept New Client?',
+                message: `Accepting ${connectionRequst.member.givenName} will notify them that ${connectionRequst.profile.givenName} is ready to start working with them.`,
+                primaryButtonColor: 'primary' as const,
+                primaryButtonText: 'Accept',
+                textareaLabel: 'Additional Information (optional)',
+                textareaPlaceholder: `Share any additional details here`,
+            };
+    }
+};

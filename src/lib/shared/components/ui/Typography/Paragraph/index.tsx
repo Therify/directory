@@ -103,14 +103,14 @@ export const Paragraph = styled(MuiParagraph, {
         fontWeight = PARAGRAPH_FONT_WEIGHT.NORMAL,
         textDecoration,
         noMargin,
-        color = 'text-primary',
+        color,
     }) => {
         return {
             ...getParagraphStyle({ size, theme }),
             fontStyle: italic ? 'italic' : undefined,
             textDecoration: textDecoration ?? 'none',
             fontWeight: bold ? 'bold' : fontWeight,
-            color: getColor(color, theme),
+            color: color ? getColor(color, theme) : undefined,
             ...(noMargin ? { margin: 0 } : {}),
         };
     }
