@@ -166,7 +166,7 @@ export default function PracticeClientsPage({
                     { memberId, profileId, connectionStatus }
                 ) => {
                     if (success) {
-                        return handleSuccess({
+                        handleSuccess({
                             connectionStatus,
                             memberId,
                             profileId,
