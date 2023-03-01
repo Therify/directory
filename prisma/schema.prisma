@@ -335,6 +335,7 @@ enum ConnectionStatus {
   pending
   accepted
   declined
+  terminated
 }
 
 model ConnectionRequest {

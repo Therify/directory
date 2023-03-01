@@ -1,151 +1,63 @@
+import { directoryService } from '@/lib/modules/directory/service';
 import {
-    AccountSchema,
-    ConnectionRequestSchema,
-    MemberProfileSchema,
-    PracticeProfileSchema,
-    PracticeSchema,
-    ProviderProfileSchema,
-    UserSchema,
-} from '@/lib/shared/schema';
-import { TherifyUser } from '@/lib/shared/types';
+    TherifyUser,
+    PracticeProfileConnectionRequests,
+} from '@/lib/shared/types';
+import { URL_PATHS } from '@/lib/sitemap';
 import { getSession } from '@auth0/nextjs-auth0';
+import { ConnectionStatus } from '@prisma/client';
 import { GetServerSideProps } from 'next';
-import { z } from 'zod';
 import { GetProviderTherifyUser } from '../../get-provider-therify-user';
 import { ProvidersServiceParams } from '../../params';
 
-const queryResultSchema = PracticeProfileSchema.extend({
-    practice: PracticeSchema,
-    profile: ProviderProfileSchema.extend({
-        ConnectionRequest: z
-            .array(
-                ConnectionRequestSchema.extend({
-                    member: UserSchema.extend({
-                        account: AccountSchema.nullable(),
-                        memberProfile: MemberProfileSchema,
-                    }),
-                })
-            )
-            .nullable(),
-    }),
-}).array();
-
-type QueryResult = z.infer<typeof queryResultSchema>;
-
-const practiceConnectionRequestViewSchema = z.object({
-    connectionRequestStatus: ConnectionRequestSchema.shape.connectionStatus,
-    memberId: z.string(),
-    providerFirstName: z.string(),
-    providerLastName: z.string(),
-    memberFirstName: z.string(),
-    memberLastName: z.string(),
-    memberEmailAddress: z.string(),
-    practiceName: z.string(),
-    practiceEmailAddress: z.string(),
-    memberState: z.string(),
-    memberAccountName: z.string(),
-    memberConcerns: z.string().array(),
-    memberGoals: z.string().array(),
-    memberConnectionMessage: z.string(),
-});
-
-type PracticeConnectionRequestView = z.infer<
-    typeof practiceConnectionRequestViewSchema
->;
-
-function toPracticeConnectionRequestView(
-    queryResult: QueryResult
-): PracticeConnectionRequestView[] {
-    let results: PracticeConnectionRequestView[] = [];
-    for (const practiceProfile of queryResult) {
-        const { ConnectionRequest } = practiceProfile.profile;
-        const connectionRequestView = (ConnectionRequest ?? []).map(
-            (connectionRequest) => {
-                return {
-                    memberId: connectionRequest.member.id,
-                    connectionRequestStatus: connectionRequest.connectionStatus,
-                    providerFirstName: practiceProfile.profile.givenName,
-                    providerLastName: practiceProfile.profile.surname,
-                    memberFirstName: connectionRequest.member.givenName,
-                    memberLastName: connectionRequest.member.surname,
-                    memberEmailAddress: connectionRequest.member.emailAddress,
-                    practiceName: practiceProfile.practice.name,
-                    practiceEmailAddress: practiceProfile.practice.email,
-                    memberState: connectionRequest.member.memberProfile.state,
-                    memberAccountName: connectionRequest.member.account?.name,
-                    memberConcerns:
-                        connectionRequest.member.memberProfile.concerns,
-                    memberGoals: connectionRequest.member.memberProfile.goals,
-                    memberConnectionMessage:
-                        connectionRequest.connectionMessage,
-                };
-            }
-        );
-        // @ts-ignore
-        results = results.concat(connectionRequestView);
-    }
-    return results;
-}
-
 export interface PracticeClientsPageProps {
-    connectionRequests: PracticeConnectionRequestView[];
+    practiceConnectionRequests: PracticeProfileConnectionRequests.Type;
     user: TherifyUser.TherifyUser;
 }
 
-interface GetPracticeClientsPagePropsParams extends ProvidersServiceParams {}
-export const factory = (params: GetPracticeClientsPagePropsParams) => {
+export const factory = (params: ProvidersServiceParams) => {
     const getPracticeClientsPageProps: GetServerSideProps<
         PracticeClientsPageProps
     > = async (context) => {
+        // TODO [feat:provider-clients-page]:  Remove this when ready for prod
+        if (process.env.NODE_ENV !== 'development') {
+            return {
+                notFound: true,
+            };
+        }
         const session = await getSession(context.req, context.res);
         if (!session) {
             return {
                 redirect: {
-                    destination: '/api/auth/login',
+                    destination: URL_PATHS.AUTH.LOGIN,
                     permanent: false,
                 },
             };
         }
         const getUserDetails = GetProviderTherifyUser.factory(params);
-        const { prisma } = params;
-        const [user, practiceProfiles] = await Promise.all([
+        const [{ user }, practiceConnectionRequests] = await Promise.all([
             getUserDetails({
                 userId: session.user.sub,
             }),
-            prisma.practiceProfile.findMany({
-                where: {
-                    practice: {
-                        practiceOwnerId: session.user.sub,
-                    },
-                },
-                select: {
-                    practice: true,
-                    profile: {
-                        include: {
-                            ConnectionRequest: {
-                                include: {
-                                    member: {
-                                        include: {
-                                            account: true,
-                                            memberProfile: true,
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
+            directoryService.listConnectionRequestsByPracticeOwnerId({
+                practiceOwnerId: session.user.sub,
+                status: [ConnectionStatus.pending, ConnectionStatus.accepted],
             }),
         ]);
+        if (user === null) {
+            return {
+                redirect: {
+                    destination: URL_PATHS.AUTH.LOGIN,
+                    permanent: false,
+                },
+            };
+        }
+        const props: PracticeClientsPageProps = {
+            practiceConnectionRequests,
+            user,
+        };
         return {
-            props: JSON.parse(
-                JSON.stringify({
-                    user,
-                    connectionRequests: toPracticeConnectionRequestView(
-                        practiceProfiles as QueryResult
-                    ),
-                })
-            ),
+            props: JSON.parse(JSON.stringify(props)),
         };
     };
     return getPracticeClientsPageProps;

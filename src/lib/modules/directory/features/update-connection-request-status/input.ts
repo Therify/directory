@@ -6,7 +6,7 @@ export const schema = z.object({
     profileId: z.string(),
     memberId: z.string(),
     userId: z.string(),
-    declineMessage: z.string().optional(),
+    message: z.string().optional(),
 });
 
 export type Input = z.infer<typeof schema>;

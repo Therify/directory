@@ -46,24 +46,23 @@ export function factory({ prisma }: ProvidersServiceParams) {
         }
         const supervisor = rawSupervisor
             ? ProviderSupervisor.validate(rawSupervisor)
-            : null;
+            : {};
         const credentials = rawCredentials.map(ProviderCredential.validate);
 
         const profile = {
             ...rawProfile,
             practiceStartDate: practiceStartDate && new Date(practiceStartDate),
-            supervisor,
             credentials,
+            supervisor,
         };
+        const payload = ProviderProfileSchema.omit({
+            createdAt: true,
+            updatedAt: true,
+        }).parse(profile);
+
         await prisma.providerProfile.update({
             where: { id: profile.id },
-            data: {
-                ...ProviderProfileSchema.omit({
-                    createdAt: true,
-                    updatedAt: true,
-                    supervisor: true,
-                }).parse(profile),
-            },
+            data: { ...payload },
         });
 
         return {

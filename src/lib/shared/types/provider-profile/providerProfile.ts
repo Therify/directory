@@ -4,6 +4,7 @@ import { ProviderProfileSchema } from '../../schema';
 import { ProviderCredential } from '../provider-credential';
 import { ProviderSupervisor } from '../provider-supervisor';
 import { AcceptedInsurance } from '../accepted-insurance';
+import { convertNestedDatesToISOString } from '../../utils';
 
 export const schema = ProviderProfileSchema.extend({
     pronouns: Pronoun.schema,
@@ -30,7 +31,23 @@ export const schema = ProviderProfileSchema.extend({
 export type ProviderProfile = z.infer<typeof schema>;
 
 export const validate = (value: unknown): ProviderProfile => {
-    return schema.parse(value);
+    const valueWithISOStringDates = convertNestedDatesToISOString(value);
+    if (
+        valueWithISOStringDates !== null &&
+        typeof valueWithISOStringDates === 'object' &&
+        'supervisor' in valueWithISOStringDates
+    ) {
+        const supervisorShouldBeNull =
+            valueWithISOStringDates.supervisor === null ||
+            JSON.stringify(valueWithISOStringDates.supervisor) === '{}';
+        return schema.parse({
+            ...valueWithISOStringDates,
+            supervisor: supervisorShouldBeNull
+                ? null
+                : valueWithISOStringDates.supervisor,
+        });
+    }
+    return schema.parse(valueWithISOStringDates);
 };
 
 export const isValid = (value: unknown): value is ProviderProfile => {

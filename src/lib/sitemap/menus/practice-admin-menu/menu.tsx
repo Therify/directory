@@ -1,11 +1,14 @@
 import {
-    //  DASHBOARD, CLIENTS,
+    //  DASHBOARD,
+    CLIENTS,
     PROFILES,
 } from './links';
 import { ACCOUNT, BILLING_AND_SUBSCRIPTION, LOGOUT } from '../accountLinks';
 
 export const PRACTICE_ADMIN_MAIN_MENU = [
-    // DASHBOARD, CLIENTS,
+    // DASHBOARD,
+    // TODO [feat:provider-clients-page]: Remove this when ready for prod
+    ...(process.env.NODE_ENV === 'development' ? [CLIENTS] : []),
     PROFILES,
 ] as const;
 

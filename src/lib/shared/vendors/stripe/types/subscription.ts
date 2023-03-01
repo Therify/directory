@@ -39,7 +39,7 @@ export const schema = z.object({
     current_period_start: z.number(),
     customer: z.string(),
     days_until_due: z.number().nullable(),
-    default_payment_method: z.string(),
+    default_payment_method: z.string().nullable(),
     default_source: z.string().nullable(),
     default_tax_rates: z.array(z.string()),
     discount: stripeDiscount.nullable(),

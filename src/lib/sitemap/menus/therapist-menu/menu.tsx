@@ -5,7 +5,6 @@ import {
 } from './links';
 import {
     // ACCOUNT,
-    BILLING_AND_SUBSCRIPTION,
     LOGOUT,
 } from '../accountLinks';
 
@@ -18,7 +17,6 @@ export const THERAPIST_MAIN_MENU = [
 
 export const THERAPIST_SECONDARY_MENU = [
     // { ...ACCOUNT, icon: undefined },
-    BILLING_AND_SUBSCRIPTION,
     LOGOUT,
 ] as const;
 

@@ -2,6 +2,7 @@ import { ConnectionRequestSchema } from '@/lib/shared/schema';
 import * as z from 'zod';
 
 export const schema = z.object({
+    // TODO: this is the wrong output type
     connectionRequests: ConnectionRequestSchema.array(),
     errors: z.array(z.string()),
 });

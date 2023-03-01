@@ -1,6 +1,9 @@
+import { DirectoryProfile } from '@/lib/shared/types/presentation';
 import * as z from 'zod';
 
-export const schema = z.object({});
+export const schema = z.object({
+    profiles: DirectoryProfile.schema.array(),
+});
 
 export type Output = z.infer<typeof schema>;
 
