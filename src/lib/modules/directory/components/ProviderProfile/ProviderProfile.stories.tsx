@@ -88,6 +88,7 @@ const coach: ProviderProfileType.ProviderProfile = {
     offersPhoneConsultations: true,
     offersVirtual: true,
     practiceStartDate: '2010-09-01T00:00:00.000Z',
+    offersChat: true,
 };
 const therapist: ProviderProfileType.ProviderProfile = {
     id: 'test-id',
@@ -169,6 +170,7 @@ const therapist: ProviderProfileType.ProviderProfile = {
     designation: ProfileType.therapist,
     newClientStatus: NewClientStatus.accepting,
     practiceStartDate: '2010-09-01T00:00:00.000Z',
+    offersChat: true,
 };
 
 export default meta;
