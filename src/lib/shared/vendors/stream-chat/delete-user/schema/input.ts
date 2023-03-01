@@ -1,8 +1,8 @@
-import { UserSchema } from '@/lib/shared/schema';
 import * as z from 'zod';
 
 export const schema = z.object({
-    members: z.array(UserSchema),
+    userIdentifier: z.string(),
+    markMessagesAsDeleted: z.boolean().optional().default(false),
 });
 
 export type Input = z.infer<typeof schema>;
