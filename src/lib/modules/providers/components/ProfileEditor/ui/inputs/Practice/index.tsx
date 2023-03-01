@@ -13,6 +13,7 @@ import {
     OffersVirtualToggle,
     OffersMedicationManagement,
     OffersPhoneConsultations,
+    OffersChat,
 } from './ToggleInputs';
 import { AgeGroupsServedServedInput } from './AgeGroupsServed';
 import { CommunitiesServedInput } from './CommunitiesServed';
@@ -54,6 +55,12 @@ export const PracticeSection = ({
                         control={control}
                         disabled={disabled}
                     />
+                </Box>
+            )}
+            {!isTherapist && (
+                <Box marginBottom={4}>
+                    <FormSectionSubtitle>Chat</FormSectionSubtitle>
+                    <OffersChat control={control} disabled={disabled} />
                 </Box>
             )}
             <InputsContainer>
