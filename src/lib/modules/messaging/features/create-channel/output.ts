@@ -1,7 +1,10 @@
 import * as z from 'zod';
 
 export const schema = z.object({
-    channelId: z.string(),
+    /**
+     * If the channel is undefined, it means the provider does not support messaging
+     */
+    channelId: z.string().optional(),
 });
 
 export type Output = z.infer<typeof schema>;

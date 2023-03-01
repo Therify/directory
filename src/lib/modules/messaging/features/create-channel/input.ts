@@ -1,7 +1,10 @@
+import { ProviderProfileSchema, UserSchema } from '@/lib/shared/schema';
+import { TherifyUser } from '@/lib/shared/types';
 import * as z from 'zod';
 
 export const schema = z.object({
-    members: z.array(z.string()),
+    memberId: z.string(),
+    profileId: z.string(),
 });
 
 export type Input = z.infer<typeof schema>;

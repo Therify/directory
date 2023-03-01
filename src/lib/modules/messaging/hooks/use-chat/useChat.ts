@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { StreamChat } from 'stream-chat';
+import { useChatContext } from 'stream-chat-react';
 
 interface UseChatParams {
     setClient: (client: StreamChat) => void;
@@ -11,7 +12,7 @@ interface UseChatParams {
 }
 
 export function useChat(params: UseChatParams) {
-    const [client] = useState<StreamChat>(new StreamChat('----'));
+    const [client] = useState<StreamChat>(new StreamChat('7ryxym6g8a33'));
     useEffect(() => {
         const handleConnectionChange = ({
             online = false,
@@ -35,5 +36,5 @@ export function useChat(params: UseChatParams) {
                 .disconnectUser()
                 .then(() => console.info('connection closed'));
         };
-    }, []);
+    }, [client, params]);
 }
