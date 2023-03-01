@@ -7,8 +7,7 @@ export const PARAGRAPH_SIZE = {
     LARGE: 'large',
 } as const;
 
-export type ParagraphSize =
-    (typeof PARAGRAPH_SIZE)[keyof typeof PARAGRAPH_SIZE];
+export type ParagraphSize = typeof PARAGRAPH_SIZE[keyof typeof PARAGRAPH_SIZE];
 
 export const PARAGRAPH_FONT_WEIGHT = {
     BOLD: 'bold',
@@ -17,7 +16,7 @@ export const PARAGRAPH_FONT_WEIGHT = {
 } as const;
 
 export type ParagraphFontWeight =
-    (typeof PARAGRAPH_FONT_WEIGHT)[keyof typeof PARAGRAPH_FONT_WEIGHT];
+    typeof PARAGRAPH_FONT_WEIGHT[keyof typeof PARAGRAPH_FONT_WEIGHT];
 
 export const PARAGRAPH_TEXT_DECORATION = {
     UNDERLINE: 'underline',
@@ -25,7 +24,7 @@ export const PARAGRAPH_TEXT_DECORATION = {
 } as const;
 
 export type ParagraphTextDecoration =
-    (typeof PARAGRAPH_TEXT_DECORATION)[keyof typeof PARAGRAPH_TEXT_DECORATION];
+    typeof PARAGRAPH_TEXT_DECORATION[keyof typeof PARAGRAPH_TEXT_DECORATION];
 
 interface ParagraphProps {
     size?: ParagraphSize;

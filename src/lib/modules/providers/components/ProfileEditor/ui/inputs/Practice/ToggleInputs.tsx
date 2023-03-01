@@ -57,6 +57,27 @@ export const OffersVirtualToggle = ({
         )}
     />
 );
+
+export const OffersChat = ({ control, disabled }: ToggleInputProps) => (
+    <Controller
+        control={control}
+        name="offersChat"
+        render={({ field: { onChange, onBlur, value, name } }) => (
+            <Switch
+                id="offersChat"
+                displayText="Do you want to offer chat?"
+                {...{
+                    onChange,
+                    onBlur,
+                    value,
+                    checked: value,
+                    name,
+                    disabled,
+                }}
+            />
+        )}
+    />
+);
 export const OffersMedicationManagement = ({
     control,
     disabled,

@@ -6,4 +6,5 @@ export const COACH_PATHS = {
     PAYMENTS: 'providers/coach/payments',
     PROFILE_EDITOR: '/providers/coach/profile/editor',
     PROFILES: '/providers/coach/profiles',
+    CHAT: '/providers/coach/chat',
 } as const;

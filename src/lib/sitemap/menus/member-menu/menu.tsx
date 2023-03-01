@@ -4,6 +4,7 @@ import {
     FAVORITES,
     DIRECTORY,
     THERIFY_WEBSITE,
+    CHAT,
 } from './links';
 import { ACCOUNT, LOGOUT } from '../accountLinks';
 

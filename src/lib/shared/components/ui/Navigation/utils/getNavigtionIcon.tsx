@@ -51,6 +51,8 @@ export const getNavigationIcon = (iconName?: NavigationIcon) => {
             return FavoriteBorderRounded;
         case NAVIGATION_ICON.DIRECTORY:
             return PersonSearchOutlined;
+        case NAVIGATION_ICON.CHAT:
+            return QuestionAnswerOutlined;
         case NAVIGATION_ICON.THERIFY_ICON:
             return TherifyLogoIcon;
 

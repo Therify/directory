@@ -14,14 +14,14 @@ export const BADGE_SIZE = {
     LARGE: 'large',
 } as const;
 
-export type BadgeSize = (typeof BADGE_SIZE)[keyof typeof BADGE_SIZE];
+export type BadgeSize = typeof BADGE_SIZE[keyof typeof BADGE_SIZE];
 
 export const BADGE_TYPE = {
     CONTAINED: 'contained',
     OUTLINED: 'outlined',
 } as const;
 
-export type BadgeType = (typeof BADGE_TYPE)[keyof typeof BADGE_TYPE];
+export type BadgeType = typeof BADGE_TYPE[keyof typeof BADGE_TYPE];
 
 export const BADGE_COLOR = {
     PRIMARY: 'primary',
@@ -33,7 +33,7 @@ export const BADGE_COLOR = {
     ERROR: 'error',
 } as const;
 
-export type BadgeColor = (typeof BADGE_COLOR)[keyof typeof BADGE_COLOR];
+export type BadgeColor = typeof BADGE_COLOR[keyof typeof BADGE_COLOR];
 
 export const TEST_IDS = {
     BADGE: 'badge',

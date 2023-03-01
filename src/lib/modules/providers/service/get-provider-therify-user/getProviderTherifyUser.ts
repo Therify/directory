@@ -20,6 +20,8 @@ export const factory =
                 createdAt: true,
                 roles: true,
                 accountId: true,
+                chatAccessToken: true,
+                providerChannels: true,
                 managedPractice: {
                     select: {
                         plans: {
@@ -68,7 +70,7 @@ export const factory =
         });
 
         if (!user) return { user: null };
-
+        console.log('Building provider user', user);
         const {
             providerProfile,
             emailAddress,
@@ -79,6 +81,8 @@ export const factory =
             accountId,
             managedPractice,
             practiceProvider,
+            providerChannels,
+            chatAccessToken,
         } = user;
 
         let plan: TherifyUser.TherifyUser['plan'] = null;
@@ -125,6 +129,8 @@ export const factory =
                 userId,
                 plan,
                 isPracticeAdmin,
+                providerChannels,
+                chatAccessToken,
                 ...(providerProfile?.profileImageUrl
                     ? { avatarUrl: providerProfile.profileImageUrl }
                     : {}),

@@ -6,5 +6,6 @@ export const MEMBER_PATHS = {
     HOME: './members/home',
     FAVORITES: '/members/favorites',
     DIRECTORY: '/members/directory',
+    CHAT: '/members/chat',
     CONTENT: CONTENT_PATHS,
 } as const;
