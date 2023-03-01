@@ -93,4 +93,5 @@ export const mockProviderProfile: ProviderProfile.ProviderProfile = {
     designation: ProfileType.therapist,
     newClientStatus: NewClientStatus.accepting,
     practiceStartDate: '2010-09-01T00:00:00.000Z',
+    offersChat: false,
 };
