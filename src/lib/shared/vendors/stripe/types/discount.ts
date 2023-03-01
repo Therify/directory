@@ -2,9 +2,9 @@ import * as z from 'zod';
 
 export const schema = z.object({
     customer: z.string(),
-    discount: z.object({
-        coupon: z
-            .object({
+    discount: z
+        .object({
+            coupon: z.object({
                 amount_off: z.number(),
                 created: z.number(),
                 currency: z.string(),
@@ -18,15 +18,15 @@ export const schema = z.object({
                 redeem_by: z.number(),
                 times_redeemed: z.number(),
                 valid: z.boolean(),
-            })
-            .optional(),
-        customer: z.string(),
-        end: z.number(),
-        id: z.string(),
-        object: z.literal('discount'),
-        start: z.number(),
-        subscription: z.string(),
-    }),
+            }),
+            customer: z.string(),
+            end: z.number(),
+            id: z.string(),
+            object: z.literal('discount'),
+            start: z.number(),
+            subscription: z.string(),
+        })
+        .optional(),
     id: z.string(),
     object: z.literal('discount'),
     subscription: z.string(),
