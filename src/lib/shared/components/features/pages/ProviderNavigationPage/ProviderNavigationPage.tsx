@@ -5,6 +5,7 @@ import {
     COACH_MAIN_MENU,
     COACH_SECONDARY_MENU,
     COACH_MOBILE_MENU,
+    NavigationLink,
 } from '@/lib/sitemap';
 import { TherifyUser } from '@/lib/shared/types';
 import { useRouter } from 'next/router';
@@ -13,6 +14,7 @@ import {
     SideNavigationPageProps,
 } from '../SideNavigationPage';
 import { Role } from '@prisma/client';
+import { CHAT } from '@/lib/sitemap/menus/coach-menu/links';
 
 interface ProviderNavigationPageProps
     extends Omit<
@@ -29,7 +31,8 @@ interface ProviderNavigationPageProps
 export function ProviderNavigationPage(props: ProviderNavigationPageProps) {
     const router = useRouter();
     const { primaryMenu, secondaryMenu, mobileMenu } = getMenusByRole(
-        props.user?.roles ?? []
+        props.user?.roles ?? [],
+        props.user?.hasChatEnabled ?? false
     );
     return (
         <SideNavigationPage
@@ -42,7 +45,10 @@ export function ProviderNavigationPage(props: ProviderNavigationPageProps) {
     );
 }
 
-const getMenusByRole = (roles: TherifyUser.TherifyUser['roles']) => {
+const getMenusByRole = (
+    roles: TherifyUser.TherifyUser['roles'],
+    hasChatEnabled = false
+) => {
     const isTherapist = roles.includes(Role.provider_therapist);
     if (isTherapist) {
         return {
@@ -53,8 +59,14 @@ const getMenusByRole = (roles: TherifyUser.TherifyUser['roles']) => {
     }
 
     return {
-        primaryMenu: [...COACH_MAIN_MENU],
+        primaryMenu: [
+            ...COACH_MAIN_MENU,
+            hasChatEnabled ? CHAT : undefined,
+        ].filter(Boolean) as NavigationLink[],
         secondaryMenu: [...COACH_SECONDARY_MENU],
-        mobileMenu: [...COACH_MOBILE_MENU],
+        mobileMenu: [
+            ...COACH_MOBILE_MENU,
+            hasChatEnabled ? CHAT : undefined,
+        ].filter(Boolean) as NavigationLink[],
     };
 };

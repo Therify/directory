@@ -9,6 +9,7 @@ import { FavoriteProfile } from './favorite-profile';
 import { GetFavoritesPageProps } from './get-favorites-page-props';
 import { GetMemberTherifyUser } from './get-member-therify-user';
 import { GetTherifyUserPageProps } from './get-therify-user-props';
+import { GetChatPageProps } from './get-chat-page-props';
 
 const factoryParams: MembersServiceParams = {
     prisma,
@@ -24,6 +25,7 @@ export const membersService = {
         GetDirectoryProfilePageProps.factory(factoryParams),
     getFavoritesPageProps: GetFavoritesPageProps.factory(factoryParams),
     favoriteProfile: FavoriteProfile.factory(factoryParams),
+    getChatPageProps: GetChatPageProps.factory(factoryParams),
 };
 
 export type MembersService = typeof membersService;

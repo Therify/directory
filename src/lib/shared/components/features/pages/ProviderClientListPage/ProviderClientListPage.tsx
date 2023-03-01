@@ -30,6 +30,8 @@ import {
     PreviewRounded,
 } from '@mui/icons-material';
 import { ConnectionStatus, ProfileType } from '@prisma/client';
+import { CHAT } from '@/lib/sitemap/menus/coach-menu/links';
+import router from 'next/router';
 
 const REIMBURSEMENT_REQUEST_URL =
     'https://hipaa.jotform.com/221371005584146?' as const;
@@ -100,9 +102,7 @@ export function ProviderClientListPage({
                                 onOpenChat={
                                     isCoach
                                         ? () => {
-                                              console.log(
-                                                  'TODO: implement chat'
-                                              );
+                                              router.push(CHAT.path);
                                           }
                                         : undefined
                                 }
