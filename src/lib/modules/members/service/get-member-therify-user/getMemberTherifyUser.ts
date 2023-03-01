@@ -20,6 +20,8 @@ export const factory =
                 createdAt: true,
                 roles: true,
                 accountId: true,
+                chatAccessToken: true,
+                memberChannels: true,
                 account: {
                     select: {
                         plans: {
@@ -50,6 +52,8 @@ export const factory =
             roles,
             accountId,
             account: { plans },
+            memberChannels,
+            chatAccessToken,
         } = user;
 
         const [newestPlan] = plans;
@@ -66,6 +70,8 @@ export const factory =
                 emailAddress,
                 givenName,
                 surname,
+                chatAccessToken,
+                memberChannels,
                 createdAt: createdAt.toISOString(),
                 roles,
                 accountId,

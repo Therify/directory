@@ -1,8 +1,7 @@
 import { DirectoryServiceParams } from '../params';
 import { UpdateConnectionRequestStatus } from '@/lib/modules/directory/features';
-import { ConnectionRequest } from '@/lib/shared/types';
 
-export function factory({ prisma }: DirectoryServiceParams) {
+export function factory({ prisma, messaging }: DirectoryServiceParams) {
     return async function ({
         profileId,
         memberId,
@@ -56,7 +55,10 @@ export function factory({ prisma }: DirectoryServiceParams) {
                 connectionStatus,
             },
         });
-
+        await messaging.createChannel({
+            memberId,
+            profileId,
+        });
         return {
             success: true,
         };

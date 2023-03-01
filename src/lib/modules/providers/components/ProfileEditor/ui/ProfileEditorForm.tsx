@@ -51,6 +51,7 @@ interface EditorFormProps {
         designation: ProviderProfile.ProviderProfile['designation'];
         profileImageUrl: ProviderProfile.ProviderProfile['profileImageUrl'];
         offersSlidingScale: ProviderProfile.ProviderProfile['offersSlidingScale'];
+        offersChat: ProviderProfile.ProviderProfile['offersChat'];
         minimumRate: ProviderProfile.ProviderProfile['minimumRate'];
         givenName: ProviderProfile.ProviderProfile['givenName'];
         surname: ProviderProfile.ProviderProfile['surname'];

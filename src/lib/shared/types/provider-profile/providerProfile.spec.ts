@@ -44,6 +44,7 @@ const mockProfile: PrismaProviderProfile = {
     designation: ProfileType.therapist,
     newClientStatus: NewClientStatus.accepting,
     practiceStartDate: new Date(),
+    offersChat: false,
 };
 
 describe('ProviderProfile.validate', () => {

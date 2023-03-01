@@ -18,3 +18,9 @@ export const PROFILE_EDITOR: NavigationLink = {
     displayName: 'Profile',
     path: URL_PATHS.PROVIDERS.COACH.PROFILES,
 } as const;
+
+export const CHAT: NavigationLink = {
+    icon: NAVIGATION_ICON.CHAT,
+    displayName: 'Chat',
+    path: URL_PATHS.PROVIDERS.COACH.CHAT,
+};

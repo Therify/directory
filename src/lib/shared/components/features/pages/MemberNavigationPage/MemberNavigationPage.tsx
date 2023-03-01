@@ -10,6 +10,8 @@ import {
     TopNavigationPage,
     TopNavigationPageProps,
 } from '../TopNavigationPage';
+import { CHAT } from '@/lib/sitemap/menus/member-menu/links';
+import { NavigationLink } from '@/lib/sitemap/types/navigationLink';
 
 export interface MemberNavigationPageProps
     extends Omit<
@@ -29,9 +31,19 @@ export function MemberNavigationPage(props: MemberNavigationPageProps) {
         <TopNavigationPage
             {...props}
             onNavigate={router.push}
-            primaryMenu={[...MEMBER_MAIN_MENU]}
+            primaryMenu={
+                [
+                    ...MEMBER_MAIN_MENU,
+                    props.user?.hasChatEnabled ?? false ? CHAT : null,
+                ].filter(Boolean) as NavigationLink[]
+            }
             secondaryMenu={[...MEMBER_SECONDARY_MENU]}
-            mobileMenu={[...MEMBER_MOBILE_MENU]}
+            mobileMenu={
+                [
+                    ...MEMBER_MOBILE_MENU,
+                    props.user?.hasChatEnabled ?? false ? CHAT : null,
+                ].filter(Boolean) as NavigationLink[]
+            }
             isLoadingUser={false}
         />
     );

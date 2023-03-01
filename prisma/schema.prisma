@@ -37,11 +37,14 @@ model User {
   practiceProviderInvitation PracticeProviderInvitation[]
   providerProfile            ProviderProfile?
   practiceProvider           PracticeProvider?
+  chatAccessToken            String?                      @map("chat_access_token")
 
-  memberProfile     MemberProfile?
-  selfAssessments   SelfAssessment[]
-  ConnectionRequest ConnectionRequest[]
-  managedPractice   Practice?
+  memberProfile      MemberProfile?
+  selfAssessments    SelfAssessment[]
+  connectionRequests ConnectionRequest[]
+  managedPractice    Practice?
+  memberChannels     Channel[]           @relation("member")
+  providerChannels   Channel[]           @relation("provider")
 
   @@map("users")
 }
@@ -282,7 +285,8 @@ model ProviderProfile {
   invitations                PracticeProviderInvitation[]
   memberFavorites            MemberFavorites[]
   practiceProfile            PracticeProfile?
-  ConnectionRequest          ConnectionRequest[]
+  connectionRequests         ConnectionRequest[]
+  offersChat                 Boolean                      @default(false) @map("offers_chat")
 
   @@map("provider_profiles")
 }
@@ -346,4 +350,17 @@ model ConnectionRequest {
 
   @@id([memberId, profileId])
   @@map("connection_requests")
+}
+
+model Channel {
+  id String @id @map("channel_id")
+
+  providerId String @map("provider_id")
+  memberId   String @map("member_id")
+
+  member    User     @relation("member", fields: [memberId], references: [id])
+  provider  User     @relation("provider", fields: [providerId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("channels")
 }

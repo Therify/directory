@@ -32,3 +32,9 @@ export const CONTENT_LIBRARY: NavigationLink = {
     path: URL_PATHS.EXTERNAL.VIMEO.CHANNEL,
     // path: URL_PATHS.MEMBERS.CONTENT.LIBRARY,
 } as const;
+
+export const CHAT: NavigationLink = {
+    icon: NAVIGATION_ICON.CHAT,
+    displayName: 'Chat',
+    path: URL_PATHS.MEMBERS.CHAT,
+};

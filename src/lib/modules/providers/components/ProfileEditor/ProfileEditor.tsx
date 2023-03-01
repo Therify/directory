@@ -47,6 +47,7 @@ export function ProfileEditor({
             offersPhoneConsultations: false,
             offersVirtual: true,
             offersSlidingScale: false,
+            offersChat: false,
             specialties: [],
             ethnicity: [],
             religions: [],
@@ -189,6 +190,7 @@ export function ProfileEditor({
                                         watchedProfile.profileImageUrl,
                                     offersSlidingScale:
                                         watchedProfile.offersSlidingScale,
+                                    offersChat: watchedProfile.offersChat,
                                     minimumRate: watchedProfile.minimumRate,
                                     supervisor: watchedProfile.supervisor,
                                 }}
