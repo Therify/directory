@@ -14,9 +14,7 @@ import {
 } from 'stream-chat-react';
 import { styled, Theme } from '@mui/material/styles';
 import { useState } from 'react';
-import { IconButton } from '@/lib/shared/components/ui';
 import { Box, useMediaQuery } from '@mui/material';
-
 import { ChevronLeft } from '@mui/icons-material';
 
 interface ChatComponentProps {
@@ -58,9 +56,7 @@ export function ChatComponent({
                         <ChannelHeader
                             MenuIcon={() => (
                                 <IconButton
-                                    size="small"
-                                    type="outlined"
-                                    color="info"
+                                    className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeSmall MuiButton-disableElevation MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeSmall MuiButton-disableElevation css-1q53vy0-MuiButtonBase-root-MuiButton-root"
                                     onClick={() => setDrawerOpen(true)}
                                 >
                                     <ChevronLeft />
@@ -76,9 +72,17 @@ export function ChatComponent({
         </StyledChatContainer>
     );
 }
+
+const IconButton = styled(Box)(({ theme }) => ({
+    minWidth: '40px',
+    width: '40px',
+    height: '40px',
+    padding: '0px',
+}));
+
 const DrawerBackdrop = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'drawerOpen',
-})<{ drawerOpen: boolean }>(({ theme, drawerOpen }) => ({
+})<{ drawerOpen: boolean }>(({ drawerOpen }) => ({
     transition: '.3s',
     position: 'absolute',
     top: 0,
