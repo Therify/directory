@@ -17,20 +17,16 @@ interface ClientListProps {
     onTerminateConnectionRequest: HandleConnectionRequestAction;
     onReimbursmentRequest: HandleConnectionRequestAction;
     onViewMemberDetails: HandleConnectionRequestAction;
-    onOpenChat: (memberId: string) => void;
 }
 
 export const ClientList = ({
-    designation,
     connectionRequests,
     onAcceptConnectionRequest,
     onDeclineConnectionRequest,
     onTerminateConnectionRequest,
     onReimbursmentRequest,
-    onOpenChat,
     onViewMemberDetails,
 }: ClientListProps) => {
-    const isCoach = designation === ProfileType.coach;
     const isSmallScreen = useMediaQuery((theme: Theme) =>
         theme.breakpoints.down('md')
     );
@@ -75,11 +71,6 @@ export const ClientList = ({
                             onTerminateConnectionRequest(connectionRequest)
                         }
                         onView={() => onViewMemberDetails(connectionRequest)}
-                        onOpenChat={
-                            isCoach
-                                ? () => onOpenChat(connectionRequest.member.id)
-                                : undefined
-                        }
                         onReimbursmentRequest={() => {
                             onReimbursmentRequest(connectionRequest);
                         }}

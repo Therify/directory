@@ -34,7 +34,6 @@ export const ClientListItem = ({
     onDecline,
     onTerminate,
     onView,
-    onOpenChat,
     onReimbursmentRequest,
 }: {
     connectionRequest: ConnectionRequest.Type;
@@ -43,7 +42,6 @@ export const ClientListItem = ({
     onDecline: () => void;
     onTerminate: () => void;
     onView?: () => void;
-    onOpenChat?: () => void;
     onReimbursmentRequest: () => void;
 }) => {
     const isPending =
@@ -65,24 +63,12 @@ export const ClientListItem = ({
                   },
               ]
             : []),
-        ...(!onOpenChat
-            ? [
-                  {
-                      icon: <PreviewRounded />,
-                      text: ' View Member Details',
-                      onClick: onView,
-                  },
-              ]
-            : []),
-        ...(onOpenChat
-            ? [
-                  {
-                      icon: <ChatBubbleOutlineRounded />,
-                      text: 'Chat',
-                      onClick: onOpenChat,
-                  },
-              ]
-            : []),
+
+        {
+            icon: <PreviewRounded />,
+            text: ' View Member Details',
+            onClick: onView,
+        },
     ];
     const actionList = [
         ...(isSmallScreen ? mobileActions : []),
@@ -160,7 +146,6 @@ export const ClientListItem = ({
                             onAccept={onAccept}
                             onDecline={onDecline}
                             onView={onView}
-                            onOpenChat={onOpenChat}
                         />
                     )}
                     {isPending && isSmallScreen && (
