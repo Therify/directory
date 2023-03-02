@@ -181,6 +181,11 @@ const StyledChatContainer = styled(Box, {
         position: 'absolute',
         bottom: 0,
     },
+
+    '& textarea.rta__textarea::placeholder': {
+        fontSize: '14px !important',
+    },
+
     [theme.breakpoints.up('md')]: {
         flexDirection: 'row',
         ['& .str-chat-channel-list']: {
