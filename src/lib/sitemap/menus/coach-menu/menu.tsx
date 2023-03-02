@@ -8,7 +8,7 @@ import { ACCOUNT, BILLING_AND_SUBSCRIPTION, LOGOUT } from '../accountLinks';
 export const COACH_MAIN_MENU = [
     // DASHBOARD,
     // TODO [feat:provider-clients-page]: Remove this when ready for prod
-    ...(process.env.NODE_ENV === 'development' ? [CLIENTS] : []),
+    ...(process.env.NODE_ENV !== 'production' ? [CLIENTS] : []),
     PROFILE_EDITOR,
 ] as const;
 
