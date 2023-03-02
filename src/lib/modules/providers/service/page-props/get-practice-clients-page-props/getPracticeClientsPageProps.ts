@@ -20,7 +20,7 @@ export const factory = (params: ProvidersServiceParams) => {
         PracticeClientsPageProps
     > = async (context) => {
         // TODO [feat:provider-clients-page]:  Remove this when ready for prod
-        if (process.env.NODE_ENV !== 'development') {
+        if (process.env.NODE_ENV === 'production') {
             return {
                 notFound: true,
             };
