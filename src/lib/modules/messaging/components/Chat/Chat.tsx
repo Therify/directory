@@ -144,17 +144,20 @@ const StyledChatContainer = styled(Box, {
             height: '100%',
             '& > div.str-chat__channel-list-messenger__main': {
                 padding: theme.spacing(0, 4),
+                overflowX: 'hidden',
                 [theme.breakpoints.up('md')]: {
                     padding: theme.spacing(0),
+                    paddingLeft: theme.spacing(2),
                     display: 'block',
                 },
                 width: '100% !important',
-                overflowX: 'auto',
                 '& button.str-chat__channel-preview-messenger': {
                     // Mobile channel list button
                     padding: theme.spacing(4),
                     marginBottom: theme.spacing(4),
                     [theme.breakpoints.up('md')]: {
+                        borderTopRightRadius: 0,
+                        borderBottomRightRadius: 0,
                         width: '100%',
                         marginTop: 0,
                     },
@@ -185,6 +188,7 @@ const StyledChatContainer = styled(Box, {
         },
         '& .str-chat-channel': {
             position: 'relative',
+            overflowX: 'hidden',
         },
         '& .str-chat__input-flat': {
             width: '100%',
