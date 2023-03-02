@@ -11,7 +11,7 @@ import {
 export const THERAPIST_MAIN_MENU = [
     // DASHBOARD,
     // TODO [feat:provider-clients-page]: Remove this when ready for prod
-    ...(process.env.NODE_ENV !== 'production' ? [CLIENTS] : []),
+    ...(process.env.VERCEL_ENV !== 'production' ? [CLIENTS] : []),
     PROFILE_EDITOR,
 ] as const;
 
