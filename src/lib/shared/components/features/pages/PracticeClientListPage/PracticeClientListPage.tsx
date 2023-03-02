@@ -533,11 +533,12 @@ const ClientListItem = ({
                   },
                   ...(onTerminate
                       ? [
-                            {
-                                icon: <PersonRemoveOutlined />,
-                                text: 'Remove Client',
-                                onClick: onTerminate,
-                            },
+                            // TODO: We need to be able to handle this without breaking confidentiality
+                            // {
+                            //     icon: <PersonRemoveOutlined />,
+                            //     text: 'Remove Client',
+                            //     onClick: onTerminate,
+                            // },
                         ]
                       : []),
               ]
