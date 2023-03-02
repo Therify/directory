@@ -1,6 +1,9 @@
 import { Control, Controller } from 'react-hook-form';
 import { Switch } from '@/lib/shared/components/ui';
 import { ProviderProfile } from '@/lib/shared/types';
+import { Tooltip, Box } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { InfoOutlined } from '@mui/icons-material';
 
 interface ToggleInputProps {
     control: Control<ProviderProfile.ProviderProfile>;
@@ -65,7 +68,14 @@ export const OffersChat = ({ control, disabled }: ToggleInputProps) => (
         render={({ field: { onChange, onBlur, value, name } }) => (
             <Switch
                 id="offersChat"
-                displayText="Do you want to offer chat?"
+                displayText={
+                    <Box display="flex" alignItems="center">
+                        Do you want to offer in-app messaging?{' '}
+                        <ChatTooltip title="In-app messaging allows you to communicate inside the Therify App with your clients">
+                            <InfoOutlined fontSize="small" />
+                        </ChatTooltip>
+                    </Box>
+                }
                 {...{
                     onChange,
                     onBlur,
@@ -78,6 +88,16 @@ export const OffersChat = ({ control, disabled }: ToggleInputProps) => (
         )}
     />
 );
+
+const ChatTooltip = styled(Tooltip)(({ theme }) => ({
+    marginLeft: 2,
+    fontSize: '0.8rem',
+    display: 'none',
+    [theme.breakpoints.up('md')]: {
+        display: 'inline-block',
+    },
+}));
+
 export const OffersMedicationManagement = ({
     control,
     disabled,

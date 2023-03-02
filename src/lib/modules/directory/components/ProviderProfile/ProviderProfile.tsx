@@ -26,6 +26,7 @@ import {
     Diversity1Outlined,
     ChurchOutlined,
     PersonPinCircleOutlined,
+    QuestionAnswerOutlined,
 } from '@mui/icons-material';
 import {
     Box,
@@ -141,6 +142,7 @@ export function ProviderProfile({
     gender,
     offersPhoneConsultations,
     offersMedicationManagement,
+    offersChat,
     newClientStatus,
     practiceStartDate,
     specialties = [],
@@ -297,6 +299,15 @@ export function ProviderProfile({
                                         color="primary"
                                     />
                                 )}
+                                {offersChat && (
+                                    <SessionTypeChip
+                                        label="In-App Messaging"
+                                        size="small"
+                                        icon={<QuestionAnswerOutlined />}
+                                        variant="outlined"
+                                        color="primary"
+                                    />
+                                )}
                             </SessionTypeContainer>
                             <Box>
                                 {/* TODO: Handle Share */}
@@ -404,6 +415,15 @@ export function ProviderProfile({
                                     description={`${
                                         givenName || 'This provider'
                                     } offers a free 15 min phone consultation to get started`}
+                                />
+                            )}
+                            {offersChat && (
+                                <CalloutBanner
+                                    icon={<QuestionAnswerOutlined />}
+                                    title="Offers in-app messaging"
+                                    description={`${
+                                        givenName || 'This provider'
+                                    } can be reached by clients via in-app chat`}
                                 />
                             )}
                             {offersMedicationManagement && isTherapist && (
