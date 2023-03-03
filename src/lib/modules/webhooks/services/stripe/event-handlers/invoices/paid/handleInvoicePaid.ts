@@ -40,7 +40,12 @@ export const handleInvoicePaidFactory =
         }
 
         const [lineItem] = invoice.lines.data;
-        if (!isValidPriceId(lineItem.price.id, process.env.NODE_ENV)) {
+        if (
+            !isValidPriceId(
+                lineItem.price.id,
+                process.env.VERCEL_ENV as NodeEnvironment
+            )
+        ) {
             throw new Error(`Unexpected price id: ${lineItem.price.id}`);
         }
 
