@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 
+let attempts = 0;
+
 const removeHubspotElement = () => {
+    attempts += 1;
     const element = document?.getElementById(
         'hubspot-messages-iframe-container'
     );
@@ -8,19 +11,14 @@ const removeHubspotElement = () => {
         element.remove();
         return;
     }
-    setTimeout(() => {
-        'retrying to remove hubspot element...';
-        removeHubspotElement();
-    }, 2000);
+    if (attempts < 10) {
+        setTimeout(() => {
+            console.log('retrying to remove hubspot element...');
+            removeHubspotElement();
+        }, 2000);
+    }
 };
 
 export const useRemoveHubspotChatWidget = () => {
-    const [attempts, setAttempts] = useState(0);
-
-    useEffect(() => {
-        setAttempts(attempts + 1);
-        if (attempts > 10) {
-            removeHubspotElement();
-        }
-    }, [attempts]);
+    useEffect(removeHubspotElement, []);
 };
