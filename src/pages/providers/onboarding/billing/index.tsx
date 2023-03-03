@@ -22,12 +22,13 @@ import { TRPCClientError } from '@trpc/client';
 import Link from 'next/link';
 import { URL_PATHS } from '@/lib/sitemap';
 import { RBAC } from '@/lib/shared/utils';
+import { NodeEnvironment } from '@/lib/shared/types/nodeEnvironment';
 
 const REGISTRATION_STEPS = ['Registration', 'Payment', 'Onboarding'] as const;
 
 const PRODUCT = getProductByEnvironment(
     PRODUCTS.GROUP_PRACTICE_PLAN,
-    process.env.NODE_ENV
+    process.env.VERCEL_ENV as NodeEnvironment
 );
 export const getServerSideProps = RBAC.requireProviderAuth(
     withPageAuthRequired()
