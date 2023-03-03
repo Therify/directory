@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 
 export const ApplicationContainer = styled(Box)(({ theme }) => ({
     height: '100vh',
+    maxHeight: '-webkit-fill-available',
     width: '100vw',
     position: 'relative',
     margin: 0,
