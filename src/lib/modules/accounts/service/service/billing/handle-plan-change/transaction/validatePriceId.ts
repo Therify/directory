@@ -13,7 +13,7 @@ export const factory: ValidatePriceIdFactory = ({ newStripePriceId }) => ({
     async commit() {
         const isValid = isValidPriceId(
             newStripePriceId,
-            process.env.VERCEL_ENV as NodeEnvironment
+            process.env.NEXT_PUBLIC_VERCEL_ENV as NodeEnvironment
         );
         if (!isValid) {
             throw new Error('Invalid price id.');

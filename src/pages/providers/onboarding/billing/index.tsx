@@ -28,7 +28,7 @@ const REGISTRATION_STEPS = ['Registration', 'Payment', 'Onboarding'] as const;
 
 const PRODUCT = getProductByEnvironment(
     PRODUCTS.GROUP_PRACTICE_PLAN,
-    process.env.VERCEL_ENV as NodeEnvironment
+    process.env.NEXT_PUBLIC_VERCEL_ENV as NodeEnvironment
 );
 export const getServerSideProps = RBAC.requireProviderAuth(
     withPageAuthRequired()
