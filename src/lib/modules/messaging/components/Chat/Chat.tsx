@@ -178,8 +178,30 @@ const StyledChatContainer = styled(Box, {
         paddingBottom: 75,
     },
     ['& .str-chat__message-input']: {
+        width: '100%',
         position: 'absolute',
         bottom: 0,
+        [theme.breakpoints.down('md')]: {
+            paddingLeft: theme.spacing(2),
+            paddingRight: theme.spacing(2),
+        },
+    },
+    '& .str-chat__send-button': {
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
+        borderRadius: theme.shape.borderRadius,
+        height: '57px',
+        width: '57px',
+        marginRight: theme.spacing(2),
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        '& svg path': {
+            fill: theme.palette.primary.contrastText,
+        },
+        [theme.breakpoints.up('md')]: {
+            display: 'none',
+        },
     },
     [theme.breakpoints.up('md')]: {
         flexDirection: 'row',

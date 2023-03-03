@@ -19,12 +19,6 @@ export const factory = (params: ProvidersServiceParams) => {
     const getPracticeClientsPageProps: GetServerSideProps<
         PracticeClientsPageProps
     > = async (context) => {
-        // TODO [feat:provider-clients-page]:  Remove this when ready for prod
-        if (process.env.NEXT_PUBLIC_VERCEL_ENV === 'production') {
-            return {
-                notFound: true,
-            };
-        }
         const session = await getSession(context.req, context.res);
         if (!session) {
             return {

@@ -1,4 +1,7 @@
-import { ChatComponent } from '@/lib/modules/messaging/components';
+import {
+    ChatComponent,
+    useRemoveHubspotChatWidget,
+} from '@/lib/modules/messaging/components';
 import { ProvidersService } from '@/lib/modules/providers/service';
 import { ChatPageProps } from '@/lib/modules/providers/service/page-props/get-chat-page-props/getChatPageProps';
 import { ProviderNavigationPage } from '@/lib/shared/components/features/pages/ProviderNavigationPage';
@@ -13,6 +16,7 @@ export const getServerSideProps = RBAC.requireCoachAuth(
 );
 
 export default function ChatPage({ user }: ChatPageProps) {
+    useRemoveHubspotChatWidget();
     if (!user) {
         return <div>Chat is not available</div>;
     }

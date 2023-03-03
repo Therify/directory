@@ -22,6 +22,10 @@ export function Globals() {
                     font: inherit;
                 }
 
+                html {
+                    height: -webkit-fill-available;
+                }
+
                 html,
                 body {
                     padding: 0;
@@ -42,6 +46,7 @@ export function Globals() {
 
                 body {
                     min-height: 100vh;
+                    min-height: -webkit-fill-available;
                 }
 
                 input,
@@ -51,10 +56,6 @@ export function Globals() {
                     font-family: inherit;
                     font-size: inherit;
                     line-height: inherit;
-                }
-
-                body {
-                    height: 100vh;
                 }
             `}
         />

@@ -15,13 +15,7 @@ import {
     Alert,
     IconButton,
 } from '@/lib/shared/components/ui';
-import { SideNavigationPage } from '@/lib/shared/components/features/pages';
-import {
-    URL_PATHS,
-    COACH_MAIN_MENU,
-    COACH_SECONDARY_MENU,
-    COACH_MOBILE_MENU,
-} from '@/lib/sitemap';
+import { URL_PATHS } from '@/lib/sitemap';
 import { EditRounded } from '@mui/icons-material';
 import { RBAC } from '@/lib/shared/utils';
 import { styled, useTheme } from '@mui/material/styles';
@@ -31,6 +25,7 @@ import { ProviderProfile } from '@/lib/shared/types';
 import { GetProviderProfileByUserId } from '@/lib/modules/providers/features/profiles';
 import { ProvidersService } from '@/lib/modules/providers/service';
 import { ProviderTherifyUserPageProps } from '@/lib/modules/providers/service/page-props/get-therify-user-props';
+import { ProviderNavigationPage } from '@/lib/shared/components/features/pages/ProviderNavigationPage';
 
 export const getServerSideProps = RBAC.requireCoachAuth(
     withPageAuthRequired({
@@ -72,13 +67,9 @@ export default function PracticeProfilesPage({
     const errorMessage = trpcError?.message || queryError;
 
     return (
-        <SideNavigationPage
+        <ProviderNavigationPage
             currentPath={URL_PATHS.PROVIDERS.COACH.PROFILES}
-            onNavigate={router.push}
             user={user}
-            primaryMenu={[...COACH_MAIN_MENU]}
-            secondaryMenu={[...COACH_SECONDARY_MENU]}
-            mobileMenu={[...COACH_MOBILE_MENU]}
         >
             <LoadingContainer isLoading={isLoading}>
                 <PageContentContainer
@@ -162,7 +153,7 @@ export default function PracticeProfilesPage({
                     </ProfileList>
                 </PageContentContainer>
             </LoadingContainer>
-        </SideNavigationPage>
+        </ProviderNavigationPage>
     );
 }
 

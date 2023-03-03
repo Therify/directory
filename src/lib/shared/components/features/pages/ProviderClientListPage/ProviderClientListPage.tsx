@@ -70,9 +70,6 @@ export function ProviderClientListPage({
                         connectionRequest,
                     })
                 }
-                onOpenChat={(memberId) =>
-                    console.log('TODO: Open chat with member', memberId)
-                }
                 onReimbursmentRequest={(connectionRequest) =>
                     window?.open(
                         formatReimbursementRequestUrl(

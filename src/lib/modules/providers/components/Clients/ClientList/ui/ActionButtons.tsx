@@ -7,13 +7,11 @@ export const ActionButtons = ({
     onAccept,
     onDecline,
     onView,
-    onOpenChat,
 }: {
     connectionRequest: ConnectionRequest.Type;
     onAccept: () => void;
     onDecline: () => void;
     onView?: () => void;
-    onOpenChat?: () => void;
 }) => {
     const isPending =
         connectionRequest.connectionStatus === ConnectionStatus.pending;
@@ -41,28 +39,14 @@ export const ActionButtons = ({
                 </>
             )}
             {isAccepted && (
-                <>
-                    {!onOpenChat && (
-                        <Button
-                            size="small"
-                            color="info"
-                            type="outlined"
-                            onClick={onView}
-                        >
-                            View Member
-                        </Button>
-                    )}
-                    {onOpenChat && (
-                        <Button
-                            size="small"
-                            color="info"
-                            type="outlined"
-                            onClick={onOpenChat}
-                        >
-                            Chat
-                        </Button>
-                    )}
-                </>
+                <Button
+                    size="small"
+                    color="info"
+                    type="outlined"
+                    onClick={onView}
+                >
+                    View Member
+                </Button>
             )}
         </>
     );
