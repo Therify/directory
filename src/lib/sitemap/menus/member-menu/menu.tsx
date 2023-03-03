@@ -6,7 +6,8 @@ import {
     THERIFY_WEBSITE,
     CHAT,
 } from './links';
-import { ACCOUNT, LOGOUT } from '../accountLinks';
+import { LOGOUT } from '../accountLinks';
+import { NavigationLink } from '../../types';
 
 export const MEMBER_MAIN_MENU = [
     // HOME,
@@ -26,3 +27,15 @@ export const MEMBER_MOBILE_MENU = [
     THERIFY_WEBSITE,
     // ACCOUNT
 ] as const;
+
+export const getMemberMenu = (hasChatEnabled: boolean) => [
+    ...MEMBER_MAIN_MENU,
+    ...(hasChatEnabled ? [CHAT] : []),
+];
+
+export const getMemberMobileMenu = (hasChatEnabled: boolean) => [
+    ...MEMBER_MAIN_MENU,
+    ...(hasChatEnabled ? [CHAT] : []),
+    THERIFY_WEBSITE,
+    // ACCOUNT
+];

@@ -35,6 +35,6 @@ export const CONTENT_LIBRARY: NavigationLink = {
 
 export const CHAT: NavigationLink = {
     icon: NAVIGATION_ICON.CHAT,
-    displayName: 'Chat',
+    displayName: 'Messaging',
     path: URL_PATHS.MEMBERS.CHAT,
 };

@@ -1,17 +1,14 @@
 import {
-    MEMBER_MAIN_MENU,
-    MEMBER_MOBILE_MENU,
     MEMBER_SECONDARY_MENU,
+    getMemberMobileMenu,
+    getMemberMenu,
 } from '@/lib/sitemap/menus/member-menu';
-import { URL_PATHS } from '@/lib/sitemap/urlPaths';
 import { TherifyUser } from '@/lib/shared/types';
 import { useRouter } from 'next/router';
 import {
     TopNavigationPage,
     TopNavigationPageProps,
 } from '../TopNavigationPage';
-import { CHAT } from '@/lib/sitemap/menus/member-menu/links';
-import { NavigationLink } from '@/lib/sitemap/types/navigationLink';
 
 export interface MemberNavigationPageProps
     extends Omit<
@@ -27,23 +24,16 @@ export interface MemberNavigationPageProps
 
 export function MemberNavigationPage(props: MemberNavigationPageProps) {
     const router = useRouter();
+    const mainMenu = getMemberMenu(props.user?.hasChatEnabled ?? false);
+    const mobileMenu = getMemberMobileMenu(props.user?.hasChatEnabled ?? false);
+
     return (
         <TopNavigationPage
             {...props}
             onNavigate={router.push}
-            primaryMenu={
-                [
-                    ...MEMBER_MAIN_MENU,
-                    props.user?.hasChatEnabled ?? false ? CHAT : null,
-                ].filter(Boolean) as NavigationLink[]
-            }
+            primaryMenu={mainMenu}
             secondaryMenu={[...MEMBER_SECONDARY_MENU]}
-            mobileMenu={
-                [
-                    ...MEMBER_MOBILE_MENU,
-                    props.user?.hasChatEnabled ?? false ? CHAT : null,
-                ].filter(Boolean) as NavigationLink[]
-            }
+            mobileMenu={mobileMenu}
             isLoadingUser={false}
         />
     );
