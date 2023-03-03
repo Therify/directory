@@ -30,6 +30,7 @@ export const ENTRIES = [
     'Oscar',
     'TRICARE',
     'UnitedHealthcare',
+    "I don't have insurance",
 ] as const;
 
 export const MAP = {
