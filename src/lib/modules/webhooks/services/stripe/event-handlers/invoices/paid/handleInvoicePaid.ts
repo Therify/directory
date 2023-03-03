@@ -7,6 +7,7 @@ import {
     isValidPriceId,
     PRODUCTS,
 } from '@/lib/shared/types';
+import { NodeEnvironment } from '@/lib/shared/types/nodeEnvironment';
 
 type HandlerResult = inferAsyncReturnType<
     typeof handleGroupPracticePayment | typeof handlePlanChange
@@ -14,7 +15,7 @@ type HandlerResult = inferAsyncReturnType<
 
 const GROUP_PRACTICE_PLAN = getProductByEnvironment(
     PRODUCTS.GROUP_PRACTICE_PLAN,
-    process.env.NODE_ENV
+    process.env.VERCEL_ENV as NodeEnvironment
 );
 
 export const handleInvoicePaidFactory =
@@ -39,7 +40,12 @@ export const handleInvoicePaidFactory =
         }
 
         const [lineItem] = invoice.lines.data;
-        if (!isValidPriceId(lineItem.price.id, process.env.NODE_ENV)) {
+        if (
+            !isValidPriceId(
+                lineItem.price.id,
+                process.env.VERCEL_ENV as NodeEnvironment
+            )
+        ) {
             throw new Error(`Unexpected price id: ${lineItem.price.id}`);
         }
 

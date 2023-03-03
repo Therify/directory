@@ -28,13 +28,13 @@ export const THERIFY_WEBSITE: NavigationLink = {
 
 export const CONTENT_LIBRARY: NavigationLink = {
     icon: NAVIGATION_ICON.LIBRARY,
-    displayName: 'Content Library',
+    displayName: 'Library',
     path: URL_PATHS.EXTERNAL.VIMEO.CHANNEL,
     // path: URL_PATHS.MEMBERS.CONTENT.LIBRARY,
 } as const;
 
 export const CHAT: NavigationLink = {
     icon: NAVIGATION_ICON.CHAT,
-    displayName: 'Chat',
+    displayName: 'Messaging',
     path: URL_PATHS.MEMBERS.CHAT,
 };
