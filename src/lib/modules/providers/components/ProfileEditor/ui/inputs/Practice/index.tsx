@@ -1,6 +1,7 @@
 import {
     FormSectionTitle,
     FormSectionSubtitle,
+    Badge,
 } from '@/lib/shared/components/ui';
 import { ProviderProfile } from '@/lib/shared/types';
 import { Box } from '@mui/material';
@@ -21,6 +22,11 @@ import { ModalititesServedInput } from './Modalities';
 import { LanguagesSpokenInput } from './LanguagesSpoken';
 import { ReligionsInput } from './Religions';
 
+('TODO: Remove after 3/10/23');
+const CHAT_FEATURE_BADGE_EXPIRATION_TIMESTAMP = new Date(
+    '2023-03-10T00:00:00.000Z'
+).getTime();
+
 interface IdentitySectionProps {
     control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
@@ -31,6 +37,8 @@ export const PracticeSection = ({
     disabled,
     isTherapist,
 }: IdentitySectionProps) => {
+    const showNewFeatureBadge =
+        CHAT_FEATURE_BADGE_EXPIRATION_TIMESTAMP > Date.now();
     return (
         <Box width="100%">
             <FormSectionTitle>Your Practice</FormSectionTitle>
@@ -59,7 +67,14 @@ export const PracticeSection = ({
             )}
             {!isTherapist && (
                 <Box marginBottom={4}>
-                    <FormSectionSubtitle>Chat</FormSectionSubtitle>
+                    <FormSectionSubtitle>
+                        In-App Messaging{' '}
+                        {showNewFeatureBadge && (
+                            <Badge color="success" size="small">
+                                New!
+                            </Badge>
+                        )}
+                    </FormSectionSubtitle>
                     <OffersChat control={control} disabled={disabled} />
                 </Box>
             )}
