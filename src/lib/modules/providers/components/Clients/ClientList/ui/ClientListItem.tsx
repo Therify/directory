@@ -79,11 +79,12 @@ export const ClientListItem = ({
                       icon: <PaidOutlined />,
                       onClick: onReimbursmentRequest,
                   },
-                  {
-                      text: 'Remove Client',
-                      icon: <PersonRemoveOutlined />,
-                      onClick: onTerminate,
-                  },
+                  // TODO: We need to be able to handle this without breaking confidentiality
+                  //   {
+                  //       text: 'Remove Client',
+                  //       icon: <PersonRemoveOutlined />,
+                  //       onClick: onTerminate,
+                  //   },
               ]
             : []),
     ];

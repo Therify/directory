@@ -3,6 +3,7 @@ import { UpdateConnectionRequestStatus } from '@/lib/modules/directory/features'
 import sendMail from '@/emails';
 import AcceptRequest from '@/emails/AcceptRequest';
 import DeclineRequestEmail from '@/emails/DeclineRequest';
+import { ConnectionStatus } from '@prisma/client';
 
 export function factory({ prisma, messaging }: DirectoryServiceParams) {
     return async function ({
@@ -57,6 +58,13 @@ export function factory({ prisma, messaging }: DirectoryServiceParams) {
         const providerName = connectionRequest.providerProfile.givenName;
         if (!isProfileOwner && !isPracticeOwner) {
             throw new Error('User cannot perform this action.');
+        }
+
+        if (connectionStatus === ConnectionStatus.terminated) {
+            throw new Error(
+                // TODO: We need to be able to handle this without breaking confidentiality
+                'Cannot terminate a connection requests at this time.'
+            );
         }
 
         await prisma.connectionRequest.update({
