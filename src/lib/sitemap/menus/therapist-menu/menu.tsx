@@ -10,8 +10,7 @@ import {
 
 export const THERAPIST_MAIN_MENU = [
     // DASHBOARD,
-    // TODO [feat:provider-clients-page]: Remove this when ready for prod
-    ...(process.env.NEXT_PUBLIC_VERCEL_ENV !== 'production' ? [CLIENTS] : []),
+    CLIENTS,
     PROFILE_EDITOR,
 ] as const;
 
