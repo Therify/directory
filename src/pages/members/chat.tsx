@@ -1,5 +1,8 @@
 import { membersService } from '@/lib/modules/members/service';
-import { ChatComponent } from '@/lib/modules/messaging/components';
+import {
+    ChatComponent,
+    useRemoveHubspotChatWidget,
+} from '@/lib/modules/messaging/components';
 import { ChatPageProps } from '@/lib/modules/providers/service/page-props/get-chat-page-props/getChatPageProps';
 import { MemberNavigationPage } from '@/lib/shared/components/features/pages/MemberNavigationPage';
 import { RBAC } from '@/lib/shared/utils/rbac';
@@ -13,6 +16,7 @@ export const getServerSideProps = RBAC.requireMemberAuth(
 );
 
 export default function ChatPage({ user }: ChatPageProps) {
+    useRemoveHubspotChatWidget();
     if (!user) {
         return <div>Chat is not available</div>;
     }
