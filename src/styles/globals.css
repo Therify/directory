@@ -15,7 +15,7 @@
 }
 
 html {
-  height: -webkit-fill-available;
+    height: -webkit-fill-available;
 }
 html,
 body {
@@ -52,4 +52,3 @@ button {
     background-color: #f0f0f0;
     color: #000;
 }
-
