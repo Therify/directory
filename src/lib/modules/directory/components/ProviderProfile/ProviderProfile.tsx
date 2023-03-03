@@ -569,7 +569,6 @@ export function ProviderProfile({
                                     md: 4,
                                 },
                                 display: {
-                                    sm: 'none',
                                     md: 'block',
                                 },
                                 paddingTop: {
