@@ -568,9 +568,6 @@ export function ProviderProfile({
                                     sm: 0,
                                     md: 4,
                                 },
-                                display: {
-                                    md: 'block',
-                                },
                                 paddingTop: {
                                     sm: 0,
                                     md: ELEMENT_DIMENSIONS.avatar / 2,
