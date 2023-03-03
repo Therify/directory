@@ -9,6 +9,5 @@ export default function handler(
     req: NextApiRequest,
     res: NextApiResponse<Data>
 ) {
-    console.log('ENV VARS', process.env);
     res.status(200).json({ name: 'John Doe' });
 }
