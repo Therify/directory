@@ -1,7 +1,6 @@
 import { FirebaseOptions, initializeApp } from 'firebase/app';
-import { getDatabase } from 'firebase/database';
+import { getDatabase, Unsubscribe } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
-import { withFirebaseConfiguration } from './configuration';
 import {
     pushDataFactory,
     setDataFactory,
@@ -10,6 +9,8 @@ import {
     updateDataFactory,
     authenticateWithCustomTokenFactory,
     signOutFactory,
+    readPresenceFactory,
+    establishPresence,
 } from './methods';
 
 export const getFirebaseVendor = (instanceName: string) => {
@@ -27,6 +28,13 @@ export const getFirebaseVendor = (instanceName: string) => {
     const firebaseApp = initializeApp(options, instanceName);
     const auth = getAuth(firebaseApp);
     const database = getDatabase(firebaseApp);
+    let unsubscribePresenceListener: Unsubscribe | null = null;
+    const authenticateWithCustomToken = authenticateWithCustomTokenFactory({
+        auth,
+    });
+    const signOut = signOutFactory({
+        auth,
+    });
 
     return {
         isAuthenticated: () => Boolean(auth.currentUser),
@@ -35,12 +43,18 @@ export const getFirebaseVendor = (instanceName: string) => {
         readData: readDataFactory({ database }),
         addListener: addListenerFactory({ database }),
         updateData: updateDataFactory({ database }),
-        authenticateWithCustomToken: authenticateWithCustomTokenFactory({
-            auth,
-        }),
-        signOut: signOutFactory({
-            auth,
-        }),
+        getPresenceForUser: readPresenceFactory({ database }),
+        authenticateWithCustomToken: async (token: string) => {
+            const userCredential = await authenticateWithCustomToken(token);
+            unsubscribePresenceListener = await establishPresence(
+                userCredential.user.uid,
+                database
+            );
+            return userCredential;
+        },
+        signOut: async () => {
+            return Promise.all([signOut(), unsubscribePresenceListener?.()]);
+        },
     };
 };
 
