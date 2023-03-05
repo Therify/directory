@@ -5,11 +5,11 @@ export const establishPresence = (uid: string, database: Database) => {
     const userStatusDatabaseRef = ref(database, `${USER_PRESENCE_PATH}/${uid}`);
 
     const isOfflineForDatabase = {
-        state: 'offline',
+        status: 'offline',
     };
 
     const isOnlineForDatabase = {
-        state: 'online',
+        status: 'online',
     };
 
     return onValue(ref(database, '.info/connected'), function (snapshot) {

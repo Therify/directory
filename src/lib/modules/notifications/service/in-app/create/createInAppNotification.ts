@@ -1,7 +1,7 @@
 import { CreateInAppNotification } from '@/lib/modules/notifications/features/in-app';
 import { InAppNotificationsFactoryParams } from '../factoryParams';
 import { getUserNotificationsPath } from '../utils';
-import { withAuthentication } from '../utils/withAuthentication';
+import { withAdminAuthentication } from '../utils/withAdminAuthentication';
 
 export const createInAppNotificationFactory =
     (params: InAppNotificationsFactoryParams) =>
@@ -9,7 +9,7 @@ export const createInAppNotificationFactory =
         targetUserId,
         notification,
     }: CreateInAppNotification.Input): Promise<CreateInAppNotification.Output> => {
-        const { firebase } = await withAuthentication(params);
+        const firebase = await withAdminAuthentication(params.firebase);
         if (firebase.isAuthenticated() === false) {
             throw new Error('Notification service is not authenticated');
         }
