@@ -7,6 +7,8 @@ export const Provider = ({ children }: { children: ReactNode }) => {
 
     useEffect(() => {
         if (user?.firebaseToken && firebase?.isAuthenticated() === false) {
+            // TODO: There is a case where user can be defined but firebaseToken is undefined
+            // This will cause the user to never authenticate with firebase
             firebase.authenticateWithCustomToken(user.firebaseToken);
         } else if (!user && firebase?.isAuthenticated()) {
             firebase.signOut();

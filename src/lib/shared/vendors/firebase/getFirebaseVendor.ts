@@ -11,6 +11,7 @@ import {
     signOutFactory,
     readPresenceFactory,
     establishPresence,
+    setPresenceFactory,
 } from './methods';
 
 export const getFirebaseVendor = (instanceName: string) => {
@@ -44,6 +45,7 @@ export const getFirebaseVendor = (instanceName: string) => {
         addListener: addListenerFactory({ database }),
         updateData: updateDataFactory({ database }),
         getPresenceForUser: readPresenceFactory({ database }),
+        setPresence: setPresenceFactory({ database }),
         authenticateWithCustomToken: async (token: string) => {
             const userCredential = await authenticateWithCustomToken(token);
             unsubscribePresenceListener = await establishPresence(
