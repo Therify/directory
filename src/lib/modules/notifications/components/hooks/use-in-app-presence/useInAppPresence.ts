@@ -9,8 +9,8 @@ interface InAppPresenceProps {
 
 const THIRTY_SECONDS = 30 * 1000;
 
-// Tracks user presence in the app and marks them `offline`.
-// Default inactivity occurs after 30 seconds
+// Tracks user activity and marks them `offline` after specified time of activity.
+// Default inactivity timer expires after 30 seconds
 export const useInAppPresence = ({
     userId,
     firebase,
