@@ -4,14 +4,6 @@ import { USER_PRESENCE_PATH } from '../constants';
 export const establishPresence = (uid: string, database: Database) => {
     const userStatusDatabaseRef = ref(database, `${USER_PRESENCE_PATH}/${uid}`);
 
-    const isOfflineForDatabase = {
-        status: 'offline',
-    };
-
-    const isOnlineForDatabase = {
-        status: 'online',
-    };
-
     return onValue(ref(database, '.info/connected'), function (snapshot) {
         // If we're not currently connected, don't do anything.
         if (snapshot.val() == false) {
@@ -24,8 +16,8 @@ export const establishPresence = (uid: string, database: Database) => {
         // losing internet, or any other means.
         onDisconnect(userStatusDatabaseRef)
             .set({
-                ...isOfflineForDatabase,
-                last_changed: new Date().toISOString(),
+                status: 'offline',
+                updatedAt: new Date().toISOString(),
             })
             .then(function () {
                 // The promise returned from .onDisconnect().set() will
@@ -36,8 +28,8 @@ export const establishPresence = (uid: string, database: Database) => {
                 // We can now safely set ourselves as 'online' knowing that the
                 // server will mark us as offline once we lose connection.
                 set(userStatusDatabaseRef, {
-                    ...isOnlineForDatabase,
-                    last_changed: new Date().toISOString(),
+                    status: 'online',
+                    updatedAt: new Date().toISOString(),
                 });
             });
     });

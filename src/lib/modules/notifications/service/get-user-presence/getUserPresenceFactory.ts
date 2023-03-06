@@ -13,6 +13,7 @@ export const factory = (params: FactoryParams) => async (userId: string) => {
     const presence = await firebase.getPresenceForUser(userId);
     return {
         isOnline: presence.status === 'online',
-        lastChanged: presence.last_changed ?? null,
+        updatedAt: presence.updatedAt ?? null,
+        path: presence.path,
     };
 };

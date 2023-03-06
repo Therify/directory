@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
 import { FirebaseVendor } from '@/lib/shared/vendors/firebase';
 
 interface InAppPresenceProps {
@@ -14,41 +15,50 @@ const THIRTY_SECONDS = 30 * 1000;
 export const useInAppPresence = ({
     userId,
     firebase,
-    inactivityTimeoutMs,
+    inactivityTimeoutMs = THIRTY_SECONDS,
 }: InAppPresenceProps) => {
+    const { pathname } = useRouter();
     const windowBlurTimeout = useRef<number>();
     const inactivityTimeout = useRef<number>();
     const [localPresence, setLocalPresence] = useState<'online' | 'offline'>(
         'offline'
     );
+    const [lastPathname, setLastPathname] = useState<string>(pathname);
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
         if (userId && firebase?.isAuthenticated()) {
             const startInactivityTimeout = () =>
                 (inactivityTimeout.current = window.setTimeout(() => {
-                    if (localPresence === 'online') {
-                        firebase.setPresence(userId, 'offline');
-                        setLocalPresence('offline');
-                    }
-                }, inactivityTimeoutMs ?? THIRTY_SECONDS));
+                    firebase.setPresence(userId, 'offline', pathname);
+                    setLastPathname(pathname);
+                    setLocalPresence('offline');
+                }, inactivityTimeoutMs));
 
             const resetInactivityTimeout = () => {
                 window.clearTimeout(inactivityTimeout?.current);
                 startInactivityTimeout();
-                if (localPresence === 'offline') {
-                    firebase.setPresence(userId, 'online');
+                if (localPresence === 'offline' || pathname !== lastPathname) {
+                    firebase.setPresence(userId, 'online', pathname);
+                    setLastPathname(pathname);
                     setLocalPresence('online');
                 }
             };
 
             const onWindowFocus = () => {
                 window.clearTimeout(windowBlurTimeout?.current);
-                if (localPresence === 'offline') {
-                    firebase.setPresence(userId, 'online');
+                if (localPresence === 'offline' || pathname !== lastPathname) {
+                    firebase.setPresence(userId, 'online', pathname);
+                    setLastPathname(pathname);
                     setLocalPresence('online');
                 }
             };
+            if (pathname !== lastPathname) {
+                firebase.setPresence(userId, 'online', pathname);
+                setLastPathname(pathname);
+                setLocalPresence('online');
+            }
+
             window.addEventListener('mousemove', resetInactivityTimeout, false);
             window.addEventListener('touchmove', resetInactivityTimeout, false);
             window.addEventListener('focus', onWindowFocus);
@@ -61,7 +71,14 @@ export const useInAppPresence = ({
                 window.removeEventListener('focus', onWindowFocus);
             };
         }
-    }, [firebase, localPresence, userId, inactivityTimeoutMs]);
+    }, [
+        firebase,
+        localPresence,
+        userId,
+        inactivityTimeoutMs,
+        pathname,
+        lastPathname,
+    ]);
 
     return;
 };
