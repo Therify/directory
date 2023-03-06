@@ -25,10 +25,12 @@ export const useInAppPresence = ({
     const { pathname } = useRouter();
     const windowBlurTimeout = useRef<number>();
     const inactivityTimeout = useRef<number>();
+    const firebaseAuthPoll = useRef<number>();
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [localPresence, setLocalPresence] = useState<'online' | 'offline'>(
         'offline'
     );
-    const [lastPathname, setLastPathname] = useState<string>(pathname);
+    const [lastPathname, setLastPathname] = useState<string>('/');
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
@@ -39,36 +41,40 @@ export const useInAppPresence = ({
             window.clearTimeout(windowBlurTimeout?.current);
             return;
         }
-        if (userId && firebase?.isAuthenticated()) {
+        if (userId && isAuthenticated && firebase?.isAuthenticated()) {
+            const setOnline = () => {
+                firebase.setPresence(userId, 'online', pathname);
+                setLastPathname(pathname);
+                setLocalPresence('online');
+            };
+            const setOffline = () => {
+                firebase.setPresence(userId, 'offline', pathname);
+                setLastPathname(pathname);
+                setLocalPresence('offline');
+            };
+
             const startInactivityTimeout = () =>
-                (inactivityTimeout.current = window.setTimeout(() => {
-                    firebase.setPresence(userId, 'offline', pathname);
-                    setLastPathname(pathname);
-                    setLocalPresence('offline');
-                }, inactivityTimeoutMs));
+                (inactivityTimeout.current = window.setTimeout(
+                    setOffline,
+                    inactivityTimeoutMs
+                ));
 
             const resetInactivityTimeout = () => {
                 window.clearTimeout(inactivityTimeout?.current);
                 startInactivityTimeout();
                 if (localPresence === 'offline' || pathname !== lastPathname) {
-                    firebase.setPresence(userId, 'online', pathname);
-                    setLastPathname(pathname);
-                    setLocalPresence('online');
+                    setOnline();
                 }
             };
 
             const onWindowFocus = () => {
                 window.clearTimeout(windowBlurTimeout?.current);
                 if (localPresence === 'offline' || pathname !== lastPathname) {
-                    firebase.setPresence(userId, 'online', pathname);
-                    setLastPathname(pathname);
-                    setLocalPresence('online');
+                    setOnline();
                 }
             };
             if (pathname !== lastPathname) {
-                firebase.setPresence(userId, 'online', pathname);
-                setLastPathname(pathname);
-                setLocalPresence('online');
+                setOnline();
             }
 
             window.addEventListener('mousemove', resetInactivityTimeout, false);
@@ -90,7 +96,38 @@ export const useInAppPresence = ({
         inactivityTimeoutMs,
         pathname,
         lastPathname,
+        isAuthenticated,
     ]);
+
+    useEffect(() => {
+        // If not authenticated, and logged in, poll for auth to finish
+        if (typeof window === 'undefined') return;
+        if (!firebase) return;
+        if (firebase?.isAuthenticated()) {
+            setIsAuthenticated(true);
+            window.clearInterval(firebaseAuthPoll.current);
+        } else {
+            if (
+                pathname === URL_PATHS.AUTH.LOGOUT ||
+                pathname === '/' ||
+                pathname.includes('/register')
+            ) {
+                setIsAuthenticated(false);
+                return window.clearInterval(firebaseAuthPoll.current);
+            }
+            firebaseAuthPoll.current = window.setInterval(() => {
+                console.log('polling for auth...');
+                if (firebase?.isAuthenticated()) {
+                    window.clearInterval(firebaseAuthPoll.current);
+                    setIsAuthenticated(true);
+                    return;
+                }
+            }, 2000);
+        }
+        return () => {
+            window.clearInterval(firebaseAuthPoll.current);
+        };
+    }, [firebase, isAuthenticated, pathname]);
 
     return;
 };
