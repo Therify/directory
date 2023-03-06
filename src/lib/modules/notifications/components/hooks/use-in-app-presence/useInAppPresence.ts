@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { FirebaseVendor } from '@/lib/shared/vendors/firebase';
+import { URL_PATHS } from '@/lib/sitemap';
 
 interface InAppPresenceProps {
     userId?: string;
@@ -27,6 +28,12 @@ export const useInAppPresence = ({
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
+        if (pathname === URL_PATHS.AUTH.LOGOUT) {
+            // Signout will clean up presence.
+            // We dont want to make calls to firebase or we will get permission denied errors when the session ends from signout
+            window.clearTimeout(windowBlurTimeout?.current);
+            return;
+        }
         if (userId && firebase?.isAuthenticated()) {
             const startInactivityTimeout = () =>
                 (inactivityTimeout.current = window.setTimeout(() => {

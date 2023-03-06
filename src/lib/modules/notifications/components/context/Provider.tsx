@@ -11,17 +11,17 @@ import {
 } from './methods';
 
 export const Provider = ({ children }: { children: ReactNode }) => {
-    const { user } = useContext(TherifyUser.Context);
     const { firebase } = useContext(FirebaseClient.Context);
-    useInAppPresence({ userId: user?.userId, firebase });
+    const userId = firebase?.getSignedInUserId();
+    useInAppPresence({ userId, firebase });
 
     const [notifications, setNotifications] = useState<
         Notification.InApp.PersitedType[]
     >([]);
-    const notificationsPath = `in-app-notifications/${user?.userId}`;
+    const notificationsPath = `in-app-notifications/${userId}`;
     const isFirebaseAuthenticated = Boolean(firebase?.isAuthenticated());
     const [shouldListenToNotifications, setShouldListenToNotifications] =
-        useState(Boolean(firebase?.isAuthenticated() && user?.userId));
+        useState(Boolean(firebase?.isAuthenticated() && userId));
 
     const clearNotifications = clearNotificationsFactory({
         firebase,
@@ -42,10 +42,8 @@ export const Provider = ({ children }: { children: ReactNode }) => {
     });
 
     useEffect(() => {
-        setShouldListenToNotifications(
-            !!user?.userId && isFirebaseAuthenticated
-        );
-    }, [user?.userId, isFirebaseAuthenticated]);
+        setShouldListenToNotifications(!!userId && isFirebaseAuthenticated);
+    }, [userId, isFirebaseAuthenticated]);
 
     useEffect(() => {
         if (shouldListenToNotifications && !!firebase) {
@@ -60,12 +58,7 @@ export const Provider = ({ children }: { children: ReactNode }) => {
                 unsubscribe();
             };
         }
-    }, [
-        shouldListenToNotifications,
-        notificationsPath,
-        user?.userId,
-        firebase,
-    ]);
+    }, [shouldListenToNotifications, notificationsPath, userId, firebase]);
     return (
         <Context.Provider
             value={{

@@ -19,7 +19,7 @@ export const setPresenceFactory =
         await set(ref(database, `${USER_PRESENCE_PATH}/${userId}`), {
             status,
             updatedAt: new Date().toISOString(),
-            path,
+            ...(path ? { path } : {}),
         });
         return { success: true };
     };
