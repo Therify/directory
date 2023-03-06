@@ -11,8 +11,12 @@ interface InAppPresenceProps {
 
 const THIRTY_SECONDS = 30 * 1000;
 
-// Tracks user activity and marks them `offline` after specified time of activity.
-// Default inactivity timer expires after 30 seconds
+/**
+ * Tracks user mouse, tap, and tab focus events to determine inactivity for presence
+ * @param userId the signed-in user's id
+ * @param firebase Firebase Vendor instance
+ * @param inactivityTimeoutMs the number of milliseconds of inactivity before the user is considered offline. Defualts to 30 seconds.
+ */
 export const useInAppPresence = ({
     userId,
     firebase,
@@ -28,9 +32,10 @@ export const useInAppPresence = ({
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
-        if (pathname === URL_PATHS.AUTH.LOGOUT) {
+        if (pathname === URL_PATHS.AUTH.LOGOUT || pathname === '/') {
             // Signout will clean up presence.
-            // We dont want to make calls to firebase or we will get permission denied errors when the session ends from signout
+            // We dont want to make calls to firebase here
+            // or we will get permission denied errors when the session ends from signout
             window.clearTimeout(windowBlurTimeout?.current);
             return;
         }
