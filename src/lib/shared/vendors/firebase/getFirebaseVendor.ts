@@ -1,7 +1,6 @@
 import { FirebaseOptions, initializeApp } from 'firebase/app';
-import { getDatabase } from 'firebase/database';
+import { getDatabase, Unsubscribe } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
-import { withFirebaseConfiguration } from './configuration';
 import {
     pushDataFactory,
     setDataFactory,
@@ -10,6 +9,9 @@ import {
     updateDataFactory,
     authenticateWithCustomTokenFactory,
     signOutFactory,
+    readPresenceFactory,
+    establishPresence,
+    setPresenceFactory,
 } from './methods';
 
 export const getFirebaseVendor = (instanceName: string) => {
@@ -27,20 +29,47 @@ export const getFirebaseVendor = (instanceName: string) => {
     const firebaseApp = initializeApp(options, instanceName);
     const auth = getAuth(firebaseApp);
     const database = getDatabase(firebaseApp);
+    const setPresence = setPresenceFactory({ database });
+
+    let unsubscribePresenceListener: Unsubscribe = async () => {};
+    const unsubscribeOnAuthStateChange = auth.onAuthStateChanged((user) => {
+        unsubscribePresenceListener();
+        if (user?.uid) {
+            unsubscribePresenceListener = establishPresence(user.uid, database);
+        }
+    });
+    const signOut = signOutFactory({
+        auth,
+    });
 
     return {
+        getSignedInUserId: () => auth.currentUser?.uid,
         isAuthenticated: () => Boolean(auth.currentUser),
         setData: setDataFactory({ database }),
         pushData: pushDataFactory({ database }),
         readData: readDataFactory({ database }),
         addListener: addListenerFactory({ database }),
         updateData: updateDataFactory({ database }),
+        getPresenceForUser: readPresenceFactory({ database }),
+        setPresence,
         authenticateWithCustomToken: authenticateWithCustomTokenFactory({
             auth,
         }),
-        signOut: signOutFactory({
-            auth,
-        }),
+        signOut: () => {
+            return signOut([
+                unsubscribePresenceListener,
+                unsubscribeOnAuthStateChange,
+                () => {
+                    return auth.currentUser?.uid
+                        ? setPresence(
+                              auth.currentUser.uid,
+                              'offline',
+                              '/logout'
+                          )
+                        : null;
+                },
+            ]);
+        },
     };
 };
 

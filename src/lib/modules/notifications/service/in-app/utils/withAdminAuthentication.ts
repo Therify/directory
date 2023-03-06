@@ -1,17 +1,15 @@
+import { FirebaseVendor } from '@/lib/shared/vendors/firebase';
 import { firebaseAdminVendor } from '@/lib/shared/vendors/firebase-admin';
-import { InAppNotificationsFactoryParams } from '../factoryParams';
 import { IN_APP_NOTIFICATIONS_SERVICE_IDENTIFIER } from './constants';
 
-export const withAuthentication = async (
-    params: InAppNotificationsFactoryParams
-) => {
-    if (params.firebase.isAuthenticated() === false) {
+export const withAdminAuthentication = async (firebase: FirebaseVendor) => {
+    if (firebase.isAuthenticated() === false) {
         await firebaseAdminVendor
             .createCustomToken({
                 userId: IN_APP_NOTIFICATIONS_SERVICE_IDENTIFIER,
             })
             .then((token) => {
-                return params.firebase.authenticateWithCustomToken(token);
+                return firebase.authenticateWithCustomToken(token);
             })
             .catch((error) => {
                 console.error(error);
@@ -20,5 +18,5 @@ export const withAuthentication = async (
                 );
             });
     }
-    return params;
+    return firebase;
 };

@@ -4,6 +4,7 @@ import { Context, firebase } from './Context';
 
 export const Provider = ({ children }: { children: ReactNode }) => {
     const { user } = useContext(TherifyUser.Context);
+    const isAuthenticated = firebase?.isAuthenticated();
 
     useEffect(() => {
         if (user?.firebaseToken && firebase?.isAuthenticated() === false) {
@@ -11,7 +12,7 @@ export const Provider = ({ children }: { children: ReactNode }) => {
         } else if (!user && firebase?.isAuthenticated()) {
             firebase.signOut();
         }
-    }, [user]);
+    }, [user, isAuthenticated]);
 
     return (
         <Context.Provider
