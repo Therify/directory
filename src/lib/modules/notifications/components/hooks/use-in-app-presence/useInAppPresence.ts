@@ -10,6 +10,18 @@ interface InAppPresenceProps {
 }
 
 const THIRTY_SECONDS = 30 * 1000;
+// These paths generally don't require authentication to access
+// Except for logout, which handles its own presence on firebase.signout
+const excludedPaths: string[] = [
+    URL_PATHS.AUTH.LOGOUT,
+    URL_PATHS.ROOT,
+    URL_PATHS.PROVIDERS.THERAPIST.REGISTER,
+    URL_PATHS.PROVIDERS.THERAPIST.REGISTER_SUCCESS,
+    URL_PATHS.PROVIDERS.COACH.REGISTER,
+    URL_PATHS.PROVIDERS.COACH.REGISTER_SUCCESS,
+    URL_PATHS.MEMBERS.REGISTER,
+    URL_PATHS.MEMBERS.REGISTER_SUCCESS,
+];
 
 /**
  * Tracks user mouse, tap, and tab focus events to determine inactivity for presence
@@ -34,10 +46,8 @@ export const useInAppPresence = ({
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
-        if (pathname === URL_PATHS.AUTH.LOGOUT || pathname === '/') {
-            // Signout will clean up presence.
+        if (excludedPaths.includes(pathname)) {
             // We dont want to make calls to firebase here
-            // or we will get permission denied errors when the session ends from signout
             window.clearTimeout(windowBlurTimeout?.current);
             return;
         }
@@ -107,11 +117,7 @@ export const useInAppPresence = ({
             setIsAuthenticated(true);
             window.clearInterval(firebaseAuthPoll.current);
         } else {
-            if (
-                pathname === URL_PATHS.AUTH.LOGOUT ||
-                pathname === '/' ||
-                pathname.includes('/register')
-            ) {
+            if (excludedPaths.includes(pathname)) {
                 setIsAuthenticated(false);
                 return window.clearInterval(firebaseAuthPoll.current);
             }
