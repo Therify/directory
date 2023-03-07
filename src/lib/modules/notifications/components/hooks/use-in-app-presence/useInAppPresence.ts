@@ -35,7 +35,6 @@ export const useInAppPresence = ({
     inactivityTimeoutMs = THIRTY_SECONDS,
 }: InAppPresenceProps) => {
     const { pathname } = useRouter();
-    const windowBlurTimeout = useRef<number>();
     const inactivityTimeout = useRef<number>();
     const firebaseAuthPoll = useRef<number>();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -48,10 +47,12 @@ export const useInAppPresence = ({
         if (typeof window === 'undefined') return;
         if (excludedPaths.includes(pathname)) {
             // We dont want to make calls to firebase here
-            window.clearTimeout(windowBlurTimeout?.current);
+            window.clearTimeout(inactivityTimeout?.current);
             return;
         }
         if (userId && isAuthenticated && firebase?.isAuthenticated()) {
+            const shouldSetOnline =
+                localPresence === 'offline' || pathname !== lastPathname;
             const setOnline = () => {
                 firebase.setPresence(userId, 'online', pathname);
                 setLastPathname(pathname);
@@ -72,14 +73,14 @@ export const useInAppPresence = ({
             const resetInactivityTimeout = () => {
                 window.clearTimeout(inactivityTimeout?.current);
                 startInactivityTimeout();
-                if (localPresence === 'offline' || pathname !== lastPathname) {
+                if (shouldSetOnline) {
                     setOnline();
                 }
             };
 
             const onWindowFocus = () => {
-                window.clearTimeout(windowBlurTimeout?.current);
-                if (localPresence === 'offline' || pathname !== lastPathname) {
+                resetInactivityTimeout();
+                if (shouldSetOnline) {
                     setOnline();
                 }
             };
