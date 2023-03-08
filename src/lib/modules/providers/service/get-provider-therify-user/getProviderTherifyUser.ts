@@ -70,7 +70,6 @@ export const factory =
         });
 
         if (!user) return { user: null };
-        console.log('Building provider user', user);
         const {
             providerProfile,
             emailAddress,
