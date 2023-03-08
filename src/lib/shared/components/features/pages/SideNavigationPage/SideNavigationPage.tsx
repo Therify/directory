@@ -4,7 +4,8 @@ import { styled, useTheme } from '@mui/material/styles';
 import { Button, BUTTON_TYPE } from '@/lib/shared/components/ui';
 import { ActionNavListItem } from '@/lib/shared/components/ui/Navigation/NavigationMenu';
 import { NavigationLink, URL_PATHS } from '@/lib/sitemap';
-import { TherifyUser } from '@/lib/shared/hooks';
+import { usePlanMonitoring } from '@/lib/shared/hooks';
+import { TherifyUser } from '@/lib/shared/types';
 import {
     SideNavigationLayout,
     NavigationDrawer,
@@ -21,12 +22,14 @@ export interface SideNavigationPageProps {
     mobileMenu: NavigationLink[];
     currentPath: string;
     onNavigate: (path: string) => void;
-    user?: TherifyUser;
+    user?: TherifyUser.TherifyUser;
     actionLink?: NavigationLink;
     isLoadingUser?: boolean;
     children?: React.ReactNode;
 }
-
+/**
+ * @deprecated Use role-based navigation page navigation components instead except for in role-based navigation page components themselves
+ */
 export const SideNavigationPage = ({
     primaryMenu,
     secondaryMenu,
@@ -38,6 +41,7 @@ export const SideNavigationPage = ({
     isLoadingUser = false,
     children,
 }: SideNavigationPageProps) => {
+    usePlanMonitoring(user);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const theme = useTheme();
     const {
