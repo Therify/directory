@@ -39,7 +39,7 @@ export const TopNavigationPage = ({
     isLoadingUser,
     children,
 }: TopNavigationPageProps) => {
-    usePlanMonitoring(user);
+    const { hasAccess } = usePlanMonitoring(user);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const theme = useTheme();
     const {
@@ -57,7 +57,7 @@ export const TopNavigationPage = ({
                 user && (
                     <TopNavigationBar
                         currentPath={currentPath}
-                        primaryMenu={primaryMenu}
+                        primaryMenu={hasAccess ? primaryMenu : []}
                         secondaryMenu={secondaryMenu}
                         onNavigate={onNavigate}
                         onShowNotifications={notificationDrawer.open}
@@ -78,8 +78,10 @@ export const TopNavigationPage = ({
                     currentPath={currentPath}
                     isOpen={isMobileMenuOpen}
                     onClose={() => setIsMobileMenuOpen(false)}
-                    navigationMenu={mobileMenu}
-                    notificationsMap={getNotificationsMapForMenu(mobileMenu)}
+                    navigationMenu={hasAccess ? mobileMenu : secondaryMenu}
+                    notificationsMap={getNotificationsMapForMenu(
+                        hasAccess ? mobileMenu : secondaryMenu
+                    )}
                     onNavigate={(path) => {
                         onNavigate(path);
                         setIsMobileMenuOpen(false);

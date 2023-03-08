@@ -23,6 +23,7 @@ import {
     PracticeAdminNavigationPage,
 } from '@/lib/shared/components/features/pages';
 import { URL_PATHS } from '@/lib/sitemap';
+import { PlanStatus } from '@prisma/client';
 
 export const getServerSideProps = RBAC.requireProviderAuth(
     withPageAuthRequired({
@@ -36,18 +37,24 @@ export default function BillingPage({
     const isPlanExpired =
         !!user?.plan?.endDate &&
         isAfter(new Date(), new Date(user.plan.endDate));
+    const isPlanActive =
+        user &&
+        (user?.plan?.status === PlanStatus.active ||
+            user?.plan?.status === PlanStatus.trialing);
     return (
         <>
             {user?.isPracticeAdmin ? (
                 <PracticeAdminBillingView
                     stripeCustomerPortalUrl={stripeCustomerPortalUrl}
                     isPlanExpired={isPlanExpired}
+                    isPlanActive={isPlanActive}
                     user={user}
                 />
             ) : (
                 <ProviderBillingView
                     user={user}
                     isPlanExpired={isPlanExpired}
+                    isPlanActive={isPlanActive}
                 />
             )}
         </>
@@ -57,9 +64,11 @@ export default function BillingPage({
 const PracticeAdminBillingView = ({
     stripeCustomerPortalUrl,
     isPlanExpired,
+    isPlanActive,
     user,
 }: {
     isPlanExpired: boolean;
+    isPlanActive: boolean;
     user: TherifyUser.TherifyUser;
     stripeCustomerPortalUrl: string | null;
 }) => {
@@ -71,9 +80,10 @@ const PracticeAdminBillingView = ({
             user={user}
         >
             <Box padding={4}>
-                {isPlanExpired && user && (
+                {(isPlanExpired || !isPlanActive) && user && (
                     <Box marginBottom={4}>
-                        <ExpiredAlert
+                        <PlanAlert
+                            showExpiredMessage={isPlanExpired}
                             endDate={user.plan?.endDate}
                             message="Please update your billing information with Stripe to continue using Therify."
                         />
@@ -124,9 +134,11 @@ const PracticeAdminBillingView = ({
 const ProviderBillingView = ({
     user,
     isPlanExpired,
+    isPlanActive,
 }: {
     user: TherifyUser.TherifyUser;
     isPlanExpired: boolean;
+    isPlanActive: boolean;
 }) => {
     return (
         <ProviderNavigationPage
@@ -134,9 +146,10 @@ const ProviderBillingView = ({
             user={user}
         >
             <Box padding={4}>
-                {isPlanExpired && user && (
+                {(isPlanExpired || !isPlanActive) && user && (
                     <Box marginBottom={4}>
-                        <ExpiredAlert
+                        <PlanAlert
+                            showExpiredMessage={isPlanExpired}
                             endDate={user.plan?.endDate}
                             message="Please reach out to your practice administrator to update your billing information."
                         />
@@ -145,20 +158,28 @@ const ProviderBillingView = ({
                 <H3>Billing and Subscription</H3>
                 <Paragraph>
                     Your billing is handled by your practice administrator.
-                    Please reach out to them for any billing questions.
+                    Please contact them for any billing questions.
                 </Paragraph>
             </Box>
         </ProviderNavigationPage>
     );
 };
 
-const ExpiredAlert = ({
+const PlanAlert = ({
     endDate,
     message,
+    showExpiredMessage,
 }: {
     endDate?: string;
+    showExpiredMessage: boolean;
     message: string;
 }) => {
+    const expiredTitle = `Your plan expired${
+        endDate ? ` on ${format(new Date(endDate), 'MMMM do, yyyy')}` : ''
+    }.`;
+    const title = showExpiredMessage
+        ? expiredTitle
+        : 'Your plan is not active.';
     return (
         <Alert
             icon={
@@ -166,11 +187,7 @@ const ExpiredAlert = ({
                     <WarningRounded />
                 </CenteredContainer>
             }
-            title={`Your plan expired${
-                endDate
-                    ? ` on ${format(new Date(endDate), 'MMMM do, yyyy')}`
-                    : ''
-            }.`}
+            title={title}
             type="error"
             message={message}
         />

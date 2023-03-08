@@ -41,7 +41,7 @@ export const SideNavigationPage = ({
     isLoadingUser = false,
     children,
 }: SideNavigationPageProps) => {
-    usePlanMonitoring(user);
+    const { hasAccess } = usePlanMonitoring(user);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const theme = useTheme();
     const {
@@ -71,10 +71,12 @@ export const SideNavigationPage = ({
             navigationSlot={
                 <SideNavigationBar
                     currentPath={currentPath}
-                    navigationMenu={primaryMenu}
+                    navigationMenu={hasAccess ? primaryMenu : []}
                     onNavigate={onNavigate}
                     actionLink={actionLink}
-                    notificationMap={getNotificationsMapForMenu(primaryMenu)}
+                    notificationMap={getNotificationsMapForMenu(
+                        hasAccess ? primaryMenu : []
+                    )}
                 />
             }
         >
@@ -84,8 +86,10 @@ export const SideNavigationPage = ({
                 currentPath={currentPath}
                 isOpen={isMobileMenuOpen}
                 onClose={() => setIsMobileMenuOpen(false)}
-                navigationMenu={mobileMenu}
-                notificationsMap={getNotificationsMapForMenu(mobileMenu)}
+                navigationMenu={hasAccess ? mobileMenu : secondaryMenu}
+                notificationsMap={getNotificationsMapForMenu(
+                    hasAccess ? mobileMenu : secondaryMenu
+                )}
                 onNavigate={(path) => {
                     onNavigate(path);
                     setIsMobileMenuOpen(false);
