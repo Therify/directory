@@ -14,14 +14,13 @@ export const usePlanMonitoring = (
     user: TherifyUser.TherifyUser | null | undefined
 ) => {
     const router = useRouter();
-    console.log({ user });
     const isPlanExpired =
         !!user?.plan?.endDate &&
         isAfter(new Date(), new Date(user.plan.endDate));
     const hasPlanStarted =
         !!user?.plan?.startDate &&
         isAfter(new Date(), new Date(user.plan.startDate));
-    console.log({ isPlanExpired, hasPlanStarted });
+
     useEffect(() => {
         if (EXPIRED_PLAN_ROUTES.includes(router.pathname) || !user?.roles)
             return;
