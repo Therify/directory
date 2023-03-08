@@ -2,6 +2,7 @@ import { ReactNode, useContext, useEffect, useState } from 'react';
 import { FirebaseClient, TherifyUser } from '@/lib/shared/context';
 import { Notification } from '@/lib/shared/types';
 import { handleNotifications } from './handle-notifications-change';
+import { useInAppPresence } from '../hooks';
 import { Context } from './Context';
 import {
     clearNotificationsFactory,
@@ -10,15 +11,17 @@ import {
 } from './methods';
 
 export const Provider = ({ children }: { children: ReactNode }) => {
-    const { user } = useContext(TherifyUser.Context);
     const { firebase } = useContext(FirebaseClient.Context);
+    const userId = firebase?.getSignedInUserId();
+    useInAppPresence({ userId, firebase });
+
     const [notifications, setNotifications] = useState<
         Notification.InApp.PersitedType[]
     >([]);
-    const notificationsPath = `in-app-notifications/${user?.userId}`;
+    const notificationsPath = `in-app-notifications/${userId}`;
     const isFirebaseAuthenticated = Boolean(firebase?.isAuthenticated());
     const [shouldListenToNotifications, setShouldListenToNotifications] =
-        useState(Boolean(firebase?.isAuthenticated() && user?.userId));
+        useState(Boolean(firebase?.isAuthenticated() && userId));
 
     const clearNotifications = clearNotificationsFactory({
         firebase,
@@ -39,10 +42,8 @@ export const Provider = ({ children }: { children: ReactNode }) => {
     });
 
     useEffect(() => {
-        setShouldListenToNotifications(
-            !!user?.userId && isFirebaseAuthenticated
-        );
-    }, [user?.userId, isFirebaseAuthenticated]);
+        setShouldListenToNotifications(!!userId && isFirebaseAuthenticated);
+    }, [userId, isFirebaseAuthenticated]);
 
     useEffect(() => {
         if (shouldListenToNotifications && !!firebase) {
@@ -57,12 +58,7 @@ export const Provider = ({ children }: { children: ReactNode }) => {
                 unsubscribe();
             };
         }
-    }, [
-        shouldListenToNotifications,
-        notificationsPath,
-        user?.userId,
-        firebase,
-    ]);
+    }, [shouldListenToNotifications, notificationsPath, userId, firebase]);
     return (
         <Context.Provider
             value={{
