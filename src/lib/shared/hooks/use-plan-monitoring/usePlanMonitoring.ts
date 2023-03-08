@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 
 const EXPIRED_PLAN_ROUTES = [
     URL_PATHS.PROVIDERS.ACCOUNT.BILLING_AND_SUBSCRIPTION,
-    URL_PATHS.MEMBERS.ACCOUNT.PLAN_EXPIRED,
+    URL_PATHS.MEMBERS.ACCOUNT.EXPIRED_PLAN,
 ];
 
 export const usePlanMonitoring = (
@@ -29,7 +29,7 @@ export const usePlanMonitoring = (
             router.push(URL_PATHS.LAUNCH_COUNTDOWN);
         } else if (isPlanExpired) {
             const expiredPath = user.roles.includes(Role.member)
-                ? URL_PATHS.MEMBERS.ACCOUNT.PLAN_EXPIRED
+                ? URL_PATHS.MEMBERS.ACCOUNT.EXPIRED_PLAN
                 : URL_PATHS.PROVIDERS.ACCOUNT.BILLING_AND_SUBSCRIPTION;
             router.push(expiredPath);
         }
