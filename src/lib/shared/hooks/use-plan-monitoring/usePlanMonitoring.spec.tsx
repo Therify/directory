@@ -94,7 +94,7 @@ describe('usePlanMonitoring', () => {
             };
             render(<TestJSX />);
             expect(routerMock.push).toHaveBeenCalledWith(
-                URL_PATHS.MEMBERS.ACCOUNT.EXPIRED_PLAN
+                URL_PATHS.MEMBERS.ACCOUNT.INVALID_PLAN
             );
         });
         it('should route to billing when provider plan is expired', () => {
@@ -137,7 +137,7 @@ describe('usePlanMonitoring', () => {
                 );
                 return <div />;
             };
-            routerMock.pathname = URL_PATHS.MEMBERS.ACCOUNT.EXPIRED_PLAN;
+            routerMock.pathname = URL_PATHS.MEMBERS.ACCOUNT.INVALID_PLAN;
             render(<TestJSX />);
             expect(routerMock.push).not.toHaveBeenCalled();
         });
@@ -171,7 +171,7 @@ describe('usePlanMonitoring', () => {
             };
             render(<TestJSX />);
             expect(routerMock.push).toHaveBeenCalledWith(
-                URL_PATHS.MEMBERS.ACCOUNT.EXPIRED_PLAN
+                URL_PATHS.MEMBERS.ACCOUNT.INVALID_PLAN
             );
         });
         it('should route to billing when provider plan is not active', () => {
@@ -214,7 +214,7 @@ describe('usePlanMonitoring', () => {
                 );
                 return <div />;
             };
-            routerMock.pathname = URL_PATHS.MEMBERS.ACCOUNT.EXPIRED_PLAN;
+            routerMock.pathname = URL_PATHS.MEMBERS.ACCOUNT.INVALID_PLAN;
             render(<TestJSX />);
             expect(routerMock.push).not.toHaveBeenCalled();
         });

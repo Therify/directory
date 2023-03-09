@@ -49,7 +49,7 @@ export const MemberExpiredPlanPage = ({ user }: MemberTherifyUserPageProps) => {
 
     return (
         <MemberNavigationPage
-            currentPath={URL_PATHS.MEMBERS.ACCOUNT.EXPIRED_PLAN}
+            currentPath={URL_PATHS.MEMBERS.ACCOUNT.INVALID_PLAN}
             user={user}
         >
             <CenteredContainer

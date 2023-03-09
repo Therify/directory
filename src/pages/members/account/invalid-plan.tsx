@@ -24,7 +24,7 @@ export const getServerSideProps = RBAC.requireMemberAuth(
         getServerSideProps: membersService.getTherifyUserPageProps,
     })
 );
-export default function ExpiredPlanPage({ user }: MemberTherifyUserPageProps) {
+export default function InvalidPlanPage({ user }: MemberTherifyUserPageProps) {
     const theme = useTheme();
     const router = useRouter();
     const isPlanExpired =
@@ -56,7 +56,7 @@ export default function ExpiredPlanPage({ user }: MemberTherifyUserPageProps) {
 
     return (
         <MemberNavigationPage
-            currentPath={URL_PATHS.MEMBERS.ACCOUNT.EXPIRED_PLAN}
+            currentPath={URL_PATHS.MEMBERS.ACCOUNT.INVALID_PLAN}
             user={user}
         >
             <CenteredContainer

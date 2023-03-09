@@ -5,9 +5,9 @@ import { isAfter } from 'date-fns';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
-const EXPIRED_PLAN_ROUTES = [
+const INVALID_PLAN_ROUTES = [
     URL_PATHS.PROVIDERS.ACCOUNT.BILLING_AND_SUBSCRIPTION,
-    URL_PATHS.MEMBERS.ACCOUNT.EXPIRED_PLAN,
+    URL_PATHS.MEMBERS.ACCOUNT.INVALID_PLAN,
 ];
 
 export const usePlanMonitoring = (
@@ -32,15 +32,15 @@ export const usePlanMonitoring = (
             router.push(URL_PATHS.ACCESS_COUNTDOWN);
         } else if (
             (isPlanExpired || !isPlanActive) &&
-            !EXPIRED_PLAN_ROUTES.includes(router.pathname)
+            !INVALID_PLAN_ROUTES.includes(router.pathname)
         ) {
-            const expiredPath = user.roles.includes(Role.member)
-                ? URL_PATHS.MEMBERS.ACCOUNT.EXPIRED_PLAN
+            const invalidPath = user.roles.includes(Role.member)
+                ? URL_PATHS.MEMBERS.ACCOUNT.INVALID_PLAN
                 : URL_PATHS.PROVIDERS.ACCOUNT.BILLING_AND_SUBSCRIPTION;
-            router.push(expiredPath);
+            router.push(invalidPath);
         }
     }, [hasPlanStarted, isPlanExpired, isPlanActive, router, user?.roles]);
     return {
-        hasAccess: hasPlanStarted && isPlanActive && !isPlanExpired,
+        hasAccess: Boolean(hasPlanStarted && isPlanActive && !isPlanExpired),
     };
 };

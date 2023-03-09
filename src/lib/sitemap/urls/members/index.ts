@@ -9,6 +9,6 @@ export const MEMBER_PATHS = {
     CHAT: '/members/chat',
     CONTENT: CONTENT_PATHS,
     ACCOUNT: {
-        EXPIRED_PLAN: '/members/account/expired-plan',
+        INVALID_PLAN: '/members/account/invalid-plan',
     },
 } as const;
