@@ -1,4 +1,4 @@
-import { Role } from '@prisma/client';
+import { PlanStatus, Role } from '@prisma/client';
 import { TherifyUser } from '../therify-user';
 import { faker } from '@faker-js/faker';
 import { add, sub } from 'date-fns';
@@ -32,21 +32,28 @@ export const getTherifyUser = (options?: {
 });
 
 const mockExpiredPlan: Exclude<TherifyUser.TherifyUser['plan'], null> = {
-    status: 'active',
+    status: PlanStatus.active,
     startDate: sub(new Date(), { months: 2 }).toISOString(),
     endDate: sub(new Date(), { days: 1 }).toISOString(),
     renews: false,
     seats: 1,
 };
 const mockActivePlan: Exclude<TherifyUser.TherifyUser['plan'], null> = {
-    status: 'active',
+    status: PlanStatus.active,
+    startDate: sub(new Date(), { months: 1 }).toISOString(),
+    endDate: add(new Date(), { months: 1 }).toISOString(),
+    renews: false,
+    seats: 1,
+};
+const mockInctivePlan: Exclude<TherifyUser.TherifyUser['plan'], null> = {
+    status: PlanStatus.canceled,
     startDate: sub(new Date(), { months: 1 }).toISOString(),
     endDate: add(new Date(), { months: 1 }).toISOString(),
     renews: false,
     seats: 1,
 };
 const mockFuturePlan: Exclude<TherifyUser.TherifyUser['plan'], null> = {
-    status: 'active',
+    status: PlanStatus.active,
     startDate: add(new Date(), { months: 1 }).toISOString(),
     endDate: add(new Date(), { months: 2 }).toISOString(),
     renews: false,
@@ -58,6 +65,8 @@ function getPlan(plan?: MockPlanType): TherifyUser.TherifyUser['plan'] {
         case undefined:
         case 'active':
             return mockActivePlan;
+        case 'inactive':
+            return mockInctivePlan;
         case 'expired':
             return mockExpiredPlan;
         case 'future':
