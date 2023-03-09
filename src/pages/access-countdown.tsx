@@ -12,22 +12,52 @@ import {
     CenteredContainer,
     AbstractShape1,
     TherifyIcon,
+    Button,
 } from '@/lib/shared/components/ui';
-import { withPageAuthRequired } from '@auth0/nextjs-auth0';
-import { membersService } from '@/lib/modules/members/service';
-import { RBAC } from '@/lib/shared/utils';
-import { MemberTherifyUserPageProps } from '@/lib/modules/members/service/get-therify-user-props';
-import { MemberNavigationPage } from '@/lib/shared/components/features/pages';
+import { GetServerSideProps } from 'next';
+import { getSession } from '@auth0/nextjs-auth0';
+import { AccountsService } from '@/lib/modules/accounts/service';
 import { URL_PATHS } from '@/lib/sitemap';
+import { TherifyUser } from '@/lib/shared/types';
 
-export const getServerSideProps = RBAC.requireMemberAuth(
-    withPageAuthRequired({
-        getServerSideProps: membersService.getTherifyUserPageProps,
-    })
-);
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const session = await getSession(context.req, context.res);
+    if (!session) {
+        return {
+            props: {
+                redirect: {
+                    destination: URL_PATHS.AUTH.LOGIN,
+                    permanent: false,
+                },
+            },
+        };
+    }
+    const { user } = await AccountsService.getUserDetailsById({
+        userId: session.user.sub,
+    });
+
+    if (!user) {
+        return {
+            props: {
+                redirect: {
+                    destination: URL_PATHS.AUTH.LOGIN,
+                    permanent: false,
+                },
+            },
+        };
+    }
+
+    return {
+        props: {
+            user,
+        },
+    };
+};
 export default function AccessCountdownPage({
     user,
-}: MemberTherifyUserPageProps) {
+}: {
+    user: TherifyUser.TherifyUser;
+}) {
     const theme = useTheme();
     const router = useRouter();
     const [countdown, setCountdown] = useState('');
@@ -80,69 +110,70 @@ export default function AccessCountdownPage({
     }, [router, user?.plan?.startDate]);
 
     return (
-        <MemberNavigationPage
-            currentPath={URL_PATHS.MEMBERS.ACCOUNT.EXPIRED_PLAN}
-            user={user}
+        <CenteredContainer
+            fillSpace
+            style={{ background: theme.palette.background.default }}
         >
-            <CenteredContainer
-                fillSpace
-                style={{ background: theme.palette.background.default }}
+            <Container>
+                <CenteredContainer zIndex={2}>
+                    <motion.div
+                        animate={
+                            isCountDownComplete
+                                ? {
+                                      rotate: [0, 360, 360],
+                                      scale: [1, 1.3, 1],
+                                  }
+                                : undefined
+                        }
+                        transition={{
+                            duration: 1,
+                            ease: 'easeInOut',
+                            repeat: Infinity,
+                            repeatDelay: 0.5,
+                        }}
+                        style={{ marginBottom: theme.spacing(4) }}
+                    >
+                        <TherifyIcon width="50px" />
+                    </motion.div>
+                    {isCountDownComplete && <Title>Welcome to Therify</Title>}
+                    {!isCountDownComplete && (
+                        <Title>Your access to Therify starts soon!</Title>
+                    )}
+                    {user?.plan?.startDate && (
+                        <>
+                            <Paragraph>
+                                Your plan with Therify starts on{' '}
+                                {format(
+                                    new Date(user.plan.startDate),
+                                    'MMMM do, yyyy'
+                                )}{' '}
+                                at{' '}
+                                {format(
+                                    new Date(user.plan.startDate),
+                                    'h:mm a'
+                                )}
+                                .
+                            </Paragraph>
+                            <CountDown>{countdown}</CountDown>
+                        </>
+                    )}
+                    <Caption secondary>
+                        Please contact your account administrator within your
+                        organization for further information about accessing our
+                        services.
+                    </Caption>
+                </CenteredContainer>
+                <Shape />
+            </Container>
+            <Button
+                type="text"
+                color="info"
+                onClick={() => router.push(URL_PATHS.AUTH.LOGOUT)}
+                style={{ marginTop: theme.spacing(4) }}
             >
-                <Container>
-                    <CenteredContainer zIndex={2}>
-                        <motion.div
-                            animate={
-                                isCountDownComplete
-                                    ? {
-                                          rotate: [0, 360, 360],
-                                          scale: [1, 1.3, 1],
-                                      }
-                                    : undefined
-                            }
-                            transition={{
-                                duration: 1,
-                                ease: 'easeInOut',
-                                repeat: Infinity,
-                                repeatDelay: 0.5,
-                            }}
-                            style={{ marginBottom: theme.spacing(4) }}
-                        >
-                            <TherifyIcon width="50px" />
-                        </motion.div>
-                        {isCountDownComplete && (
-                            <Title>Welcome to Therify</Title>
-                        )}
-                        {!isCountDownComplete && (
-                            <Title>Your access to Therify starts soon!</Title>
-                        )}
-                        {user?.plan?.startDate && (
-                            <>
-                                <Paragraph>
-                                    Your plan with Therify starts on{' '}
-                                    {format(
-                                        new Date(user.plan.startDate),
-                                        'MMMM do, yyyy'
-                                    )}{' '}
-                                    at{' '}
-                                    {format(
-                                        new Date(user.plan.startDate),
-                                        'h:mm a'
-                                    )}
-                                    .
-                                </Paragraph>
-                                <CountDown>{countdown}</CountDown>
-                            </>
-                        )}
-                        <Caption secondary>
-                            Please contact your account administrator within
-                            your organization for further information about
-                            accessing our services.
-                        </Caption>
-                    </CenteredContainer>
-                    <Shape />
-                </Container>
-            </CenteredContainer>
-        </MemberNavigationPage>
+                Logout
+            </Button>
+        </CenteredContainer>
     );
 }
 const Title = styled(H1)(({ theme }) => ({
