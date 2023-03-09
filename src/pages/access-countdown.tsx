@@ -48,9 +48,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
 
     return {
-        props: {
-            user,
-        },
+        props: JSON.parse(
+            JSON.stringify({
+                user,
+            })
+        ),
     };
 };
 export default function AccessCountdownPage({
