@@ -65,6 +65,7 @@ const coach: ProviderProfileType.ProviderProfile = {
         AreaOfFocus.MAP.STRESS,
         AreaOfFocus.MAP.PARENTING,
     ],
+    isMultiracial: true,
     ethnicity: [
         Ethnicity.MAP.BLACK_OR_AFRICAN_AMERICAN,
         Ethnicity.MAP.EAST_ASIAN,
@@ -145,6 +146,7 @@ const therapist: ProviderProfileType.ProviderProfile = {
         AreaOfFocus.MAP.STRESS,
         AreaOfFocus.MAP.PARENTING,
     ],
+    isMultiracial: false,
     ethnicity: [
         Ethnicity.MAP.BLACK_OR_AFRICAN_AMERICAN,
         Ethnicity.MAP.EAST_ASIAN,

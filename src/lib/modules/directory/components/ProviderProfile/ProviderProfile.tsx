@@ -150,6 +150,7 @@ export function ProviderProfile({
     communitiesServed = [],
     religions = [],
     ethnicity = [],
+    isMultiracial,
     languagesSpoken = [],
     credentials = [],
     ageGroups = [],
@@ -513,7 +514,13 @@ export function ProviderProfile({
                                     <ProviderAttribute>
                                         <PublicOutlined />
                                         <AttributeText>
-                                            Ethnicity: {ethnicity.join(', ')}
+                                            Ethnicity:{' '}
+                                            {[
+                                                ...(isMultiracial
+                                                    ? ['Multiracial']
+                                                    : []),
+                                                ...ethnicity,
+                                            ].join(', ')}
                                         </AttributeText>
                                     </ProviderAttribute>
                                 )}
