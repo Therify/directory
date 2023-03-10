@@ -7,6 +7,7 @@ import { ContactEmailInput } from './ContactEmail';
 import { EthnicitiesInput } from './Ethnicities';
 import { GenderInput } from './Gender';
 import { GivenNameInput } from './GivenName';
+import { IsMultiracialToggle } from './IsMultiracial';
 import { PronounsInput } from './Pronouns';
 import { SurnameInput } from './Surname';
 
@@ -43,6 +44,9 @@ export const IdentitySection = ({
             </TwoInputContainer>
             <Box>
                 <EthnicitiesInput control={control} disabled={disabled} />
+            </Box>
+            <Box>
+                <IsMultiracialToggle control={control} disabled={disabled} />
             </Box>
         </Box>
     );
