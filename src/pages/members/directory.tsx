@@ -12,7 +12,12 @@ import { styled } from '@mui/material/styles';
 import { ProviderProfile } from '@prisma/client';
 import { useRouter } from 'next/navigation';
 import React from 'react';
-import { AreaOfFocus, InsuranceProvider, Issue } from '@/lib/shared/types';
+import {
+    AcceptedInsurance,
+    AreaOfFocus,
+    InsuranceProvider,
+    Issue,
+} from '@/lib/shared/types';
 import { Select } from '@/lib/shared/components/ui/FormElements/Select';
 import { InputWrapper } from '@/lib/shared/components/ui/FormElements/Input/InputWrapper';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -53,7 +58,7 @@ function Directory({
             (profile: DirectoryPageProps['providerProfiles'][number]) => {
                 const insuranceMatch = selectedInsurance
                     ? profile.acceptedInsurances.includes(
-                          selectedInsurance as InsuranceProvider.InsuranceProvider
+                          selectedInsurance as AcceptedInsurance.AcceptedInsurance['insurances'][number]
                       )
                     : true;
                 const issueMatch = selectedIssues.length

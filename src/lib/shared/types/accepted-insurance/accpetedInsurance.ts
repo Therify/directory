@@ -1,9 +1,40 @@
 import * as z from 'zod';
 import { ENTRIES as STATES } from '../state';
-import { ENTRIES as INSURANCE_PROVIDERS } from '../insuranceProvider';
+
+export const ACCEPTED_INSURANCES = [
+    'Aetna',
+    'Affinity Health Plan',
+    'Alliance',
+    'Amerigroup',
+    'AmeriHealth',
+    'Anthem',
+    'Beacon',
+    'Behavioral Health Systems',
+    'Blue Care Network',
+    'BlueCross Blue Shield',
+    'CareFirst',
+    'Ceridian',
+    'Cigna',
+    'Coventry',
+    'EmblemHealth',
+    'Fidelis',
+    'Guardian',
+    'Harvard Pilgrim',
+    'HealthFirst',
+    'Humana',
+    'Kaiser',
+    'Medicaid',
+    'Medicare',
+    'Meritian Health',
+    'MetroPlus Health Plan',
+    'Optum',
+    'Oscar',
+    'TRICARE',
+    'UnitedHealthcare',
+] as const;
 
 export const schema = z.object({
-    insurances: z.enum(INSURANCE_PROVIDERS).array(),
+    insurances: z.enum(ACCEPTED_INSURANCES).array(),
     state: z.enum(STATES),
 });
 
