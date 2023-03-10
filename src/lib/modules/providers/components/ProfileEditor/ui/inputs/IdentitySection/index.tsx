@@ -1,3 +1,4 @@
+import { Badge } from '@/lib/shared/components/ui';
 import { FormSectionTitle } from '@/lib/shared/components/ui/FormElements';
 import { ProviderProfile } from '@/lib/shared/types';
 import { Box } from '@mui/material';
@@ -15,11 +16,12 @@ interface IdentitySectionProps {
     control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
 }
+const NEW_FEATURE_EXPIRATION = new Date('2023-03-17').getTime();
 export const IdentitySection = ({
     control,
     disabled,
 }: IdentitySectionProps) => {
-    const theme = useTheme();
+    const showNewFeatureBadge = NEW_FEATURE_EXPIRATION > Date.now();
     return (
         <Box width="100%">
             <FormSectionTitle>Your Identity</FormSectionTitle>
@@ -47,6 +49,15 @@ export const IdentitySection = ({
             </Box>
             <Box>
                 <IsMultiracialToggle control={control} disabled={disabled} />
+                {showNewFeatureBadge && (
+                    <Badge
+                        color="success"
+                        size="small"
+                        style={{ marginLeft: 16 }}
+                    >
+                        New!
+                    </Badge>
+                )}
             </Box>
         </Box>
     );
