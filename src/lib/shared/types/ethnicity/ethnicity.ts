@@ -4,6 +4,7 @@ export const ENTRIES = [
     'Black or African American',
     'East Asian',
     'Hispanic, Latino, or of Spanish origin',
+    'Jewish',
     'Middle Eastern',
     'Pacific Islander',
     'South Asian',
@@ -17,6 +18,7 @@ export const MAP = {
     EAST_ASIAN: 'East Asian',
     HISPANIC_LATINO_OR_OF_SPANISH_ORIGIN:
         'Hispanic, Latino, or of Spanish origin',
+    JEWISH: 'Jewish',
     MIDDLE_EASTERN: 'Middle Eastern',
     PACIFIC_ISLANDER: 'Pacific Islander',
     SOUTH_ASIAN: 'South Asian',

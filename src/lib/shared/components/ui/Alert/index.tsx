@@ -10,7 +10,7 @@ export const ALERT_TYPE = {
     INFO: 'info',
 } as const;
 
-export type AlertType = typeof ALERT_TYPE[keyof typeof ALERT_TYPE];
+export type AlertType = (typeof ALERT_TYPE)[keyof typeof ALERT_TYPE];
 
 interface AlertAction {
     displayText: string;
@@ -41,7 +41,13 @@ export const Alert = ({
             icon={icon}
             severity={alertType}
             onClose={onClose}
-            sx={{ fontSize: '1rem', ...sx }}
+            sx={{
+                fontSize: '1rem',
+                '& .MuiAlert-message': {
+                    ...(!message && { display: 'flex', alignItems: 'center' }),
+                },
+                ...sx,
+            }}
         >
             <>
                 <AlertTitle

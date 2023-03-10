@@ -4,6 +4,7 @@ import { LogoutRounded as LogoutIcon } from '@mui/icons-material';
 import { styled, useTheme } from '@mui/material/styles';
 import { NavigationLink, URL_PATHS } from '@/lib/sitemap';
 import { TherifyUser } from '@/lib/shared/types';
+import { usePlanMonitoring } from '@/lib/shared/hooks';
 import {
     Button,
     BUTTON_TYPE,
@@ -25,6 +26,9 @@ export interface TopNavigationPageProps {
     isLoadingUser: boolean;
     children?: React.ReactNode;
 }
+/**
+ * @deprecated Use role-based navigation page navigation components instead except for in role-based navigation page components themselves
+ */
 export const TopNavigationPage = ({
     primaryMenu,
     secondaryMenu,
@@ -35,6 +39,7 @@ export const TopNavigationPage = ({
     isLoadingUser,
     children,
 }: TopNavigationPageProps) => {
+    const { hasAccess } = usePlanMonitoring(user);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const theme = useTheme();
     const {
@@ -52,7 +57,7 @@ export const TopNavigationPage = ({
                 user && (
                     <TopNavigationBar
                         currentPath={currentPath}
-                        primaryMenu={primaryMenu}
+                        primaryMenu={hasAccess ? primaryMenu : []}
                         secondaryMenu={secondaryMenu}
                         onNavigate={onNavigate}
                         onShowNotifications={notificationDrawer.open}
@@ -73,8 +78,10 @@ export const TopNavigationPage = ({
                     currentPath={currentPath}
                     isOpen={isMobileMenuOpen}
                     onClose={() => setIsMobileMenuOpen(false)}
-                    navigationMenu={mobileMenu}
-                    notificationsMap={getNotificationsMapForMenu(mobileMenu)}
+                    navigationMenu={hasAccess ? mobileMenu : secondaryMenu}
+                    notificationsMap={getNotificationsMapForMenu(
+                        hasAccess ? mobileMenu : secondaryMenu
+                    )}
                     onNavigate={(path) => {
                         onNavigate(path);
                         setIsMobileMenuOpen(false);

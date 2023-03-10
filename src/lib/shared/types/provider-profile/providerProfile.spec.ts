@@ -29,6 +29,7 @@ const mockProfile: PrismaProviderProfile = {
     acceptedInsurances: [],
     supervisor: null,
     specialties: [],
+    isMultiracial: false,
     ethnicity: [],
     communitiesServed: [],
     religions: [],

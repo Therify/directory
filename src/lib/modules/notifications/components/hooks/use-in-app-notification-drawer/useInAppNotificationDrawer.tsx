@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { InAppNotificationsContext } from '../../context';
 import { getNotificationCountForPath } from './methods';
 import { handleActionFactory } from './methods/handle-action/handleAction';
-import { FirebaseClient } from '@/lib/shared/context';
 import { NavigationLink } from '@/lib/sitemap';
 
 export const useInAppNotificationDrawer = () => {

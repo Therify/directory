@@ -266,6 +266,7 @@ model ProviderProfile {
   acceptedInsurances         Json[]                       @map("accepted_insurances")
   supervisor                 Json?
   specialties                String[]
+  isMultiracial              Boolean                      @default(false) @map("is_multiracial")
   ethnicity                  String[]
   communitiesServed          String[]                     @map("communities_served")
   religions                  String[]

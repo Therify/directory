@@ -25,3 +25,5 @@ export * from './provider-supervisor';
 export * from './accepted-insurance';
 export * from './provider-availability';
 export * from './connection-request';
+
+export * as Mocks from './__mocks__';
