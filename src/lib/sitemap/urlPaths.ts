@@ -14,4 +14,5 @@ export const URL_PATHS = {
     EXTERNAL: EXTERNAL_URLS,
     404: '/404',
     ROOT: '/',
+    ACCESS_COUNTDOWN: '/access-countdown',
 } as const;

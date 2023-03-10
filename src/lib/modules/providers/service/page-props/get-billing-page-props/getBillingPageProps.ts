@@ -33,14 +33,6 @@ export const factory = (params: ProvidersServiceParams) => {
                 },
             };
         }
-        if (!user.isPracticeAdmin) {
-            return {
-                redirect: {
-                    destination: URL_PATHS.ROOT,
-                    permanent: false,
-                },
-            };
-        }
 
         const stripeCustomerPortalUrl =
             process.env.STRIPE_CUSTOMER_PORTAL_URL ?? null;

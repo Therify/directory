@@ -8,4 +8,7 @@ export const MEMBER_PATHS = {
     DIRECTORY: '/members/directory',
     CHAT: '/members/chat',
     CONTENT: CONTENT_PATHS,
+    ACCOUNT: {
+        INVALID_PLAN: '/members/account/invalid-plan',
+    },
 } as const;

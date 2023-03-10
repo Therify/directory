@@ -19,5 +19,5 @@ export const PRACTICE_ADMIN_SECONDARY_MENU = [
 
 export const PRACTICE_ADMIN_MOBILE_MENU = [
     ...PRACTICE_ADMIN_MAIN_MENU,
-    // ACCOUNT,
+    { ...ACCOUNT, path: BILLING_AND_SUBSCRIPTION.path },
 ] as const;
