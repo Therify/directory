@@ -68,6 +68,7 @@ export const mockProviderProfile: ProviderProfile.ProviderProfile = {
         AreaOfFocus.MAP.STRESS,
         AreaOfFocus.MAP.PARENTING,
     ],
+    isMultiracial: true,
     ethnicity: [
         Ethnicity.MAP.BLACK_OR_AFRICAN_AMERICAN,
         Ethnicity.MAP.EAST_ASIAN,
