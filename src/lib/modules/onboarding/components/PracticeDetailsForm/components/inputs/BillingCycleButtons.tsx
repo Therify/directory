@@ -11,7 +11,7 @@ interface BillingCycleButtonsProps {
 
 const BILLING_CYCLE_OPTIONS = {
     MONTHLY: 'month',
-    ANNUAL: 'year',
+    ANNUALLY: 'year',
 } as const;
 
 export const BillingCycleButtons = ({
@@ -43,7 +43,7 @@ export const BillingCycleButtons = ({
                     <ToggleButton value={BILLING_CYCLE_OPTIONS.MONTHLY}>
                         Monthly
                     </ToggleButton>
-                    <ToggleButton value={BILLING_CYCLE_OPTIONS.ANNUAL}>
+                    <ToggleButton value={BILLING_CYCLE_OPTIONS.ANNUALLY}>
                         Annually
                     </ToggleButton>
                 </ButtonGroup>
