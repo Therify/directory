@@ -97,7 +97,8 @@ export const PracticeDetailsForm = ({
                     disabled={disabled}
                 />
                 <SectionTitle>
-                    How would you like to pay for your Therify subscription?
+                    How would you like to be billed for your Therify
+                    subscription?
                 </SectionTitle>
                 <BillingCycleButtons
                     control={control}
