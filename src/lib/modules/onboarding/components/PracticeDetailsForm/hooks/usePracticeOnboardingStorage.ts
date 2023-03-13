@@ -13,6 +13,7 @@ export type SafePracticeDetails = Pick<
     | 'email'
     | 'website'
     | 'seatCount'
+    | 'billingCycle'
 >;
 
 export const usePracticeOnboardingStorage = () => {
@@ -31,6 +32,7 @@ export const usePracticeOnboardingStorage = () => {
             email: details.email,
             website: details.website,
             seatCount: details.seatCount,
+            billingCycle: details.billingCycle,
         };
         const cleanedDetails = Object.entries(safeDetails).reduce<
             Partial<SafePracticeDetails>

@@ -15,7 +15,7 @@ export const schema = PracticeSchema.pick({
     .extend({
         practiceId: z.string().optional(),
         seatCount: z.number().min(1),
-        priceId: z.string(),
+        billingCycle: z.enum(['month', 'year']),
         userId: z.string(),
     })
     .refine((data) => data.seatCount > 0, {
