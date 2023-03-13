@@ -44,7 +44,7 @@ export const BillingCycleButtons = ({
                         Monthly
                     </ToggleButton>
                     <ToggleButton value={BILLING_CYCLE_OPTIONS.ANNUAL}>
-                        Annual
+                        Annually
                     </ToggleButton>
                 </ButtonGroup>
             )}
