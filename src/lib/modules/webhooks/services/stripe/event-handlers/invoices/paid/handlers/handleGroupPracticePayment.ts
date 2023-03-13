@@ -21,7 +21,6 @@ export const handleGroupPracticePayment = async ({
     priceId,
     seats,
 }: HandleGroupPracticePaymentInput) => {
-    console.log('handleGroupPracticePayment...');
     return await accounts.billing.handleGroupPracticePlanPayment({
         startDate,
         endDate,

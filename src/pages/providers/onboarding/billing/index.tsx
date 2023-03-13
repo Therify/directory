@@ -17,19 +17,13 @@ import { useForm } from 'react-hook-form';
 import { ArrowForwardRounded as NextIcon } from '@mui/icons-material';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
-import { getProductByEnvironment, PRODUCTS } from '@/lib/shared/types';
 import { TRPCClientError } from '@trpc/client';
 import Link from 'next/link';
 import { URL_PATHS } from '@/lib/sitemap';
 import { RBAC } from '@/lib/shared/utils';
-import { NodeEnvironment } from '@/lib/shared/types/nodeEnvironment';
 
 const REGISTRATION_STEPS = ['Registration', 'Payment', 'Onboarding'] as const;
 
-const PRODUCT = getProductByEnvironment(
-    PRODUCTS.GROUP_PRACTICE_PLAN,
-    process.env.NEXT_PUBLIC_VERCEL_ENV as NodeEnvironment
-);
 export const getServerSideProps = RBAC.requireProviderAuth(
     withPageAuthRequired()
 );
@@ -44,9 +38,9 @@ export default function PracticeOnboardingPage() {
         mode: 'onChange',
         defaultValues: {
             ...getStoredPracticeDetails(),
-            priceId: PRODUCT.PRICES.DEFAULT,
         },
     });
+    const billingCycle = practiceDetailsForm.watch('billingCycle');
 
     const { isLoading: isLoadingPractice, data: practiceData } = trpc.useQuery(
         [
@@ -151,13 +145,14 @@ export default function PracticeOnboardingPage() {
                             defaultValues={undefined}
                             control={practiceDetailsForm.control}
                             seatCount={practiceDetailsForm.watch('seatCount')}
-                            baseSeatPrice={39}
+                            seatPrice={billingCycle === 'year' ? 372 : 39}
                             maximumSeats={35}
                             onInputBlur={() =>
                                 storePracticeDetails(
                                     practiceDetailsForm.getValues()
                                 )
                             }
+                            billingCycle={billingCycle}
                             disabled={
                                 isLoadingUser ||
                                 isLoadingPractice ||
