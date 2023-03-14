@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import { ENTRIES as STATES } from '../state';
+import { ENTRIES as STATES } from '../address/united-states/state';
 
 export const ACCEPTED_INSURANCES = [
     'Aetna',

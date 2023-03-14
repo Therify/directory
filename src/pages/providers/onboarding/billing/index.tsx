@@ -41,6 +41,7 @@ export default function PracticeOnboardingPage() {
         },
     });
     const billingCycle = practiceDetailsForm.watch('billingCycle');
+    const country = practiceDetailsForm.watch('country');
 
     const { isLoading: isLoadingPractice, data: practiceData } = trpc.useQuery(
         [
@@ -71,8 +72,17 @@ export default function PracticeOnboardingPage() {
             );
             practiceDetailsForm.setValue('email', practiceData.practice.email);
             practiceDetailsForm.setValue('city', practiceData.practice.city);
-            practiceDetailsForm.setValue('state', practiceData.practice.state);
+            practiceDetailsForm.setValue(
+                'state',
+                practiceData.practice
+                    .state as HandlePracticeOnboarding.Input['state']
+            );
             practiceDetailsForm.setValue('zip', practiceData.practice.zip);
+            practiceDetailsForm.setValue(
+                'country',
+                practiceData.practice
+                    .country as HandlePracticeOnboarding.Input['country']
+            );
             practiceDetailsForm.setValue('name', practiceData.practice.name);
             practiceDetailsForm.setValue(
                 'phone',
@@ -153,6 +163,7 @@ export default function PracticeOnboardingPage() {
                                 )
                             }
                             billingCycle={billingCycle}
+                            country={country}
                             disabled={
                                 isLoadingUser ||
                                 isLoadingPractice ||

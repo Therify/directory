@@ -1,5 +1,6 @@
 import * as z from 'zod';
 import { PracticeSchema } from '@/lib/shared/schema';
+import { Country, UNITED_STATES, CANADA } from '@/lib/shared/types';
 
 export const schema = PracticeSchema.pick({
     name: true,
@@ -8,6 +9,7 @@ export const schema = PracticeSchema.pick({
     city: true,
     state: true,
     zip: true,
+    country: true,
     phone: true,
     email: true,
     website: true,
@@ -17,6 +19,11 @@ export const schema = PracticeSchema.pick({
         seatCount: z.number().min(1),
         billingCycle: z.enum(['month', 'year']),
         userId: z.string(),
+        state: z.enum([
+            ...UNITED_STATES.STATE.ENTRIES,
+            ...CANADA.PROVINCE.ENTRIES,
+        ]),
+        country: z.enum(Country.ENTRIES),
     })
     .refine((data) => data.seatCount > 0, {
         message: 'Must have at least one seat.',

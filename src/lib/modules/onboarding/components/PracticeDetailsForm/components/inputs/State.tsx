@@ -1,26 +1,23 @@
 import { Control, Controller } from 'react-hook-form';
-import {
-    Select,
-    SelectOption,
-    FormValidation,
-} from '@/lib/shared/components/ui';
+import { Select, FormValidation } from '@/lib/shared/components/ui';
 import { HandlePracticeOnboarding } from '@/lib/modules/onboarding/features';
 import { asSelectOptions } from '@/lib/shared/utils';
-import { State } from '@/lib/shared/types';
+import { UNITED_STATES, CANADA } from '@/lib/shared/types';
 
 interface StateInputProps {
     control: Control<HandlePracticeOnboarding.Input>;
-    defaultValue?: string;
+    defaultValue?: HandlePracticeOnboarding.Input['state'];
     onInputBlur: () => void;
     disabled?: boolean;
+    country: HandlePracticeOnboarding.Input['country'];
 }
-const options: SelectOption[] = asSelectOptions(State.ENTRIES);
 
 export const StateInput = ({
     control,
-    defaultValue = State.MAP.NEW_YORK,
+    defaultValue,
     onInputBlur,
     disabled,
+    country,
 }: StateInputProps) => (
     <Controller
         control={control}
@@ -28,6 +25,15 @@ export const StateInput = ({
         defaultValue={defaultValue}
         rules={{
             required: true,
+            validate: {
+                isInCountry: (value) => {
+                    const validator =
+                        country === CANADA.COUNTRY.CODE
+                            ? CANADA.PROVINCE.validate
+                            : UNITED_STATES.STATE.validate;
+                    return safeValidateState(value, validator);
+                },
+            },
         }}
         render={({
             field: { onChange, onBlur, value, name },
@@ -40,10 +46,16 @@ export const StateInput = ({
                 placeholder="State"
                 errorMessage={
                     isTouched
-                        ? FormValidation.getNameValidationErrorMessage(
-                              error?.type as FormValidation.NameValidationType,
-                              'State'
-                          )
+                        ? error?.type === 'isInCountry'
+                            ? `Please select a valid ${
+                                  country === CANADA.COUNTRY.CODE
+                                      ? 'province'
+                                      : 'state'
+                              }.`
+                            : FormValidation.getNameValidationErrorMessage(
+                                  error?.type as FormValidation.NameValidationType,
+                                  'State'
+                              )
                         : undefined
                 }
                 value={value}
@@ -51,8 +63,12 @@ export const StateInput = ({
                     onBlur();
                     onInputBlur();
                 }}
+                options={asSelectOptions(
+                    country === UNITED_STATES.COUNTRY.CODE
+                        ? UNITED_STATES.STATE.ENTRIES
+                        : CANADA.PROVINCE.ENTRIES
+                )}
                 {...{
-                    options,
                     onChange,
                     name,
                     disabled,
@@ -61,3 +77,15 @@ export const StateInput = ({
         )}
     />
 );
+
+const safeValidateState = (
+    state: string,
+    validator: (input: unknown) => any
+) => {
+    try {
+        validator(state);
+        return true;
+    } catch (_) {
+        return false;
+    }
+};

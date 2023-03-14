@@ -5,7 +5,7 @@ import {
 } from '@prisma/client';
 import { Pronoun } from '..';
 import { validate } from './providerProfile';
-import { ENTRIES as STATES } from '../state';
+import { ENTRIES as STATES } from '../address/united-states/state';
 
 const mockProfile: PrismaProviderProfile = {
     id: '1',

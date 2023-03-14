@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import { ENTRIES as STATES } from '../state';
+import { ENTRIES as STATES } from '../address/united-states/state';
 import { ConnectionRequestSchema, PlanSchema } from '../../schema';
 import { ProviderProfile } from '../provider-profile';
 import { convertNestedDatesToISOString } from '../../utils';
