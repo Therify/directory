@@ -1,7 +1,13 @@
-import { ProviderCredential } from '@/lib/shared/types';
+import {
+    ProviderCredential,
+    Country,
+    UNITED_STATES,
+    CANADA,
+} from '@/lib/shared/types';
 import { Box } from '@mui/material';
 import { styled, SxProps, Theme, useTheme } from '@mui/material/styles';
 import { useForm } from 'react-hook-form';
+import { asSelectOptions } from '@/lib/shared/utils';
 import {
     Button,
     Caption,
@@ -13,10 +19,11 @@ import {
     LicenseTypeInput,
     StateInput,
     ExpirationDateInput,
+    CountryInput,
 } from './inputs';
 
 interface ProviderCredentialInputProps {
-    defaultValue?: Partial<ProviderCredential.ProviderCredential>;
+    defaultValues?: Partial<ProviderCredential.ProviderCredential>;
     onSubmit: (value: ProviderCredential.ProviderCredential) => void;
     errorMessage?: string;
     successMessage?: string;
@@ -27,7 +34,7 @@ interface ProviderCredentialInputProps {
 }
 
 export const ProviderCredentialInput = ({
-    defaultValue,
+    defaultValues,
     label,
     onSubmit,
     buttonText = 'Add credential',
@@ -44,8 +51,10 @@ export const ProviderCredentialInput = ({
 
     const credential = useForm<ProviderCredential.ProviderCredential>({
         mode: 'onChange',
-        defaultValues: defaultValue,
+        defaultValues,
     });
+    const country = credential.watch('country');
+
     return (
         <InputWrapper sx={sx}>
             {label && <FormSectionTitle>{label}</FormSectionTitle>}
@@ -55,7 +64,8 @@ export const ProviderCredentialInput = ({
             </TwoInputContainer>
             <TwoInputContainer>
                 <ExpirationDateInput control={credential.control} />
-                <StateInput control={credential.control} />
+                <StateInput control={credential.control} country={country} />
+                <CountryInput control={credential.control} />
             </TwoInputContainer>
             <Button
                 disabled={!credential.formState.isValid}

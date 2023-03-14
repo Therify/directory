@@ -1,12 +1,21 @@
 import * as z from 'zod';
-import { ENTRIES as STATES } from '../address/united-states/state';
-
-export const schema = z.object({
-    state: z.enum(STATES),
+import { UNITED_STATES, CANADA } from '../address';
+const baseSchema = z.object({
     type: z.string(),
     licenseNumber: z.string(),
     expirationDate: z.string(),
 });
+
+export const schema = z.discriminatedUnion('country', [
+    baseSchema.extend({
+        state: z.enum(CANADA.PROVINCE.ENTRIES),
+        country: z.literal(CANADA.COUNTRY.CODE),
+    }),
+    baseSchema.extend({
+        state: z.enum(UNITED_STATES.STATE.ENTRIES),
+        country: z.literal(UNITED_STATES.COUNTRY.CODE),
+    }),
+]);
 
 export type ProviderCredential = z.infer<typeof schema>;
 

@@ -11,7 +11,11 @@ import {
     Divider,
 } from '@/lib/shared/components/ui';
 import { Control, Controller } from 'react-hook-form';
-import { ProviderCredential, ProviderProfile } from '@/lib/shared/types';
+import {
+    ProviderCredential,
+    ProviderProfile,
+    UNITED_STATES,
+} from '@/lib/shared/types';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
@@ -60,6 +64,9 @@ export const CredentialsManagerInput = ({ control, disabled }: InputProps) => {
                             title="New License"
                             postBodySlot={
                                 <ProviderCredentialInput
+                                    defaultValues={{
+                                        country: UNITED_STATES.COUNTRY.CODE,
+                                    }}
                                     onSubmit={(credential) => {
                                         onChange([...value, credential]);
                                         setShowEditor(false);

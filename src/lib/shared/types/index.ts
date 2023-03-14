@@ -2,8 +2,6 @@ export * as Notification from './notifications';
 export * from './products';
 export * from './roles';
 export * as Pronoun from './pronoun';
-export * as State from './address/united-states/state';
-export * as Country from './address/country';
 export * as InsuranceProvider from './insuranceProvider';
 export * as EvidenceBasedApproach from './evidenceBasedApproach';
 export * as AreaOfFocus from './areaOfFocus';
