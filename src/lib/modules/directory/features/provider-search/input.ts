@@ -1,8 +1,8 @@
-import { State } from '@/lib/shared/types';
+import { UNITED_STATES } from '@/lib/shared/types';
 import * as z from 'zod';
 
 export const schema = z.object({
-    state: z.enum(State.ENTRIES),
+    state: z.enum(UNITED_STATES.STATE.ENTRIES),
     memberPreferences: z
         .object({
             insuranceProvider: z.string().optional(),

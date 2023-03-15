@@ -1,14 +1,23 @@
 import * as z from 'zod';
-import { ENTRIES as STATES } from '../address/united-states/state';
+import { UNITED_STATES, CANADA } from '../address';
 
 export const schema = z.object({
     name: z.string(),
     npiNumber: z.string(),
-    supervisorLicense: z.object({
-        expiration: z.string(),
-        licenseNumber: z.string(),
-        state: z.enum(STATES),
-    }),
+    supervisorLicense: z.discriminatedUnion('country', [
+        z.object({
+            expiration: z.string(),
+            licenseNumber: z.string(),
+            state: z.enum(CANADA.PROVINCE.ENTRIES),
+            country: z.literal(CANADA.COUNTRY.CODE),
+        }),
+        z.object({
+            expiration: z.string(),
+            licenseNumber: z.string(),
+            state: z.enum(UNITED_STATES.STATE.ENTRIES),
+            country: z.literal(UNITED_STATES.COUNTRY.CODE),
+        }),
+    ]),
 });
 
 export type ProviderSupervisor = z.infer<typeof schema>;

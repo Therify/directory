@@ -3,14 +3,20 @@ import { Select, SelectOption } from '@/lib/shared/components/ui';
 import {
     ProviderCredential,
     Country,
-    CANADA,
     UNITED_STATES,
+    CANADA,
+    ProviderProfile,
+    ProviderSupervisor,
 } from '@/lib/shared/types';
 
 interface CountryInputProps {
-    control: Control<ProviderCredential.ProviderCredential>;
-    defaultValue?: (typeof Country.ENTRIES)[number];
+    control: Control<ProviderProfile.ProviderProfile>;
+    defaultValue?: Country.Country;
     disabled?: boolean;
+    storeLocalData: (
+        key: keyof ProviderSupervisor.ProviderSupervisor['supervisorLicense'],
+        value: string
+    ) => void;
 }
 const options: SelectOption[] = [
     {
@@ -30,7 +36,7 @@ export const CountryInput = ({
 }: CountryInputProps) => (
     <Controller
         control={control}
-        name="country"
+        name="supervisor.supervisorLicense.country"
         defaultValue={defaultValue}
         rules={{
             required: true,
@@ -38,7 +44,7 @@ export const CountryInput = ({
         render={({ field: { onChange, onBlur, value, name } }) => (
             <Select
                 id="country"
-                label="Country"
+                label="Issuing Country"
                 placeholder="Country"
                 fullWidth
                 value={value}
