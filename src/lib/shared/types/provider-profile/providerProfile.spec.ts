@@ -3,9 +3,8 @@ import {
     ProfileType,
     ProviderProfile as PrismaProviderProfile,
 } from '@prisma/client';
-import { Pronoun } from '..';
+import { Pronoun, UNITED_STATES } from '..';
 import { validate } from './providerProfile';
-import { ENTRIES as STATES } from '../address/united-states/state';
 
 const mockProfile: PrismaProviderProfile = {
     id: '1',
@@ -87,7 +86,8 @@ describe('ProviderProfile.validate', () => {
                 supervisorLicense: {
                     expiration: new Date(),
                     licenseNumber: '123',
-                    state: STATES[0],
+                    state: UNITED_STATES.STATE.ENTRIES[0],
+                    country: UNITED_STATES.COUNTRY.CODE,
                 },
             };
             const { supervisor } = validate({

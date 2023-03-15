@@ -1,4 +1,3 @@
-import { factory } from './executeProviderSearch';
 import { prismaMock } from '@/lib/prisma/__mock__';
 import { addYears } from 'date-fns';
 import { ProviderProfile, ProfileType, NewClientStatus } from '@prisma/client';
@@ -13,7 +12,10 @@ import {
     Language,
     Modality,
     Pronoun,
+    UNITED_STATES,
 } from '@/lib/shared/types';
+import { DirectoryServiceParams } from '../params';
+import { factory } from './executeProviderSearch';
 
 const mockProviderProfile: ProviderProfile = {
     createdAt: new Date('2021-03-01'),
@@ -39,13 +41,15 @@ const mockProviderProfile: ProviderProfile = {
     gender: Gender.MAP.MALE,
     credentials: [
         {
-            state: 'Tennessee',
+            state: UNITED_STATES.STATE.MAP.TENNESSEE,
+            country: UNITED_STATES.COUNTRY.CODE,
             licenseNumber: '123456',
             type: 'LMFT',
             expirationDate: addYears(new Date(), 1).toISOString(),
         },
         {
-            state: 'New York',
+            state: UNITED_STATES.STATE.MAP.NEW_YORK,
+            country: UNITED_STATES.COUNTRY.CODE,
             licenseNumber: '123456',
             type: 'LMFT',
             expirationDate: addYears(new Date(), 1).toISOString(),
@@ -71,6 +75,7 @@ const mockProviderProfile: ProviderProfile = {
         AreaOfFocus.MAP.STRESS,
         AreaOfFocus.MAP.PARENTING,
     ],
+    isMultiracial: true,
     ethnicity: [
         Ethnicity.MAP.BLACK_OR_AFRICAN_AMERICAN,
         Ethnicity.MAP.EAST_ASIAN,
@@ -93,6 +98,7 @@ const mockProviderProfile: ProviderProfile = {
     offersMedicationManagement: true,
     offersPhoneConsultations: true,
     offersVirtual: true,
+    offersChat: true,
     designation: ProfileType.therapist,
     newClientStatus: NewClientStatus.accepting,
     practiceStartDate: new Date('2010-09-01T00:00:00.000Z'),
@@ -101,7 +107,7 @@ const mockProviderProfile: ProviderProfile = {
 describe('executeProviderSearch', () => {
     const executeProviderSearch = factory({
         prisma: prismaMock,
-    });
+    } as unknown as DirectoryServiceParams);
 
     describe('therapists', () => {
         it('should return valid profiles', async () => {
