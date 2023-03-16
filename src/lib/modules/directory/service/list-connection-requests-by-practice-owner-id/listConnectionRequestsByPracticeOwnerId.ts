@@ -24,6 +24,7 @@ export function factory({ prisma }: DirectoryServiceParams) {
                                 surname: true,
                                 profileImageUrl: true,
                                 designation: true,
+                                contactEmail: true,
                             },
                         },
                     },

@@ -13,10 +13,12 @@ const mockConnectionRequest: ConnectionRequest.Type = {
         givenName: 'John',
         surname: 'Doe',
         emailAddress: 'member@therify.co',
+
         memberProfile: {
             concerns: [],
             goals: [],
             state: State.ENTRIES[0],
+            insurance: 'Aetna',
         },
         account: {
             name: 'Test Account',
@@ -27,6 +29,7 @@ const mockConnectionRequest: ConnectionRequest.Type = {
         id: 'profile-123',
         givenName: 'Jane',
         surname: 'Doe',
+        contactEmail: 'test@test.co',
         practice: {
             name: 'Therify',
             email: 'office@therify.co',
@@ -46,7 +49,7 @@ describe('formatReimbursementRequestUrl', () => {
             mockConnectionRequest.providerProfile.givenName,
         ],
         ['providername[last]', mockConnectionRequest.providerProfile.surname],
-        ['provideremail', mockConnectionRequest.providerProfile.practice.email],
+        ['provideremail', mockConnectionRequest.providerProfile.contactEmail],
         ['billingemail', mockConnectionRequest.providerProfile.practice.email],
         ['practice', mockConnectionRequest.providerProfile.practice.name],
     ];
