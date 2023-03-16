@@ -1,7 +1,7 @@
 import {
     AcceptedInsurance,
     InsuranceProvider,
-    State,
+    Region,
     ProviderProfile,
 } from '@/lib/shared/types';
 import { Autocomplete, Box, TextField } from '@mui/material';
@@ -11,7 +11,7 @@ import { Caption, FormSectionSubtitle } from '@/lib/shared/components/ui';
 
 interface AcceptedInsuranceInputProps {
     control: Control<ProviderProfile.ProviderProfile>;
-    stateOptions: State.State[];
+    stateOptions: Region.Type[];
 }
 type InsuranceByState = Record<
     AcceptedInsurance.AcceptedInsurance['state'],

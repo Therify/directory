@@ -29,49 +29,52 @@ export const StateInput = ({
     disabled,
     storeLocalData,
     country,
-}: StateInputProps) => (
-    <Controller
-        control={control}
-        name="supervisor.supervisorLicense.state"
-        defaultValue={defaultValue}
-        rules={{
-            required: true,
-            validate: {
-                isInCountry: (value) => {
-                    const validator =
-                        country === CANADA.COUNTRY.CODE
-                            ? CANADA.PROVINCE.validate
-                            : UNITED_STATES.STATE.validate;
-                    return safeValidateState(value, validator);
+}: StateInputProps) => {
+    const regionName = country === CANADA.COUNTRY.CODE ? 'Province' : 'State';
+    return (
+        <Controller
+            control={control}
+            name="supervisor.supervisorLicense.state"
+            defaultValue={defaultValue}
+            rules={{
+                required: true,
+                validate: {
+                    isInCountry: (value) => {
+                        const validator =
+                            country === CANADA.COUNTRY.CODE
+                                ? CANADA.PROVINCE.validate
+                                : UNITED_STATES.STATE.validate;
+                        return safeValidateState(value, validator);
+                    },
                 },
-            },
-        }}
-        render={({ field: { onChange, onBlur, value, name } }) => (
-            <Select
-                required
-                id="state"
-                label="Issuing State"
-                placeholder="State"
-                fullWidth
-                value={value}
-                onChange={(state) => {
-                    onChange(state);
-                    storeLocalData('state', state);
-                }}
-                options={asSelectOptions(
-                    country === CANADA.COUNTRY.CODE
-                        ? CANADA.PROVINCE.ENTRIES
-                        : UNITED_STATES.STATE.ENTRIES
-                )}
-                {...{
-                    onBlur,
-                    name,
-                    disabled,
-                }}
-            />
-        )}
-    />
-);
+            }}
+            render={({ field: { onChange, onBlur, value, name } }) => (
+                <Select
+                    required
+                    id="state"
+                    label={`Issuing ${regionName}`}
+                    placeholder={regionName}
+                    fullWidth
+                    value={value}
+                    onChange={(state) => {
+                        onChange(state);
+                        storeLocalData('state', state);
+                    }}
+                    options={asSelectOptions(
+                        country === CANADA.COUNTRY.CODE
+                            ? CANADA.PROVINCE.ENTRIES
+                            : UNITED_STATES.STATE.ENTRIES
+                    )}
+                    {...{
+                        onBlur,
+                        name,
+                        disabled,
+                    }}
+                />
+            )}
+        />
+    );
+};
 
 const safeValidateState = (
     state: string,

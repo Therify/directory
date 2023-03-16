@@ -115,7 +115,8 @@ describe('executeProviderSearch', () => {
                 mockProviderProfile,
             ]);
             const { profiles } = await executeProviderSearch({
-                state: 'New York',
+                state: UNITED_STATES.STATE.MAP.NEW_YORK,
+                country: UNITED_STATES.COUNTRY.CODE,
             });
             await expect(profiles.length).toBe(1);
         });
@@ -127,7 +128,8 @@ describe('executeProviderSearch', () => {
                 },
             ]);
             const { profiles } = await executeProviderSearch({
-                state: 'New York',
+                state: UNITED_STATES.STATE.MAP.NEW_YORK,
+                country: UNITED_STATES.COUNTRY.CODE,
             });
             await expect(profiles.length).toBe(0);
         });
@@ -139,7 +141,8 @@ describe('executeProviderSearch', () => {
                 },
             ]);
             const { profiles } = await executeProviderSearch({
-                state: 'New York',
+                state: UNITED_STATES.STATE.MAP.NEW_YORK,
+                country: UNITED_STATES.COUNTRY.CODE,
             });
             await expect(profiles.length).toBe(0);
         });
@@ -161,7 +164,8 @@ describe('executeProviderSearch', () => {
                 },
             ]);
             const { profiles } = await executeProviderSearch({
-                state: 'New York',
+                state: UNITED_STATES.STATE.MAP.NEW_YORK,
+                country: UNITED_STATES.COUNTRY.CODE,
             });
             await expect(profiles.length).toBe(0);
         });
@@ -182,7 +186,8 @@ describe('executeProviderSearch', () => {
                 },
             ]);
             const { profiles } = await executeProviderSearch({
-                state: 'New York',
+                state: UNITED_STATES.STATE.MAP.NEW_YORK,
+                country: UNITED_STATES.COUNTRY.CODE,
             });
             await expect(profiles.length).toBe(0);
         });
@@ -198,7 +203,8 @@ describe('executeProviderSearch', () => {
                 },
             ]);
             const { profiles } = await executeProviderSearch({
-                state: 'New York',
+                state: UNITED_STATES.STATE.MAP.NEW_YORK,
+                country: UNITED_STATES.COUNTRY.CODE,
             });
             expect(profiles.length).toBe(1);
         });

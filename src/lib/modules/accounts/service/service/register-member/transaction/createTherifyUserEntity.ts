@@ -31,6 +31,7 @@ export const createTherifyUserEntity: RegisterMemberTransaction['CREATE_THERIFY_
                         memberProfile: {
                             create: {
                                 state: input.state,
+                                country: input.country,
                                 insurance: input.insurance,
                                 concerns: input.concerns,
                                 goals: input.goals,
@@ -54,6 +55,7 @@ export const createTherifyUserEntity: RegisterMemberTransaction['CREATE_THERIFY_
                     memberProfile: {
                         create: {
                             state: input.state,
+                            country: input.country,
                             insurance: input.insurance,
                             concerns: input.concerns,
                             goals: input.goals,

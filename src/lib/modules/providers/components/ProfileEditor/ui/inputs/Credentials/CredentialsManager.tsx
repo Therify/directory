@@ -167,7 +167,8 @@ const Credential = ({
                         {credential.type}
                     </Paragraph>
                     <CredentialDetails>
-                        {credential.state} - {credential.licenseNumber} - Exp:{' '}
+                        {credential.state}, {credential.country} -{' '}
+                        {credential.licenseNumber} - Exp:{' '}
                         {format(
                             new Date(credential.expirationDate),
                             'MM/dd/yyyy'

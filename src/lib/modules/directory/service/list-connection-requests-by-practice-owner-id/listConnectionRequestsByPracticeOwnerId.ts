@@ -57,6 +57,7 @@ export function factory({ prisma }: DirectoryServiceParams) {
                             select: {
                                 goals: true,
                                 state: true,
+                                country: true,
                                 concerns: true,
                                 insurance: true,
                             },
@@ -89,7 +90,7 @@ export function factory({ prisma }: DirectoryServiceParams) {
         });
 
         const profilesById = practiceProfiles.reduce<
-            Record<string, typeof practiceProfiles[number]['profile']>
+            Record<string, (typeof practiceProfiles)[number]['profile']>
         >((acc, { profile }) => {
             return {
                 ...acc,

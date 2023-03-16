@@ -18,65 +18,64 @@ export const StateInput = ({
     onInputBlur,
     disabled,
     country,
-}: StateInputProps) => (
-    <Controller
-        control={control}
-        name="state"
-        defaultValue={defaultValue}
-        rules={{
-            required: true,
-            validate: {
-                isInCountry: (value) => {
-                    const validator =
-                        country === CANADA.COUNTRY.CODE
-                            ? CANADA.PROVINCE.validate
-                            : UNITED_STATES.STATE.validate;
-                    return safeValidateState(value, validator);
+}: StateInputProps) => {
+    const regionName = country === CANADA.COUNTRY.CODE ? 'Province' : 'State';
+    return (
+        <Controller
+            control={control}
+            name="state"
+            defaultValue={defaultValue}
+            rules={{
+                required: true,
+                validate: {
+                    isInCountry: (value) => {
+                        const validator =
+                            country === CANADA.COUNTRY.CODE
+                                ? CANADA.PROVINCE.validate
+                                : UNITED_STATES.STATE.validate;
+                        return safeValidateState(value, validator);
+                    },
                 },
-            },
-        }}
-        render={({
-            field: { onChange, onBlur, value, name },
-            fieldState: { error, isTouched },
-        }) => (
-            <Select
-                required
-                fullWidth
-                id="state"
-                placeholder="State"
-                errorMessage={
-                    isTouched
-                        ? error?.type === 'isInCountry'
-                            ? `Please select a valid ${
-                                  country === CANADA.COUNTRY.CODE
-                                      ? 'province'
-                                      : 'state'
-                              }.`
-                            : FormValidation.getNameValidationErrorMessage(
-                                  error?.type as FormValidation.NameValidationType,
-                                  'State'
-                              )
-                        : undefined
-                }
-                value={value}
-                onBlur={() => {
-                    onBlur();
-                    onInputBlur();
-                }}
-                options={asSelectOptions(
-                    country === UNITED_STATES.COUNTRY.CODE
-                        ? UNITED_STATES.STATE.ENTRIES
-                        : CANADA.PROVINCE.ENTRIES
-                )}
-                {...{
-                    onChange,
-                    name,
-                    disabled,
-                }}
-            />
-        )}
-    />
-);
+            }}
+            render={({
+                field: { onChange, onBlur, value, name },
+                fieldState: { error, isTouched },
+            }) => (
+                <Select
+                    required
+                    fullWidth
+                    id="state"
+                    placeholder={regionName}
+                    errorMessage={
+                        isTouched
+                            ? error?.type === 'isInCountry'
+                                ? `Please select a valid ${regionName.toLowerCase()}.`
+                                : FormValidation.getNameValidationErrorMessage(
+                                      error?.type as FormValidation.NameValidationType,
+                                      regionName
+                                  )
+                            : undefined
+                    }
+                    value={value}
+                    onBlur={() => {
+                        onBlur();
+                        onInputBlur();
+                    }}
+                    options={asSelectOptions(
+                        country === UNITED_STATES.COUNTRY.CODE
+                            ? UNITED_STATES.STATE.ENTRIES
+                            : CANADA.PROVINCE.ENTRIES
+                    )}
+                    {...{
+                        onChange,
+                        name,
+                        disabled,
+                    }}
+                />
+            )}
+        />
+    );
+};
 
 const safeValidateState = (
     state: string,

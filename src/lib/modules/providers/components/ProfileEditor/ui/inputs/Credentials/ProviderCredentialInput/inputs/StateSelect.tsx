@@ -23,6 +23,7 @@ export const StateInput = ({
     country,
 }: StateInputProps) => {
     const options = asSelectOptions(getCountryStates(country));
+    const regionName = country === CANADA.COUNTRY.CODE ? 'Province' : 'State';
     return (
         <Controller
             control={control}
@@ -46,8 +47,8 @@ export const StateInput = ({
             render={({ field: { onChange, onBlur, value, name } }) => (
                 <Select
                     id="state"
-                    label="Issuing State"
-                    placeholder="State"
+                    label={`Issuing ${regionName}`}
+                    placeholder={regionName}
                     fullWidth
                     value={value}
                     {...{

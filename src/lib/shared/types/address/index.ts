@@ -7,4 +7,5 @@ const COUNTRY_MAP = {
     [UNITED_STATES.COUNTRY.CODE]: UNITED_STATES,
 };
 
+export * as Region from './region';
 export { CANADA, UNITED_STATES, COUNTRY_MAP, Country };

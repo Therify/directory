@@ -1,12 +1,12 @@
-import { UNITED_STATES } from '@/lib/shared/types';
+import { Country, Region, UNITED_STATES } from '@/lib/shared/types';
 import * as z from 'zod';
 
 export const schema = z.object({
-    state: z.enum(UNITED_STATES.STATE.ENTRIES),
+    state: z.enum(Region.ENTRIES),
+    country: z.enum(Country.ENTRIES),
     memberPreferences: z
         .object({
             insuranceProvider: z.string().optional(),
-            state: z.string().optional(),
             issues: z.string().array().optional(),
             languages: z.string().array().optional(),
         })
