@@ -58,6 +58,7 @@ export function SelfAssessment() {
                     <InputWrapper label="Provider Ethnicity">
                         <Select
                             id="Provider Ethnicity"
+                            sx={{ minWidth: { lg: 300, xs: '100%' } }}
                             value="American Indian"
                             options={asSelectOptions(Ethnicity.ENTRIES)}
                         />
@@ -65,6 +66,7 @@ export function SelfAssessment() {
                     <InputWrapper label="Provider Gender">
                         <Select
                             id="Provider Gender"
+                            sx={{ minWidth: { lg: 300, xs: '100%' } }}
                             value="Male"
                             options={asSelectOptions(Gender.ENTRIES)}
                         />
@@ -72,6 +74,7 @@ export function SelfAssessment() {
                     <InputWrapper label="Provider Language">
                         <Select
                             id="Provider Language"
+                            sx={{ minWidth: { lg: 300, xs: '100%' } }}
                             value="English"
                             options={asSelectOptions(Language.ENTRIES)}
                         />
@@ -79,6 +82,7 @@ export function SelfAssessment() {
                     <InputWrapper label="Provider Insurance">
                         <Select
                             id="Provider Insurance"
+                            sx={{ minWidth: { lg: 300, xs: '100%' } }}
                             value="Aetna"
                             options={asSelectOptions(InsuranceProvider.ENTRIES)}
                         />
@@ -86,7 +90,7 @@ export function SelfAssessment() {
                 </Stack>
                 <Stack spacing={4}>
                     <FormControl>
-                        <FormLabel>Do you identify as LGBTQ</FormLabel>
+                        <FormLabel>Do you identify as LGBTQ?</FormLabel>
                         <RadioGroup defaultValue={'no'}>
                             <FormControlLabel
                                 value="yes"
@@ -198,7 +202,7 @@ export function SelfAssessment() {
 
 const SelfAssessmentContainer = styled(Stack)(({ theme }) => ({
     background: theme.palette.background.paper,
-    padding: `${theme.spacing(4)} ${theme.spacing(2)}`,
+    padding: `${theme.spacing(4)} ${theme.spacing(4)}`,
 }));
 
 const AssessmentSection = styled(Stack)(({ theme }) => ({
