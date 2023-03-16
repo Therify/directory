@@ -10,7 +10,7 @@ export const ALERT_TYPE = {
     INFO: 'info',
 } as const;
 
-export type AlertType = (typeof ALERT_TYPE)[keyof typeof ALERT_TYPE];
+export type AlertType = typeof ALERT_TYPE[keyof typeof ALERT_TYPE];
 
 interface AlertAction {
     displayText: string;
