@@ -45,7 +45,7 @@ export const getMockProviderProfile = (
         {
             state: UNITED_STATES.STATE.MAP.NEW_YORK,
             country: UNITED_STATES.COUNTRY.CODE,
-            licenseNumber: '123456',
+            licenseNumber: '234567',
             type: 'LMFT',
             expirationDate: '2021-12-31',
         },

@@ -27,7 +27,6 @@ export const AcceptedInsuranceInput = ({
         render={({
             field: { onChange, onBlur, value: acceptedInsurances, name },
         }) => {
-            console.log({ locationOptions });
             const insurancesByState = acceptedInsurances.reduce(
                 (acc, value) => {
                     acc[`${value.state}, ${value.country}`] = value.insurances;
