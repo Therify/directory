@@ -17,7 +17,7 @@ import {
 import { DirectoryServiceParams } from '../params';
 import { factory } from './executeProviderSearch';
 
-const mockProviderProfile: ProviderProfile = {
+const mockPrismaProviderProfile: ProviderProfile = {
     createdAt: new Date('2021-03-01'),
     updatedAt: new Date('2021-03-01'),
     id: 'test-provider-profile-id',
@@ -58,6 +58,7 @@ const mockProviderProfile: ProviderProfile = {
     acceptedInsurances: [
         {
             state: 'Tennessee',
+            country: UNITED_STATES.COUNTRY.CODE,
             insurances: [
                 InsuranceProvider.MAP.AETNA,
                 InsuranceProvider.MAP.AMERIHEALTH,
@@ -66,6 +67,7 @@ const mockProviderProfile: ProviderProfile = {
         },
         {
             state: 'New York',
+            country: UNITED_STATES.COUNTRY.CODE,
             insurances: [InsuranceProvider.MAP.BLUECROSS_BLUESHIELD],
         },
     ],
@@ -112,7 +114,7 @@ describe('executeProviderSearch', () => {
     describe('therapists', () => {
         it('should return valid profiles', async () => {
             prismaMock.providerProfile.findMany.mockResolvedValue([
-                mockProviderProfile,
+                mockPrismaProviderProfile,
             ]);
             const { profiles } = await executeProviderSearch({
                 state: UNITED_STATES.STATE.MAP.NEW_YORK,
@@ -123,7 +125,7 @@ describe('executeProviderSearch', () => {
         it('should filter out therapists with no credentials', async () => {
             prismaMock.providerProfile.findMany.mockResolvedValue([
                 {
-                    ...mockProviderProfile,
+                    ...mockPrismaProviderProfile,
                     credentials: [],
                 },
             ]);
@@ -136,8 +138,8 @@ describe('executeProviderSearch', () => {
         it('should filter out therapists with no credentials for the given state', async () => {
             prismaMock.providerProfile.findMany.mockResolvedValue([
                 {
-                    ...mockProviderProfile,
-                    credentials: [mockProviderProfile.credentials[0]],
+                    ...mockPrismaProviderProfile,
+                    credentials: [mockPrismaProviderProfile.credentials[0]],
                 },
             ]);
             const { profiles } = await executeProviderSearch({
@@ -149,7 +151,7 @@ describe('executeProviderSearch', () => {
         it('should filter out therapists with expired credentials', async () => {
             prismaMock.providerProfile.findMany.mockResolvedValue([
                 {
-                    ...mockProviderProfile,
+                    ...mockPrismaProviderProfile,
                     credentials: [
                         {
                             type: 'LMFT',
@@ -173,7 +175,7 @@ describe('executeProviderSearch', () => {
         it('should safely filter out therapists with malformed credentials', async () => {
             prismaMock.providerProfile.findMany.mockResolvedValue([
                 {
-                    ...mockProviderProfile,
+                    ...mockPrismaProviderProfile,
                     credentials: [
                         {
                             state: 'New York',
@@ -197,7 +199,7 @@ describe('executeProviderSearch', () => {
         it('should not filter coaches by credentials', async () => {
             prismaMock.providerProfile.findMany.mockResolvedValue([
                 {
-                    ...mockProviderProfile,
+                    ...mockPrismaProviderProfile,
                     credentials: [],
                     designation: ProfileType.coach,
                 },

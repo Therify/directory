@@ -1,9 +1,8 @@
 import { factory as getProviderProfileByUserIdFactory } from './getProfileByUserId';
 import { prismaMock } from '@/lib/prisma/__mock__';
 import { Role, User } from '@prisma/client';
-import { generateMock } from '@anatine/zod-mock';
 import { ProvidersServiceParams } from '../../params';
-import { Pronoun, ProviderProfile } from '@/lib/shared/types';
+import { ProviderProfile } from '@/lib/shared/types';
 import { ProviderProfileSchema as ProviderProfileDbSchema } from '@/lib/shared/schema';
 import { z } from 'zod';
 import { mockProviderProfile } from './__mocks__/providerProfile';

@@ -54,6 +54,7 @@ export const mockProviderProfile: ProviderProfile.ProviderProfile = {
     acceptedInsurances: [
         {
             state: 'Tennessee',
+            country: UNITED_STATES.COUNTRY.CODE,
             insurances: [
                 InsuranceProvider.MAP.AETNA,
                 InsuranceProvider.MAP.AMERIHEALTH,
@@ -62,6 +63,7 @@ export const mockProviderProfile: ProviderProfile.ProviderProfile = {
         },
         {
             state: 'New York',
+            country: UNITED_STATES.COUNTRY.CODE,
             insurances: [InsuranceProvider.MAP.BLUECROSS_BLUESHIELD],
         },
     ],
