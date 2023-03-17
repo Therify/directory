@@ -23,3 +23,16 @@ export const isValid = (value: unknown): value is Type => {
         return false;
     }
 };
+
+export const stateAndCountrySchema = z.discriminatedUnion('country', [
+    z.object({
+        state: z.enum(UNITED_STATES.STATE.ENTRIES),
+        country: z.literal(UNITED_STATES.COUNTRY.CODE),
+    }),
+    z.object({
+        state: z.enum(CANADA.PROVINCE.ENTRIES),
+        country: z.literal(CANADA.COUNTRY.CODE),
+    }),
+]);
+
+export type StateAndCountry = z.infer<typeof stateAndCountrySchema>;

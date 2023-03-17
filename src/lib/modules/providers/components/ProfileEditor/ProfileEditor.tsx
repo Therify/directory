@@ -16,6 +16,8 @@ import {
     AgeGroup,
     ProviderProfile,
     ProviderPractice,
+    Region,
+    AcceptedInsurance,
 } from '@/lib/shared/types';
 import { Alerts } from '@/lib/modules/alerts/context';
 import { ProfileEditorForm } from './ui/ProfileEditorForm';
@@ -72,22 +74,43 @@ export function ProfileEditor({
     const licensedStates = useMemo(() => {
         return Array.from(
             new Set(
-                (watchedProfile.credentials ?? []).map(({ state }) => state)
+                (watchedProfile.credentials ?? []).map(
+                    (credential) => `${credential.state},${credential.country}`
+                )
             )
-        );
+        ).map((uniqueState) => {
+            const [state, country] = uniqueState.split(',');
+            return Region.stateAndCountrySchema.parse({ state, country });
+        });
     }, [watchedProfile.credentials]);
 
     useEffect(
         function manageAcceptedInsuranceStates() {
             const acceptedInsurances = (
                 providerProfileForm.getValues('acceptedInsurances') ?? []
-            ).filter((insurance) => licensedStates.includes(insurance.state));
-            licensedStates.forEach((state) => {
+            ).filter(
+                (insurance) =>
+                    licensedStates.find(
+                        (licensedState) =>
+                            licensedState.state === insurance.state &&
+                            licensedState.country === insurance.country
+                    ) !== undefined
+            );
+            licensedStates.forEach(({ state, country }) => {
                 const stateIsFound =
-                    acceptedInsurances.find(({ state: s }) => s === state) !==
-                    undefined;
+                    acceptedInsurances.find(
+                        (insurance) =>
+                            insurance.state === state &&
+                            insurance.country === country
+                    ) !== undefined;
                 if (!stateIsFound) {
-                    acceptedInsurances.push({ state, insurances: [] });
+                    acceptedInsurances.push(
+                        AcceptedInsurance.validate({
+                            state,
+                            country,
+                            insurances: [],
+                        })
+                    );
                 }
                 providerProfileForm.setValue(
                     'acceptedInsurances',
