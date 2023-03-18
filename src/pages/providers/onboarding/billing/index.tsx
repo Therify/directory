@@ -101,9 +101,8 @@ export default function PracticeOnboardingPage() {
         }
     }, [practiceDetailsForm, user?.sub]);
 
-    const mutation = trpc.useMutation(
-        'accounts.onboarding.handle-practice-onboarding',
-        {
+    const { isLoading: isHandlingPracticeSubmission, mutate: submitPractice } =
+        trpc.useMutation('accounts.onboarding.handle-practice-onboarding', {
             onSuccess(response) {
                 const parseResult =
                     HandlePracticeOnboarding.outputSuccessSchema.safeParse(
@@ -131,13 +130,12 @@ export default function PracticeOnboardingPage() {
                 }
                 setErrorMessage(error.message);
             },
-        }
-    );
+        });
 
     const handlePracticeOnboarding = async function () {
         setErrorMessage(undefined);
         const practiceDetails = practiceDetailsForm.getValues();
-        return mutation.mutate(practiceDetails);
+        return submitPractice(practiceDetails);
     };
 
     return (
@@ -167,7 +165,7 @@ export default function PracticeOnboardingPage() {
                             disabled={
                                 isLoadingUser ||
                                 isLoadingPractice ||
-                                mutation.isLoading
+                                isHandlingPracticeSubmission
                             }
                         />
                     </FormContainer>
@@ -186,7 +184,7 @@ export default function PracticeOnboardingPage() {
                             </Caption>
                         </Box>
                         <Button
-                            isLoading={mutation.isLoading}
+                            isLoading={isHandlingPracticeSubmission}
                             disabled={
                                 !practiceDetailsForm.formState.isValid ||
                                 isLoadingUser ||

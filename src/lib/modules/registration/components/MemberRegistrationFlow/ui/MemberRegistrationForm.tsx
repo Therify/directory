@@ -91,8 +91,10 @@ export const MemberRegistrationForm = ({
                     control={control}
                     password={password}
                 />
-                <StateInput control={control} country={country} />
-                <CountryInput control={control} />
+                <LocationWrapper>
+                    <StateInput control={control} country={country} />
+                    <CountryInput control={control} />
+                </LocationWrapper>
                 <InsuranceInput control={control} />
                 <GoalsInput control={control} />
                 <ConcernsInput control={control} />
@@ -130,4 +132,18 @@ const Form = styled('form')(({ theme }) => ({
 const Header = styled(H1)(({ theme }) => ({
     ...theme.typography.h3,
     width: '75%',
+}));
+
+const LocationWrapper = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    [theme.breakpoints.up('md')]: {
+        flexDirection: 'row',
+        '& > *:nth-of-type(1)': {
+            marginRight: theme.spacing(4),
+        },
+    },
+    '& > *': {
+        flex: 1,
+    },
 }));
