@@ -102,7 +102,7 @@ export default function PracticeOnboardingPage() {
     }, [practiceDetailsForm, user?.sub]);
 
     const { isLoading: isHandlingPracticeSubmission, mutate: submitPractice } =
-        trpc.useMutation('accounts.onboarding.handle-practice-onboarding', {
+        trpc.useMutation(`accounts.${HandlePracticeOnboarding.TRPC_ROUTE}`, {
             onSuccess(response) {
                 const parseResult =
                     HandlePracticeOnboarding.outputSuccessSchema.safeParse(

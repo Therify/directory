@@ -20,7 +20,7 @@ export const practiceSchema = PracticeSchema.pick({
     userId: z.string(),
 });
 
-const schema = z
+export const schema = z
     .discriminatedUnion('country', [
         practiceSchema.extend({
             state: z.enum(CANADA.PROVINCE.ENTRIES),
