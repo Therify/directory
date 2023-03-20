@@ -41,6 +41,7 @@ export default function PracticeOnboardingPage() {
         },
     });
     const billingCycle = practiceDetailsForm.watch('billingCycle');
+    const country = practiceDetailsForm.watch('country');
 
     const { isLoading: isLoadingPractice, data: practiceData } = trpc.useQuery(
         [
@@ -71,8 +72,17 @@ export default function PracticeOnboardingPage() {
             );
             practiceDetailsForm.setValue('email', practiceData.practice.email);
             practiceDetailsForm.setValue('city', practiceData.practice.city);
-            practiceDetailsForm.setValue('state', practiceData.practice.state);
+            practiceDetailsForm.setValue(
+                'state',
+                practiceData.practice
+                    .state as HandlePracticeOnboarding.Input['state']
+            );
             practiceDetailsForm.setValue('zip', practiceData.practice.zip);
+            practiceDetailsForm.setValue(
+                'country',
+                practiceData.practice
+                    .country as HandlePracticeOnboarding.Input['country']
+            );
             practiceDetailsForm.setValue('name', practiceData.practice.name);
             practiceDetailsForm.setValue(
                 'phone',
@@ -91,9 +101,8 @@ export default function PracticeOnboardingPage() {
         }
     }, [practiceDetailsForm, user?.sub]);
 
-    const mutation = trpc.useMutation(
-        'accounts.onboarding.handle-practice-onboarding',
-        {
+    const { isLoading: isHandlingPracticeSubmission, mutate: submitPractice } =
+        trpc.useMutation(`accounts.${HandlePracticeOnboarding.TRPC_ROUTE}`, {
             onSuccess(response) {
                 const parseResult =
                     HandlePracticeOnboarding.outputSuccessSchema.safeParse(
@@ -121,13 +130,12 @@ export default function PracticeOnboardingPage() {
                 }
                 setErrorMessage(error.message);
             },
-        }
-    );
+        });
 
     const handlePracticeOnboarding = async function () {
         setErrorMessage(undefined);
         const practiceDetails = practiceDetailsForm.getValues();
-        return mutation.mutate(practiceDetails);
+        return submitPractice(practiceDetails);
     };
 
     return (
@@ -153,10 +161,11 @@ export default function PracticeOnboardingPage() {
                                 )
                             }
                             billingCycle={billingCycle}
+                            country={country}
                             disabled={
                                 isLoadingUser ||
                                 isLoadingPractice ||
-                                mutation.isLoading
+                                isHandlingPracticeSubmission
                             }
                         />
                     </FormContainer>
@@ -175,7 +184,7 @@ export default function PracticeOnboardingPage() {
                             </Caption>
                         </Box>
                         <Button
-                            isLoading={mutation.isLoading}
+                            isLoading={isHandlingPracticeSubmission}
                             disabled={
                                 !practiceDetailsForm.formState.isValid ||
                                 isLoadingUser ||

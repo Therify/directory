@@ -28,6 +28,7 @@ export interface PracticeDetailsFormProps {
     maximumSeats?: number;
     seatPrice: number;
     billingCycle: HandlePracticeOnboarding.Input['billingCycle'];
+    country: HandlePracticeOnboarding.Input['country'];
     seatCount: number;
     disabled?: boolean;
     onInputBlur: () => void;
@@ -43,6 +44,7 @@ export const PracticeDetailsForm = ({
     billingCycle,
     disabled,
     onInputBlur,
+    country,
 }: PracticeDetailsFormProps) => {
     const theme = useTheme();
     if (!control) throw new Error('control is required');
@@ -72,8 +74,9 @@ export const PracticeDetailsForm = ({
                     }}
                     onInputBlur={onInputBlur}
                     disabled={disabled}
+                    country={country}
                 />
-                <SectionTitle>Contact </SectionTitle>
+                <SectionTitle>Contact</SectionTitle>
                 <Caption>
                     Contact will not be publicly listed unless you choose to
                     share on your profile(s).

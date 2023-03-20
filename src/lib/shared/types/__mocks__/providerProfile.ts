@@ -1,27 +1,26 @@
-import {
-    AgeGroup,
-    AreaOfFocus,
-    CommunitiesServed,
-    Ethnicity,
-    EvidenceBasedApproach,
-    Gender,
-    InsuranceProvider,
-    Language,
-    Modality,
-    Pronoun,
-    ProviderProfile,
-    Religion,
-    UNITED_STATES,
-} from '@/lib/shared/types';
 import { ProfileType, NewClientStatus } from '@prisma/client';
+import * as InsuranceProvider from '../insuranceProvider';
+import { Gender } from '../gender';
+import { ProviderProfile } from '../provider-profile';
+import * as AreaOfFocus from '../areaOfFocus';
+import { Ethnicity } from '../ethnicity';
+import { CommunitiesServed } from '../communities-served';
+import * as EvidenceBasedApproach from '../evidenceBasedApproach';
+import { Modality } from '../modality';
+import { Religion } from '../religion';
+import { Language } from '../language';
+import * as Pronoun from '../pronoun';
+import { AgeGroup } from '../age-group';
+import { UNITED_STATES } from '../address';
 
-export const mockProviderProfile: ProviderProfile.ProviderProfile = {
+export const getMockProviderProfile = (
+    defaults?: Partial<ProviderProfile.ProviderProfile>
+): ProviderProfile.ProviderProfile => ({
     id: 'test-provider-profile-id',
     supervisor: null,
     givenName: 'John',
     surname: 'Doe',
     contactEmail: 'test@test.com',
-    userId: 'test-user-id',
     bio: 'Seeking therapy is a big step that provokes pressing emotional questions: “How can therapy help me? Am I ready to spill my guts to a stranger?” There are logistical challenges: “What will this cost? How can I make the time?” In these days of navigating the ongoing impacts of the pandemic, you likely need support more than ever as you evaluate how you want to live, love, and work. In my practice, I help clients confront the challenges in their lives, including depression, anxiety, substance misuse, and relationship difficulties.',
     npiNumber: '12345',
     offersSlidingScale: true,
@@ -46,15 +45,15 @@ export const mockProviderProfile: ProviderProfile.ProviderProfile = {
         {
             state: UNITED_STATES.STATE.MAP.NEW_YORK,
             country: UNITED_STATES.COUNTRY.CODE,
-            licenseNumber: '123456',
+            licenseNumber: '234567',
             type: 'LMFT',
             expirationDate: '2021-12-31',
         },
     ],
     acceptedInsurances: [
         {
-            state: 'Tennessee',
             country: UNITED_STATES.COUNTRY.CODE,
+            state: 'Tennessee',
             insurances: [
                 InsuranceProvider.MAP.AETNA,
                 InsuranceProvider.MAP.AMERIHEALTH,
@@ -62,8 +61,8 @@ export const mockProviderProfile: ProviderProfile.ProviderProfile = {
             ],
         },
         {
-            state: 'New York',
             country: UNITED_STATES.COUNTRY.CODE,
+            state: 'New York',
             insurances: [InsuranceProvider.MAP.BLUECROSS_BLUESHIELD],
         },
     ],
@@ -100,4 +99,5 @@ export const mockProviderProfile: ProviderProfile.ProviderProfile = {
     newClientStatus: NewClientStatus.accepting,
     practiceStartDate: '2010-09-01T00:00:00.000Z',
     offersChat: false,
-};
+    ...defaults,
+});

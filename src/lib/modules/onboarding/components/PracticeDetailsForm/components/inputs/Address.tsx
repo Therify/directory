@@ -7,6 +7,7 @@ import { Address2Input } from './Address2';
 import { CityInput } from './City';
 import { StateInput } from './State';
 import { ZipCodeInput } from './ZipCode';
+import { CountryInput } from './Country';
 
 interface PracticeAddressInputProps {
     control: Control<HandlePracticeOnboarding.Input>;
@@ -14,10 +15,11 @@ interface PracticeAddressInputProps {
     defaultValues?: Partial<
         Pick<
             HandlePracticeOnboarding.Input,
-            'address' | 'address2' | 'city' | 'state' | 'zip'
+            'address' | 'address2' | 'city' | 'state' | 'zip' | 'country'
         >
     >;
     onInputBlur: () => void;
+    country: HandlePracticeOnboarding.Input['country'];
 }
 
 export const PracticeAddressInput = ({
@@ -25,8 +27,8 @@ export const PracticeAddressInput = ({
     defaultValues = {},
     onInputBlur,
     disabled,
+    country,
 }: PracticeAddressInputProps) => {
-    const theme = useTheme();
     return (
         <Box display="flex" flex={1} width="100%" flexDirection="column">
             <StreetContainer>
@@ -56,10 +58,18 @@ export const PracticeAddressInput = ({
                         defaultValue={defaultValues.state}
                         onInputBlur={onInputBlur}
                         disabled={disabled}
+                        country={country}
                     />
                     <ZipCodeInput
                         control={control}
                         defaultValue={defaultValues.zip}
+                        onInputBlur={onInputBlur}
+                        disabled={disabled}
+                        country={country}
+                    />
+                    <CountryInput
+                        control={control}
+                        defaultValue={defaultValues.country}
                         onInputBlur={onInputBlur}
                         disabled={disabled}
                     />
@@ -111,8 +121,11 @@ const StateContainer = styled(Box)(({ theme }) => ({
         [theme.breakpoints.up('md')]: {
             flexDirection: 'row',
             paddingLeft: theme.spacing(2),
-            '& > *:first-of-type': {
+            '& > *': {
                 marginRight: theme.spacing(4),
+                '&:last-of-type': {
+                    marginRight: 0,
+                },
             },
         },
     },

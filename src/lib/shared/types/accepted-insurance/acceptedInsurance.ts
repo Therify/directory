@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import { ENTRIES as STATES } from '../state';
+import { CANADA, UNITED_STATES } from '../address';
 
 export const ACCEPTED_INSURANCES = [
     'Aetna',
@@ -33,10 +33,20 @@ export const ACCEPTED_INSURANCES = [
     'UnitedHealthcare',
 ] as const;
 
-export const schema = z.object({
+const baseSchema = z.object({
     insurances: z.enum(ACCEPTED_INSURANCES).array(),
-    state: z.enum(STATES),
 });
+
+export const schema = z.discriminatedUnion('country', [
+    baseSchema.extend({
+        state: z.enum(CANADA.PROVINCE.ENTRIES),
+        country: z.literal(CANADA.COUNTRY.CODE),
+    }),
+    baseSchema.extend({
+        state: z.enum(UNITED_STATES.STATE.ENTRIES),
+        country: z.literal(UNITED_STATES.COUNTRY.CODE),
+    }),
+]);
 
 export type AcceptedInsurance = z.infer<typeof schema>;
 

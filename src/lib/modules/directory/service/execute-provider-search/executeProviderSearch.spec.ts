@@ -1,4 +1,3 @@
-import { factory } from './executeProviderSearch';
 import { prismaMock } from '@/lib/prisma/__mock__';
 import { addYears } from 'date-fns';
 import { ProviderProfile, ProfileType, NewClientStatus } from '@prisma/client';
@@ -13,9 +12,12 @@ import {
     Language,
     Modality,
     Pronoun,
+    UNITED_STATES,
 } from '@/lib/shared/types';
+import { DirectoryServiceParams } from '../params';
+import { factory } from './executeProviderSearch';
 
-const mockProviderProfile: ProviderProfile = {
+const mockPrismaProviderProfile: ProviderProfile = {
     createdAt: new Date('2021-03-01'),
     updatedAt: new Date('2021-03-01'),
     id: 'test-provider-profile-id',
@@ -39,13 +41,15 @@ const mockProviderProfile: ProviderProfile = {
     gender: Gender.MAP.MALE,
     credentials: [
         {
-            state: 'Tennessee',
+            state: UNITED_STATES.STATE.MAP.TENNESSEE,
+            country: UNITED_STATES.COUNTRY.CODE,
             licenseNumber: '123456',
             type: 'LMFT',
             expirationDate: addYears(new Date(), 1).toISOString(),
         },
         {
-            state: 'New York',
+            state: UNITED_STATES.STATE.MAP.NEW_YORK,
+            country: UNITED_STATES.COUNTRY.CODE,
             licenseNumber: '123456',
             type: 'LMFT',
             expirationDate: addYears(new Date(), 1).toISOString(),
@@ -54,6 +58,7 @@ const mockProviderProfile: ProviderProfile = {
     acceptedInsurances: [
         {
             state: 'Tennessee',
+            country: UNITED_STATES.COUNTRY.CODE,
             insurances: [
                 InsuranceProvider.MAP.AETNA,
                 InsuranceProvider.MAP.AMERIHEALTH,
@@ -62,6 +67,7 @@ const mockProviderProfile: ProviderProfile = {
         },
         {
             state: 'New York',
+            country: UNITED_STATES.COUNTRY.CODE,
             insurances: [InsuranceProvider.MAP.BLUECROSS_BLUESHIELD],
         },
     ],
@@ -71,6 +77,7 @@ const mockProviderProfile: ProviderProfile = {
         AreaOfFocus.MAP.STRESS,
         AreaOfFocus.MAP.PARENTING,
     ],
+    isMultiracial: true,
     ethnicity: [
         Ethnicity.MAP.BLACK_OR_AFRICAN_AMERICAN,
         Ethnicity.MAP.EAST_ASIAN,
@@ -93,6 +100,7 @@ const mockProviderProfile: ProviderProfile = {
     offersMedicationManagement: true,
     offersPhoneConsultations: true,
     offersVirtual: true,
+    offersChat: true,
     designation: ProfileType.therapist,
     newClientStatus: NewClientStatus.accepting,
     practiceStartDate: new Date('2010-09-01T00:00:00.000Z'),
@@ -101,46 +109,49 @@ const mockProviderProfile: ProviderProfile = {
 describe('executeProviderSearch', () => {
     const executeProviderSearch = factory({
         prisma: prismaMock,
-    });
+    } as unknown as DirectoryServiceParams);
 
     describe('therapists', () => {
         it('should return valid profiles', async () => {
             prismaMock.providerProfile.findMany.mockResolvedValue([
-                mockProviderProfile,
+                mockPrismaProviderProfile,
             ]);
             const { profiles } = await executeProviderSearch({
-                state: 'New York',
+                state: UNITED_STATES.STATE.MAP.NEW_YORK,
+                country: UNITED_STATES.COUNTRY.CODE,
             });
             await expect(profiles.length).toBe(1);
         });
         it('should filter out therapists with no credentials', async () => {
             prismaMock.providerProfile.findMany.mockResolvedValue([
                 {
-                    ...mockProviderProfile,
+                    ...mockPrismaProviderProfile,
                     credentials: [],
                 },
             ]);
             const { profiles } = await executeProviderSearch({
-                state: 'New York',
+                state: UNITED_STATES.STATE.MAP.NEW_YORK,
+                country: UNITED_STATES.COUNTRY.CODE,
             });
             await expect(profiles.length).toBe(0);
         });
         it('should filter out therapists with no credentials for the given state', async () => {
             prismaMock.providerProfile.findMany.mockResolvedValue([
                 {
-                    ...mockProviderProfile,
-                    credentials: [mockProviderProfile.credentials[0]],
+                    ...mockPrismaProviderProfile,
+                    credentials: [mockPrismaProviderProfile.credentials[0]],
                 },
             ]);
             const { profiles } = await executeProviderSearch({
-                state: 'New York',
+                state: UNITED_STATES.STATE.MAP.NEW_YORK,
+                country: UNITED_STATES.COUNTRY.CODE,
             });
             await expect(profiles.length).toBe(0);
         });
         it('should filter out therapists with expired credentials', async () => {
             prismaMock.providerProfile.findMany.mockResolvedValue([
                 {
-                    ...mockProviderProfile,
+                    ...mockPrismaProviderProfile,
                     credentials: [
                         {
                             type: 'LMFT',
@@ -155,7 +166,8 @@ describe('executeProviderSearch', () => {
                 },
             ]);
             const { profiles } = await executeProviderSearch({
-                state: 'New York',
+                state: UNITED_STATES.STATE.MAP.NEW_YORK,
+                country: UNITED_STATES.COUNTRY.CODE,
             });
             await expect(profiles.length).toBe(0);
         });
@@ -163,7 +175,7 @@ describe('executeProviderSearch', () => {
         it('should safely filter out therapists with malformed credentials', async () => {
             prismaMock.providerProfile.findMany.mockResolvedValue([
                 {
-                    ...mockProviderProfile,
+                    ...mockPrismaProviderProfile,
                     credentials: [
                         {
                             state: 'New York',
@@ -176,7 +188,8 @@ describe('executeProviderSearch', () => {
                 },
             ]);
             const { profiles } = await executeProviderSearch({
-                state: 'New York',
+                state: UNITED_STATES.STATE.MAP.NEW_YORK,
+                country: UNITED_STATES.COUNTRY.CODE,
             });
             await expect(profiles.length).toBe(0);
         });
@@ -186,13 +199,14 @@ describe('executeProviderSearch', () => {
         it('should not filter coaches by credentials', async () => {
             prismaMock.providerProfile.findMany.mockResolvedValue([
                 {
-                    ...mockProviderProfile,
+                    ...mockPrismaProviderProfile,
                     credentials: [],
                     designation: ProfileType.coach,
                 },
             ]);
             const { profiles } = await executeProviderSearch({
-                state: 'New York',
+                state: UNITED_STATES.STATE.MAP.NEW_YORK,
+                country: UNITED_STATES.COUNTRY.CODE,
             });
             expect(profiles.length).toBe(1);
         });

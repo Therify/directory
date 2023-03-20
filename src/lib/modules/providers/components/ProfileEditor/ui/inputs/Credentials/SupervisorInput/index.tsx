@@ -1,5 +1,9 @@
 import { Switch, FormSectionSubtitle } from '@/lib/shared/components/ui';
-import { ProviderProfile, ProviderSupervisor, State } from '@/lib/shared/types';
+import {
+    ProviderProfile,
+    ProviderSupervisor,
+    UNITED_STATES,
+} from '@/lib/shared/types';
 import { Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
@@ -20,7 +24,8 @@ const DEFAULT_SUPERVISOR: ProviderProfile.ProviderProfile['supervisor'] = {
     supervisorLicense: {
         expiration: '',
         licenseNumber: '',
-        state: State.ENTRIES[0],
+        state: UNITED_STATES.STATE.ENTRIES[0],
+        country: UNITED_STATES.COUNTRY.CODE,
     },
 } as const;
 
@@ -82,13 +87,13 @@ export const SupervisorInput = ({
                 }}
                 style={{ marginBottom: theme.spacing(4) }}
             />
-            {/* // TODO: this components logs an error about uncontrolled inputs
-            becoming controlled */}
+            {/* // TODO: this components logs an error about uncontrolled inputs becoming controlled */}
             {isSupervised && (
                 <SupervisorForm
                     disabled={disabled}
                     control={control}
                     storeLocalData={storeLocalData}
+                    supervisor={supervisor}
                 />
             )}
         </Box>

@@ -1,5 +1,5 @@
 import { ConnectionStatus } from '@prisma/client';
-import { ConnectionRequest, State } from '../../types';
+import { ConnectionRequest, UNITED_STATES } from '../../types';
 import { formatReimbursementRequestUrl } from './formatReimbursementRequestUrl';
 
 const baseUrl = 'https://therify.co';
@@ -15,10 +15,11 @@ const mockConnectionRequest: ConnectionRequest.Type = {
         emailAddress: 'member@therify.co',
 
         memberProfile: {
+            insurance: 'Aetna',
             concerns: [],
             goals: [],
-            state: State.ENTRIES[0],
-            insurance: 'Aetna',
+            state: UNITED_STATES.STATE.MAP.ALABAMA,
+            country: UNITED_STATES.COUNTRY.CODE,
         },
         account: {
             name: 'Test Account',
@@ -43,6 +44,7 @@ describe('formatReimbursementRequestUrl', () => {
         ['clientname[last]', mockConnectionRequest.member.surname],
         ['clientemail', mockConnectionRequest.member.emailAddress],
         ['clientstate', mockConnectionRequest.member.memberProfile.state],
+        ['clientcountry', mockConnectionRequest.member.memberProfile.country],
         ['clientemployer', mockConnectionRequest.member.account.name],
         [
             'providername[first]',

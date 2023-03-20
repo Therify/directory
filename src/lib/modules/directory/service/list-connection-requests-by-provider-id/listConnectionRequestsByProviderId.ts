@@ -44,6 +44,7 @@ export function factory({ prisma }: DirectoryServiceParams) {
                             select: {
                                 goals: true,
                                 state: true,
+                                country: true,
                                 concerns: true,
                                 insurance: true,
                             },

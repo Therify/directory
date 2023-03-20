@@ -1,9 +1,9 @@
 import * as z from 'zod';
-import { ENTRIES as STATES } from '../state';
 import { ConnectionRequestSchema, PlanSchema } from '../../schema';
 import { ProviderProfile } from '../provider-profile';
 import { convertNestedDatesToISOString } from '../../utils';
 import { ENTRIES as INSURANCE_PROVIDERS } from '../insuranceProvider';
+import { CANADA, UNITED_STATES } from '../address';
 
 export const schema = z.object({
     connectionStatus: ConnectionRequestSchema.shape.connectionStatus,
@@ -15,12 +15,22 @@ export const schema = z.object({
         givenName: z.string(),
         surname: z.string(),
         emailAddress: z.string(),
-        memberProfile: z.object({
-            insurance: z.enum(INSURANCE_PROVIDERS),
-            concerns: z.array(z.string()),
-            goals: z.array(z.string()),
-            state: z.enum(STATES),
-        }),
+        memberProfile: z.discriminatedUnion('country', [
+            z.object({
+                insurance: z.enum(INSURANCE_PROVIDERS),
+                concerns: z.array(z.string()),
+                goals: z.array(z.string()),
+                state: z.enum(CANADA.PROVINCE.ENTRIES),
+                country: z.literal(CANADA.COUNTRY.CODE),
+            }),
+            z.object({
+                insurance: z.enum(INSURANCE_PROVIDERS),
+                concerns: z.array(z.string()),
+                goals: z.array(z.string()),
+                state: z.enum(UNITED_STATES.STATE.ENTRIES),
+                country: z.literal(UNITED_STATES.COUNTRY.CODE),
+            }),
+        ]),
         account: z.object({
             name: z.string(),
         }),

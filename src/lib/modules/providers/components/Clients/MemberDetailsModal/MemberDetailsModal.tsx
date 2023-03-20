@@ -62,7 +62,8 @@ export const MemberDetailsModal = ({
                 Located in
             </Paragraph>
             <Paragraph size={PARAGRAPH_SIZE.SMALL}>
-                {connectionRequest.member.memberProfile.state}
+                {connectionRequest.member.memberProfile.state},{' '}
+                {connectionRequest.member.memberProfile.country}
             </Paragraph>
             <Paragraph bold size={PARAGRAPH_SIZE.LARGE}>
                 Insurance Provider
