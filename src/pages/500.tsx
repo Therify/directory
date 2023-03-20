@@ -52,12 +52,10 @@ export default function NotFoundPage() {
                             type="outlined"
                             color="info"
                             onClick={() => {
-                                if (typeof window !== 'undefined') {
-                                    window.location.reload();
-                                }
+                                router.back();
                             }}
                         >
-                            Refresh Page
+                            Go Back
                         </Button>
                         <Button onClick={() => router.push(URL_PATHS.ROOT)}>
                             Go Home
