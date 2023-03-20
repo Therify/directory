@@ -26,7 +26,11 @@ export default async function handler(
                 credentials: rawCredentials,
                 acceptedInsurances: rawAcceptedInsurances,
             } = profile;
-            if (!!rawSupervisor && JSON.stringify(rawSupervisor) !== '{}') {
+            if (
+                !!rawSupervisor &&
+                typeof rawSupervisor === 'object' &&
+                JSON.stringify(rawSupervisor) !== '{}'
+            ) {
                 const jsonSupervisor = JSON.parse(
                     JSON.stringify(rawSupervisor)
                 );
