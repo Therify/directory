@@ -47,6 +47,7 @@ export const schema = z.object({
         id: z.string(),
         givenName: ProviderProfile.schema.shape.givenName,
         surname: ProviderProfile.schema.shape.surname,
+        contactEmail: ProviderProfile.schema.shape.contactEmail,
         practice: z.object({
             name: z.string(),
             email: z.string(),

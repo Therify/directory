@@ -73,6 +73,7 @@ export function factory({ prisma }: DirectoryServiceParams) {
                         id: true,
                         givenName: true,
                         surname: true,
+                        contactEmail: true,
                         practiceProfile: {
                             select: {
                                 practice: {
