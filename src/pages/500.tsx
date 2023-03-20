@@ -92,6 +92,7 @@ const ButtonContainer = styled(Box)(({ theme }) => ({
     width: '100%',
     '& > button': {
         flex: 1,
+        marginBottom: theme.spacing(2),
         [theme.breakpoints.up('md')]: {
             '&:first-of-type': {
                 marginRight: theme.spacing(2),
