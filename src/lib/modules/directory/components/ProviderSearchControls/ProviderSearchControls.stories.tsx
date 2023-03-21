@@ -1,4 +1,4 @@
-import { State } from '@/lib/shared/types';
+import { UNITED_STATES } from '@/lib/shared/types';
 import { asSelectOptions } from '@/lib/shared/utils';
 import { Meta, StoryObj } from '@storybook/react';
 import { FilterOption, ProviderSearchControls } from './ProviderSearchControls';
@@ -6,7 +6,7 @@ import { FilterOption, ProviderSearchControls } from './ProviderSearchControls';
 const filters: FilterOption[] = [
     {
         name: 'State',
-        options: asSelectOptions(State.ENTRIES),
+        options: asSelectOptions(UNITED_STATES.STATE.ENTRIES),
     },
 ];
 const meta: Meta<typeof ProviderSearchControls> = {

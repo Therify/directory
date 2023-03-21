@@ -45,7 +45,7 @@ export const factory = ({ prisma }: CreateConnectionFactoryParams) => {
                     }),
                 ]
             );
-            const { user, state, insurance } = memberProfile;
+            const { user, state, country, insurance, concerns } = memberProfile;
             let planDetails = undefined;
             if (account && account.plans.length > 0) {
                 const [plan] = account.plans;
@@ -70,8 +70,9 @@ export const factory = ({ prisma }: CreateConnectionFactoryParams) => {
                             surname: user.surname,
                             emailAddress: user.emailAddress,
                             state,
+                            country,
                             insurance,
-                            concerns: memberProfile.concerns,
+                            concerns,
                         },
                         plan: planDetails ?? undefined,
                         provider: {

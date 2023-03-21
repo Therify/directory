@@ -11,6 +11,7 @@ import {
     Pronoun,
     ProviderProfile,
     Religion,
+    UNITED_STATES,
 } from '@/lib/shared/types';
 import { ProfileType, NewClientStatus } from '@prisma/client';
 
@@ -36,13 +37,15 @@ export const mockProviderProfile: ProviderProfile.ProviderProfile = {
     gender: Gender.MAP.MALE,
     credentials: [
         {
-            state: 'Tennessee',
+            state: UNITED_STATES.STATE.MAP.TENNESSEE,
+            country: UNITED_STATES.COUNTRY.CODE,
             licenseNumber: '123456',
             type: 'LMFT',
             expirationDate: '2021-12-31',
         },
         {
-            state: 'New York',
+            state: UNITED_STATES.STATE.MAP.NEW_YORK,
+            country: UNITED_STATES.COUNTRY.CODE,
             licenseNumber: '123456',
             type: 'LMFT',
             expirationDate: '2021-12-31',
@@ -51,6 +54,7 @@ export const mockProviderProfile: ProviderProfile.ProviderProfile = {
     acceptedInsurances: [
         {
             state: 'Tennessee',
+            country: UNITED_STATES.COUNTRY.CODE,
             insurances: [
                 InsuranceProvider.MAP.AETNA,
                 InsuranceProvider.MAP.AMERIHEALTH,
@@ -59,6 +63,7 @@ export const mockProviderProfile: ProviderProfile.ProviderProfile = {
         },
         {
             state: 'New York',
+            country: UNITED_STATES.COUNTRY.CODE,
             insurances: [InsuranceProvider.MAP.BLUECROSS_BLUESHIELD],
         },
     ],

@@ -2,7 +2,7 @@ import { Control } from 'react-hook-form';
 import { FormSectionTitle } from '@/lib/shared/components/ui/FormElements';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { State, ProviderProfile } from '@/lib/shared/types';
+import { Region, ProviderProfile } from '@/lib/shared/types';
 import { NpiNumberInput } from './NpiNumber';
 import { AcceptedInsuranceInput } from './AcceptedInsurance';
 import { CredentialsManagerInput } from './CredentialsManager';
@@ -13,7 +13,7 @@ interface IdentitySectionProps {
     isTherapist: boolean;
     control: Control<ProviderProfile.ProviderProfile>;
     disabled?: boolean;
-    licensedStates?: typeof State.ENTRIES[number][];
+    licensedStates?: Region.StateAndCountry[];
     supervisor: ProviderProfile.ProviderProfile['supervisor'];
     setSupervisor: (
         supervisor: ProviderProfile.ProviderProfile['supervisor']
@@ -43,7 +43,7 @@ export const CredentialsSection = ({
                     <>
                         <AcceptedInsuranceInput
                             control={control}
-                            stateOptions={licensedStates}
+                            locationOptions={licensedStates}
                         />
                         <SupervisorInput
                             supervisor={supervisor}

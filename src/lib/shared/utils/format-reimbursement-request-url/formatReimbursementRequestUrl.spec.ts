@@ -1,5 +1,5 @@
 import { ConnectionStatus } from '@prisma/client';
-import { ConnectionRequest, State } from '../../types';
+import { ConnectionRequest, UNITED_STATES } from '../../types';
 import { formatReimbursementRequestUrl } from './formatReimbursementRequestUrl';
 
 const baseUrl = 'https://therify.co';
@@ -13,10 +13,13 @@ const mockConnectionRequest: ConnectionRequest.Type = {
         givenName: 'John',
         surname: 'Doe',
         emailAddress: 'member@therify.co',
+
         memberProfile: {
+            insurance: 'Aetna',
             concerns: [],
             goals: [],
-            state: State.ENTRIES[0],
+            state: UNITED_STATES.STATE.MAP.ALABAMA,
+            country: UNITED_STATES.COUNTRY.CODE,
         },
         account: {
             name: 'Test Account',
@@ -27,6 +30,7 @@ const mockConnectionRequest: ConnectionRequest.Type = {
         id: 'profile-123',
         givenName: 'Jane',
         surname: 'Doe',
+        contactEmail: 'test@test.co',
         practice: {
             name: 'Therify',
             email: 'office@therify.co',
@@ -40,13 +44,14 @@ describe('formatReimbursementRequestUrl', () => {
         ['clientname[last]', mockConnectionRequest.member.surname],
         ['clientemail', mockConnectionRequest.member.emailAddress],
         ['clientstate', mockConnectionRequest.member.memberProfile.state],
+        ['clientcountry', mockConnectionRequest.member.memberProfile.country],
         ['clientemployer', mockConnectionRequest.member.account.name],
         [
             'providername[first]',
             mockConnectionRequest.providerProfile.givenName,
         ],
         ['providername[last]', mockConnectionRequest.providerProfile.surname],
-        ['provideremail', mockConnectionRequest.providerProfile.practice.email],
+        ['provideremail', mockConnectionRequest.providerProfile.contactEmail],
         ['billingemail', mockConnectionRequest.providerProfile.practice.email],
         ['practice', mockConnectionRequest.providerProfile.practice.name],
     ];

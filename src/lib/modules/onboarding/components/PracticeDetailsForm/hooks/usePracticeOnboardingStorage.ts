@@ -8,6 +8,7 @@ export type SafePracticeDetails = Pick<
     | 'address2'
     | 'city'
     | 'state'
+    | 'country'
     | 'zip'
     | 'phone'
     | 'email'
@@ -28,6 +29,7 @@ export const usePracticeOnboardingStorage = () => {
             city: details.city,
             state: details.state,
             zip: details.zip,
+            country: details.country,
             phone: details.phone,
             email: details.email,
             website: details.website,

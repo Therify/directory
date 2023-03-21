@@ -11,6 +11,7 @@ import {
     Modality,
     Language,
     AgeGroup,
+    UNITED_STATES,
 } from '@/lib/shared/types';
 import { NewClientStatus, ProfileType } from '@prisma/client';
 import { Meta, StoryObj } from '@storybook/react';
@@ -45,13 +46,15 @@ const coach: ProviderProfileType.ProviderProfile = {
     gender: Gender.MAP.MALE,
     credentials: [
         {
-            state: 'Tennessee',
+            country: UNITED_STATES.COUNTRY.CODE,
+            state: UNITED_STATES.STATE.MAP.TENNESSEE,
             licenseNumber: '123456',
             type: 'LMFT',
             expirationDate: '2021-12-31',
         },
         {
-            state: 'New York',
+            country: UNITED_STATES.COUNTRY.CODE,
+            state: UNITED_STATES.STATE.MAP.NEW_YORK,
             licenseNumber: '123456',
             type: 'LMFT',
             expirationDate: '2021-12-31',
@@ -113,13 +116,15 @@ const therapist: ProviderProfileType.ProviderProfile = {
     gender: Gender.MAP.MALE,
     credentials: [
         {
-            state: 'Tennessee',
+            country: UNITED_STATES.COUNTRY.CODE,
+            state: UNITED_STATES.STATE.MAP.TENNESSEE,
             licenseNumber: '123456',
             type: 'LMFT',
             expirationDate: '2021-12-31',
         },
         {
-            state: 'New York',
+            country: UNITED_STATES.COUNTRY.CODE,
+            state: UNITED_STATES.STATE.MAP.NEW_YORK,
             licenseNumber: '123456',
             type: 'LMFT',
             expirationDate: '2021-12-31',
@@ -127,7 +132,8 @@ const therapist: ProviderProfileType.ProviderProfile = {
     ],
     acceptedInsurances: [
         {
-            state: 'Tennessee',
+            country: UNITED_STATES.COUNTRY.CODE,
+            state: UNITED_STATES.STATE.MAP.TENNESSEE,
             insurances: [
                 InsuranceProvider.MAP.AETNA,
                 InsuranceProvider.MAP.AMERIHEALTH,
@@ -135,7 +141,8 @@ const therapist: ProviderProfileType.ProviderProfile = {
             ],
         },
         {
-            state: 'New York',
+            country: UNITED_STATES.COUNTRY.CODE,
+            state: UNITED_STATES.STATE.MAP.NEW_YORK,
             insurances: [InsuranceProvider.MAP.BLUECROSS_BLUESHIELD],
         },
     ],

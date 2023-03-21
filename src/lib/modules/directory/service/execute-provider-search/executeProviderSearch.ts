@@ -6,7 +6,7 @@ import {
     ProfileType,
     ProviderProfile,
 } from '@prisma/client';
-import { ProviderCredential, State } from '@/lib/shared/types';
+import { ProviderCredential, Country, Region } from '@/lib/shared/types';
 import { DirectoryProfile } from '@/lib/shared/types/presentation';
 
 interface CreateConnectionFactoryParams extends DirectoryServiceParams {}
@@ -84,8 +84,9 @@ export const factory = ({ prisma }: CreateConnectionFactoryParams) => {
 
         const eligibleProfiles = profileResults.filter((profile) => {
             if (profile.designation === ProfileType.therapist) {
-                const inStateCredentials = getInStateCredentials(
+                const inStateCredentials = getInRegionCredentials(
                     input.state,
+                    input.country,
                     profile.credentials
                 );
                 return inStateCredentials.length > 0;
@@ -98,8 +99,9 @@ export const factory = ({ prisma }: CreateConnectionFactoryParams) => {
     };
 };
 
-const getInStateCredentials = (
-    state: State.State,
+const getInRegionCredentials = (
+    region: Region.Type,
+    country: Country.Country,
     credentials: ProviderProfile['credentials']
 ) => {
     return credentials.filter((credential) => {
@@ -108,7 +110,9 @@ const getInStateCredentials = (
 
         return (
             parsedCredential.success &&
-            parsedCredential.data.state === state &&
+            // TODO: All DB credentials need a country added or a default value, otherwise this will fail
+            parsedCredential.data.country === country &&
+            parsedCredential.data.state === region &&
             new Date(parsedCredential.data.expirationDate).getTime() >
                 new Date().getTime()
         );

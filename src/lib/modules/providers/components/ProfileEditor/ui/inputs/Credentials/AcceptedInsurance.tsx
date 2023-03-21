@@ -1,7 +1,7 @@
 import {
     AcceptedInsurance,
     InsuranceProvider,
-    State,
+    Region,
     ProviderProfile,
 } from '@/lib/shared/types';
 import { Autocomplete, Box, TextField } from '@mui/material';
@@ -11,15 +11,15 @@ import { Caption, FormSectionSubtitle } from '@/lib/shared/components/ui';
 
 interface AcceptedInsuranceInputProps {
     control: Control<ProviderProfile.ProviderProfile>;
-    stateOptions: State.State[];
+    locationOptions: Region.StateAndCountry[];
 }
 type InsuranceByState = Record<
-    AcceptedInsurance.AcceptedInsurance['state'],
+    string,
     AcceptedInsurance.AcceptedInsurance['insurances']
 >;
 export const AcceptedInsuranceInput = ({
     control,
-    stateOptions,
+    locationOptions,
 }: AcceptedInsuranceInputProps) => (
     <Controller
         control={control}
@@ -29,31 +29,34 @@ export const AcceptedInsuranceInput = ({
         }) => {
             const insurancesByState = acceptedInsurances.reduce(
                 (acc, value) => {
-                    acc[value.state] = value.insurances;
+                    acc[`${value.state}, ${value.country}`] = value.insurances;
                     return acc;
                 },
                 {} as InsuranceByState
             );
+            const hasMultipleCountries =
+                new Set(locationOptions.map((l) => l.country)).size > 1;
             return (
                 <InputWrapper>
                     <FormSectionSubtitle>
                         Accepted Insurances
                     </FormSectionSubtitle>
                     <Box>
-                        {stateOptions.length === 0 ? (
+                        {locationOptions.length === 0 ? (
                             <Caption>Add a license.</Caption>
                         ) : (
                             <Caption>
                                 Based on your licenses, please select any
-                                insurance panels you are in-network within these
-                                states.
+                                insurance panels you are in-network with in
+                                these locations.
                             </Caption>
                         )}
                     </Box>
-                    {stateOptions.map((state) => {
+                    {locationOptions.map((location) => {
+                        const locationKey = `${location.state}, ${location.country}`;
                         return (
                             <Autocomplete
-                                key={state}
+                                key={locationKey}
                                 multiple
                                 options={InsuranceProvider.ENTRIES}
                                 onChange={(_, value) => {
@@ -62,21 +65,28 @@ export const AcceptedInsuranceInput = ({
                                     ).map(([stateKey, insurances]) => ({
                                         state: stateKey,
                                         insurances:
-                                            state === stateKey
+                                            locationKey === stateKey
                                                 ? value
                                                 : insurances,
                                     }));
 
                                     onChange(update);
                                 }}
-                                value={insurancesByState[state] ?? []}
+                                value={insurancesByState[locationKey] ?? []}
                                 {...{
                                     onBlur,
                                     name,
                                 }}
                                 sx={{ width: '100%' }}
                                 renderInput={(params) => (
-                                    <TextField {...params} label={state} />
+                                    <TextField
+                                        {...params}
+                                        label={
+                                            hasMultipleCountries
+                                                ? locationKey
+                                                : location.state
+                                        }
+                                    />
                                 )}
                             />
                         );
