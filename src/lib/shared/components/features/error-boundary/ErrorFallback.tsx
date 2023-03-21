@@ -8,6 +8,7 @@ import {
     Alert,
 } from '@/lib/shared/components/ui';
 import { URL_PATHS } from '@/lib/sitemap';
+import { WarningAmberRounded } from '@mui/icons-material';
 import { Box, Link } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { useRouter } from 'next/router';
@@ -56,7 +57,12 @@ export const ErrorFallback = ({ error }: ErrorFallbackProps) => {
                         type="error"
                         title="Error Message"
                         message={error}
-                        sx={{ width: '100%' }}
+                        sx={{ width: '100%', textAlign: 'left' }}
+                        icon={
+                            <CenteredContainer>
+                                <WarningAmberRounded />
+                            </CenteredContainer>
+                        }
                     />
 
                     <ButtonContainer>
