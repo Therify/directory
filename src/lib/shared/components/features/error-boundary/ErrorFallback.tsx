@@ -26,7 +26,7 @@ export const ErrorFallback = ({ error }: ErrorFallbackProps) => {
 
     const emailBody = `
         Hi Therify Team,
-        I'm experiencing a server side issue while trying to access this page:
+        I'm experiencing a client side issue while trying to access this page:
         ${typeof window !== 'undefined' ? window?.location.href : ''}
     
         What I was trying to do:
