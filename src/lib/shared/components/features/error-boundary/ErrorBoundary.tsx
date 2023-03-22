@@ -13,7 +13,7 @@ interface State {
 export class ErrorBoundary extends Component<Props, State> {
     public state: State = {
         hasError: false,
-        message: 'There was a client side error',
+        message: 'There was a client side error.',
     };
 
     public static getDerivedStateFromError(error: Error): State {
