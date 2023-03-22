@@ -16,10 +16,12 @@ import {
     TEST_IDS,
     ConcernsInput,
     GoalsInput,
+    CountryInput,
 } from './inputs';
 import { ROLES } from '@/lib/shared/types/roles';
 import { InsuranceInput } from './inputs/Insurance';
 import { Account } from '@prisma/client';
+import { Country } from '@/lib/shared/types';
 
 export interface MemberRegistrationFormProps {
     defaultValues?: Partial<
@@ -35,6 +37,7 @@ export interface MemberRegistrationFormProps {
     emailHelperText?: string;
     role: typeof ROLES.MEMBER;
     account?: Account;
+    country: Country.Country;
 }
 
 export const MemberRegistrationForm = ({
@@ -45,6 +48,7 @@ export const MemberRegistrationForm = ({
     isEmailDisabled,
     emailHelperText,
     account,
+    country,
 }: MemberRegistrationFormProps) => {
     if (!control) throw new Error('control is required');
     return (
@@ -87,7 +91,10 @@ export const MemberRegistrationForm = ({
                     control={control}
                     password={password}
                 />
-                <StateInput control={control} />
+                <LocationWrapper>
+                    <StateInput control={control} country={country} />
+                    <CountryInput control={control} />
+                </LocationWrapper>
                 <InsuranceInput control={control} />
                 <GoalsInput control={control} />
                 <ConcernsInput control={control} />
@@ -125,4 +132,18 @@ const Form = styled('form')(({ theme }) => ({
 const Header = styled(H1)(({ theme }) => ({
     ...theme.typography.h3,
     width: '75%',
+}));
+
+const LocationWrapper = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    [theme.breakpoints.up('md')]: {
+        flexDirection: 'row',
+        '& > *:nth-of-type(1)': {
+            marginRight: theme.spacing(4),
+        },
+    },
+    '& > *': {
+        flex: 1,
+    },
 }));

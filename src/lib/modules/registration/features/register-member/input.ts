@@ -1,5 +1,6 @@
 import * as z from 'zod';
 import { ROLES } from '@/lib/shared/types/roles';
+import { Country } from '@/lib/shared/types';
 
 export const schema = z
     .object({
@@ -10,6 +11,7 @@ export const schema = z
         confirmPassword: z.string(),
         dateOfBirth: z.string(),
         state: z.string(),
+        country: z.enum(Country.ENTRIES),
         insurance: z.string(),
         goals: z.string().array(),
         concerns: z.string().array(),

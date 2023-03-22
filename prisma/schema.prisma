@@ -163,6 +163,7 @@ model Practice {
   city             String
   state            String
   zip              String
+  country          String             @default("US")
   phone            String?
   email            String
   website          String?
@@ -296,6 +297,7 @@ model MemberProfile {
   id        String   @id @default(cuid()) @map("member_profile_id")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   state     String
+  country   String   @default("US")
   insurance String
   concerns  String[]
   goals     String[]

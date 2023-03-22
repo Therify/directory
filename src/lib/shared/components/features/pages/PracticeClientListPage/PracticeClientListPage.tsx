@@ -355,7 +355,8 @@ export function PracticeClientListPage({
                         Located in
                     </Paragraph>
                     <Paragraph size={PARAGRAPH_SIZE.SMALL}>
-                        {targetConnection.member.memberProfile.state}
+                        {targetConnection.member.memberProfile.state},{' '}
+                        {targetConnection.member.memberProfile.country}
                     </Paragraph>
                     <Paragraph bold size={PARAGRAPH_SIZE.LARGE}>
                         Insurance Provider

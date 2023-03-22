@@ -17,19 +17,13 @@ import { useForm } from 'react-hook-form';
 import { ArrowForwardRounded as NextIcon } from '@mui/icons-material';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
-import { getProductByEnvironment, PRODUCTS } from '@/lib/shared/types';
 import { TRPCClientError } from '@trpc/client';
 import Link from 'next/link';
 import { URL_PATHS } from '@/lib/sitemap';
 import { RBAC } from '@/lib/shared/utils';
-import { NodeEnvironment } from '@/lib/shared/types/nodeEnvironment';
 
 const REGISTRATION_STEPS = ['Registration', 'Payment', 'Onboarding'] as const;
 
-const PRODUCT = getProductByEnvironment(
-    PRODUCTS.GROUP_PRACTICE_PLAN,
-    process.env.NEXT_PUBLIC_VERCEL_ENV as NodeEnvironment
-);
 export const getServerSideProps = RBAC.requireProviderAuth(
     withPageAuthRequired()
 );
@@ -44,9 +38,10 @@ export default function PracticeOnboardingPage() {
         mode: 'onChange',
         defaultValues: {
             ...getStoredPracticeDetails(),
-            priceId: PRODUCT.PRICES.DEFAULT,
         },
     });
+    const billingCycle = practiceDetailsForm.watch('billingCycle');
+    const country = practiceDetailsForm.watch('country');
 
     const { isLoading: isLoadingPractice, data: practiceData } = trpc.useQuery(
         [
@@ -77,8 +72,17 @@ export default function PracticeOnboardingPage() {
             );
             practiceDetailsForm.setValue('email', practiceData.practice.email);
             practiceDetailsForm.setValue('city', practiceData.practice.city);
-            practiceDetailsForm.setValue('state', practiceData.practice.state);
+            practiceDetailsForm.setValue(
+                'state',
+                practiceData.practice
+                    .state as HandlePracticeOnboarding.Input['state']
+            );
             practiceDetailsForm.setValue('zip', practiceData.practice.zip);
+            practiceDetailsForm.setValue(
+                'country',
+                practiceData.practice
+                    .country as HandlePracticeOnboarding.Input['country']
+            );
             practiceDetailsForm.setValue('name', practiceData.practice.name);
             practiceDetailsForm.setValue(
                 'phone',
@@ -97,9 +101,8 @@ export default function PracticeOnboardingPage() {
         }
     }, [practiceDetailsForm, user?.sub]);
 
-    const mutation = trpc.useMutation(
-        'accounts.onboarding.handle-practice-onboarding',
-        {
+    const { isLoading: isHandlingPracticeSubmission, mutate: submitPractice } =
+        trpc.useMutation(`accounts.${HandlePracticeOnboarding.TRPC_ROUTE}`, {
             onSuccess(response) {
                 const parseResult =
                     HandlePracticeOnboarding.outputSuccessSchema.safeParse(
@@ -127,13 +130,12 @@ export default function PracticeOnboardingPage() {
                 }
                 setErrorMessage(error.message);
             },
-        }
-    );
+        });
 
     const handlePracticeOnboarding = async function () {
         setErrorMessage(undefined);
         const practiceDetails = practiceDetailsForm.getValues();
-        return mutation.mutate(practiceDetails);
+        return submitPractice(practiceDetails);
     };
 
     return (
@@ -151,17 +153,19 @@ export default function PracticeOnboardingPage() {
                             defaultValues={undefined}
                             control={practiceDetailsForm.control}
                             seatCount={practiceDetailsForm.watch('seatCount')}
-                            baseSeatPrice={39}
+                            seatPrice={billingCycle === 'year' ? 372 : 39}
                             maximumSeats={35}
                             onInputBlur={() =>
                                 storePracticeDetails(
                                     practiceDetailsForm.getValues()
                                 )
                             }
+                            billingCycle={billingCycle}
+                            country={country}
                             disabled={
                                 isLoadingUser ||
                                 isLoadingPractice ||
-                                mutation.isLoading
+                                isHandlingPracticeSubmission
                             }
                         />
                     </FormContainer>
@@ -180,7 +184,7 @@ export default function PracticeOnboardingPage() {
                             </Caption>
                         </Box>
                         <Button
-                            isLoading={mutation.isLoading}
+                            isLoading={isHandlingPracticeSubmission}
                             disabled={
                                 !practiceDetailsForm.formState.isValid ||
                                 isLoadingUser ||

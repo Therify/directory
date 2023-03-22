@@ -17,6 +17,7 @@ import {
     PhoneNumberInput,
     PracticeEmailInput,
     SeatCountInput,
+    BillingCycleButtons,
 } from './components/inputs';
 import { SafePracticeDetails } from './hooks';
 
@@ -25,7 +26,9 @@ export interface PracticeDetailsFormProps {
     control: Control<HandlePracticeOnboarding.Input>;
     minimumSeats?: number;
     maximumSeats?: number;
-    baseSeatPrice: number;
+    seatPrice: number;
+    billingCycle: HandlePracticeOnboarding.Input['billingCycle'];
+    country: HandlePracticeOnboarding.Input['country'];
     seatCount: number;
     disabled?: boolean;
     onInputBlur: () => void;
@@ -36,10 +39,12 @@ export const PracticeDetailsForm = ({
     control,
     minimumSeats = 1,
     maximumSeats = 15,
-    baseSeatPrice,
+    seatPrice,
     seatCount,
+    billingCycle,
     disabled,
     onInputBlur,
+    country,
 }: PracticeDetailsFormProps) => {
     const theme = useTheme();
     if (!control) throw new Error('control is required');
@@ -69,8 +74,9 @@ export const PracticeDetailsForm = ({
                     }}
                     onInputBlur={onInputBlur}
                     disabled={disabled}
+                    country={country}
                 />
-                <SectionTitle>Contact </SectionTitle>
+                <SectionTitle>Contact</SectionTitle>
                 <Caption>
                     Contact will not be publicly listed unless you choose to
                     share on your profile(s).
@@ -94,6 +100,15 @@ export const PracticeDetailsForm = ({
                     disabled={disabled}
                 />
                 <SectionTitle>
+                    How would you like to be billed for your Therify
+                    subscription?
+                </SectionTitle>
+                <BillingCycleButtons
+                    control={control}
+                    defaultValue={defaultValues?.billingCycle}
+                    disabled={disabled}
+                />
+                <SectionTitle>
                     How many profiles do you want to list with Therify?
                 </SectionTitle>
                 <Subhead textAlign="center">{seatCount}</Subhead>
@@ -110,7 +125,15 @@ export const PracticeDetailsForm = ({
                     <Paragraph>{maximumSeats}</Paragraph>
                 </Box>
                 <Paragraph>Your plan:</Paragraph>
-                <H3>${seatCount * baseSeatPrice} / month</H3>
+                <H3>
+                    ${seatCount * seatPrice} / {billingCycle}
+                </H3>
+                {billingCycle === 'year' && (
+                    <Caption secondary>
+                        $31 per profile per month, paid annually. (20% off the
+                        monthly rate)
+                    </Caption>
+                )}
                 {seatCount === maximumSeats && (
                     <Paragraph>
                         Need more than {maximumSeats} seats?{' '}

@@ -13,6 +13,7 @@ type ProductIds = {
     PRODUCT_ID: string;
     PRICES: {
         DEFAULT: string;
+        ANNUAL: string;
         [id: string]: string;
     };
 };
@@ -22,6 +23,7 @@ export const DEVELOPMENT_PRODUCT_IDS: Record<Product, ProductIds> = {
         PRODUCT_ID: 'prod_N94KTDPkgySWMC',
         PRICES: {
             DEFAULT: 'price_1MOmC0Allox7wzg5rapKGwqU',
+            ANNUAL: 'price_1MlGl1Allox7wzg5qhovHhDp',
         },
     },
 } as const;
@@ -31,6 +33,7 @@ export const PRODUCTION_PRODUCT_IDS: Record<Product, ProductIds> = {
         PRODUCT_ID: 'prod_N68tLSFmC9RrdQ',
         PRICES: {
             DEFAULT: 'price_1MbwAQAllox7wzg5jmrDiIdA',
+            ANNUAL: 'price_1MlHjSAllox7wzg5HKWnEHKS',
         },
     },
 } as const;

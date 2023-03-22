@@ -1,1 +1,1 @@
-export * as AcceptedInsurance from './accpetedInsurance';
+export * as AcceptedInsurance from './acceptedInsurance';

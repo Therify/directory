@@ -5,10 +5,11 @@ const REIMBURSMENT_KEY_MAPS = [
     ['clientname[last]', 'member.surname'],
     ['clientemail', 'member.emailAddress'],
     ['clientstate', 'member.memberProfile.state'],
+    ['clientcountry', 'member.memberProfile.country'],
     ['clientemployer', 'member.account.name'],
     ['providername[first]', 'providerProfile.givenName'],
     ['providername[last]', 'providerProfile.surname'],
-    ['provideremail', 'providerProfile.practice.email'],
+    ['provideremail', 'providerProfile.contactEmail'],
     ['billingemail', 'providerProfile.practice.email'],
     ['practice', 'providerProfile.practice.name'],
 ] as const;

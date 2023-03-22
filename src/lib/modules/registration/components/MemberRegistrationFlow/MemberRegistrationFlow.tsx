@@ -73,6 +73,7 @@ export const MemberRegistrationFlow = ({
     };
     const debounceRef = useRef<number>();
     const emailAddress = memberDetailsForm.watch('emailAddress');
+    const country = memberDetailsForm.watch('country');
 
     useEffect(() => {
         const shouldFetchUniqueness =
@@ -150,6 +151,7 @@ export const MemberRegistrationFlow = ({
                         password={memberDetailsForm.watch('password')}
                         role={role}
                         account={account}
+                        country={country}
                     />
                 )}
 

@@ -44,6 +44,7 @@ export function factory({ prisma }: DirectoryServiceParams) {
                             select: {
                                 goals: true,
                                 state: true,
+                                country: true,
                                 concerns: true,
                                 insurance: true,
                             },
@@ -72,6 +73,7 @@ export function factory({ prisma }: DirectoryServiceParams) {
                         id: true,
                         givenName: true,
                         surname: true,
+                        contactEmail: true,
                         practiceProfile: {
                             select: {
                                 practice: {

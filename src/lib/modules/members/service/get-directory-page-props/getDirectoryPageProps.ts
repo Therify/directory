@@ -5,7 +5,7 @@ import { MembersServiceParams } from '../params';
 import { getSession } from '@auth0/nextjs-auth0';
 import { DirectoryProfile } from '@/lib/shared/types/presentation';
 import { directoryService } from '@/lib/modules/directory/service';
-import { State } from '@/lib/shared/types';
+import { Country, Region } from '@/lib/shared/types';
 import { URL_PATHS } from '@/lib/sitemap';
 import { GetMemberTherifyUser } from '../get-member-therify-user';
 
@@ -29,6 +29,7 @@ export function factory(params: MembersServiceParams) {
             },
             select: {
                 state: true,
+                country: true,
             },
         });
         if (!memberProfile) {
@@ -46,7 +47,8 @@ export function factory(params: MembersServiceParams) {
                     userId: session.user.sub,
                 }),
                 directoryService.executeProviderSearch({
-                    state: memberProfile.state as State.State,
+                    state: memberProfile.state as Region.Type,
+                    country: memberProfile.country as Country.Country,
                 }),
                 params.prisma.memberFavorites.findMany({
                     where: {

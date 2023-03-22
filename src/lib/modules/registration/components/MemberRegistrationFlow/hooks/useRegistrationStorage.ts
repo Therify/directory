@@ -5,7 +5,12 @@ const MEMBER_DETAILS_STORAGE_KEY =
 
 type SafeMemberDetails = Pick<
     RegisterMember.Input,
-    'givenName' | 'surname' | 'emailAddress' | 'dateOfBirth'
+    | 'givenName'
+    | 'surname'
+    | 'emailAddress'
+    | 'dateOfBirth'
+    | 'state'
+    | 'country'
 >;
 export const useRegistrationStorage = () => {
     const storeMemberDetails = (memberDetails: RegisterMember.Input) => {
@@ -17,6 +22,8 @@ export const useRegistrationStorage = () => {
             surname: memberDetails.surname,
             emailAddress: memberDetails.emailAddress,
             dateOfBirth: memberDetails.dateOfBirth,
+            state: memberDetails.state,
+            country: memberDetails.country,
         };
         try {
             localStorage.setItem(

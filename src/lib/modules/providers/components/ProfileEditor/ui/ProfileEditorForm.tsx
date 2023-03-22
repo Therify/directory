@@ -21,7 +21,7 @@ import {
     NewClientStatusInput,
 } from './inputs';
 import { CloudinaryUploadResult } from '@/lib/modules/media/components/hooks/userCloudinaryWidget';
-import { State, ProviderProfile } from '@/lib/shared/types';
+import { ProviderProfile, Region } from '@/lib/shared/types';
 import { ChevronLeft } from '@mui/icons-material';
 import { useRef, useState } from 'react';
 import useOnScreen from '@/lib/shared/hooks/use-on-screen';
@@ -32,7 +32,7 @@ interface EditorFormProps {
     control: Control<ProviderProfile.ProviderProfile>;
     isSubmitDisabled: boolean;
     isSubmittingForm: boolean;
-    licensedStates?: typeof State.ENTRIES[number][];
+    licensedStates?: Region.StateAndCountry[];
     onImageUploadSuccess: (
         error: Error | null,
         result: CloudinaryUploadResult
