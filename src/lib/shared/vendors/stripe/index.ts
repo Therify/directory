@@ -10,6 +10,7 @@ import { SearchProduct } from './client/search-product';
 import { ConstructEvent } from './client/construct-event';
 import { withStripeConfiguration } from './configuration';
 import { CreateExpressAccount } from './client/create-express-account';
+import { CreateAccountLink } from './client/create-account-link';
 
 export * from './types';
 export * as StripeUtils from './utils';
@@ -20,6 +21,9 @@ export const vendorStripe = withStripeConfiguration((CONFIG) => {
     });
     return {
         createExpressAccount: CreateExpressAccount.factory({
+            stripe,
+        }),
+        createAccountLink: CreateAccountLink.factory({
             stripe,
         }),
         createCustomer: CreateCustomer.factory({
