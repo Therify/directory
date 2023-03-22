@@ -5,22 +5,28 @@ import {
     Button,
     TherifyIcon,
     AbstractShape1,
+    Alert,
 } from '@/lib/shared/components/ui';
 import { URL_PATHS } from '@/lib/sitemap';
+import { WarningAmberRounded } from '@mui/icons-material';
 import { Box, Link } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { useRouter } from 'next/router';
 
-export default function NotFoundPage() {
+interface ErrorFallbackProps {
+    error: string;
+}
+
+export const ErrorFallback = ({ error }: ErrorFallbackProps) => {
     const router = useRouter();
     const theme = useTheme();
-    const emailSubject = `Therify Server-side Issue: ${
+    const emailSubject = `Therify App Issue: ${
         typeof window !== 'undefined' ? window?.location.href : ''
     }`;
 
     const emailBody = `
         Hi Therify Team,
-        I'm experiencing a server side issue while trying to access this page:
+        I'm experiencing a client side issue while trying to access this page:
         ${typeof window !== 'undefined' ? window?.location.href : ''}
     
         What I was trying to do:
@@ -36,8 +42,7 @@ export default function NotFoundPage() {
                     <TherifyIcon />
                     <H1 marginTop={4}>We&apos;ve encountered an issue</H1>
                     <Paragraph>
-                        It&apos;s not you, it&apos;s us. There was an error
-                        preparing the page. If this continues, please{' '}
+                        Looks like the app hit a snag. If this continues, please{' '}
                         <Link
                             target="_blank"
                             href={`mailto:help@therify.co?subject=${encodeURIComponent(
@@ -45,9 +50,21 @@ export default function NotFoundPage() {
                             )}&body=${encodeURIComponent(emailBody)}`}
                         >
                             contact us
-                        </Link>
-                        .
+                        </Link>{' '}
+                        for support.
                     </Paragraph>
+                    <Alert
+                        type="error"
+                        title="Error Message"
+                        message={error}
+                        sx={{ width: '100%', textAlign: 'left' }}
+                        icon={
+                            <CenteredContainer>
+                                <WarningAmberRounded />
+                            </CenteredContainer>
+                        }
+                    />
+
                     <ButtonContainer>
                         <Button
                             type="outlined"
@@ -69,7 +86,7 @@ export default function NotFoundPage() {
             </Container>
         </CenteredContainer>
     );
-}
+};
 const Shape = styled(AbstractShape1)(() => ({
     position: 'absolute',
     width: '250px',
@@ -81,6 +98,7 @@ const Shape = styled(AbstractShape1)(() => ({
 const Container = styled(Box)(({ theme }) => ({
     background: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadius,
+    border: `1px solid ${theme.palette.error.main}`,
     padding: theme.spacing(10),
     maxWidth: '800px',
     textAlign: 'center',
@@ -88,6 +106,7 @@ const Container = styled(Box)(({ theme }) => ({
     overflow: 'hidden',
 }));
 const ButtonContainer = styled(Box)(({ theme }) => ({
+    marginTop: theme.spacing(4),
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
