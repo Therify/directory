@@ -30,6 +30,7 @@ model User {
   updatedAt                     DateTime @default(now()) @map("updated_at") @db.Timestamp(6)
   roles                         Role[]
   stripeCustomerId              String?  @unique @map("stripe_customer_id")
+  stripeConnectAccountId        String?  @unique @map("stripe_connect_account_id")
 
   account                    Account?                     @relation(fields: [accountId], references: [id])
   accountId                  String?

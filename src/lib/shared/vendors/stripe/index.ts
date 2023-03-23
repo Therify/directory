@@ -11,6 +11,7 @@ import { ConstructEvent } from './client/construct-event';
 import { withStripeConfiguration } from './configuration';
 import { CreateExpressAccount } from './client/create-express-account';
 import { CreateAccountLink } from './client/create-account-link';
+import { CreateStripeConnectLoginLink } from './client/create-stripe-connect-login-link';
 
 export * from './types';
 export * as StripeUtils from './utils';
@@ -24,6 +25,9 @@ export const vendorStripe = withStripeConfiguration((CONFIG) => {
             stripe,
         }),
         createAccountLink: CreateAccountLink.factory({
+            stripe,
+        }),
+        createStripeConnectLoginLink: CreateStripeConnectLoginLink.factory({
             stripe,
         }),
         createCustomer: CreateCustomer.factory({

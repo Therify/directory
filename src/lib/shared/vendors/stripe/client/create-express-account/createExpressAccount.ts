@@ -16,6 +16,7 @@ export const factory =
             country: 'US',
             type: 'express',
             email,
+            business_type: 'individual',
             individual: {
                 email,
                 first_name,
@@ -37,7 +38,7 @@ export const factory =
                     requested: true,
                 },
             },
-            tos_acceptance: { service_agreement: 'recipient' },
+            tos_acceptance: { service_agreement: 'full' },
         });
         return { accountId: account.id };
     };
