@@ -22,6 +22,7 @@ export const factory =
                 accountId: true,
                 chatAccessToken: true,
                 providerChannels: true,
+                stripeConnectAccountId: true,
                 managedPractice: {
                     select: {
                         plans: {
@@ -82,6 +83,7 @@ export const factory =
             practiceProvider,
             providerChannels,
             chatAccessToken,
+            stripeConnectAccountId,
         } = user;
 
         let plan: TherifyUser.TherifyUser['plan'] = null;
@@ -130,6 +132,7 @@ export const factory =
                 isPracticeAdmin,
                 providerChannels,
                 chatAccessToken,
+                stripeConnectAccountId,
                 ...(providerProfile?.profileImageUrl
                     ? { avatarUrl: providerProfile.profileImageUrl }
                     : {}),
