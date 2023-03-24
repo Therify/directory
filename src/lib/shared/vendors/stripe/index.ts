@@ -12,6 +12,7 @@ import { withStripeConfiguration } from './configuration';
 import { CreateExpressAccount } from './client/create-express-account';
 import { CreateAccountLink } from './client/create-account-link';
 import { CreateStripeConnectLoginLink } from './client/create-stripe-connect-login-link';
+import { DeleteExpressAccount } from './client/delete-express-account';
 
 export * from './types';
 export * as StripeUtils from './utils';
@@ -22,6 +23,9 @@ export const vendorStripe = withStripeConfiguration((CONFIG) => {
     });
     return {
         createExpressAccount: CreateExpressAccount.factory({
+            stripe,
+        }),
+        deleteExpressAccount: DeleteExpressAccount.factory({
             stripe,
         }),
         createAccountLink: CreateAccountLink.factory({

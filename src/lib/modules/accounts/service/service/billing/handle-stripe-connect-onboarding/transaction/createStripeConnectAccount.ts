@@ -36,6 +36,6 @@ export const factory: GetTherifyUserDetailsFactory = ({
         { stripe },
         { createStripeConnectAccount: { stripeConnectAccountId } }
     ) {
-        return; // TODO: Delete the Stripe Connect Account
+        return await stripe.deleteExpressAccount(stripeConnectAccountId);
     },
 });
