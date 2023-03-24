@@ -22,7 +22,7 @@ export const factory: GetTherifyUserDetailsFactory = ({
             return { stripeConnectAccountId };
         }
         const { accountId: newStripeConnectAccountId } =
-            await stripe.createExpressAccount({
+            await stripe.createConnectAccount({
                 email,
                 givenName,
                 surname,
@@ -36,6 +36,6 @@ export const factory: GetTherifyUserDetailsFactory = ({
         { stripe },
         { createStripeConnectAccount: { stripeConnectAccountId } }
     ) {
-        return await stripe.deleteExpressAccount(stripeConnectAccountId);
+        return await stripe.deleteConnectAccount(stripeConnectAccountId);
     },
 });

@@ -9,10 +9,10 @@ import { RetrieveCustomer } from './client/retrieve-customer';
 import { SearchProduct } from './client/search-product';
 import { ConstructEvent } from './client/construct-event';
 import { withStripeConfiguration } from './configuration';
-import { CreateExpressAccount } from './client/create-express-account';
 import { CreateAccountLink } from './client/create-account-link';
 import { CreateStripeConnectLoginLink } from './client/create-stripe-connect-login-link';
-import { DeleteExpressAccount } from './client/delete-express-account';
+import { CreateConnectAccount } from './client/create-connect-account';
+import { DeleteConnectAccount } from './client/delete-connect-account';
 
 export * from './types';
 export * as StripeUtils from './utils';
@@ -22,10 +22,10 @@ export const vendorStripe = withStripeConfiguration((CONFIG) => {
         apiVersion: '2022-11-15',
     });
     return {
-        createExpressAccount: CreateExpressAccount.factory({
+        createConnectAccount: CreateConnectAccount.factory({
             stripe,
         }),
-        deleteExpressAccount: DeleteExpressAccount.factory({
+        deleteConnectAccount: DeleteConnectAccount.factory({
             stripe,
         }),
         createAccountLink: CreateAccountLink.factory({

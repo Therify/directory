@@ -1,10 +1,10 @@
 import { StripeVendorFactoryParams } from '../types';
 import { Output } from './schema';
 
-export interface CreateAccountFactoryParams extends StripeVendorFactoryParams {}
+export interface DeleteAccountFactoryParams extends StripeVendorFactoryParams {}
 
 export const factory =
-    ({ stripe }: CreateAccountFactoryParams) =>
+    ({ stripe }: DeleteAccountFactoryParams) =>
     async (accountId: string): Promise<Output> => {
         const { deleted } = await stripe.accounts.del(accountId);
         return { deleted };
