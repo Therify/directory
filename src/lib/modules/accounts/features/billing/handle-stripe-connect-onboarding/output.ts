@@ -1,7 +1,7 @@
 import * as z from 'zod';
 
 export const schema = z.object({
-    onboardingUrl: z.string(),
+    onboardingUrl: z.string().nullable(),
     errors: z.array(z.string()),
 });
 export type Output = z.infer<typeof schema>;

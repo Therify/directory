@@ -20,8 +20,10 @@ import {
     getUserDetailsByIdResolver,
     handlePracticeOnboardingResolver,
     getPracticeByOwnerIdResolver,
+    handleStripeConnectOnboardingResolver,
 } from './resolvers';
 import { Context } from '../../../server/context';
+import { HandleStripeConnectOnboarding } from '../features/billing';
 
 export const router = trpc
     .router<Context>()
@@ -44,6 +46,11 @@ export const router = trpc
         input: HandlePracticeOnboarding.inputSchema,
         output: HandlePracticeOnboarding.outputSchema,
         resolve: handlePracticeOnboardingResolver,
+    })
+    .mutation(HandleStripeConnectOnboarding.TRPC_ROUTE, {
+        input: HandleStripeConnectOnboarding.inputSchema,
+        output: HandleStripeConnectOnboarding.outputSchema,
+        resolve: handleStripeConnectOnboardingResolver,
     })
     .mutation(RegisterProvider.TRPC_ROUTE, {
         input: RegisterProvider.inputSchema,
