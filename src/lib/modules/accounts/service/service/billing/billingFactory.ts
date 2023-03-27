@@ -4,6 +4,7 @@ import { HandleGroupPracticePlanPayment } from './handle-group-practice-plan-pay
 import { HandlePlanChange } from './handle-plan-change';
 import { RenewPlan } from './renew-plan';
 import { HandleStripeConnectOnboarding } from './handle-stripe-connect-onboarding';
+import { CreateStripeConnectLoginUrl } from './create-stripe-connect-login-url';
 
 export const factory = (context: AccountsServiceParams) => ({
     handleGroupPracticePlanPayment:
@@ -13,4 +14,5 @@ export const factory = (context: AccountsServiceParams) => ({
     renewPlan: RenewPlan.factory(context),
     handleStripeConnectOnboarding:
         HandleStripeConnectOnboarding.factory(context),
+    createStripeConnectLoginUrl: CreateStripeConnectLoginUrl.factory(context),
 });

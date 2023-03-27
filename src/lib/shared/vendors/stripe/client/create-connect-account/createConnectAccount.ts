@@ -22,7 +22,7 @@ export const factory =
                 first_name,
                 last_name,
                 dob: {
-                    day: new Date(dateOfBirth).getDay(),
+                    day: new Date(dateOfBirth).getDate(),
                     month: new Date(dateOfBirth).getMonth() + 1,
                     year: new Date(dateOfBirth).getFullYear(),
                 },
