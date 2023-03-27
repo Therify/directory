@@ -22,11 +22,11 @@ export const handleEventFactory =
                     previous_attributes
                 );
             default:
-                handleUknownEvent(type);
+                handleUnknownEvent(type);
         }
     };
 
-const handleUknownEvent = (type: string) => {
+const handleUnknownEvent = (type: string) => {
     console.log(`Unexpected event type: ${type}`);
     if (process.env.NODE_ENV !== 'development') {
         throw new UnknownStripeEventTypeError(type);
