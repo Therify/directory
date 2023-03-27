@@ -9,24 +9,27 @@ import { therifyDesignSystem } from '@/lib/shared/components/themes/therify-desi
 import { InAppNotificationsContext } from '@/lib/modules/notifications/components/context';
 import { Globals } from '@/lib/shared/components/styles';
 import { Alerts } from '@/lib/modules/alerts/context';
+import { ErrorBoundary } from '@/lib/shared/components/features/error-boundary';
 
 const App: AppType = ({ Component, pageProps }: AppProps) => {
     return (
         <ThemeProvider theme={therifyDesignSystem}>
             <Globals />
-            <Auth0UserProvider>
-                <TherifyUser.Provider>
-                    <FirebaseClient.Provider>
-                        <InAppNotificationsContext.Provider>
-                            <Alerts.Provider>
-                                <ApplicationContainer>
-                                    <Component {...pageProps} />
-                                </ApplicationContainer>
-                            </Alerts.Provider>
-                        </InAppNotificationsContext.Provider>
-                    </FirebaseClient.Provider>
-                </TherifyUser.Provider>
-            </Auth0UserProvider>
+            <ApplicationContainer>
+                <ErrorBoundary>
+                    <Auth0UserProvider>
+                        <TherifyUser.Provider>
+                            <FirebaseClient.Provider>
+                                <InAppNotificationsContext.Provider>
+                                    <Alerts.Provider>
+                                        <Component {...pageProps} />
+                                    </Alerts.Provider>
+                                </InAppNotificationsContext.Provider>
+                            </FirebaseClient.Provider>
+                        </TherifyUser.Provider>
+                    </Auth0UserProvider>
+                </ErrorBoundary>
+            </ApplicationContainer>
         </ThemeProvider>
     );
 };
