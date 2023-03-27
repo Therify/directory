@@ -10,6 +10,9 @@ import { GetFavoritesPageProps } from './get-favorites-page-props';
 import { GetMemberTherifyUser } from './get-member-therify-user';
 import { GetTherifyUserPageProps } from './get-therify-user-props';
 import { GetChatPageProps } from './get-chat-page-props';
+import { GetSelfAssessmentPageProps } from './get-self-assessment-page-props';
+import { CreateSelfAssessment } from './create-self-assessment';
+import { GetCarePageProps } from './get-care-page-props';
 
 const factoryParams: MembersServiceParams = {
     prisma,
@@ -26,6 +29,10 @@ export const membersService = {
     getFavoritesPageProps: GetFavoritesPageProps.factory(factoryParams),
     favoriteProfile: FavoriteProfile.factory(factoryParams),
     getChatPageProps: GetChatPageProps.factory(factoryParams),
+    getSelfAssessmentPageProps:
+        GetSelfAssessmentPageProps.factory(factoryParams),
+    getCarePageProps: GetCarePageProps.factory(factoryParams),
+    createSelfAssessment: CreateSelfAssessment.factory(factoryParams),
 };
 
 export type MembersService = typeof membersService;
