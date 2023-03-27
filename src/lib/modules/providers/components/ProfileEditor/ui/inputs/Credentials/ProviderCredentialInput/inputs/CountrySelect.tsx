@@ -9,7 +9,7 @@ import {
 
 interface CountryInputProps {
     control: Control<ProviderCredential.ProviderCredential>;
-    defaultValue?: (typeof Country.ENTRIES)[number];
+    defaultValue?: typeof Country.ENTRIES[number];
     disabled?: boolean;
 }
 const options: SelectOption[] = [
