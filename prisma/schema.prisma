@@ -309,17 +309,18 @@ model MemberProfile {
 }
 
 model SelfAssessment {
-  id        String   @id @default(cuid()) @map("self_assessment_id")
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String   @map("user_id")
-  concerns  String[]
-  goals     String[]
-  notes     String?  @db.Text
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  id                  String   @id @default(cuid()) @map("self_assessment_id")
+  userId              String?  @map("user_id")
+  preferences         Json     @default("{}")
+  concerns            String[]
+  isLGBTQ             Boolean  @default(false) @map("is_lgbtq")
+  isCaregiver         Boolean  @default(false) @map("is_caregiver")
+  isInCrisis          Boolean  @default(false) @map("is_in_crisis")
+  hasSuicidalIdeation Boolean  @default(false) @map("has_suicidal_ideation")
+  phq9Score           Int      @default(0) @map("phq9_score")
 
-  // /* ------------------------------- Preferences ------------------------------ */
-  // Example Preference `{"religion": {"selection": "Religion", "isDealbreaker": false}}`
-  preferences Json @default("{}") @db.Json
+  createdAt DateTime @default(now()) @map("created_at")
+  User      User?    @relation(fields: [userId], references: [id])
 
   @@map("self_assessments")
 }
