@@ -22,6 +22,10 @@ export const factory: GetTherifyUserDetailsFactory = ({ userId }) => ({
                     roles: true,
                     providerProfile: {
                         select: {
+                            id: true,
+                            minimumRate: true,
+                            givenName: true,
+                            surname: true,
                             practiceProfile: {
                                 select: {
                                     practice: {
@@ -53,8 +57,18 @@ export const factory: GetTherifyUserDetailsFactory = ({ userId }) => ({
         if (!canCreateAccount) {
             throw new Error('User cannot create a Stripe Connect Account.');
         }
+        if (!providerProfile) {
+            throw new Error('Missing provider profile.');
+        }
         return {
             user,
+            sessionRate: providerProfile.minimumRate,
+            providerProfile: {
+                id: providerProfile.id,
+                givenName: providerProfile.givenName,
+                surname: providerProfile.surname,
+                minimumRate: providerProfile.minimumRate,
+            },
             stripeConnectAccountId: stripeConnectAccountId ?? undefined,
         };
     },

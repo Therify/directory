@@ -259,6 +259,7 @@ model ProviderProfile {
   offersSlidingScale         Boolean                      @default(false) @map("offers_sliding_scale")
   profileImageUrl            String?                      @map("profile_image_url")
   yearsOfExperience          String?                      @map("years_of_experience")
+  stripeSessionPriceId       String?                      @map("stripe_price_id")
   minimumRate                Int                          @map("minimum_rate")
   maximumRate                Int?                         @map("maximum_rate")
   idealClientDescription     String?                      @map("ideal_client_description") @db.Text

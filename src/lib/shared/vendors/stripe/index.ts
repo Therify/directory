@@ -13,6 +13,8 @@ import { CreateAccountLink } from './client/create-account-link';
 import { CreateStripeConnectLoginLink } from './client/create-stripe-connect-login-link';
 import { CreateConnectAccount } from './client/create-connect-account';
 import { DeleteConnectAccount } from './client/delete-connect-account';
+import { CreatePrice } from './client/create-price';
+import { ArchivePrice } from './client/archive-price';
 
 export * from './types';
 export * as StripeUtils from './utils';
@@ -44,6 +46,12 @@ export const vendorStripe = withStripeConfiguration((CONFIG) => {
             stripe,
         }),
         createProduct: CreateProduct.factory({
+            stripe,
+        }),
+        createPrice: CreatePrice.factory({
+            stripe,
+        }),
+        archivePrice: ArchivePrice.factory({
             stripe,
         }),
         searchProduct: SearchProduct.factory({

@@ -6,6 +6,8 @@ import {
     GetTherifyUserDetails,
     CreateStripeConnectAccount,
     CreateOnbordingUrl,
+    CreateCoachProduct,
+    AddCoachPriceIdtoProfile,
     handleStripeConnectOnboardingTransactionDefinition,
 } from './transaction';
 
@@ -21,6 +23,8 @@ export const factory =
                     CreateStripeConnectAccount.factory(params),
                 addStripeConnectAccountToUser:
                     AddStripeConnectAccountToUser.factory(params),
+                createCoachProduct: CreateCoachProduct.factory(params),
+                addCoachPriceIdToProfile: AddCoachPriceIdtoProfile.step,
                 createOnbordingUrl: CreateOnbordingUrl.factory(params),
             },
             true

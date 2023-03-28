@@ -10,12 +10,22 @@ export const handleStripeConnectOnboardingTransactionDefinition = z.object({
             dateOfBirth: z.date(),
             emailAddress: z.string(),
         }),
+        providerProfile: z.object({
+            id: z.string(),
+            minimumRate: z.number(),
+            givenName: z.string(),
+            surname: z.string(),
+        }),
         stripeConnectAccountId: z.string().optional(),
     }),
     createStripeConnectAccount: z.object({
         stripeConnectAccountId: z.string(),
     }),
     addStripeConnectAccountToUser: z.unknown(),
+    createCoachProduct: z.object({
+        priceId: z.string(),
+    }),
+    addCoachPriceIdToProfile: z.unknown(),
     createOnbordingUrl: z.object({
         stripeConnectOnboardingUrl: z.string(),
     }),

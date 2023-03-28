@@ -16,6 +16,7 @@ export const factory =
         cancelUrl,
         submitMessage,
         allowPromotionCodes = true,
+        connectedAccountData,
     }: Input): Promise<Stripe.Checkout.Session> => {
         return await stripe.checkout.sessions.create({
             customer: customerId,
@@ -26,6 +27,22 @@ export const factory =
             payment_method_types: ['card'],
             billing_address_collection: 'auto',
             allow_promotion_codes: allowPromotionCodes,
+
+            ...(connectedAccountData
+                ? {
+                      payment_intent_data: {
+                          receipt_email: connectedAccountData.receiptEmail,
+                          transfer_data: {
+                              destination:
+                                  connectedAccountData.stripeConnectAccountId,
+                          },
+
+                          application_fee_amount:
+                              connectedAccountData.applicationFee,
+                      },
+                  }
+                : {}),
+
             ...(submitMessage
                 ? {
                       custom_text: {
