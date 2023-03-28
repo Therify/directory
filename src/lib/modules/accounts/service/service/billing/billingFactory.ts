@@ -5,6 +5,7 @@ import { HandlePlanChange } from './handle-plan-change';
 import { RenewPlan } from './renew-plan';
 import { HandleStripeConnectOnboarding } from './handle-stripe-connect-onboarding';
 import { CreateStripeConnectLoginUrl } from './create-stripe-connect-login-url';
+import { CreateCoachingSessionCheckout } from './create-coaching-session-checkout';
 
 export const factory = (context: AccountsServiceParams) => ({
     handleGroupPracticePlanPayment:
@@ -15,4 +16,6 @@ export const factory = (context: AccountsServiceParams) => ({
     handleStripeConnectOnboarding:
         HandleStripeConnectOnboarding.factory(context),
     createStripeConnectLoginUrl: CreateStripeConnectLoginUrl.factory(context),
+    createCoachingSessionCheckout:
+        CreateCoachingSessionCheckout.factory(context),
 });

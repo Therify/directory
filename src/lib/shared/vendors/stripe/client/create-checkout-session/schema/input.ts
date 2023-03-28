@@ -9,10 +9,11 @@ export const schema = z.object({
     checkoutMode: z.enum(['payment', 'setup', 'subscription']),
     submitMessage: z.string().optional(),
     allowPromotionCodes: z.boolean().optional().default(true),
+    expiresInSeconds: z.number().optional(),
     connectedAccountData: z
         .object({
             stripeConnectAccountId: z.string(),
-            applicationFee: z.number(),
+            applicationFeeInCents: z.number(),
             receiptEmail: z.string(),
         })
         .optional(),

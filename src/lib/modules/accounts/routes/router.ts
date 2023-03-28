@@ -22,11 +22,13 @@ import {
     getPracticeByOwnerIdResolver,
     handleStripeConnectOnboardingResolver,
     createStripeConnectLoginUrlResolver,
+    createCoachingSessionCheckoutResolver,
 } from './resolvers';
 import { Context } from '../../../server/context';
 import {
     HandleStripeConnectOnboarding,
     CreateStripeConnectLoginUrl,
+    CreateCoachingSessionCheckout,
 } from '../features/billing';
 
 export const router = trpc
@@ -75,6 +77,11 @@ export const router = trpc
         input: RegisterMember.inputSchema,
         output: RegisterMember.outputSchema,
         resolve: registerMemberResolver,
+    })
+    .mutation(CreateCoachingSessionCheckout.TRPC_ROUTE, {
+        input: CreateCoachingSessionCheckout.inputSchema,
+        output: CreateCoachingSessionCheckout.outputSchema,
+        resolve: createCoachingSessionCheckoutResolver,
     })
     .mutation(SendEmailVerification.TRPC_ROUTE, {
         input: SendEmailVerification.inputSchema,
