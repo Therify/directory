@@ -3,7 +3,6 @@ import { MoreHoriz as LauncherIcon } from '@mui/icons-material';
 import {
     Badge,
     Box,
-    ListItemProps,
     ListItemText,
     Menu,
     ListItem as MuiListItem,
@@ -14,6 +13,7 @@ import { styled } from '@mui/material/styles';
 import { BUTTON_TYPE, IconButton } from '../Button';
 
 interface FloatingListItemProps {
+    disabled?: boolean;
     icon?: ReactNode;
     text: string;
     onClick?: () => void;
@@ -23,6 +23,7 @@ interface FloatingListProps {
     launcherIcon?: React.ReactNode;
     headerSlot?: React.ReactNode;
     sx?: SxProps<Theme>;
+    menuSx?: SxProps<Theme>;
 }
 
 export const FloatingList = ({
@@ -30,6 +31,7 @@ export const FloatingList = ({
     listItems,
     headerSlot,
     sx,
+    menuSx,
 }: FloatingListProps) => {
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 
@@ -67,15 +69,18 @@ export const FloatingList = ({
                 onClose={() => setAnchorElNav(null)}
                 sx={{
                     '& .MuiList-root': { width: '275px' },
+                    ...menuSx,
                 }}
             >
                 {headerSlot && (
                     <ListItem hoverable={false}>{headerSlot}</ListItem>
                 )}
-                {listItems.map(({ icon, onClick, text }, i) => (
+                {listItems.map(({ icon, onClick, text, disabled }, i) => (
                     <ListItem
                         key={i}
+                        disabled={disabled}
                         onClick={() => {
+                            if (disabled) return;
                             onClick?.();
                             setAnchorElNav(null);
                         }}

@@ -60,7 +60,7 @@ export const factory =
             },
         });
         if (session.url === null) {
-            throw new Error('No Stripe session url was retrurned.');
+            throw new Error('No Stripe session url was returned.');
         }
         return {
             checkoutUrl: session.url,
