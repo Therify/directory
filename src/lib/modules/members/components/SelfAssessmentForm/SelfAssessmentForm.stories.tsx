@@ -1,11 +1,11 @@
 import { Meta, StoryFn } from '@storybook/react';
-import { SelfAssessment } from './SelfAsseessmentForm';
+import { SelfAssessmentForm } from './SelfAsseessmentForm';
 
 const meta: Meta = {
-    component: SelfAssessment,
+    component: SelfAssessmentForm,
     title: 'SelfAssessmentForm',
 };
 
 export default meta;
 
-export const SelfAssessmentStory: StoryFn = () => <SelfAssessment />;
+export const SelfAssessmentStory: StoryFn = () => <SelfAssessmentForm />;
