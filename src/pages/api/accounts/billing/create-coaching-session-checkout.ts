@@ -13,23 +13,23 @@ export default async function handler(
     if (typeof memberId !== 'string' || typeof providerId !== 'string') {
         return res
             .status(400)
-            .json({ checkoutUrl: null, errors: ['Missing ids'] });
+            .json({ invoiceId: null, errors: ['Missing ids'] });
     }
 
     try {
-        const { checkoutUrl } =
+        const { invoiceId } =
             await AccountsService.billing.createCoachingSessionCheckout({
                 memberId,
                 providerId,
             });
 
-        res.status(200).json({ checkoutUrl, errors: [] });
+        res.status(200).json({ invoiceId, errors: [] });
     } catch (error) {
         let errorMessage =
-            'Creating Stripe checkout session failed with an unknown error.';
+            'Creating Stripe invoice failed with an unknown error.';
         if (error instanceof Error) {
             errorMessage = error.message;
         }
-        res.status(500).json({ checkoutUrl: null, errors: [errorMessage] });
+        res.status(500).json({ invoiceId: null, errors: [errorMessage] });
     }
 }

@@ -34,15 +34,13 @@ export const ChatActions = ({
         const memberId = adaptUserIdentifier.fromStreamChat(memberIdentifier);
 
         createSessionPurchaseLink(memberId)
-            .then((checkoutLink) => {
-                channel.sendMessage({
-                    text: `Here is a link to purchase a session with me:
-                ${checkoutLink}
-
-                This link will expire in 24 hours.`,
-                });
+            .then(() => {
                 setShowModal(false);
                 setIsCreatingCheckoutSession(false);
+                createAlert({
+                    type: 'success',
+                    title: 'Session Invoice Sent',
+                });
             })
             .catch((err: Error) => {
                 console.error(err);
@@ -65,7 +63,8 @@ export const ChatActions = ({
                 listItems={[
                     {
                         icon: <CreditCardOutlined />,
-                        text: 'Send Session Purchase Link',
+                        text: 'Send Session Invoice',
+                        title: 'This will email a Mental Health Coaching Session invoice to the member so they can purchase a session with you. Payments can be viewed in your Stripe Connect Dashboard once the invoice has been paid.',
                         onClick: () => setShowModal(true),
                     },
                 ]}
@@ -74,8 +73,8 @@ export const ChatActions = ({
             <Modal
                 isOpen={showModal}
                 onClose={() => setShowModal(false)}
-                title="Send Session Purchase Link"
-                message="Are you sure you want to send a purchase link to this client? This will allow them to purchase one session with you. Links expire in 24 hours."
+                title="Send Session Invoice"
+                message="Stripe will email an invoice for 1 coaching session with you to this member. Payments can be viewed in your Stripe Connect Dashboard once the invoice has been paid."
                 primaryButtonDisabled={isCreatingCheckoutSession}
                 secondaryButtonDisabled={isCreatingCheckoutSession}
                 primaryButtonText="Send"

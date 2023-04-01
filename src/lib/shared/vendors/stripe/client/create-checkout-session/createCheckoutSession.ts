@@ -18,6 +18,7 @@ export const factory =
         allowPromotionCodes = true,
         connectedAccountData,
         expiresInSeconds,
+        metadata,
     }: Input): Promise<Stripe.Checkout.Session> => {
         return await stripe.checkout.sessions.create({
             customer: customerId,
@@ -29,6 +30,7 @@ export const factory =
             billing_address_collection: 'auto',
             allow_promotion_codes: allowPromotionCodes,
             expires_at: expiresInSeconds,
+            metadata,
             ...(connectedAccountData
                 ? {
                       payment_intent_data: {

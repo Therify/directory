@@ -3,11 +3,11 @@ import { PlanSchema } from '@/lib/shared/schema';
 
 export const schema = z.union([
     z.object({
-        checkoutUrl: z.string(),
+        invoiceId: z.string(),
         errors: z.array(z.string()),
     }),
     z.object({
-        checkoutUrl: z.literal(null),
+        invoiceId: z.literal(null),
         errors: z.array(z.string()),
     }),
 ]);

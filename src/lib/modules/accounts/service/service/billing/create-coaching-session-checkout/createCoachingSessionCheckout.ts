@@ -1,14 +1,18 @@
 import { CreateCoachingSessionCheckout } from '@/lib/modules/accounts/features/billing';
 import { AccountsServiceParams } from '../../params';
+import crypto from 'crypto';
 
 const THERIFY_COACHING_FEE_IN_CENTS = 2000;
 export const factory =
-    ({ prisma, stripe }: AccountsServiceParams) =>
+    ({ prisma, stripe, streamChat }: AccountsServiceParams) =>
     async ({
         memberId,
         providerId,
     }: CreateCoachingSessionCheckout.Input): Promise<{
-        checkoutUrl: CreateCoachingSessionCheckout.Output['checkoutUrl'];
+        invoiceId: Exclude<
+            CreateCoachingSessionCheckout.Output['invoiceId'],
+            null
+        >;
     }> => {
         const provider = await prisma.user.findUniqueOrThrow({
             where: {
@@ -18,6 +22,8 @@ export const factory =
                 stripeConnectAccountId: true,
                 providerProfile: {
                     select: {
+                        givenName: true,
+                        surname: true,
                         stripeSessionPriceId: true,
                     },
                 },
@@ -45,24 +51,30 @@ export const factory =
         if (member.stripeCustomerId === null) {
             throw new Error('Member does not have a stripe customer id');
         }
-        const session = await stripe.createCheckoutSession({
-            checkoutMode: 'payment',
+        const uuid = crypto.randomUUID();
+        const shortUuid = uuid.substring(0, 8);
+        const invoice = await stripe.createInvoice({
             customerId: member.stripeCustomerId,
             priceId: provider.providerProfile.stripeSessionPriceId,
             quantity: 1,
-            successUrl: 'http://localhost:3000/success',
-            cancelUrl: 'http://localhost:3000/cancel',
-            allowPromotionCodes: true,
             connectedAccountData: {
                 stripeConnectAccountId: provider.stripeConnectAccountId,
                 applicationFeeInCents: THERIFY_COACHING_FEE_IN_CENTS,
                 receiptEmail: member.emailAddress,
             },
+            lineItemDescription: `Coaching session with ${provider.providerProfile.givenName} ${provider.providerProfile.surname}`,
+            daysUntilDue: 1,
+            metadata: {
+                priceId: provider.providerProfile.stripeSessionPriceId,
+                referenceId: shortUuid,
+                coachId: providerId,
+                memberId: memberId,
+            },
         });
-        if (session.url === null) {
-            throw new Error('No Stripe session url was returned.');
-        }
+
+        await stripe.sendInvoice(invoice.id);
+
         return {
-            checkoutUrl: session.url,
+            invoiceId: invoice.id,
         };
     };

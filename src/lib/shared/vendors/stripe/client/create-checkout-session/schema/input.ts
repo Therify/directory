@@ -10,6 +10,7 @@ export const schema = z.object({
     submitMessage: z.string().optional(),
     allowPromotionCodes: z.boolean().optional().default(true),
     expiresInSeconds: z.number().optional(),
+    metadata: z.record(z.string()).optional(),
     connectedAccountData: z
         .object({
             stripeConnectAccountId: z.string(),

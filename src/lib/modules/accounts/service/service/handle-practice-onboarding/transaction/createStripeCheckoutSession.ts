@@ -29,6 +29,9 @@ export const factory = ({
                 cancelUrl: `${process.env.APPLICATION_URL}${URL_PATHS.PROVIDERS.ONBOARDING.BILLING}`,
                 successUrl: `${process.env.APPLICATION_URL}${URL_PATHS.PROVIDERS.ONBOARDING.BILLING_SUCCESS}`,
                 allowPromotionCodes: true,
+                metadata: {
+                    priceId,
+                },
             });
         if (!checkoutSessionUrl) {
             throw new Error('No session URL returned from Stripe.');

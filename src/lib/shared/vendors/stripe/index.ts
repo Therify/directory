@@ -15,6 +15,8 @@ import { CreateConnectAccount } from './client/create-connect-account';
 import { DeleteConnectAccount } from './client/delete-connect-account';
 import { CreatePrice } from './client/create-price';
 import { ArchivePrice } from './client/archive-price';
+import { CreateInvoice } from './client/create-invoice';
+import { SendInvoice } from './client/send-invoice';
 
 export * from './types';
 export * as StripeUtils from './utils';
@@ -45,6 +47,8 @@ export const vendorStripe = withStripeConfiguration((CONFIG) => {
         deleteCustomer: DeleteCustomer.factory({
             stripe,
         }),
+        createInvoice: CreateInvoice.factory({ stripe }),
+        sendInvoice: SendInvoice.factory({ stripe }),
         createProduct: CreateProduct.factory({
             stripe,
         }),

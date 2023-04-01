@@ -16,6 +16,7 @@ interface FloatingListItemProps {
     disabled?: boolean;
     icon?: ReactNode;
     text: string;
+    title?: string;
     onClick?: () => void;
 }
 interface FloatingListProps {
@@ -75,22 +76,27 @@ export const FloatingList = ({
                 {headerSlot && (
                     <ListItem hoverable={false}>{headerSlot}</ListItem>
                 )}
-                {listItems.map(({ icon, onClick, text, disabled }, i) => (
-                    <ListItem
-                        key={i}
-                        disabled={disabled}
-                        onClick={() => {
-                            if (disabled) return;
-                            onClick?.();
-                            setAnchorElNav(null);
-                        }}
-                    >
-                        {icon && (
-                            <Badge className="navigation-icon">{icon}</Badge>
-                        )}
-                        <Text primary={text} />
-                    </ListItem>
-                ))}
+                {listItems.map(
+                    ({ icon, onClick, text, disabled, title }, i) => (
+                        <ListItem
+                            key={i}
+                            disabled={disabled}
+                            title={title}
+                            onClick={() => {
+                                if (disabled) return;
+                                onClick?.();
+                                setAnchorElNav(null);
+                            }}
+                        >
+                            {icon && (
+                                <Badge className="navigation-icon">
+                                    {icon}
+                                </Badge>
+                            )}
+                            <Text primary={text} />
+                        </ListItem>
+                    )
+                )}
             </Menu>
         </Box>
     );

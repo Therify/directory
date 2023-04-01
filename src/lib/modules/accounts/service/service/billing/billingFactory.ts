@@ -6,8 +6,12 @@ import { RenewPlan } from './renew-plan';
 import { HandleStripeConnectOnboarding } from './handle-stripe-connect-onboarding';
 import { CreateStripeConnectLoginUrl } from './create-stripe-connect-login-url';
 import { CreateCoachingSessionCheckout } from './create-coaching-session-checkout';
+import { HandleCoachingSessionPayment } from './handle-coaching-session-payment';
+import { HandleInvoiceSent } from './handle-invoice-sent';
 
 export const factory = (context: AccountsServiceParams) => ({
+    handleCoachingSessionPayment: HandleCoachingSessionPayment.factory(context),
+    handleInvoiceSent: HandleInvoiceSent.factory(context),
     handleGroupPracticePlanPayment:
         HandleGroupPracticePlanPayment.factory(context),
     handlePlanChange: HandlePlanChange.factory(context),
