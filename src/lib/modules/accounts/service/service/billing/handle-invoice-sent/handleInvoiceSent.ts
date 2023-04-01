@@ -49,12 +49,12 @@ export const factory =
 
         if (channel.id) {
             const referenceId = invoice.metadata.referenceId;
-            const referenceText = `Reference # ${referenceId}`;
+            const referenceText = `Reference #: ${referenceId}`;
             try {
                 await streamChat.sendSystemMessageToChannel({
                     channelId: channel.id,
                     message:
-                        `Therify Session invoice has been sent sent to ${member.emailAddress}. Please check your email for payment instructions.
+                        `Therify Session Invoice has been sent to ${member.emailAddress}. Please check your email for payment instructions.
                     
 ${referenceText}`.trim(),
                 });

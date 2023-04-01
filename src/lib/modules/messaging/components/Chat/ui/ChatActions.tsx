@@ -81,7 +81,7 @@ export const ChatActions = ({
                 primaryButtonOnClick={handleSendSessionPurchaseLink}
                 postBodySlot={
                     isCreatingCheckoutSession ? (
-                        <CenteredContainer>
+                        <CenteredContainer sx={{ width: '100%' }}>
                             <CircularProgress />
                         </CenteredContainer>
                     ) : undefined

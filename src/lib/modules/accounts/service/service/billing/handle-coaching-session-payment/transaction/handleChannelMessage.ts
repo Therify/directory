@@ -25,7 +25,7 @@ export const factory: HandleChannelMessageFactory = ({ referenceId }) => ({
             return { messageDelivered: false };
         }
         try {
-            const referenceText = `Reference # ${referenceId}`;
+            const referenceText = `Reference #: ${referenceId}`;
             const { sent } = await streamChat.sendSystemMessageToChannel({
                 channelId: channel.id,
                 message: `${memberName} has purchased a session! 
