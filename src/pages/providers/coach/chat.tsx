@@ -31,16 +31,16 @@ export default function ChatPage({ user }: ChatPageProps) {
         memberId: string;
         providerId: string;
     }) => {
-        const { checkoutUrl, errors } = await fetch(
-            URL_PATHS.API.ACCOUNTS.BILLING.CREATE_COACHING_SESSION_CHECKOUT,
+        const { invoiceId, errors } = await fetch(
+            URL_PATHS.API.ACCOUNTS.BILLING.CREATE_COACHING_SESSION_INVOICE,
             {
                 method: 'POST',
                 body: JSON.stringify(input),
             }
         ).then((res) => res.json());
 
-        if (checkoutUrl) {
-            return checkoutUrl;
+        if (invoiceId) {
+            return invoiceId;
         }
         const [error] = errors;
         if (error) {

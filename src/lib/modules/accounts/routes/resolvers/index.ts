@@ -8,4 +8,4 @@ export { handlePracticeOnboardingResolver } from './handle-practice-onboarding';
 export { registerMemberResolver } from './register-member';
 export { handleStripeConnectOnboardingResolver } from './handle-stripe-connect-onboarding';
 export { createStripeConnectLoginUrlResolver } from './create-stripe-connect-login-url';
-export { createCoachingSessionCheckoutResolver } from './create-coaching-session-checkout';
+export { createCoachingSessionInvoiceResolver } from './create-coaching-session-invoice';

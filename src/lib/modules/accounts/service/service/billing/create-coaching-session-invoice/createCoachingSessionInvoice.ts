@@ -1,4 +1,4 @@
-import { CreateCoachingSessionCheckout } from '@/lib/modules/accounts/features/billing';
+import { CreateCoachingSessionInvoice } from '@/lib/modules/accounts/features/billing';
 import { AccountsServiceParams } from '../../params';
 import crypto from 'crypto';
 
@@ -8,9 +8,9 @@ export const factory =
     async ({
         memberId,
         providerId,
-    }: CreateCoachingSessionCheckout.Input): Promise<{
+    }: CreateCoachingSessionInvoice.Input): Promise<{
         invoiceId: Exclude<
-            CreateCoachingSessionCheckout.Output['invoiceId'],
+            CreateCoachingSessionInvoice.Output['invoiceId'],
             null
         >;
     }> => {

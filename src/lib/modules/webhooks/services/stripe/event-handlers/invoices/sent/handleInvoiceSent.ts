@@ -13,9 +13,10 @@ export const handleInvoiceSentFactory =
         if (!priceId) {
             throw new Error('No price id found on invoice');
         }
-        return await accounts.billing.handleInvoiceSent({
+        const { sentMessage } = await accounts.billing.handleInvoiceSent({
             customerId: invoice.customer,
             priceId,
             invoice,
         });
+        return { success: sentMessage };
     };

@@ -5,7 +5,7 @@ import { HandlePlanChange } from './handle-plan-change';
 import { RenewPlan } from './renew-plan';
 import { HandleStripeConnectOnboarding } from './handle-stripe-connect-onboarding';
 import { CreateStripeConnectLoginUrl } from './create-stripe-connect-login-url';
-import { CreateCoachingSessionCheckout } from './create-coaching-session-checkout';
+import { CreateCoachingSessionInvoice } from './create-coaching-session-invoice';
 import { HandleCoachingSessionPayment } from './handle-coaching-session-payment';
 import { HandleInvoiceSent } from './handle-invoice-sent';
 
@@ -20,6 +20,5 @@ export const factory = (context: AccountsServiceParams) => ({
     handleStripeConnectOnboarding:
         HandleStripeConnectOnboarding.factory(context),
     createStripeConnectLoginUrl: CreateStripeConnectLoginUrl.factory(context),
-    createCoachingSessionCheckout:
-        CreateCoachingSessionCheckout.factory(context),
+    createCoachingSessionInvoice: CreateCoachingSessionInvoice.factory(context),
 });

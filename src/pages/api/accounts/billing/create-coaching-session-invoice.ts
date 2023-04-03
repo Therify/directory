@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { AccountsService } from '@/lib/modules/accounts/service';
-import { CreateCoachingSessionCheckout } from '@/lib/modules/accounts/features/billing';
+import { CreateCoachingSessionInvoice } from '@/lib/modules/accounts/features/billing';
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<CreateCoachingSessionCheckout.Output>
+    res: NextApiResponse<CreateCoachingSessionInvoice.Output>
 ) {
     if (req.method !== 'POST') {
         return res.status(404).end();
@@ -18,7 +18,7 @@ export default async function handler(
 
     try {
         const { invoiceId } =
-            await AccountsService.billing.createCoachingSessionCheckout({
+            await AccountsService.billing.createCoachingSessionInvoice({
                 memberId,
                 providerId,
             });
