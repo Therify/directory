@@ -60,7 +60,7 @@ export default function PaymentsPage({
         onSuccess({ errors, url }) {
             if (url) {
                 if (typeof window !== 'undefined') {
-                    window.location.href = url;
+                    window.open(url);
                 }
                 return;
             }
