@@ -1,5 +1,5 @@
 import { HandlePlanChange } from '@/lib/modules/accounts/features/billing';
-import { isValidPriceId } from '@/lib/shared/types';
+import { isValidTherifyPriceId } from '@/lib/shared/types';
 import { NodeEnvironment } from '@/lib/shared/types/nodeEnvironment';
 import { HandlePlanChangeTransaction } from './definition';
 
@@ -11,7 +11,7 @@ interface ValidatePriceIdFactory {
 
 export const factory: ValidatePriceIdFactory = ({ newStripePriceId }) => ({
     async commit() {
-        const isValid = isValidPriceId(
+        const isValid = isValidTherifyPriceId(
             newStripePriceId,
             process.env.NEXT_PUBLIC_VERCEL_ENV as NodeEnvironment
         );
