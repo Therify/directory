@@ -55,6 +55,9 @@ export const factory =
         const shortUuid = uuid.substring(0, 8);
         const invoice = await stripe.createInvoice({
             customerId: member.stripeCustomerId,
+            collectionMethod: 'send_invoice',
+            daysUntilDue: 1,
+            shouldSendEmail: true,
             priceId: provider.providerProfile.stripeSessionPriceId,
             quantity: 1,
             connectedAccountData: {
@@ -63,7 +66,6 @@ export const factory =
                 receiptEmail: member.emailAddress,
             },
             lineItemDescription: `Coaching session with ${provider.providerProfile.givenName} ${provider.providerProfile.surname}`,
-            daysUntilDue: 1,
             metadata: {
                 priceId: provider.providerProfile.stripeSessionPriceId,
                 referenceId: shortUuid,
@@ -71,8 +73,6 @@ export const factory =
                 memberId: memberId,
             },
         });
-
-        await stripe.sendInvoice(invoice.id);
 
         return {
             invoiceId: invoice.id,

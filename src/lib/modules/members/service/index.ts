@@ -10,6 +10,7 @@ import { GetFavoritesPageProps } from './get-favorites-page-props';
 import { GetMemberTherifyUser } from './get-member-therify-user';
 import { GetTherifyUserPageProps } from './get-therify-user-props';
 import { GetChatPageProps } from './get-chat-page-props';
+import { GetBillingPageProps } from './get-billing-page-props';
 
 const factoryParams: MembersServiceParams = {
     prisma,
@@ -18,6 +19,7 @@ const factoryParams: MembersServiceParams = {
 export const membersService = {
     getTherifyUser: GetMemberTherifyUser.factory(factoryParams),
     getTherifyUserPageProps: GetTherifyUserPageProps.factory(factoryParams),
+    getBillingPageProps: GetBillingPageProps.factory(factoryParams),
     selfAssessments: selfAssessmentsFactory(factoryParams),
     getHomePageProps: GetHomePageProps.factory(factoryParams),
     getDirectoryPageProps: GetDirectoryPageProps.factory(factoryParams),
