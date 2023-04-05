@@ -11,7 +11,6 @@ export const schema = z.object({
     invoiceAmountPaid: z.number(),
     invoiceAmountRemaining: z.number(),
     invoicePdf: z.string().optional(),
-    hostedInvoiceUrl: z.string().optional(),
     invoiceStatus: SessionInvoiceSchema.shape.status,
     invoiceNumber: z.string().optional(),
 });

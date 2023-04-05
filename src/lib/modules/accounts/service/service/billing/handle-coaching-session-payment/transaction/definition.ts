@@ -15,7 +15,6 @@ export const handleCoachingSessionPaymentTransactionDefinition = z.object({
                 amountDue: StripeInvoiceSchema.shape.amountDue,
                 amountPaid: StripeInvoiceSchema.shape.amountPaid,
                 amountRemaining: StripeInvoiceSchema.shape.amountRemaining,
-                hostedInvoiceUrl: StripeInvoiceSchema.shape.hostedInvoiceUrl,
                 invoicePdf: StripeInvoiceSchema.shape.invoicePdf,
             })
             .nullable(),

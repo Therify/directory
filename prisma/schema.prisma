@@ -137,25 +137,24 @@ model Plan {
 }
 
 model StripeInvoice {
-  id               String          @id @default(cuid())
-  plan             Plan?           @relation(fields: [planId], references: [id])
-  planId           String?         @map("plan_id")
-  invoiceId        String          @map("invoice_id") @db.VarChar(255)
-  user             User?           @relation(fields: [userId], references: [id])
-  userId           String          @map("user_id")
-  account          Account?        @relation(fields: [accountId], references: [id])
-  accountId        String?         @map("account_id")
-  status           String
-  total            Int
-  amountDue        Int             @map("amount_due")
-  amountPaid       Int             @map("amoint_paid")
-  amountRemaining  Int             @map("amount_remaining")
-  invoicePdf       String?         @map("invoice_pdf")
-  hostedInvoiceUrl String?         @map("hosted_invoice_url")
-  createdAt        DateTime        @default(now()) @map("created_at")
-  updatedAt        DateTime        @updatedAt @map("updated_at")
-  invoiceNumber    String?         @map("invoice_number")
-  SessionInvoice   SessionInvoice?
+  id              String          @id @default(cuid())
+  plan            Plan?           @relation(fields: [planId], references: [id])
+  planId          String?         @map("plan_id")
+  invoiceId       String          @map("invoice_id") @db.VarChar(255)
+  user            User?           @relation(fields: [userId], references: [id])
+  userId          String          @map("user_id")
+  account         Account?        @relation(fields: [accountId], references: [id])
+  accountId       String?         @map("account_id")
+  status          String
+  total           Int
+  amountDue       Int             @map("amount_due")
+  amountPaid      Int             @map("amoint_paid")
+  amountRemaining Int             @map("amount_remaining")
+  invoicePdf      String?         @map("invoice_pdf")
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+  invoiceNumber   String?         @map("invoice_number")
+  SessionInvoice  SessionInvoice?
 
   @@index([invoiceId, userId])
   @@map("billing_provider_invoices")
