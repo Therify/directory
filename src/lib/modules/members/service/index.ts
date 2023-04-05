@@ -13,6 +13,7 @@ import { GetChatPageProps } from './get-chat-page-props';
 import { GetSelfAssessmentPageProps } from './get-self-assessment-page-props';
 import { CreateSelfAssessment } from './create-self-assessment';
 import { GetCarePageProps } from './get-care-page-props';
+import { directoryService } from '../../directory/service';
 
 const factoryParams: MembersServiceParams = {
     prisma,
@@ -31,7 +32,10 @@ export const membersService = {
     getChatPageProps: GetChatPageProps.factory(factoryParams),
     getSelfAssessmentPageProps:
         GetSelfAssessmentPageProps.factory(factoryParams),
-    getCarePageProps: GetCarePageProps.factory(factoryParams),
+    getCarePageProps: GetCarePageProps.factory({
+        ...factoryParams,
+        directoryService,
+    }),
     createSelfAssessment: CreateSelfAssessment.factory(factoryParams),
 };
 

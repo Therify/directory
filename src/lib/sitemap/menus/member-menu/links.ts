@@ -7,6 +7,12 @@ export const HOME: NavigationLink = {
     path: URL_PATHS.MEMBERS.HOME,
 } as const;
 
+export const CARE: NavigationLink = {
+    icon: NAVIGATION_ICON.CARE,
+    displayName: 'Care',
+    path: URL_PATHS.MEMBERS.CARE,
+};
+
 export const FAVORITES: NavigationLink = {
     icon: NAVIGATION_ICON.FAVORITES,
     displayName: 'Favorites',
