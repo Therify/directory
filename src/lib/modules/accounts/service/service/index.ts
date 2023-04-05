@@ -17,10 +17,12 @@ import { GetUserDetailsById } from './get-user-details-by-id';
 import { CreateFirebaseAuthToken } from './create-firebase-auth-token';
 import { GetAccountByRegistrationCode } from './get-account-by-registration-code';
 import { RegisterProviderWithInvitation } from './register-provider-with-invitation';
+import { vendorStreamChat } from '@/lib/shared/vendors/stream-chat';
 
 const factoryParams: AccountsServiceParams = {
     prisma,
     stripe: vendorStripe,
+    streamChat: vendorStreamChat,
     auth0: vendorAuth0,
     firebaseAdmin: firebaseAdminVendor,
 };

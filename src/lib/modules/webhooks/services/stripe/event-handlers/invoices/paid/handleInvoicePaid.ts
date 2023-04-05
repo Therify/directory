@@ -1,16 +1,18 @@
 import { StripeWebhookParams } from '../../../webhookParams';
 import { inferAsyncReturnType } from '@trpc/server';
 import { StripeInvoice, StripeUtils } from '@/lib/shared/vendors/stripe';
-import { handleGroupPracticePayment, handlePlanChange } from './handlers';
 import {
-    getProductByEnvironment,
-    isValidPriceId,
-    PRODUCTS,
-} from '@/lib/shared/types';
+    handleGroupPracticePayment,
+    handleOneTimePayment,
+    handlePlanChange,
+} from './handlers';
+import { getProductByEnvironment, PRODUCTS } from '@/lib/shared/types';
 import { NodeEnvironment } from '@/lib/shared/types/nodeEnvironment';
 
 type HandlerResult = inferAsyncReturnType<
-    typeof handleGroupPracticePayment | typeof handlePlanChange
+    | typeof handleGroupPracticePayment
+    | typeof handlePlanChange
+    | typeof handleOneTimePayment
 >;
 
 const GROUP_PRACTICE_PLAN = getProductByEnvironment(
@@ -31,31 +33,25 @@ export const handleInvoicePaidFactory =
             throw new Error('No customer id found on invoice');
         }
 
-        if (subscriptionId === null) {
-            throw new Error(`No Stripe subscription id found on invoice.`);
-        }
-
         if (!StripeUtils.isSupportedBillingReason(billing_reason)) {
             throw new Error(`Unexpected billing reason: ${billing_reason}`);
         }
 
         const [lineItem] = invoice.lines.data;
-        if (
-            !isValidPriceId(
-                lineItem.price.id,
-                process.env.VERCEL_ENV as NodeEnvironment
-            )
-        ) {
-            throw new Error(`Unexpected price id: ${lineItem.price.id}`);
-        }
-
         const isSubscriptionChange = billing_reason === 'subscription_update';
         const isGroupPracticePlanPriceId = Object.values(
             GROUP_PRACTICE_PLAN.PRICES
         ).includes(lineItem.price.id);
 
         let result: HandlerResult | undefined = undefined;
-        if (isSubscriptionChange) {
+        if (!subscriptionId) {
+            result = await handleOneTimePayment({
+                accounts,
+                customerId,
+                priceId: lineItem.price.id,
+                invoice,
+            });
+        } else if (isSubscriptionChange) {
             result = await handlePlanChange({
                 accounts,
                 customerId,

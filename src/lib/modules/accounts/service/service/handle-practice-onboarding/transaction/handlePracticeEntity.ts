@@ -19,6 +19,9 @@ export const factory: HandlePracticeOnboardingEntityFactory = ({
     website,
     practiceId,
 }) => {
+    if (name.toLowerCase().includes('therify')) {
+        throw new Error('Practice name cannot include "Therify"');
+    }
     return {
         async commit({ prisma }, { getUserDetails: { userId } }) {
             if (practiceId) {

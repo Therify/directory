@@ -15,6 +15,10 @@ export const transactionDefinition = z.object({
     createTherifyUserEntity: z.object({
         therifyUserId: z.string(),
     }),
+    createStripeCustomer: z.object({
+        customerId: z.string(),
+    }),
+    updateUserEntity: z.unknown(),
     createPracticeProvider: z.object({
         planId: z.string(),
     }),
@@ -26,7 +30,7 @@ export const transactionDefinition = z.object({
     }),
 });
 
-export type RegisterProviderWithInitationTransaction =
+export type RegisterProviderWithInvitationTransaction =
     TransactionV1.TransactionDefinition<
         Context,
         typeof transactionDefinition.shape

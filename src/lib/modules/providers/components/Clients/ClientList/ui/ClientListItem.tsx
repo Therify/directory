@@ -3,12 +3,10 @@ import {
     MailOutline,
     PaidOutlined,
     PendingOutlined,
-    ChatBubbleOutlineRounded,
     CircleRounded,
     DoNotDisturbAltRounded,
     CheckCircleOutlineRounded,
     PreviewRounded,
-    PersonRemoveOutlined,
 } from '@mui/icons-material';
 
 import {
@@ -32,7 +30,6 @@ export const ClientListItem = ({
     isSmallScreen,
     onAccept,
     onDecline,
-    onTerminate,
     onView,
     onReimbursmentRequest,
 }: {
