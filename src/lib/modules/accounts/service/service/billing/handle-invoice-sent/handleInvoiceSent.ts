@@ -72,15 +72,14 @@ export const factory =
         }
 
         if (channel.id) {
-            const referenceId = invoice.metadata.referenceId;
-            const referenceText = `Reference #: ${referenceId}`;
+            const invoiceNumberText = `Invoice #: ${invoice.number}`;
             try {
                 await streamChat.sendSystemMessageToChannel({
                     channelId: channel.id,
                     message:
                         `A session invoice has been issued to ${member.givenName} ${member.surname}. ${member.givenName} can pay the invoice by visiting their billing and payments page or by checking their email.
                     
-${referenceText}`.trim(),
+${invoiceNumberText}`.trim(),
                 });
                 return { sentMessage: true };
             } catch (e) {

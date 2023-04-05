@@ -40,12 +40,14 @@ model User {
   practiceProvider           PracticeProvider?
   chatAccessToken            String?                      @map("chat_access_token")
 
-  memberProfile      MemberProfile?
-  selfAssessments    SelfAssessment[]
-  connectionRequests ConnectionRequest[]
-  managedPractice    Practice?
-  memberChannels     Channel[]           @relation("member")
-  providerChannels   Channel[]           @relation("provider")
+  memberProfile          MemberProfile?
+  selfAssessments        SelfAssessment[]
+  connectionRequests     ConnectionRequest[]
+  managedPractice        Practice?
+  memberChannels         Channel[]           @relation("member")
+  providerChannels       Channel[]           @relation("provider")
+  memberSessionInvoice   SessionInvoice[]    @relation("member")
+  providerSessionInvoice SessionInvoice[]    @relation("provider")
 
   @@map("users")
 }
@@ -135,25 +137,51 @@ model Plan {
 }
 
 model StripeInvoice {
-  id              String   @id @default(cuid())
-  plan            Plan?    @relation(fields: [planId], references: [id])
-  planId          String?  @map("plan_id")
-  invoiceId       String   @map("invoice_id") @db.VarChar(255)
-  user            User?    @relation(fields: [userId], references: [id])
-  userId          String   @map("user_id")
-  account         Account? @relation(fields: [accountId], references: [id])
-  accountId       String?  @map("account_id")
-  status          String
-  total           Int
-  amountDue       Int      @map("amount_due")
-  amountPaid      Int      @map("amoint_paid")
-  amountRemaining Int      @map("amount_remaining")
-  invoicePdf      String?  @map("invoice_pdf")
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
+  id               String          @id @default(cuid())
+  plan             Plan?           @relation(fields: [planId], references: [id])
+  planId           String?         @map("plan_id")
+  invoiceId        String          @map("invoice_id") @db.VarChar(255)
+  user             User?           @relation(fields: [userId], references: [id])
+  userId           String          @map("user_id")
+  account          Account?        @relation(fields: [accountId], references: [id])
+  accountId        String?         @map("account_id")
+  status           String
+  total            Int
+  amountDue        Int             @map("amount_due")
+  amountPaid       Int             @map("amoint_paid")
+  amountRemaining  Int             @map("amount_remaining")
+  invoicePdf       String?         @map("invoice_pdf")
+  hostedInvoiceUrl String?         @map("hosted_invoice_url")
+  createdAt        DateTime        @default(now()) @map("created_at")
+  updatedAt        DateTime        @updatedAt @map("updated_at")
+  SessionInvoice   SessionInvoice?
 
   @@index([invoiceId, userId])
   @@map("billing_provider_invoices")
+}
+
+enum SessionInvoiceStatus {
+  draft
+  open
+  void
+  paid
+  uncollectible
+}
+
+model SessionInvoice {
+  id            String               @id @default(cuid())
+  invoice       StripeInvoice        @relation(fields: [invoiceId], references: [id])
+  invoiceId     String               @unique @map("invoice_id")
+  status        SessionInvoiceStatus
+  dateOfSession DateTime?            @map("date_of_session")
+  createdAt     DateTime             @default(now()) @map("created_at")
+  updatedAt     DateTime             @updatedAt @map("updated_at")
+  providerId    String               @map("provider_id")
+  provider      User                 @relation("provider", fields: [providerId], references: [id])
+  memberId      String               @map("member_id")
+  member        User                 @relation("member", fields: [memberId], references: [id])
+
+  @@map("session_invoices")
 }
 
 model Practice {

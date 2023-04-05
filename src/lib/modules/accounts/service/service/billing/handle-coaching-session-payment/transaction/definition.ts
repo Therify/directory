@@ -6,6 +6,7 @@ export const handleCoachingSessionPaymentTransactionDefinition = z.object({
     getCoachEntity: z.object({ id: z.string(), givenName: z.string() }),
     getMemberEntity: z.object({ id: z.string(), givenName: z.string() }),
     createInvoiceEntity: z.object({ invoiceId: z.string() }),
+    createSessionInvoiceEntity: z.object({ sessionInvoiceId: z.string() }),
     handleChannelMessage: z.object({ messageDelivered: z.boolean() }),
 });
 

@@ -7,7 +7,7 @@ interface HandleChannelMessageFactory {
     ): HandleCoachingSessionPaymentTransaction['handleChannelMessage'];
 }
 
-export const factory: HandleChannelMessageFactory = ({ referenceId }) => ({
+export const factory: HandleChannelMessageFactory = ({ invoiceNumber }) => ({
     async commit(
         { prisma, streamChat },
         {
@@ -25,12 +25,12 @@ export const factory: HandleChannelMessageFactory = ({ referenceId }) => ({
             return { messageDelivered: false };
         }
         try {
-            const referenceText = `Reference #: ${referenceId}`;
+            const invoiceNumberText = `Invoice #: ${invoiceNumber}`;
             const { sent } = await streamChat.sendSystemMessageToChannel({
                 channelId: channel.id,
                 message: `${memberName} has purchased a session! 
 
-${referenceId ? referenceText : ''}`.trim(),
+${invoiceNumber ? invoiceNumberText : ''}`.trim(),
             });
             return { messageDelivered: sent };
         } catch (e) {

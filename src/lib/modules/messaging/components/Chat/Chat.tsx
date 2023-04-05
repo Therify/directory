@@ -22,7 +22,7 @@ interface ChatComponentProps {
     userIdentifier: string;
     accessToken: string;
     displayName?: string;
-    createSessionPurchaseLink?: (memberId: string) => Promise<string>;
+    allowSessionInvoicing?: boolean;
 }
 
 const chatClient = StreamChat.getInstance('7ryxym6g8a33');
@@ -31,7 +31,7 @@ export function ChatComponent({
     userIdentifier,
     accessToken,
     displayName,
-    createSessionPurchaseLink,
+    allowSessionInvoicing,
 }: ChatComponentProps) {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const isSmallScreen = useMediaQuery((theme: Theme) =>
@@ -67,13 +67,8 @@ export function ChatComponent({
                                     </IconButton>
                                 )}
                             />
-                            {createSessionPurchaseLink && (
-                                <ChatActions
-                                    userIdentifier={userIdentifier}
-                                    createSessionPurchaseLink={
-                                        createSessionPurchaseLink
-                                    }
-                                />
+                            {allowSessionInvoicing && (
+                                <ChatActions userIdentifier={userIdentifier} />
                             )}
                         </HeaderContainer>
                         <MessageList />

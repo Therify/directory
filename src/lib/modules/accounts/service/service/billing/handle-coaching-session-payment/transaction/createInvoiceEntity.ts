@@ -13,6 +13,7 @@ export const factory: CreateInvoiceEntityFactory = ({
     invoiceAmountDue,
     invoiceAmountPaid,
     invoiceAmountRemaining,
+    hostedInvoiceUrl,
     invoicePdf,
 }) => ({
     async commit({ prisma }, { getMemberEntity: { id: memberId } }) {
@@ -25,6 +26,7 @@ export const factory: CreateInvoiceEntityFactory = ({
                 amountDue: invoiceAmountDue,
                 amountPaid: invoiceAmountPaid,
                 amountRemaining: invoiceAmountRemaining,
+                hostedInvoiceUrl,
                 invoicePdf: invoicePdf,
             },
         });

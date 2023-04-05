@@ -7,6 +7,7 @@ import {
     GetCoachEntity,
     HandleChannelMessage,
     CreateInvoiceEntity,
+    CreateSessionInvoiceEntity,
 } from './transaction';
 
 export const factory =
@@ -19,6 +20,8 @@ export const factory =
                 getCoachEntity: GetCoachEntity.factory(params),
                 getMemberEntity: GetMemberEntity.factory(params),
                 createInvoiceEntity: CreateInvoiceEntity.factory(params),
+                createSessionInvoiceEntity:
+                    CreateSessionInvoiceEntity.factory(params),
                 handleChannelMessage: HandleChannelMessage.factory(params),
             },
             true
