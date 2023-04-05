@@ -3,7 +3,7 @@ import { NodeEnvironment } from '@/lib/shared/types/nodeEnvironment';
 import { StripeInvoice } from '@/lib/shared/vendors/stripe';
 import { StripeWebhookParams } from '../../../webhookParams';
 
-export const handleInvoiceFinalizedFactory =
+export const handleInvoiceUpdatedFactory =
     ({ accounts }: StripeWebhookParams) =>
     async (rawInvoice: unknown) => {
         const invoice = StripeInvoice.schema.parse(rawInvoice);
@@ -25,7 +25,7 @@ export const handleInvoiceFinalizedFactory =
             return { success: true };
         }
         const { sessionInvoiceId } =
-            await accounts.billing.handleCoachingSessionInvoiceFinalized({
+            await accounts.billing.handleCoachingSessionInvoiceUpdated({
                 customerId: invoice.customer,
                 priceId,
                 invoice,
