@@ -20,7 +20,7 @@ export const ANSWER_TYPES = [
     'control_mollie',
 ] as const;
 
-export type AnswerType = typeof ANSWER_TYPES[number];
+export type AnswerType = (typeof ANSWER_TYPES)[number];
 
 export const enum ANSWER_TYPE {
     EMAIL = 'control_email',
