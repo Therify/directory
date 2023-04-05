@@ -11,7 +11,7 @@ import { asSelectOptions } from '@/lib/shared/utils';
 
 interface StateInputProps {
     control: Control<ProviderProfile.ProviderProfile>;
-    defaultValue?: typeof UNITED_STATES.STATE.ENTRIES[number];
+    defaultValue?: (typeof UNITED_STATES.STATE.ENTRIES)[number];
     disabled?: boolean;
     country: Country.Country | null;
     storeLocalData: (

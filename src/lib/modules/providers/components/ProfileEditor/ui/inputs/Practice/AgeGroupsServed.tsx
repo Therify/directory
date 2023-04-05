@@ -3,7 +3,7 @@ import { AgeGroup, ProviderProfile } from '@/lib/shared/types';
 import { Autocomplete, TextField } from '@mui/material';
 import { InputWrapper } from '@/lib/shared/components/ui';
 
-type AgeGroupsServed = typeof AgeGroup.ENTRIES[number];
+type AgeGroupsServed = (typeof AgeGroup.ENTRIES)[number];
 
 interface AgeGroupsServedInputProps {
     control: Control<ProviderProfile.ProviderProfile>;

@@ -18,7 +18,7 @@ export const TOGGLE_TYPE = {
     SWITCH: 'switch',
 } as const;
 
-export type ToggleType = typeof TOGGLE_TYPE[keyof typeof TOGGLE_TYPE];
+export type ToggleType = (typeof TOGGLE_TYPE)[keyof typeof TOGGLE_TYPE];
 
 interface BaseToggleProps {
     displayText?: React.ReactNode;

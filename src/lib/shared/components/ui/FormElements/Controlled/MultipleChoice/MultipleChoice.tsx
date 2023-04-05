@@ -23,7 +23,7 @@ export type MultipleChoiceProps<TForm extends FieldValues> = {
     type?: 'text' | 'number';
     labelProps?: $ElementProps<typeof Paragraph>;
     controllerProps: UseControllerProps<TForm>;
-    error?: Merge<FieldError, (FieldError | undefined)[]>;
+    errors?: Merge<FieldError, (FieldError | undefined)[]>;
     choices: Array<
         {
             label: string;
@@ -34,7 +34,7 @@ export type MultipleChoiceProps<TForm extends FieldValues> = {
 
 export function ControlledMultipleChoice<TForm extends FieldValues>({
     controllerProps,
-    error,
+    errors,
     type = 'text',
     label,
     labelProps = {},
@@ -69,6 +69,7 @@ export function ControlledMultipleChoice<TForm extends FieldValues>({
                     />
                 ))}
             </RadioGroup>
+            <>{JSON.stringify(errors, null, 2)}</>
         </>
     );
 }

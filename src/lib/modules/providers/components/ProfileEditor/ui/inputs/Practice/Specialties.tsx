@@ -3,7 +3,7 @@ import { ProviderProfile, AreaOfFocus } from '@/lib/shared/types';
 import { Autocomplete, TextField } from '@mui/material';
 import { InputWrapper } from '@/lib/shared/components/ui';
 
-type Specialties = typeof AreaOfFocus.ENTRIES[number];
+type Specialties = (typeof AreaOfFocus.ENTRIES)[number];
 
 interface SpecialtiesInputProps {
     control: Control<ProviderProfile.ProviderProfile>;

@@ -1,11 +1,5 @@
-import {
-    Box,
-    FormControl,
-    Grid,
-    InputLabelProps,
-    styled,
-    useTheme,
-} from '@mui/material';
+import { Box, FormControl, Grid, InputLabelProps } from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
 import { useCallback, useState } from 'react';
 import {
     useController,
@@ -13,7 +7,7 @@ import {
     type FieldError,
     type FieldValues,
 } from 'react-hook-form';
-import type { Merge, UseControllerReturn } from 'react-hook-form/dist/types';
+import type { Merge } from 'react-hook-form/dist/types';
 import { Caption, CAPTION_SIZE } from '../../../Typography';
 import { InputLabel } from '../../Input';
 

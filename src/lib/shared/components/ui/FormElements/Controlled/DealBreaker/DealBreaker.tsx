@@ -1,4 +1,5 @@
 import { asSelectOptions } from '@/lib/shared/utils';
+import { Stack } from '@mui/material';
 import React from 'react';
 import {
     type FieldValues,
@@ -25,10 +26,11 @@ export type DealBreakerProps<
     options extends string[]
 > = {
     controllerProps: UseControllerProps<TForm>;
+    selectProps?: Omit<$ElementProps<typeof Select>, 'id' | 'options'>;
     errors?: Merge<FieldError, (FieldError | undefined)[]>;
     defaultValues?: DeepPartial<TForm>;
     dealBreakerName: Path<TForm>;
-    options: string[];
+    options: options;
     label: string;
     predicateFn: (value: string) => boolean;
 };
@@ -38,37 +40,41 @@ export function DealBreaker<
     options extends string[]
 >({
     controllerProps,
-    errors,
-    defaultValues,
+    selectProps,
     options,
     dealBreakerName,
     label,
     predicateFn,
 }: DealBreakerProps<TForm, options>) {
     const { field } = useController(controllerProps);
-    const [selectedItem, setSelectedItem] = React.useState<string>(options[0]);
     const onItemSelected = (value: string) => {
-        setSelectedItem(value);
         field.onChange(value);
     };
     return (
-        <>
+        <Stack>
             <Select
                 id={controllerProps.name}
                 label={label}
                 onChange={onItemSelected}
-                value={selectedItem}
+                value={field.value}
                 options={asSelectOptions(options)}
+                {...selectProps}
             />
-            {predicateFn(selectedItem) && (
+            {predicateFn(field.value) && (
                 <YesNo
-                    label="Deal Breaker"
+                    label="Is this preference mandatory?"
+                    labelProps={{
+                        sx: {
+                            background: 'cornsilk',
+                            padding: '0.5rem',
+                        },
+                    }}
                     controllerProps={{
                         name: dealBreakerName,
                         control: controllerProps.control,
                     }}
                 />
             )}
-        </>
+        </Stack>
     );
 }
