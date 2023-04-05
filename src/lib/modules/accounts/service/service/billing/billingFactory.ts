@@ -8,9 +8,12 @@ import { CreateStripeConnectLoginUrl } from './create-stripe-connect-login-url';
 import { CreateCoachingSessionInvoice } from './create-coaching-session-invoice';
 import { HandleCoachingSessionPayment } from './handle-coaching-session-payment';
 import { HandleInvoiceSent } from './handle-invoice-sent';
+import { HandleCoachingSessionInvoiceFinalized } from './handle-coaching-session-invoice-finalized';
 
 export const factory = (context: AccountsServiceParams) => ({
     handleCoachingSessionPayment: HandleCoachingSessionPayment.factory(context),
+    handleCoachingSessionInvoiceFinalized:
+        HandleCoachingSessionInvoiceFinalized.factory(context),
     handleInvoiceSent: HandleInvoiceSent.factory(context),
     handleGroupPracticePlanPayment:
         HandleGroupPracticePlanPayment.factory(context),

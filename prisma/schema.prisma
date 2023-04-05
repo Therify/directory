@@ -154,6 +154,7 @@ model StripeInvoice {
   hostedInvoiceUrl String?         @map("hosted_invoice_url")
   createdAt        DateTime        @default(now()) @map("created_at")
   updatedAt        DateTime        @updatedAt @map("updated_at")
+  invoiceNumber    String?         @map("invoice_number")
   SessionInvoice   SessionInvoice?
 
   @@index([invoiceId, userId])

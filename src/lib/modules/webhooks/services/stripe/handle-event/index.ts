@@ -16,6 +16,8 @@ export const handleEventFactory =
                 return eventHandlers.invoices.paymentFailed(object);
             case 'invoice.paid':
                 return eventHandlers.invoices.paid(object);
+            case 'invoice.finalized':
+                return eventHandlers.invoices.finalized(object);
             case 'invoice.sent':
                 return eventHandlers.invoices.sent(object);
             case 'customer.subscription.updated':

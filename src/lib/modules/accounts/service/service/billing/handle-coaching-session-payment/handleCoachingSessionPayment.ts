@@ -6,8 +6,8 @@ import {
     GetMemberEntity,
     GetCoachEntity,
     HandleChannelMessage,
-    CreateInvoiceEntity,
-    CreateSessionInvoiceEntity,
+    HandleInvoiceEntity,
+    HandleSessionInvoiceEntity,
 } from './transaction';
 
 export const factory =
@@ -19,9 +19,9 @@ export const factory =
             {
                 getCoachEntity: GetCoachEntity.factory(params),
                 getMemberEntity: GetMemberEntity.factory(params),
-                createInvoiceEntity: CreateInvoiceEntity.factory(params),
-                createSessionInvoiceEntity:
-                    CreateSessionInvoiceEntity.factory(params),
+                handleInvoiceEntity: HandleInvoiceEntity.factory(params),
+                handleSessionInvoiceEntity:
+                    HandleSessionInvoiceEntity.factory(params),
                 handleChannelMessage: HandleChannelMessage.factory(params),
             },
             true
