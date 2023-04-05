@@ -13,7 +13,6 @@ export const factory: CreateInvoiceEntityFactory = ({
     invoiceAmountDue,
     invoiceAmountPaid,
     invoiceAmountRemaining,
-    hostedInvoiceUrl,
     invoicePdf,
     invoiceNumber,
 }) => ({
@@ -29,7 +28,6 @@ export const factory: CreateInvoiceEntityFactory = ({
                 amountDue: true,
                 amountPaid: true,
                 amountRemaining: true,
-                hostedInvoiceUrl: true,
                 invoicePdf: true,
             },
         });
@@ -62,7 +60,6 @@ export const factory: CreateInvoiceEntityFactory = ({
                 amountDue: invoiceAmountDue,
                 amountPaid: invoiceAmountPaid,
                 amountRemaining: invoiceAmountRemaining,
-                hostedInvoiceUrl,
                 invoicePdf: invoicePdf,
                 invoiceNumber,
             },

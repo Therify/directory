@@ -24,7 +24,6 @@ export const handleOneTimePayment = async ({
         invoiceAmountRemaining: invoice.amount_remaining,
         invoicePdf: invoice.invoicePdf,
         invoiceNumber: invoice.number ?? undefined,
-        hostedInvoiceUrl: invoice.hosted_invoice_url ?? undefined,
         dateOfSession: invoice.metadata.dateOfSession,
     });
 };
