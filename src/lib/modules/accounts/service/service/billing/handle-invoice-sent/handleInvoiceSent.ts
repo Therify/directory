@@ -1,4 +1,6 @@
+import { notificationsService } from '@/lib/modules/notifications/service';
 import { StripeInvoice } from '@/lib/shared/vendors/stripe';
+import { URL_PATHS } from '@/lib/sitemap';
 import { AccountsServiceParams } from '../../params';
 
 export const factory =
@@ -14,21 +16,28 @@ export const factory =
     }): Promise<{
         sentMessage: boolean;
     }> => {
-        const { user: provider } =
-            await prisma.providerProfile.findUniqueOrThrow({
-                where: {
-                    stripeSessionPriceId: priceId,
-                },
-                select: {
-                    user: true,
-                },
-            });
+        const {
+            user: provider,
+            givenName: providerGivenName,
+            surname: providerSurname,
+        } = await prisma.providerProfile.findUniqueOrThrow({
+            where: {
+                stripeSessionPriceId: priceId,
+            },
+            select: {
+                user: true,
+                givenName: true,
+                surname: true,
+            },
+        });
 
         const member = await prisma.user.findUniqueOrThrow({
             where: {
                 stripeCustomerId: customerId,
             },
             select: {
+                givenName: true,
+                surname: true,
                 emailAddress: true,
                 id: true,
             },
@@ -36,6 +45,21 @@ export const factory =
 
         if (!provider?.id || !member.id) {
             return { sentMessage: false };
+        }
+        try {
+            await notificationsService.inApp.create({
+                targetUserId: member.id,
+                notification: {
+                    title: `${providerGivenName} ${providerSurname} has sent you a session invoice!`,
+                    body: `Check your Stripe customer dashboard to manage your session payments.`,
+                    action: {
+                        type: 'navigate',
+                        target: URL_PATHS.MEMBERS.ACCOUNT.BILLING_AND_PAYMENTS,
+                    },
+                },
+            });
+        } catch (e) {
+            console.error(e);
         }
         const channel = await prisma.channel.findFirst({
             where: {
@@ -54,7 +78,7 @@ export const factory =
                 await streamChat.sendSystemMessageToChannel({
                     channelId: channel.id,
                     message:
-                        `Therify Session Invoice has been sent to ${member.emailAddress}. Please check your email for payment instructions.
+                        `A session invoice has been issued to ${member.givenName} ${member.surname}. ${member.givenName} can pay the invoice by visiting their billing and payments page or by checking their email.
                     
 ${referenceText}`.trim(),
                 });
