@@ -6,6 +6,6 @@ export const resolve: ProcedureResolver<
     Context,
     CreateSelfAssessment.Input,
     CreateSelfAssessment.Output
-> = async ({ ctx, input }) => {
+> = ({ ctx, input }) => {
     return ctx.members.createSelfAssessment(input);
 };

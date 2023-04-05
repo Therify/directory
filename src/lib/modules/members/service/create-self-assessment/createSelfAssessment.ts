@@ -1,4 +1,5 @@
 import { SelfAssessment } from '@/lib/shared/types/self-assessment';
+import { fromForm } from '@/lib/shared/types/self-assessment/from-form';
 import { CreateSelfAssessment } from '../../features';
 import { MembersServiceParams } from '../params';
 
@@ -13,12 +14,16 @@ interface CreateSelfAssessmentFactory {
 }
 
 export const factory: CreateSelfAssessmentFactory = ({ prisma }) => {
-    return async function createSelfAssessment({ userId, ...input }) {
+    return async function createSelfAssessment({
+        userId,
+        selfAssessmentSubmission,
+    }) {
+        const parsedSelfAssessment = fromForm(selfAssessmentSubmission);
         try {
             const newSelfAssessment = await prisma.selfAssessment.create({
                 data: {
                     userId,
-                    ...input,
+                    ...parsedSelfAssessment,
                 },
             });
             const selfAssessment = SelfAssessment.validate(newSelfAssessment);

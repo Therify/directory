@@ -1,9 +1,9 @@
-import { SelfAssessment } from '@/lib/shared/types/self-assessment';
 import * as z from 'zod';
+import { SelfAssessmentForm } from '@/lib/shared/types/forms/self-assessment';
 
 export const schema = z.object({
     userId: z.string(),
-    selfAssessment: SelfAssessment.schema,
+    selfAssessmentSubmission: SelfAssessmentForm.schema,
 });
 
 export type Input = z.infer<typeof schema>;

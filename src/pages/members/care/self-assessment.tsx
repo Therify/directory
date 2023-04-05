@@ -1,16 +1,18 @@
-import { PHQ9Form } from '@/lib/modules/members/components/PHQ9Form/PHQ9Form';
 import { SelfAssessmentForm } from '@/lib/modules/members/components/SelfAssessmentForm';
 import { membersService } from '@/lib/modules/members/service';
 import { SelfAssessmentPageProps } from '@/lib/modules/members/service/get-self-assessment-page-props/getSelfAssessmentPageProps';
 import { MemberNavigationPage } from '@/lib/shared/components/features/pages';
 import { PageHeader } from '@/lib/shared/components/ui/PageHeader';
-import { Box } from '@mui/material';
-import Container from '@mui/material/Container';
+import { trpc } from '@/lib/shared/utils/trpc';
+import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
+import { useRouter } from 'next/router';
 
 export const getServerSideProps = membersService.getSelfAssessmentPageProps;
 
 export default function SelfAssessmentPage({ user }: SelfAssessmentPageProps) {
+    const mutation = trpc.useMutation('members.create-self-assessment');
+    const router = useRouter();
     return (
         <MemberNavigationPage
             user={user}
@@ -22,7 +24,21 @@ export default function SelfAssessmentPage({ user }: SelfAssessmentPageProps) {
                     subtitle="This information helps us find the best match for you."
                     type="secondary"
                 />
-                <SelfAssessmentForm />
+                <SelfAssessmentForm
+                    onSubmit={(formSubmission) => {
+                        mutation.mutate(
+                            {
+                                userId: user.userId,
+                                selfAssessmentSubmission: formSubmission,
+                            },
+                            {
+                                onSettled() {
+                                    router.push('/members/care');
+                                },
+                            }
+                        );
+                    }}
+                />
             </PageContainer>
         </MemberNavigationPage>
     );

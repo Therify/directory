@@ -1,402 +1,214 @@
-import { Divider } from '@/lib/shared/components/ui';
-import { Button } from '@/lib/shared/components/ui/Button';
-import { InputWrapper } from '@/lib/shared/components/ui/FormElements/Input/InputWrapper';
-import { Select } from '@/lib/shared/components/ui/FormElements/Select';
+import { Button, Divider } from '@/lib/shared/components/ui';
 import { H4 } from '@/lib/shared/components/ui/Typography/Headers';
 import { Paragraph } from '@/lib/shared/components/ui/Typography/Paragraph';
-import {
-    Ethnicity,
-    Gender,
-    InsuranceProvider,
-    Issue,
-    Language,
-} from '@/lib/shared/types';
-import { asSelectOptions } from '@/lib/shared/utils';
-import Box from '@mui/material/Box';
-import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
-import Grid from '@mui/material/Grid';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
+import { Issue, Language } from '@/lib/shared/types';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
-import React from 'react';
-import { PHQ9Form } from '../PHQ9Form/PHQ9Form';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { SelfAssessmentForm as SelfAssessmentFormSchema } from '@/lib/shared/types/forms/self-assessment';
+import { ControlledMultipleChoice } from '@/lib/shared/components/ui/FormElements/Controlled/MultipleChoice';
+import { ControlledSelectGrid } from '@/lib/shared/components/ui/FormElements/Controlled/SelectGrid/SelectGrid';
+import { DealBreaker } from '@/lib/shared/components/ui/FormElements/Controlled/DealBreaker';
+import {
+    EthnicPreference,
+    GenderPreference,
+} from '@/lib/shared/types/self-assessment/preferences';
+import { ControlledSelect } from '@/lib/shared/components/ui/FormElements/Controlled/Select';
+import { YesNo } from '@/lib/shared/components/ui/FormElements/Controlled/YesNo';
 
-type EthnicityOptions = Ethnicity.Ethnicity & "Don't Care";
-type GenderOptions = Omit<Gender.Gender, 'Prefer not to say'> & "Don't Care";
-type LanguageOptions = Language.Language;
-type InsuranceOptions = InsuranceProvider.InsuranceProvider;
-
-const ETHNICITY_OPTIONS = [
-    ...Ethnicity.ENTRIES,
-    "Don't Care",
-] as EthnicityOptions[];
-
-const GENDER_OPTIONS = [
-    ...Gender.ENTRIES.filter((g) => g !== 'Prefer not to say'),
-    "Don't Care",
-] as GenderOptions[];
-
-const LANGUAGE_OPTIONS = Language.ENTRIES as unknown as LanguageOptions[];
-
-const INSURANCE_OPTIONS = [...InsuranceProvider.ENTRIES] as InsuranceOptions[];
-
-export interface SelfAssessmentFormResults {
-    concerns: Issue.Issue[];
-    providerEthnicity: EthnicityOptions;
-    providerGender: GenderOptions;
-    providerLanguage: LanguageOptions;
-    providerInsurance: InsuranceOptions;
-    identifiesAsLGBTQ: boolean;
-    identifiesAsCaregiver: boolean;
-    providerIdentifiesAsLGBTQ: boolean;
-    providerIdentifiesAsCaregiver: boolean;
-    isExperiencingCrisis: boolean;
-    isExperiencingSuicidalThoughts: boolean;
-    phq9Score: number;
+interface SelfAssessmentFormProps {
+    onSubmit?: (data: SelfAssessmentFormSchema.Type) => void;
 }
 
-function useSelfAssessmentForm() {
-    const [concerns, setConcerns] = React.useState<Issue.Issue[]>([]);
-    const isConcernSelected = (issue: Issue.Issue) => {
-        return concerns.includes(issue);
-    };
-    const selectConcern = (issue: Issue.Issue) => {
-        if (isConcernSelected(issue)) {
-            setConcerns(concerns.filter((c) => c !== issue));
-        } else {
-            setConcerns([...concerns, issue]);
-        }
-    };
-    const [providerEthnicity, setProviderEthnicity] =
-        React.useState<Ethnicity.Ethnicity>('American Indian');
-    const [providerGender, setProviderGender] =
-        React.useState<Gender.Gender>('Female');
-    const [providerLanguage, setProviderLanguage] =
-        React.useState<Language.Language>('English');
-    const [providerInsurance, setProviderInsurance] =
-        React.useState<InsuranceProvider.InsuranceProvider>('Aetna');
-    const [identifiesAsLGBTQ, setIdentifiesAsLGBTQ] = React.useState(false);
-    const [identifiesAsCaregiver, setIdentifiesAsCaregiver] =
-        React.useState(false);
-    const [providerIdentifiesAsLGBTQ, setProviderIdentifiesAsLGBTQ] =
-        React.useState(false);
-    const [providerIdentifiesAsCaregiver, setProviderIdentifiesAsCaregiver] =
-        React.useState(false);
-    const [isExperiencingCrisis, setIsExperiencingCrisis] =
-        React.useState(false);
-    const [isExperiencingSuicidalThoughts, setIsExperiencingSuicidalThoughts] =
-        React.useState(false);
-    const [phq9Score, setPhq9Score] = React.useState(0);
+const PHQ9Options = [
+    { label: 'Not at all', value: 0, controlLabelProps: undefined },
+    { label: 'Several days', value: 1, controlLabelProps: undefined },
+    {
+        label: 'More than half the days',
+        value: 2,
+        controlLabelProps: undefined,
+    },
+    { label: 'Nearly every day', value: 3, controlLabelProps: undefined },
+] as const;
+const PHQ9Questions = [
+    '1. Little interest or pleasure in doing things',
+    '2. Feeling down, depressed, or hopeless',
+    '3. Trouble falling or staying asleep, or sleeping too much',
+    '4. Feeling tired or having little energy',
+    '5. Poor appetite or overeating',
+    '6. Feeling bad about yourself - or that you are a failure or have let yourself or your family down',
+    '7. Trouble concentrating on things, such as reading the newspaper or watching television',
+    '8. Moving or speaking so slowly that other people could have noticed. Or the opposite - being so fidgety or restless that you have been moving around a lot more than usual',
+    '9. Thoughts that you would be better off dead, or of hurting yourself in some way',
+] as const;
 
-    return {
-        concerns,
-        isConcernSelected,
-        setConcerns,
-        selectConcern,
-        providerEthnicity,
-        setProviderEthnicity,
-        providerGender,
-        setProviderGender,
-        providerLanguage,
-        setProviderLanguage,
-        providerInsurance,
-        setProviderInsurance,
-        identifiesAsLGBTQ,
-        setIdentifiesAsLGBTQ,
-        identifiesAsCaregiver,
-        setIdentifiesAsCaregiver,
-        providerIdentifiesAsLGBTQ,
-        setProviderIdentifiesAsLGBTQ,
-        providerIdentifiesAsCaregiver,
-        setProviderIdentifiesAsCaregiver,
-        isExperiencingCrisis,
-        setIsExperiencingCrisis,
-        isExperiencingSuicidalThoughts,
-        setIsExperiencingSuicidalThoughts,
-        phq9Score,
-        setPhq9Score,
-    };
-}
-
-export function SelfAssessmentForm() {
+export function SelfAssessmentForm({
+    onSubmit = console.log,
+}: SelfAssessmentFormProps) {
     const {
-        concerns,
-        isConcernSelected,
-        selectConcern,
-        providerEthnicity,
-        setProviderEthnicity,
-        providerGender,
-        setProviderGender,
-        providerLanguage,
-        setProviderLanguage,
-        providerInsurance,
-        setProviderInsurance,
-        identifiesAsLGBTQ,
-        setIdentifiesAsLGBTQ,
-        identifiesAsCaregiver,
-        setIdentifiesAsCaregiver,
-        providerIdentifiesAsLGBTQ,
-        setProviderIdentifiesAsLGBTQ,
-        providerIdentifiesAsCaregiver,
-        setProviderIdentifiesAsCaregiver,
-        isExperiencingCrisis,
-        setIsExperiencingCrisis,
-        isExperiencingSuicidalThoughts,
-        setIsExperiencingSuicidalThoughts,
-        phq9Score,
-        setPhq9Score,
-    } = useSelfAssessmentForm();
+        control,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        defaultValues: SelfAssessmentFormSchema.DEFAULT_VALUES,
+        resolver: zodResolver(SelfAssessmentFormSchema.schema),
+    });
     return (
         <SelfAssessmentContainer>
-            <AssessmentSection>
-                <SectionHeader>
-                    <H4>Tell us about your concerns</H4>
-                    <Paragraph>
-                        Select any number of concerns relevant to you.
-                    </Paragraph>
-                </SectionHeader>
-                <section>
-                    <IssueList>
-                        {Issue.ENTRIES.map((issue) => {
-                            return (
-                                <IssueButton
-                                    key={issue}
-                                    onClick={() => selectConcern(issue)}
-                                    selected={isConcernSelected(issue)}
-                                >
-                                    {issue}
-                                </IssueButton>
-                            );
-                        })}
-                    </IssueList>
-                </section>
-            </AssessmentSection>
-            <AssessmentSection>
-                <SectionHeader>
-                    <H4>Who would you like to connect with?</H4>
-                    <Paragraph>
-                        Our provider represent all backgrounds and identities.
-                    </Paragraph>
-                </SectionHeader>
-                <Stack
-                    spacing={4}
-                    direction={{
-                        xs: 'column',
-                        sm: 'row',
-                    }}
-                >
-                    <InputWrapper label="Provider Ethnicity">
-                        <Select
-                            id="Provider Ethnicity"
-                            sx={{ minWidth: { lg: 300, xs: '100%' } }}
-                            value={providerEthnicity}
-                            onChange={(value) =>
-                                setProviderEthnicity(value as EthnicityOptions)
-                            }
-                            options={asSelectOptions(ETHNICITY_OPTIONS)}
+            <>
+                <AssessmentSection>
+                    <SectionHeader>
+                        <H4>Tell us about your concerns</H4>
+                        <Paragraph>
+                            Select any number of concerns relevant to you.
+                        </Paragraph>
+                    </SectionHeader>
+                    <ControlledSelectGrid
+                        controllerProps={{ name: 'concerns', control }}
+                        options={Issue.ENTRIES}
+                        error={errors.concerns}
+                    />
+                    <Stack
+                        direction={{
+                            xs: 'column',
+                            sm: 'row',
+                        }}
+                        spacing={8}
+                    >
+                        <DealBreaker
+                            label="Provider Ethnicity"
+                            controllerProps={{
+                                name: 'ethnicPreference',
+                                control,
+                            }}
+                            dealBreakerName={'isEthnicPreferenceDealbreaker'}
+                            options={Array.from(EthnicPreference.ENTRIES)}
+                            predicateFn={(value) => value !== "Don't care"}
+                            errors={errors.ethnicPreference}
+                            selectProps={{
+                                wrapperSx: {
+                                    minWidth: {
+                                        xs: '100%',
+                                        sm: '200px',
+                                    },
+                                },
+                                sx: {
+                                    minWidth: {
+                                        xs: '100%',
+                                        sm: '200px',
+                                    },
+                                },
+                            }}
                         />
-                    </InputWrapper>
-                    <InputWrapper label="Provider Gender">
-                        <Select
-                            id="Provider Gender"
-                            sx={{ minWidth: { lg: 300, xs: '100%' } }}
-                            value={providerGender}
-                            onChange={(value) =>
-                                setProviderGender(value as GenderOptions)
-                            }
-                            options={asSelectOptions(GENDER_OPTIONS)}
+                        <DealBreaker
+                            label="Provider Gender"
+                            controllerProps={{
+                                name: 'genderPreference',
+                                control,
+                            }}
+                            dealBreakerName={'isGenderPreferenceDealbreaker'}
+                            options={Array.from(GenderPreference.ENTRIES)}
+                            errors={errors.genderPreference}
+                            predicateFn={(value) => value !== "Don't care"}
+                            selectProps={{
+                                wrapperSx: {
+                                    minWidth: {
+                                        xs: '100%',
+                                        sm: '200px',
+                                    },
+                                },
+                                sx: {
+                                    minWidth: {
+                                        xs: '100%',
+                                        sm: '200px',
+                                    },
+                                },
+                            }}
                         />
-                    </InputWrapper>
-                    <InputWrapper label="Provider Language">
-                        <Select
-                            id="Provider Language"
-                            sx={{ minWidth: { lg: 300, xs: '100%' } }}
-                            value={providerLanguage}
-                            onChange={(value) =>
-                                setProviderLanguage(value as LanguageOptions)
-                            }
-                            options={asSelectOptions(LANGUAGE_OPTIONS)}
+                        <ControlledSelect
+                            label="Provider Language"
+                            controllerProps={{
+                                name: 'languagePreference',
+                                control,
+                            }}
+                            errors={errors.languagePreference}
+                            options={Array.from(Language.ENTRIES)}
+                            selectProps={{
+                                wrapperSx: {
+                                    minWidth: {
+                                        xs: '100%',
+                                        sm: '200px',
+                                    },
+                                },
+                                sx: {
+                                    minWidth: {
+                                        xs: '100%',
+                                        sm: '200px',
+                                    },
+                                },
+                            }}
                         />
-                    </InputWrapper>
-                    <InputWrapper label="Provider Insurance">
-                        <Select
-                            id="Provider Insurance"
-                            sx={{ minWidth: { lg: 300, xs: '100%' } }}
-                            value={providerInsurance}
-                            onChange={(value) =>
-                                setProviderInsurance(value as InsuranceOptions)
-                            }
-                            options={asSelectOptions(INSURANCE_OPTIONS)}
-                        />
-                    </InputWrapper>
-                </Stack>
-                <Stack spacing={4}>
-                    <FormControl>
-                        <FormLabel>Do you identify as LGBTQ?</FormLabel>
-                        <RadioGroup
-                            defaultValue={'no'}
-                            value={identifiesAsLGBTQ ? 'yes' : 'no'}
-                            onChange={(event) => {
-                                setIdentifiesAsLGBTQ(
-                                    event.target.value === 'yes'
-                                );
-                            }}
-                        >
-                            <FormControlLabel
-                                value="yes"
-                                control={<Radio />}
-                                label="Yes"
-                            />
-                            <FormControlLabel
-                                value="no"
-                                control={<Radio />}
-                                label="No"
-                            />
-                        </RadioGroup>
-                    </FormControl>
-                    <FormControl>
-                        <FormLabel>
-                            Is it important that your provider identify with the
-                            LGBTQ+ community?
-                        </FormLabel>
-                        <RadioGroup
-                            defaultValue={'no'}
-                            value={providerIdentifiesAsLGBTQ ? 'yes' : 'no'}
-                            onChange={(event) => {
-                                setProviderIdentifiesAsLGBTQ(
-                                    event.target.value === 'yes'
-                                );
-                            }}
-                        >
-                            <FormControlLabel
-                                value="yes"
-                                control={<Radio />}
-                                label="Yes"
-                            />
-                            <FormControlLabel
-                                value="no"
-                                control={<Radio />}
-                                label="No"
-                            />
-                        </RadioGroup>
-                    </FormControl>
-                    <FormControl>
-                        <FormLabel>
-                            Do you identify as a parent or caregiver?
-                        </FormLabel>
-                        <RadioGroup
-                            defaultValue={'no'}
-                            value={identifiesAsCaregiver ? 'yes' : 'no'}
-                            onChange={(event) => {
-                                setIdentifiesAsCaregiver(
-                                    event.target.value === 'yes'
-                                );
-                            }}
-                        >
-                            <FormControlLabel
-                                value="yes"
-                                control={<Radio />}
-                                label="Yes"
-                            />
-                            <FormControlLabel
-                                value="no"
-                                control={<Radio />}
-                                label="No"
-                            />
-                        </RadioGroup>
-                    </FormControl>
-                    <FormControl>
-                        <FormLabel>
-                            It is important that your provider have experience
-                            working with parents or caregivers?
-                        </FormLabel>
-                        <RadioGroup
-                            defaultValue={'no'}
-                            value={providerIdentifiesAsCaregiver ? 'yes' : 'no'}
-                            onChange={(event) => {
-                                setProviderIdentifiesAsCaregiver(
-                                    event.target.value === 'yes'
-                                );
-                            }}
-                        >
-                            <FormControlLabel
-                                value="yes"
-                                control={<Radio />}
-                                label="Yes"
-                            />
-                            <FormControlLabel
-                                value="no"
-                                control={<Radio />}
-                                label="No"
-                            />
-                        </RadioGroup>
-                    </FormControl>
-                    <FormControl>
-                        <FormLabel>
-                            Are you experiencing an emergency or crisis?
-                        </FormLabel>
-                        <RadioGroup
-                            defaultValue={'no'}
-                            value={isExperiencingCrisis ? 'yes' : 'no'}
-                            onChange={(event) => {
-                                setIsExperiencingCrisis(
-                                    event.target.value === 'yes'
-                                );
-                            }}
-                        >
-                            <FormControlLabel
-                                value="yes"
-                                control={<Radio />}
-                                label="Yes"
-                            />
-                            <FormControlLabel
-                                value="no"
-                                control={<Radio />}
-                                label="No"
-                            />
-                        </RadioGroup>
-                    </FormControl>
-                    <FormControl>
-                        <FormLabel>
-                            Are you experiencing suicidal thoughts or desires?
-                        </FormLabel>
-                        <RadioGroup
-                            defaultValue={'no'}
-                            value={
-                                isExperiencingSuicidalThoughts ? 'yes' : 'no'
-                            }
-                            onChange={(event) => {
-                                setIsExperiencingSuicidalThoughts(
-                                    event.target.value === 'yes'
-                                );
-                            }}
-                        >
-                            <FormControlLabel
-                                value="yes"
-                                control={<Radio />}
-                                label="Yes"
-                            />
-                            <FormControlLabel
-                                value="no"
-                                control={<Radio />}
-                                label="No"
-                            />
-                        </RadioGroup>
-                    </FormControl>
-                    <Divider />
-                    <PHQ9Form
-                        onUpdated={(phq9) => {
-                            setPhq9Score(phq9);
+                    </Stack>
+                    <YesNo
+                        label="Do you identify with the LGBTQ+ community?"
+                        controllerProps={{ name: 'isLGBTQ', control }}
+                    />
+                    <YesNo
+                        label="Is it important to you that your provider identifies with the LGBTQ+ community?"
+                        controllerProps={{
+                            name: 'prefersLGBTQProvider',
+                            control,
                         }}
                     />
-                    <Box>
-                        <Button>Submit and see matches</Button>
-                    </Box>
-                </Stack>
-            </AssessmentSection>
+                    <YesNo
+                        label="Do you identify as a parent or caregiver?"
+                        controllerProps={{ name: 'isCaregiver', control }}
+                    />
+                    <YesNo
+                        label="Is it important to you that your provider identifies as a parent or caregiver?"
+                        controllerProps={{
+                            name: 'prefersTherapistIsCaregiver',
+                            control,
+                        }}
+                    />
+                    <YesNo
+                        label="Are you experiencing an emergency or crisis?"
+                        controllerProps={{ name: 'isInCrisis', control }}
+                    />
+                    <YesNo
+                        label="Are you experiencing suicidal thoughts or desires?"
+                        controllerProps={{
+                            name: 'hasSuicidalIdeation',
+
+                            control,
+                        }}
+                    />
+                    <Divider />
+                    {PHQ9Questions.map((question, index) => {
+                        const questionName = `phq9Question${
+                            index + 1
+                        }` as keyof typeof SelfAssessmentFormSchema.DEFAULT_VALUES;
+                        return (
+                            <ControlledMultipleChoice
+                                key={question}
+                                label={question}
+                                errors={errors[questionName]}
+                                controllerProps={{
+                                    name: questionName,
+                                    control,
+                                }}
+                                defaultValue={0}
+                                type="number"
+                                defaultChecked
+                                // @ts-ignore
+                                choices={PHQ9Options}
+                            />
+                        );
+                    })}
+                </AssessmentSection>
+                <Button onClick={handleSubmit(onSubmit)}>Submit</Button>
+            </>
         </SelfAssessmentContainer>
     );
 }
@@ -408,44 +220,9 @@ const SelfAssessmentContainer = styled(Stack)(({ theme }) => ({
 
 const AssessmentSection = styled(Stack)(({ theme }) => ({
     paddingBottom: theme.spacing(16),
+    gap: theme.spacing(4),
 }));
 
 const SectionHeader = styled(Stack)(({ theme }) => ({
     gap: theme.spacing(2),
 }));
-
-const IssueList = styled(Grid)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(2),
-    [theme.breakpoints.up('md')]: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-        gridGap: theme.spacing(4),
-    },
-}));
-
-const IssueButton = styled(Box)<{ selected: boolean }>(
-    ({ theme, selected }) => ({
-        border: `2px solid ${theme.palette.secondary.dark}`,
-        color: theme.palette.secondary.dark,
-        padding: `${theme.spacing(4)} ${theme.spacing(8)}`,
-        height: 77,
-        maxHeight: 77,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        textAlign: 'center',
-        borderRadius: theme.shape.borderRadius,
-        '&:hover': {
-            background: theme.palette.secondary.light,
-            cursor: 'pointer',
-        },
-        ...(selected && {
-            background: theme.palette.secondary.dark,
-            color: theme.palette.secondary.contrastText,
-        }),
-    })
-);
-
-const YesNoQuestion = styled(Stack)(({ theme }) => ({}));

@@ -2,7 +2,7 @@ import * as z from 'zod';
 import { Gender } from '../../gender';
 import { basePreferenceSchema } from './basePreference';
 
-export const ENTRIES = [...Gender.ENTRIES, "Don't care"] as const;
+export const ENTRIES = ['Male', 'Female', 'Non-binary', "Don't care"] as const;
 
 export const schema = basePreferenceSchema.extend({
     type: z.literal('gender'),

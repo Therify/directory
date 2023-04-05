@@ -6,7 +6,7 @@ export const ENTRIES = [...Ethnicity.ENTRIES, "Don't care"] as const;
 
 export const schema = basePreferenceSchema.extend({
     type: z.literal('ethnic'),
-    selection: z.enum(ENTRIES).nullable(),
+    selection: z.enum(ENTRIES),
 });
 
 export type EthnicPreference = z.infer<typeof schema>;
