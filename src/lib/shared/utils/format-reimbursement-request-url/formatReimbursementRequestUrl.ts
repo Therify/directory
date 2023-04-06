@@ -36,7 +36,7 @@ export function formatReimbursementRequestUrl(
         .join('&')}&therifydetails=${therifyDetails}`;
 }
 
-function generateTherifyReimbursementDetails(details: {
+export function generateTherifyReimbursementDetails(details: {
     memberId: string;
     providerProfileId: string;
     practiceId: string;
