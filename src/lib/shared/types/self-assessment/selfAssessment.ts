@@ -1,57 +1,26 @@
+import { SelfAssessmentSchema } from '@/lib/shared/schema';
 import * as z from 'zod';
-import { boolean } from 'zod';
-import { Ethnicity } from '../ethnicity';
-import { Gender } from '../gender';
-import { Goal } from '../goals';
 import { Issue } from '../issues';
-import { Religion } from '../religion';
-import { Language } from '../language';
+import { processPreferences } from './process-preferences';
 
-const basePreference = z.object({
-    selection: z.string(),
-    isRequired: z.boolean().default(false),
-});
+export const schema = SelfAssessmentSchema.omit({
+    id: true,
+    createdAt: true,
+    updatedAt: true,
+    userId: true,
+}).transform(({ preferences, concerns, ...rest }) => ({
+    preferences: processPreferences(preferences),
+    concerns: concerns.map(Issue.validate),
+    ...rest,
+}));
 
-const genderPreference = basePreference.extend({
-    type: z.literal('gender'),
-    selection: Gender.schema,
-});
-
-const ethnicPreference = basePreference.extend({
-    type: z.literal('ethnic'),
-    selection: Ethnicity.schema,
-});
-
-const religiousPreference = basePreference.extend({
-    type: z.literal('religious'),
-    selection: Religion.schema,
-});
-
-const languagePreference = basePreference.extend({
-    type: z.literal('language'),
-    selection: Language.schema.default('English'),
-});
-
-const preferenceSchema = z.union([
-    genderPreference,
-    ethnicPreference,
-    religiousPreference,
-    languagePreference,
-]);
-
-export const schema = z.object({
-    concerns: Issue.schema.array(),
-    goals: Goal.schema.array(),
-    notes: z.string().optional(),
-    preferences: z.object({
-        religious: preferenceSchema,
-        ethnicity: preferenceSchema,
-        gender: preferenceSchema,
-        language: preferenceSchema,
-        lgbtq: boolean().default(false),
-    }),
-});
-
+export const persistedSchema = SelfAssessmentSchema.transform(
+    ({ preferences, concerns, ...rest }) => ({
+        preferences: processPreferences(preferences),
+        concerns: concerns.map(Issue.validate),
+        ...rest,
+    })
+);
 export type SelfAssessment = z.infer<typeof schema>;
 
 export const validate = (value: unknown): SelfAssessment => {
@@ -66,3 +35,14 @@ export const isValid = (value: unknown): value is SelfAssessment => {
         return false;
     }
 };
+
+/**
+ *
+ * @param selfAssessment - Self assessment from the database
+ * @returns
+ */
+export function fromPersisted(
+    selfAssessment: z.infer<typeof SelfAssessmentSchema>
+): SelfAssessment {
+    return validate(selfAssessment);
+}

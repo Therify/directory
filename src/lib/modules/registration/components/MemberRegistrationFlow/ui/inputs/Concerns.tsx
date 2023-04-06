@@ -4,7 +4,7 @@ import { Autocomplete, TextField } from '@mui/material';
 import { InputWrapper } from '@/lib/shared/components/ui';
 import { RegisterMember } from '@/lib/modules/registration/features';
 
-type Entry = typeof Issue.ENTRIES[number];
+type Entry = (typeof Issue.ENTRIES)[number];
 
 interface ConcernsInputProps {
     control: Control<RegisterMember.Input>;

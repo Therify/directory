@@ -8,6 +8,7 @@ import { directoryService } from '@/lib/modules/directory/service';
 import { Country, Region } from '@/lib/shared/types';
 import { URL_PATHS } from '@/lib/sitemap';
 import { GetMemberTherifyUser } from '../get-member-therify-user';
+import { isAtRisk } from '@/lib/shared/types/self-assessment/is-at-risk/isAtRisk';
 
 export interface DirectoryPageProps {
     providerProfiles: DirectoryProfile.DirectoryProfileCard[];
@@ -19,6 +20,15 @@ export function factory(params: MembersServiceParams) {
     const getDirectoryPageProps: GetServerSideProps<
         DirectoryPageProps
     > = async (context) => {
+        const isMemberAtRisk = await isAtRisk(context);
+        if (isMemberAtRisk) {
+            return {
+                redirect: {
+                    destination: '/members/request-appointment',
+                    permanent: false,
+                },
+            };
+        }
         const session = await getSession(context.req, context.res);
         if (!session)
             throw Error('Failed fetching Home Page Props, session not found');

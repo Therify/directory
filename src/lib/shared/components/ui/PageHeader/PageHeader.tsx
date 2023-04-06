@@ -31,9 +31,27 @@ export type PageHeaderProps = {
      * @default 'h2'
      */
     subtitleElement?: ElementType;
+    subtitleComponent?: React.ReactNode;
     actionSlot?: React.ReactNode;
     containerProps?: BoxProps;
 } & Omit<TypographyProps, 'variant'>;
+
+function renderSubtitle({
+    subtitleComponent,
+    subtitle,
+    subtitleElement,
+}: Pick<
+    PageHeaderProps,
+    'subtitleComponent' | 'subtitle' | 'subtitleElement'
+>) {
+    if (subtitleComponent) {
+        return subtitleComponent;
+    }
+    if (subtitle) {
+        return <StyledSubtitle as={subtitleElement}>{subtitle}</StyledSubtitle>;
+    }
+    return null;
+}
 
 export const PageHeader = React.forwardRef(function PageHeader(
     {
@@ -44,6 +62,7 @@ export const PageHeader = React.forwardRef(function PageHeader(
         type = 'primary',
         actionSlot,
         containerProps,
+        subtitleComponent,
     }: PageHeaderProps,
     ref
 ) {
@@ -56,11 +75,11 @@ export const PageHeader = React.forwardRef(function PageHeader(
                     {title && (
                         <StyledTitle as={titleElement}>{title}</StyledTitle>
                     )}
-                    {subtitle && (
-                        <StyledSubtitle as={subtitleElement}>
-                            {subtitle}
-                        </StyledSubtitle>
-                    )}
+                    {renderSubtitle({
+                        subtitle,
+                        subtitleElement,
+                        subtitleComponent,
+                    })}
                 </Box>
                 {actionSlot && <Box>{actionSlot}</Box>}
             </Stack>

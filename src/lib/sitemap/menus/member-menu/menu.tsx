@@ -5,6 +5,7 @@ import {
     DIRECTORY,
     THERIFY_WEBSITE,
     CHAT,
+    CARE,
     BILLING_AND_PAYMENTS,
 } from './links';
 import { LOGOUT } from '../accountLinks';
@@ -14,6 +15,7 @@ export const MEMBER_MAIN_MENU = [
     // HOME,
     DIRECTORY,
     FAVORITES,
+    CARE,
     CONTENT_LIBRARY,
 ] as const;
 

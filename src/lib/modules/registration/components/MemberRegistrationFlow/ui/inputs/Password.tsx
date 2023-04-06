@@ -12,12 +12,14 @@ interface PasswordInputProps {
 
 export const PasswordInput = ({ control }: PasswordInputProps) => (
     <Controller
+        // @ts-ignore
         control={control}
         name="password"
         defaultValue=""
         rules={{
             required: true,
             validate: {
+                // @ts-ignore
                 [FormValidation.PasswordValidationType.MinLength]:
                     FormValidation.validatePasswordLength,
                 [FormValidation.PasswordValidationType.Number]:
