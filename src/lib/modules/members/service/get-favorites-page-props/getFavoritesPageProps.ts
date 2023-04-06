@@ -4,6 +4,7 @@ import { getSession } from '@auth0/nextjs-auth0';
 import { GetServerSideProps } from 'next';
 import { GetMemberTherifyUser } from '../get-member-therify-user';
 import { MembersServiceParams } from '../params';
+import { isAtRisk } from '@/lib/shared/types/self-assessment/is-at-risk/isAtRisk';
 
 export interface FavoritesPageProps {
     favoriteProfiles: DirectoryProfile.DirectoryProfileCard[];
@@ -14,6 +15,15 @@ export const factory = (params: MembersServiceParams) => {
     const getFavoritesPageProps: GetServerSideProps<
         FavoritesPageProps
     > = async (context) => {
+        const isMemberAtRisk = await isAtRisk(context);
+        if (isMemberAtRisk) {
+            return {
+                redirect: {
+                    destination: '/members/request-appointment',
+                    permanent: false,
+                },
+            };
+        }
         const session = await getSession(context.req, context.res);
         if (!session) {
             return {
