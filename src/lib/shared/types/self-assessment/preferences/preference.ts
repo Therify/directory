@@ -31,12 +31,12 @@ export const isValid = (value: unknown): value is Preference => {
 export const DEFAULT: Preference = {
     gender: {
         type: 'gender',
-        selection: null,
+        selection: "Don't care",
         isRequired: false,
     },
     ethnicity: {
         type: 'ethnic',
-        selection: null,
+        selection: "Don't care",
         isRequired: false,
     },
     lgbtq: {
