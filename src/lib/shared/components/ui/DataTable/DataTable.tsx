@@ -22,7 +22,7 @@ export const DATA_TABLE_TYPE = {
     LIST: 'list',
 } as const;
 
-type TableType = typeof DATA_TABLE_TYPE[keyof typeof DATA_TABLE_TYPE];
+type TableType = (typeof DATA_TABLE_TYPE)[keyof typeof DATA_TABLE_TYPE];
 
 type DataTableProps<T> = {
     rows: T[];

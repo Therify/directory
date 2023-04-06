@@ -6,6 +6,7 @@ import { ListConnectionRequestsByPracticeOwnerId } from './list-connection-reque
 import { DirectoryServiceParams } from './params';
 import { UpdateConnectionRequestStatus } from './update-connection-request-status';
 import { ExecuteProviderSearch } from './execute-provider-search';
+import { GenerateRecommendations } from './generate-recommendations';
 
 const params: DirectoryServiceParams = {
     prisma,
@@ -21,6 +22,7 @@ export const directoryService = {
         ListConnectionRequestsByPracticeOwnerId.factory(params),
     updateConnectionRequestStatus:
         UpdateConnectionRequestStatus.factory(params),
+    generateRecommendations: GenerateRecommendations.factory(params),
 };
 
 export type DirectoryService = typeof directoryService;

@@ -15,7 +15,7 @@ export const DISPLAY_SIZE = {
     LARGE: 'large',
 } as const;
 
-export type DisplaySize = typeof DISPLAY_SIZE[keyof typeof DISPLAY_SIZE];
+export type DisplaySize = (typeof DISPLAY_SIZE)[keyof typeof DISPLAY_SIZE];
 
 export const DISPLAY_ELEMENT = {
     H1: 'h1',
@@ -27,7 +27,7 @@ export const DISPLAY_ELEMENT = {
 } as const;
 
 export type DisplayElement =
-    typeof DISPLAY_ELEMENT[keyof typeof DISPLAY_ELEMENT];
+    (typeof DISPLAY_ELEMENT)[keyof typeof DISPLAY_ELEMENT];
 
 interface DisplayProps {
     size?: DisplaySize;

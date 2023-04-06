@@ -7,7 +7,7 @@ export const OVERLINE_SIZE = {
     LARGE: 'large',
 } as const;
 
-export type OverlineSize = typeof OVERLINE_SIZE[keyof typeof OVERLINE_SIZE];
+export type OverlineSize = (typeof OVERLINE_SIZE)[keyof typeof OVERLINE_SIZE];
 
 interface OverlineProps {
     size?: OverlineSize;

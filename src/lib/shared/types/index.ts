@@ -7,7 +7,6 @@ export * as EvidenceBasedApproach from './evidenceBasedApproach';
 export * as AreaOfFocus from './areaOfFocus';
 export * from './address';
 export * from './alert';
-export * from './self-assessment';
 export * from './religion';
 export * from './gender';
 export * from './issues';

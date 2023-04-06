@@ -11,6 +11,7 @@ import { Box } from '@mui/material';
 import { Paragraph } from '@/lib/shared/components/ui/Typography';
 import { Textarea } from '@/lib/shared/components/ui/FormElements/Input/Textarea';
 import { trpc } from '@/lib/shared/utils/trpc';
+import { useRouter } from 'next/router';
 
 function formatModalTitle(providerName?: string) {
     return providerName ? 'Connect with ' + providerName : 'Get Connected';
@@ -27,7 +28,10 @@ export default function ProviderProfilePage({
     providerHasBeenSelected,
     isFavorite,
 }: DirectoryProfilePageProps) {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const { query } = useRouter();
+    const [isModalOpen, setIsModalOpen] = useState(
+        Boolean(query.selectProvider) ?? false
+    );
     const [connectionMessage, setConnectionMessage] = useState('');
     const [isCurrentlyFavorited, setIsCurrentlyFavorited] = useState(
         isFavorite ?? false

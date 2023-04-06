@@ -4,7 +4,7 @@ import { Autocomplete, TextField } from '@mui/material';
 import { InputWrapper } from '@/lib/shared/components/ui';
 import { RegisterMember } from '@/lib/modules/registration/features';
 
-type Goal = typeof Goal.ENTRIES[number];
+type Goal = (typeof Goal.ENTRIES)[number];
 
 interface GoalInputProps {
     control: Control<RegisterMember.Input>;

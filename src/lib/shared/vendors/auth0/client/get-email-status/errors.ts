@@ -1,6 +1,6 @@
 const GET_EMAIL_STATUS_ERROR_CODES = [400, 401, 403, 409, 429] as const;
 
-type GetEmailStatusErrorCode = typeof GET_EMAIL_STATUS_ERROR_CODES[number];
+type GetEmailStatusErrorCode = (typeof GET_EMAIL_STATUS_ERROR_CODES)[number];
 
 class GetEmailStatusError extends Error {
     constructor(

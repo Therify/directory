@@ -15,7 +15,7 @@ export const AVATAR_SIZE = {
     XXHuge: 55,
 } as const;
 
-export type AvatarSize = typeof AVATAR_SIZE[keyof typeof AVATAR_SIZE];
+export type AvatarSize = (typeof AVATAR_SIZE)[keyof typeof AVATAR_SIZE];
 
 export const AVATAR_COLOR = {
     PRIMARY: 'primary',
@@ -26,7 +26,7 @@ export const AVATAR_COLOR = {
     SECONDARY_PEACH: 'peach',
 } as const;
 
-export type AvatarColor = typeof AVATAR_COLOR[keyof typeof AVATAR_COLOR];
+export type AvatarColor = (typeof AVATAR_COLOR)[keyof typeof AVATAR_COLOR];
 
 interface AvatarProps {
     src?: string;

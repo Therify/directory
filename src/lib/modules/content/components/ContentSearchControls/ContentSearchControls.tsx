@@ -35,7 +35,7 @@ const CONTENT_FILTERS = [
 
 export function ContentSearchControls() {
     const [selectedContentFilter, setSelectedContentFilter] = useState<
-        typeof CONTENT_FILTER[keyof typeof CONTENT_FILTER]
+        (typeof CONTENT_FILTER)[keyof typeof CONTENT_FILTER]
     >(CONTENT_FILTER.ALL_CONTENT);
     return (
         <PageHeader
@@ -73,7 +73,7 @@ export function ContentSearchControls() {
                             value={selectedContentFilter}
                             onChange={(value) => {
                                 setSelectedContentFilter(
-                                    value as typeof CONTENT_FILTER[keyof typeof CONTENT_FILTER]
+                                    value as (typeof CONTENT_FILTER)[keyof typeof CONTENT_FILTER]
                                 );
                             }}
                             options={CONTENT_FILTERS.map((filter) => ({

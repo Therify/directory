@@ -10,7 +10,7 @@ export const ENDPOINTS = {
 } as const;
 
 export type Resource = keyof typeof ENDPOINTS;
-export type Endpoints = typeof ENDPOINTS[keyof typeof ENDPOINTS];
+export type Endpoints = (typeof ENDPOINTS)[keyof typeof ENDPOINTS];
 
 export const getResourceEndpointFactory = ({
     AUTH0_BACKEND_DOMAIN,
