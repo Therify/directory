@@ -17,16 +17,13 @@ export async function isAtRisk(
         },
         take: 1,
     });
-    console.log('rawSelfAssessment', rawSelfAssessment);
     if (!rawSelfAssessment) return false;
     try {
         const selfAssessment = validateSelfAssessment(rawSelfAssessment);
-        console.log('selfAssessment', selfAssessment);
         const isAtRisk =
             selfAssessment.isInCrisis ||
             selfAssessment.hasSuicidalIdeation ||
             selfAssessment.phq9Score >= 10;
-        console.log('isAtRisk', isAtRisk);
         return isAtRisk;
     } catch {
         return false;
@@ -38,7 +35,6 @@ export function middleware<T extends Record<string, unknown>>(
 ) {
     return async (context: GetServerSidePropsContext) => {
         const isMemberAtRisk = await isAtRisk(context);
-        console.log('isMemberAtRisk', isMemberAtRisk);
         if (isMemberAtRisk) {
             return {
                 redirect: {

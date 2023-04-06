@@ -1,4 +1,3 @@
-import { GenerateRecommendations } from '@/lib/modules/directory/features';
 import { DirectoryService } from '@/lib/modules/directory/service';
 import { TherifyUser } from '@/lib/shared/types';
 import { ProviderProfile } from '@/lib/shared/types/provider-profile/providerProfile';
@@ -37,7 +36,6 @@ export const factory = (params: GetCarePagePropsParams) => {
                 },
             };
         }
-        console.info('Validating if member is at risk...');
         const isMemberAtRisk = await isAtRisk(context);
         if (isMemberAtRisk) {
             return {
