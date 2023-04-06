@@ -11,7 +11,7 @@ export const factory: GetTherifyUserDetailsFactory = ({ submissionId }) => ({
     async commit(
         { prisma },
         {
-            getMemberDetails: { memberId, planId },
+            getMemberDetails: { memberId, planId, dateOfSession },
             getProviderDetails: { providerProfileId },
         }
     ) {
@@ -22,6 +22,7 @@ export const factory: GetTherifyUserDetailsFactory = ({ submissionId }) => ({
                 profileId: providerProfileId,
                 status: CoveredSessionStatus.claimed,
                 jotformSubmissionId: submissionId,
+                dateOfSession,
             },
         });
 

@@ -6,6 +6,7 @@ export const handleReimbursementSubmissionDefinition = z.object({
     getMemberDetails: z.object({
         memberId: z.string(),
         planId: z.string(),
+        dateOfSession: z.date(),
     }),
     getProviderDetails: z.object({
         providerProfileId: z.string(),

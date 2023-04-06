@@ -42,6 +42,7 @@ export const factory: GetTherifyUserDetailsFactory = ({
         return {
             memberId: id,
             planId: plan.id,
+            dateOfSession: dateOfSession,
         };
     },
     async rollback() {
