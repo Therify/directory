@@ -9,6 +9,7 @@ import { RBAC } from '@/lib/shared/utils';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
+import Link from 'next/link';
 
 export const getServerSideProps = RBAC.requireMemberAuth(
     membersService.getCarePageProps
@@ -24,69 +25,86 @@ export default function CarePage({ user, recommendations }: CarePageProps) {
                 <PageHeader
                     title="Here are a few providers that we recommend"
                     type="abstract2"
-                    subtitle="The providers below are suited for your needs, goals, and preferences. For additional options, view our provider directory."
+                    subtitleComponent={
+                        <div>
+                            <Paragraph>
+                                The providers below are suited for your needs,
+                                goals, and preferences. For additional options,
+                                view our{' '}
+                                <StyledLink href="/members/directory">
+                                    provider directory
+                                </StyledLink>
+                                .
+                            </Paragraph>
+                        </div>
+                    }
                 />
                 <RecommendationsContainer spacing={8}>
-                    <RecommendationsRow>
-                        <H3>Ideal Matches</H3>
-                        <Paragraph>
-                            Here are list of providers who match all your
-                            specified preferences.
-                        </Paragraph>
-                        <RecommendationsList>
-                            {idealMatches.map((recommendation) => (
-                                <RecommendationCard
-                                    key={recommendation.id}
-                                    recommendation={recommendation}
-                                />
-                            ))}
-                        </RecommendationsList>
-                    </RecommendationsRow>
-                    <RecommendationsRow>
-                        <H3>Concerns Matches</H3>
-                        <Paragraph>
-                            Here are list of providers who match your specified
-                            concerns
-                        </Paragraph>
-                        <RecommendationsList>
-                            {concernsMatches.map((recommendation) => (
-                                <RecommendationCard
-                                    key={recommendation.id}
-                                    recommendation={recommendation}
-                                />
-                            ))}
-                        </RecommendationsList>
-                    </RecommendationsRow>
-                    <RecommendationsRow>
-                        <H3>Ethnic Preference</H3>
-                        <Paragraph>
-                            Here are list of providers who match your specified
-                            ethnic preference
-                        </Paragraph>
-                        <RecommendationsList>
-                            {ethnicMatches.map((recommendation) => (
-                                <RecommendationCard
-                                    key={recommendation.id}
-                                    recommendation={recommendation}
-                                />
-                            ))}
-                        </RecommendationsList>
-                    </RecommendationsRow>
-                    <RecommendationsRow>
-                        <H3>Gender Preference</H3>
-                        <Paragraph>
-                            Here are list of providers who match your specified
-                            gender preference
-                        </Paragraph>
-                        <RecommendationsList>
-                            {genderMatches.map((recommendation) => (
-                                <RecommendationCard
-                                    key={recommendation.id}
-                                    recommendation={recommendation}
-                                />
-                            ))}
-                        </RecommendationsList>
-                    </RecommendationsRow>
+                    {idealMatches.length > 0 && (
+                        <RecommendationsRow>
+                            <H3>Best Matches</H3>
+                            <Paragraph>
+                                Providers who match all of your preferences.
+                            </Paragraph>
+                            <RecommendationsList>
+                                {idealMatches.map((recommendation) => (
+                                    <RecommendationCard
+                                        key={recommendation.id}
+                                        recommendation={recommendation}
+                                    />
+                                ))}
+                            </RecommendationsList>
+                        </RecommendationsRow>
+                    )}
+                    {concernsMatches.length > 0 && (
+                        <RecommendationsRow>
+                            <H3>Specialty Matches</H3>
+                            <Paragraph>
+                                Providers who specialize in addressing your
+                                concerns.
+                            </Paragraph>
+                            <RecommendationsList>
+                                {concernsMatches.map((recommendation) => (
+                                    <RecommendationCard
+                                        key={recommendation.id}
+                                        recommendation={recommendation}
+                                    />
+                                ))}
+                            </RecommendationsList>
+                        </RecommendationsRow>
+                    )}
+                    {ethnicMatches.length > 0 && (
+                        <RecommendationsRow>
+                            <H3>Ethnicity Matches</H3>
+                            <Paragraph>
+                                Providers who match your ethnicity preference.
+                            </Paragraph>
+                            <RecommendationsList>
+                                {ethnicMatches.map((recommendation) => (
+                                    <RecommendationCard
+                                        key={recommendation.id}
+                                        recommendation={recommendation}
+                                    />
+                                ))}
+                            </RecommendationsList>
+                        </RecommendationsRow>
+                    )}
+                    {genderMatches.length > 0 && (
+                        <RecommendationsRow>
+                            <H3>Gender Matches</H3>
+                            <Paragraph>
+                                Providers who match your gender preference.
+                            </Paragraph>
+                            <RecommendationsList>
+                                {genderMatches.map((recommendation) => (
+                                    <RecommendationCard
+                                        key={recommendation.id}
+                                        recommendation={recommendation}
+                                    />
+                                ))}
+                            </RecommendationsList>
+                        </RecommendationsRow>
+                    )}
                 </RecommendationsContainer>
             </CarePageContainer>
         </MemberNavigationPage>
@@ -106,6 +124,10 @@ const RecommendationsContainer = styled(Stack)(({ theme }) => ({
 }));
 
 const RecommendationsRow = styled(Stack)(({ theme }) => ({}));
+
+const StyledLink = styled(Link)(({ theme }) => ({
+    color: theme.palette.primary.main,
+}));
 
 const RecommendationsList = styled(Box)(({ theme }) => ({
     display: 'grid',
