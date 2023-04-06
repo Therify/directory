@@ -24,6 +24,11 @@ export const factory = ({ prisma }: GenerateRecommendationsParams) => {
             prisma.providerProfile.findMany({
                 where: {
                     newClientStatus: 'accepting',
+                    connectionRequests: {
+                        none: {
+                            memberId,
+                        },
+                    },
                 },
             }),
         ]);
