@@ -1,5 +1,5 @@
 import { HandleReimbursementSubmission } from '@/lib/modules/accounts/features/billing';
-import { CoveredSessionStatus } from '@prisma/client';
+import { RedeemedSessionStatus } from '@prisma/client';
 import { HandleReimbursementSubmissionTransaction } from './definition';
 
 interface GetTherifyUserDetailsFactory {
@@ -15,12 +15,12 @@ export const factory: GetTherifyUserDetailsFactory = ({ submissionId }) => ({
             getProviderDetails: { providerProfileId },
         }
     ) {
-        const { id } = await prisma.coveredSession.create({
+        const { id } = await prisma.redeemedSession.create({
             data: {
                 planId,
                 memberId,
                 profileId: providerProfileId,
-                status: CoveredSessionStatus.claimed,
+                status: RedeemedSessionStatus.claimed,
                 jotformSubmissionId: submissionId,
                 dateOfSession,
             },
