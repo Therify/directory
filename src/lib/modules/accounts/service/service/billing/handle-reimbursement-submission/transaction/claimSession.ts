@@ -31,7 +31,7 @@ export const factory: GetTherifyUserDetailsFactory = ({ submissionId }) => ({
         };
     },
     async rollback({ prisma }, { claimSession: { coveredSessionId } }) {
-        return prisma.coveredSession.delete({
+        return prisma.redeemedSession.delete({
             where: {
                 id: coveredSessionId,
             },
