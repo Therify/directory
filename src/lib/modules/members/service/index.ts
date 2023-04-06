@@ -14,6 +14,7 @@ import { GetSelfAssessmentPageProps } from './get-self-assessment-page-props';
 import { CreateSelfAssessment } from './create-self-assessment';
 import { GetCarePageProps } from './get-care-page-props';
 import { directoryService } from '../../directory/service';
+import { GetBillingPageProps } from './get-billing-page-props';
 
 const factoryParams: MembersServiceParams = {
     prisma,
@@ -22,6 +23,7 @@ const factoryParams: MembersServiceParams = {
 export const membersService = {
     getTherifyUser: GetMemberTherifyUser.factory(factoryParams),
     getTherifyUserPageProps: GetTherifyUserPageProps.factory(factoryParams),
+    getBillingPageProps: GetBillingPageProps.factory(factoryParams),
     selfAssessments: selfAssessmentsFactory(factoryParams),
     getHomePageProps: GetHomePageProps.factory(factoryParams),
     getDirectoryPageProps: GetDirectoryPageProps.factory(factoryParams),

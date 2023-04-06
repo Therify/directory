@@ -24,3 +24,9 @@ export const CHAT: NavigationLink = {
     displayName: 'Messaging',
     path: URL_PATHS.PROVIDERS.COACH.CHAT,
 };
+
+export const PAYMENTS: NavigationLink = {
+    icon: NAVIGATION_ICON.PAYMENTS,
+    displayName: 'Payments',
+    path: URL_PATHS.PROVIDERS.COACH.PAYMENTS,
+};

@@ -28,6 +28,7 @@ export const schema = z.object({
     amount_remaining: z.number(),
     attempt_count: z.number(),
     created: z.number(),
+    number: z.string().nullable(),
     billing_reason: z
         .enum([
             'subscription_create',

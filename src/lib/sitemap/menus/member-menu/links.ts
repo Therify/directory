@@ -44,3 +44,8 @@ export const CHAT: NavigationLink = {
     displayName: 'Messaging',
     path: URL_PATHS.MEMBERS.CHAT,
 };
+
+export const BILLING_AND_PAYMENTS: NavigationLink = {
+    displayName: 'Billing & Payments',
+    path: URL_PATHS.MEMBERS.ACCOUNT.BILLING_AND_PAYMENTS,
+};

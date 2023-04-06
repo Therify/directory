@@ -6,6 +6,7 @@ import {
     THERIFY_WEBSITE,
     CHAT,
     CARE,
+    BILLING_AND_PAYMENTS,
 } from './links';
 import { LOGOUT } from '../accountLinks';
 import { NavigationLink } from '../../types';
@@ -20,6 +21,7 @@ export const MEMBER_MAIN_MENU = [
 
 export const MEMBER_SECONDARY_MENU = [
     // { ...ACCOUNT, icon: undefined },
+    BILLING_AND_PAYMENTS,
     { ...THERIFY_WEBSITE, icon: undefined },
     LOGOUT,
 ] as const;

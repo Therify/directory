@@ -1,10 +1,10 @@
 import { RegisterProviderWithInvitation } from '@/lib/modules/registration/features';
-import type { RegisterProviderWithInitationTransaction } from './definition';
+import type { RegisterProviderWithInvitationTransaction } from './definition';
 
 interface CreateTherifyUserEntityFactory {
     (
         params: RegisterProviderWithInvitation.Input
-    ): RegisterProviderWithInitationTransaction['createTherifyUserEntity'];
+    ): RegisterProviderWithInvitationTransaction['createTherifyUserEntity'];
 }
 
 export const factory: CreateTherifyUserEntityFactory = ({

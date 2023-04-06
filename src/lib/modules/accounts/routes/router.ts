@@ -20,8 +20,16 @@ import {
     getUserDetailsByIdResolver,
     handlePracticeOnboardingResolver,
     getPracticeByOwnerIdResolver,
+    handleStripeConnectOnboardingResolver,
+    createStripeConnectLoginUrlResolver,
+    createCoachingSessionInvoiceResolver,
 } from './resolvers';
 import { Context } from '../../../server/context';
+import {
+    HandleStripeConnectOnboarding,
+    CreateStripeConnectLoginUrl,
+    CreateCoachingSessionInvoice,
+} from '../features/billing';
 
 export const router = trpc
     .router<Context>()
@@ -45,6 +53,16 @@ export const router = trpc
         output: HandlePracticeOnboarding.outputSchema,
         resolve: handlePracticeOnboardingResolver,
     })
+    .mutation(HandleStripeConnectOnboarding.TRPC_ROUTE, {
+        input: HandleStripeConnectOnboarding.inputSchema,
+        output: HandleStripeConnectOnboarding.outputSchema,
+        resolve: handleStripeConnectOnboardingResolver,
+    })
+    .mutation(CreateStripeConnectLoginUrl.TRPC_ROUTE, {
+        input: CreateStripeConnectLoginUrl.inputSchema,
+        output: CreateStripeConnectLoginUrl.outputSchema,
+        resolve: createStripeConnectLoginUrlResolver,
+    })
     .mutation(RegisterProvider.TRPC_ROUTE, {
         input: RegisterProvider.inputSchema,
         output: RegisterProvider.outputSchema,
@@ -59,6 +77,11 @@ export const router = trpc
         input: RegisterMember.inputSchema,
         output: RegisterMember.outputSchema,
         resolve: registerMemberResolver,
+    })
+    .mutation(CreateCoachingSessionInvoice.TRPC_ROUTE, {
+        input: CreateCoachingSessionInvoice.inputSchema,
+        output: CreateCoachingSessionInvoice.outputSchema,
+        resolve: createCoachingSessionInvoiceResolver,
     })
     .mutation(SendEmailVerification.TRPC_ROUTE, {
         input: SendEmailVerification.inputSchema,

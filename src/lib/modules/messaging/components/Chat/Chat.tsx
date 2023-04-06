@@ -16,11 +16,13 @@ import { styled, Theme } from '@mui/material/styles';
 import { useState } from 'react';
 import { Box, useMediaQuery } from '@mui/material';
 import { ChevronLeft } from '@mui/icons-material';
+import { ChatActions } from './ui';
 
 interface ChatComponentProps {
     userIdentifier: string;
     accessToken: string;
     displayName?: string;
+    allowSessionInvoicing?: boolean;
 }
 
 const chatClient = StreamChat.getInstance('7ryxym6g8a33');
@@ -29,6 +31,7 @@ export function ChatComponent({
     userIdentifier,
     accessToken,
     displayName,
+    allowSessionInvoicing,
 }: ChatComponentProps) {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const isSmallScreen = useMediaQuery((theme: Theme) =>
@@ -53,16 +56,21 @@ export function ChatComponent({
                 )}
                 <Channel>
                     <Window>
-                        <ChannelHeader
-                            MenuIcon={() => (
-                                <IconButton
-                                    className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeSmall MuiButton-disableElevation MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeSmall MuiButton-disableElevation css-1q53vy0-MuiButtonBase-root-MuiButton-root"
-                                    onClick={() => setDrawerOpen(true)}
-                                >
-                                    <ChevronLeft />
-                                </IconButton>
+                        <HeaderContainer>
+                            <ChannelHeader
+                                MenuIcon={() => (
+                                    <IconButton
+                                        className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeSmall MuiButton-disableElevation MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeSmall MuiButton-disableElevation css-1q53vy0-MuiButtonBase-root-MuiButton-root"
+                                        onClick={() => setDrawerOpen(true)}
+                                    >
+                                        <ChevronLeft />
+                                    </IconButton>
+                                )}
+                            />
+                            {allowSessionInvoicing && (
+                                <ChatActions userIdentifier={userIdentifier} />
                             )}
-                        />
+                        </HeaderContainer>
                         <MessageList />
                         <MessageInput />
                     </Window>
@@ -99,6 +107,16 @@ const DrawerBackdrop = styled(Box, {
     }),
 }));
 
+const HeaderContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    boxShadow: '0px 1px 0px rgba(0, 0, 0, 0.05)',
+    '& .str-chat__header-livestream': {
+        flex: 1,
+    },
+}));
+
 const StyledChatContainer = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'drawerOpen',
 })<{ drawerOpen: boolean }>(({ theme, drawerOpen }) => ({
@@ -117,10 +135,17 @@ const StyledChatContainer = styled(Box, {
     position: 'relative',
     overflow: 'hidden',
     '& .str-chat__header-livestream.str-chat__channel-header': {
+        paddingRight: theme.spacing(2),
         paddingLeft: theme.spacing(2),
+        boxShadow: 'none',
         '& .str-chat__header-hamburger': {
             height: 'auto',
             width: 'auto',
+        },
+        '& .str-chat__avatar': {
+            [theme.breakpoints.down('sm')]: {
+                display: 'none',
+            },
         },
     },
     ['& .str-chat-channel-list']: {

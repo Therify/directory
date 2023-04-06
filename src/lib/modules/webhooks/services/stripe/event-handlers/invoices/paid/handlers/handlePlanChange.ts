@@ -1,5 +1,7 @@
 import { StripeInvoice, StripeUtils } from '@/lib/shared/vendors/stripe';
 import { AccountsService } from '@/lib/modules/accounts/service';
+import { isValidTherifyPriceId } from '@/lib/shared/types';
+import { NodeEnvironment } from '@/lib/shared/types/nodeEnvironment';
 
 interface HandlePlanChangeInput {
     invoice: StripeInvoice.Type;
@@ -15,6 +17,14 @@ export const handlePlanChange = async ({
 }: HandlePlanChangeInput) => {
     console.log('handleSubscriptionChange...');
     const [oldProduct, newProduct] = invoice.lines.data;
+    if (
+        !isValidTherifyPriceId(
+            newProduct.price.id,
+            process.env.VERCEL_ENV as NodeEnvironment
+        )
+    ) {
+        throw new Error(`Unexpected price id: ${newProduct.price.id}`);
+    }
     return await accounts.billing.handlePlanChange({
         startDate: StripeUtils.getDateFromStripeTimestamp(
             newProduct.period.start

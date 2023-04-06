@@ -147,6 +147,7 @@ const ProviderSelectedContainer = styled(CelebrationContainer)(({ theme }) => ({
     left: 0,
     width: '100%',
     [theme.breakpoints.up('md')]: {
+        borderRadius: theme.shape.borderRadius,
         minWidth: 570,
         maxWidth: '100%',
         position: 'sticky',

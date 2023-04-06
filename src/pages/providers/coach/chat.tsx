@@ -23,6 +23,7 @@ export default function ChatPage({ user }: ChatPageProps) {
     if (!user.chatAccessToken || !user.userId) {
         return <div>Chat is not available</div>;
     }
+
     return (
         <ProviderNavigationPage currentPath="/providers/coach/chat" user={user}>
             <ChatComponent
@@ -31,6 +32,7 @@ export default function ChatPage({ user }: ChatPageProps) {
                 )}
                 displayName={user.givenName}
                 accessToken={user.chatAccessToken!}
+                allowSessionInvoicing
             />
         </ProviderNavigationPage>
     );

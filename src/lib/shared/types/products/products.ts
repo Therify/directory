@@ -68,12 +68,15 @@ export function getProductByEnvironment(
 }
 
 /**
- * Determine if given price IDs is supported for a given environment
+ * Determine if given price ID is recognized as a known price ID in a given environment
  * @param id - The price id to check
  * @param environment - The environment products to check against
  * @returns boolean
  */
-export function isValidPriceId(id: string, environment: NodeEnvironment) {
+export function isValidTherifyPriceId(
+    id: string,
+    environment: NodeEnvironment
+) {
     const products = getProductsByEnvironment(environment);
     const prices = Object.values(products).flatMap(({ PRICES }) => {
         return Object.values(PRICES);

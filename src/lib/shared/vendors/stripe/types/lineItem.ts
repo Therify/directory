@@ -12,7 +12,7 @@ export const schema = z.object({
     quantity: z.number(),
     type: z.enum(['subscription', 'invoiceitem']),
     subscription: z.string().nullable(),
-    subscription_item: z.string().nullable(),
+    subscription_item: z.string().nullable().optional(),
     amount_excluding_tax: z.number(),
     discountable: z.boolean(),
     discounts: z.array(z.string()),
