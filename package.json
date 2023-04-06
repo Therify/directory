@@ -21,7 +21,8 @@
         "prisma:studio": "prisma studio",
         "prisma:migrate": "prisma migrate deploy",
         "vercel-build": "prisma generate && prisma migrate deploy && next build",
-        "stripe-cli:listen": "stripe listen --forward-to localhost:3000/api/webhooks/stripe"
+        "stripe-cli:listen": "stripe listen --forward-to localhost:3000/api/webhooks/stripe",
+        "localtunnel": "lt --port 3000"
     },
     "dependencies": {
         "@auth0/nextjs-auth0": "^2.1.0",
@@ -93,6 +94,7 @@
         "eslint-plugin-storybook": "^0.6.8",
         "husky": "^8.0.3",
         "lint-staged": "^13.1.0",
+        "localtunnel": "^2.0.2",
         "mailing": "^0.9.10",
         "prisma": "^4.9.0",
         "storybook": "^7.0.0-beta.19",
