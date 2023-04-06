@@ -8,15 +8,25 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const rawReq = await buffer(req);
     const data = rawReq.toString().split('-----').filter(Boolean);
     const rawBodyItem = data.find((item) => item.includes('name="rawRequest"'));
+    const rawFormId = data.find((item) => item.includes('name="formID"'));
+    const rawSubmissionId = data.find((item) =>
+        item.includes('name="submissionID"')
+    );
     const payload = rawBodyItem?.split('\r\n').filter(Boolean)[2];
-    if (!payload) {
-        throw new Error('Could not find submission payload');
+    const formId = rawFormId?.split('\r\n').filter(Boolean)[2];
+    const submissionId = rawSubmissionId?.split('\r\n').filter(Boolean)[2];
+
+    if (!payload || !formId || !submissionId) {
+        throw new Error('Missing submission data');
     }
+
     try {
-        const result = await jotformWebhookService.handleFormSubmission(
-            JSON.parse(payload)
-        );
-        res.send({ received: true });
+        const result = await jotformWebhookService.handleFormSubmission({
+            formId,
+            submissionId,
+            payload: JSON.parse(payload),
+        });
+        res.send({ received: !!result?.success });
     } catch (error) {
         console.error(error);
         if (error instanceof Error) {

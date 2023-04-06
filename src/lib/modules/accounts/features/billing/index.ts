@@ -6,3 +6,4 @@ export * as HandleStripeConnectOnboarding from './handle-stripe-connect-onboardi
 export * as HandleCoachingSessionPayment from './handle-coaching-session-payment';
 export * as RenewPlan from './renew-plan';
 export * as CancelPlan from './cancel-plan';
+export * as HandleReimbursementSubmission from './handle-reimbursement-submission';

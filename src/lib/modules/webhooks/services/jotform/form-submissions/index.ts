@@ -9,10 +9,11 @@ import { removeQuestionNumbersFromKey } from '../utils';
 interface JotformWebhookEvent {
     payload: Record<string, unknown>;
     formId: string;
+    submissionId: string;
 }
 export const handleFormSubmissionsFactory =
     (context: JotformWebhookParams) =>
-    ({ formId, payload: rawPayload }: JotformWebhookEvent) => {
+    ({ formId, submissionId, payload: rawPayload }: JotformWebhookEvent) => {
         const formHandlers = FormHandlers.factory(context);
         const formIds = getFormsByEnvironment(
             process.env.VERCEL_ENV as NodeEnvironment
@@ -26,9 +27,10 @@ export const handleFormSubmissionsFactory =
         console.log('handleFormSubmissionsFactory', { formId, payload });
         switch (formId) {
             case formIds[FORMS.REIMBURSMENT_REQUEST_V2]:
-                return formHandlers.handleReimbursementRequest(
-                    ReimbursementRequest.schema.parse(payload)
-                );
+                return formHandlers.handleReimbursementRequest({
+                    submissionId,
+                    payload: ReimbursementRequest.schema.parse(payload),
+                });
             default:
                 handleUnknownForm(formId);
         }

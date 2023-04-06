@@ -11,13 +11,25 @@ const webhookContext: JotformWebhookParams = {
     accounts: AccountsService,
 };
 
+interface JotformWebhookServiceParams {
+    formId: string;
+    submissionId: string;
+    payload: unknown;
+}
+
 export const jotformWebhookService = {
-    handleFormSubmission: (payload: unknown) => {
-        const formSubmission = BaseFormSubmission.schema.parse(payload);
-        const [_, formId] = formSubmission.slug.split('/');
+    handleFormSubmission: ({
+        formId,
+        submissionId,
+        payload,
+    }: JotformWebhookServiceParams) => {
         const handleFormSubmission =
             handleFormSubmissionsFactory(webhookContext);
-        return handleFormSubmission({ formId, payload: formSubmission });
+        return handleFormSubmission({
+            formId,
+            submissionId,
+            payload: BaseFormSubmission.schema.parse(payload),
+        });
     },
 };
 

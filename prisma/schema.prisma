@@ -48,6 +48,7 @@ model User {
   providerChannels       Channel[]           @relation("provider")
   memberSessionInvoice   SessionInvoice[]    @relation("member")
   providerSessionInvoice SessionInvoice[]    @relation("provider")
+  coveredSessions        CoveredSession[]
 
   @@map("users")
 }
@@ -113,24 +114,25 @@ enum PlanStatus {
 }
 
 model Plan {
-  id                   String          @id @default(cuid())
+  id                   String           @id @default(cuid())
   seats                Int
-  account              Account?        @relation(fields: [accountId], references: [id])
-  startDate            DateTime        @map("start_date")
-  endDate              DateTime        @map("end_date")
-  accountId            String?         @map("account_id") // Missing account id means individual plan
-  billingUserId        String?         @map("billing_user_id")
-  createdAt            DateTime        @default(now()) @map("created_at")
-  updatedAt            DateTime        @updatedAt @map("updated_at")
+  account              Account?         @relation(fields: [accountId], references: [id])
+  startDate            DateTime         @map("start_date")
+  endDate              DateTime         @map("end_date")
+  accountId            String?          @map("account_id") // Missing account id means individual plan
+  billingUserId        String?          @map("billing_user_id")
+  createdAt            DateTime         @default(now()) @map("created_at")
+  updatedAt            DateTime         @updatedAt @map("updated_at")
   status               PlanStatus
-  stripeCustomerId     String?         @map("stripe_customer_id")
-  stripeSubscriptionId String?         @map("stripe_subscription_id")
-  stripePriceId        String?         @map("stripe_price_id")
-  renews               Boolean         @default(true)
+  stripeCustomerId     String?          @map("stripe_customer_id")
+  stripeSubscriptionId String?          @map("stripe_subscription_id")
+  stripePriceId        String?          @map("stripe_price_id")
+  renews               Boolean          @default(true)
   invoices             StripeInvoice[]
-  coveredSessions      Int             @default(0) @map("covered_sessions")
-  practice             Practice?       @relation(fields: [practiceId], references: [id])
+  coveredSessions      Int              @default(0) @map("covered_sessions")
+  practice             Practice?        @relation(fields: [practiceId], references: [id])
   practiceId           String?
+  sessions             CoveredSession[]
 
   @@index([stripeCustomerId, stripeSubscriptionId])
   @@map("plans")
@@ -182,6 +184,28 @@ model SessionInvoice {
   member        User                 @relation("member", fields: [memberId], references: [id])
 
   @@map("session_invoices")
+}
+
+enum CoveredSessionStatus {
+  claimed
+  available
+  voided
+}
+
+model CoveredSession {
+  id                  String               @id @default(cuid())
+  plan                Plan                 @relation(fields: [planId], references: [id])
+  planId              String               @map("plan_id")
+  memberId            String               @map("member_id")
+  profileId           String               @map("profile_id")
+  providerProfile     ProviderProfile      @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  member              User                 @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  status              CoveredSessionStatus @map("connection_status")
+  createdAt           DateTime             @default(now()) @map("created_at")
+  updatedAt           DateTime             @updatedAt @map("updated_at")
+  jotformSubmissionId String?              @map("jotform_submission_id")
+
+  @@map("covered_sessions")
 }
 
 model Practice {
@@ -319,6 +343,7 @@ model ProviderProfile {
   practiceProfile            PracticeProfile?
   connectionRequests         ConnectionRequest[]
   offersChat                 Boolean                      @default(false) @map("offers_chat")
+  coveredSessions            CoveredSession[]
 
   @@map("provider_profiles")
 }

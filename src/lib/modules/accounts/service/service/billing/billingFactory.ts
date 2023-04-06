@@ -9,6 +9,7 @@ import { CreateCoachingSessionInvoice } from './create-coaching-session-invoice'
 import { HandleCoachingSessionPayment } from './handle-coaching-session-payment';
 import { HandleInvoiceSent } from './handle-invoice-sent';
 import { HandleCoachingSessionInvoiceUpdated } from './handle-coaching-session-invoice-updated';
+import { HandleReimbursementSubmission } from './handle-reimbursement-submission';
 
 export const factory = (context: AccountsServiceParams) => ({
     handleCoachingSessionPayment: HandleCoachingSessionPayment.factory(context),
@@ -24,4 +25,6 @@ export const factory = (context: AccountsServiceParams) => ({
         HandleStripeConnectOnboarding.factory(context),
     createStripeConnectLoginUrl: CreateStripeConnectLoginUrl.factory(context),
     createCoachingSessionInvoice: CreateCoachingSessionInvoice.factory(context),
+    handleReimbursementSubmission:
+        HandleReimbursementSubmission.factory(context),
 });
