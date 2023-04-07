@@ -7,8 +7,22 @@ import { findEligibleProviders } from './find-eligible-matches/findEligibleProvi
 import { findEthnicMatches } from './find-ethnic-matches';
 import { findGenderMatches } from './find-gender-matches';
 import { findIdealMatches } from './find-ideal-matches';
+import { RecommendedProviderProfile } from '@/lib/shared/types/provider-profile/recommended-provider-profile';
 
 interface GenerateRecommendationsParams extends DirectoryServiceParams {}
+
+/**
+ *  Sorts the provider profiles by score
+ * @param a
+ * @param b
+ * @returns
+ */
+function sortByScore(
+    a: RecommendedProviderProfile.RecommendedProviderProfile,
+    b: RecommendedProviderProfile.RecommendedProviderProfile
+) {
+    return a.score - b.score;
+}
 
 export const factory = ({ prisma }: GenerateRecommendationsParams) => {
     return async function generateRecommendations({
@@ -46,29 +60,27 @@ export const factory = ({ prisma }: GenerateRecommendationsParams) => {
         const providerProfiles = rawProviderProfiles.map(
             ProviderProfile.validate
         );
-        const { therapists, coaches } = findEligibleProviders(
+        const { recommendations } = findEligibleProviders(
             memberProfile,
             providerProfiles
         );
         return {
             success: true,
             payload: {
-                coaches,
-                idealMatches: findIdealMatches(
-                    selfAssessment,
-                    therapists
-                ).slice(0, 3),
+                idealMatches: findIdealMatches(selfAssessment, recommendations)
+                    .sort(sortByScore)
+                    .slice(0, 3),
                 ethnicMatches: findEthnicMatches(
                     selfAssessment,
-                    therapists
+                    recommendations
                 ).slice(0, 3),
                 genderMatches: findGenderMatches(
                     selfAssessment,
-                    therapists
+                    recommendations
                 ).slice(0, 3),
                 concernsMatches: findConcernMatches(
                     selfAssessment,
-                    therapists
+                    recommendations
                 ).slice(0, 3),
             },
         };
