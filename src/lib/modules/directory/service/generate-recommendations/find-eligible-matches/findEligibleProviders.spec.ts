@@ -37,11 +37,11 @@ describe('findEligibleProviders', () => {
             ],
             acceptedInsurances: [],
         });
-        const { therapists } = findEligibleProviders(memberProfile, [
+        const { recommendations } = findEligibleProviders(memberProfile, [
             profileA,
             profileB,
         ]);
-        expect(therapists).toEqual([profileA]);
+        expect(recommendations).toEqual([{ ...profileA, score: 0 }]);
     });
     test('a member who does not have insurance should be eligible for all providers in their state', function () {
         const memberProfile = generateRandomMemberProfile({
@@ -75,10 +75,10 @@ describe('findEligibleProviders', () => {
             ],
             acceptedInsurances: [],
         });
-        const { therapists } = findEligibleProviders(memberProfile, [
+        const { recommendations } = findEligibleProviders(memberProfile, [
             profileA,
             profileB,
         ]);
-        expect(therapists.length).toEqual(2);
+        expect(recommendations.length).toEqual(2);
     });
 });
