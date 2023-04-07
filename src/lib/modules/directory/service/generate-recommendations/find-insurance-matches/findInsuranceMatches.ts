@@ -14,6 +14,7 @@ export function findInsuranceMatches(
 ): ProviderProfile[] {
     if (insurance === "I don't have insurance") return providerProfiles;
     return providerProfiles.filter((providerProfile) => {
+        if (providerProfile.designation === 'coach') return true;
         const acceptedInsurances = getAcceptedInsurances(providerProfile);
         return acceptedInsurances.includes(insurance);
     });
