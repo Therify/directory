@@ -10,5 +10,6 @@ export const EXTERNAL_URLS = {
     },
     JOTFORM: {
         REQUEST_APPOINTMENT: 'https://form.jotform.com/230934288539063',
+        WAITING_LIST: 'https://form.jotform.com/221886433777166',
     },
 } as const;
