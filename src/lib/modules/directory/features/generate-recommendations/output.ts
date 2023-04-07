@@ -3,7 +3,6 @@ import { createResultSchema } from '@/lib/shared/types/result';
 import * as z from 'zod';
 
 export const recommendationsSchema = z.object({
-    coaches: ProviderProfile.schema.array().default([]),
     idealMatches: ProviderProfile.schema.array().default([]),
     ethnicMatches: ProviderProfile.schema.array().default([]),
     genderMatches: ProviderProfile.schema.array().default([]),
