@@ -21,6 +21,7 @@ import {
     ArrowForwardRounded,
     ExitToApp,
 } from '@mui/icons-material';
+import { useFeatureFlags } from '@/lib/shared/hooks';
 
 export const getServerSideProps = RBAC.requireCoachAuth(
     withPageAuthRequired({
@@ -32,6 +33,7 @@ export default function PaymentsPage({
     user,
 }: GetTherifyUserPageProps.ProviderTherifyUserPageProps) {
     const theme = useTheme();
+    const { flags } = useFeatureFlags(user);
     const [error, setError] = useState<string>();
     const { isLoading: isCreatingAccount, mutate: createStripeConnectAccount } =
         trpc.useMutation(`accounts.billing.handle-stripe-connect-onboarding`, {
@@ -81,6 +83,27 @@ export default function PaymentsPage({
             returnUrl: paymentsUrl,
         });
     };
+
+    if (!flags.hasStripeConnectAccess) {
+        return (
+            <ProviderNavigationPage
+                currentPath={URL_PATHS.PROVIDERS.COACH.PAYMENTS}
+                user={user}
+            >
+                <PageContentContainer
+                    fillContentSpace
+                    paddingX={6}
+                    paddingY={8}
+                >
+                    <Alert
+                        title="You do not have access to Therify Payments"
+                        type="error"
+                    />
+                </PageContentContainer>
+            </ProviderNavigationPage>
+        );
+    }
+
     return (
         <ProviderNavigationPage
             currentPath={URL_PATHS.PROVIDERS.COACH.PAYMENTS}

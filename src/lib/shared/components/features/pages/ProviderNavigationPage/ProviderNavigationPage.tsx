@@ -14,7 +14,8 @@ import {
     SideNavigationPageProps,
 } from '../SideNavigationPage';
 import { Role } from '@prisma/client';
-import { CHAT } from '@/lib/sitemap/menus/coach-menu/links';
+import { CHAT, PAYMENTS } from '@/lib/sitemap/menus/coach-menu/links';
+import { useFeatureFlags } from '@/lib/shared/hooks';
 
 interface ProviderNavigationPageProps
     extends Omit<
@@ -30,10 +31,12 @@ interface ProviderNavigationPageProps
 
 export function ProviderNavigationPage(props: ProviderNavigationPageProps) {
     const router = useRouter();
-    const { primaryMenu, secondaryMenu, mobileMenu } = getMenusByRole(
-        props.user?.roles ?? [],
-        props.user?.hasChatEnabled ?? false
-    );
+    const { flags } = useFeatureFlags(props.user);
+    const { primaryMenu, secondaryMenu, mobileMenu } = getMenusByRole({
+        roles: props.user?.roles ?? [],
+        hasChatEnabled: props.user?.hasChatEnabled ?? false,
+        withPaymentsLink: flags.hasStripeConnectAccess,
+    });
     return (
         <SideNavigationPage
             primaryMenu={primaryMenu}
@@ -45,10 +48,15 @@ export function ProviderNavigationPage(props: ProviderNavigationPageProps) {
     );
 }
 
-const getMenusByRole = (
-    roles: TherifyUser.TherifyUser['roles'],
-    hasChatEnabled = false
-) => {
+const getMenusByRole = ({
+    roles,
+    hasChatEnabled,
+    withPaymentsLink,
+}: {
+    roles: TherifyUser.TherifyUser['roles'];
+    hasChatEnabled: boolean;
+    withPaymentsLink: boolean;
+}) => {
     const isTherapist = roles.includes(Role.provider_therapist);
     if (isTherapist) {
         return {
@@ -59,14 +67,15 @@ const getMenusByRole = (
     }
 
     return {
-        primaryMenu: [
-            ...COACH_MAIN_MENU,
-            hasChatEnabled ? CHAT : undefined,
-        ].filter(Boolean) as NavigationLink[],
-        secondaryMenu: [...COACH_SECONDARY_MENU],
+        primaryMenu: [...COACH_MAIN_MENU, ...(hasChatEnabled ? [CHAT] : [])],
+        secondaryMenu: [
+            ...(withPaymentsLink ? [{ ...PAYMENTS, icon: undefined }] : []),
+            ...COACH_SECONDARY_MENU,
+        ],
         mobileMenu: [
             ...COACH_MOBILE_MENU,
-            hasChatEnabled ? CHAT : undefined,
-        ].filter(Boolean) as NavigationLink[],
+            ...(withPaymentsLink ? [PAYMENTS] : []),
+            ...(hasChatEnabled ? [CHAT] : []),
+        ],
     };
 };
