@@ -1,12 +1,17 @@
 import * as z from 'zod';
 
 export const schema = z.object({
+    didFlagsLoad: z.boolean(),
     hasStripeConnectAccess: z.boolean(),
 });
 
 export type Type = z.infer<typeof schema>;
+type FeatureFlags = Type;
 
-export const defaultFlags: Type = {
+export const defaultFlags: FeatureFlags = {
+    // `didFlagsLoad` should always be true from the server,
+    // so if we see false in the client, it means we're fully falling back to default flags
+    didFlagsLoad: false,
     hasStripeConnectAccess: false,
 };
 
@@ -15,11 +20,30 @@ export const isValid = (flags: unknown): boolean => {
     return success;
 };
 
-export const validate = (flags: unknown): Type => {
+const isValidFlag = (key: string, value: unknown): boolean => {
+    if (key in defaultFlags === false) return false;
+    const { success } = schema.safeParse({ ...defaultFlags, [key]: value });
+    return success;
+};
+
+const buildSafeFeatureFlags = (flags: unknown): FeatureFlags => {
+    if (!flags || typeof flags !== 'object') return defaultFlags;
+
+    return Object.entries(flags).reduce<FeatureFlags>(
+        (safeFlags, [key, value]) => {
+            if (isValidFlag(key, value)) {
+                return { ...safeFlags, [key]: value };
+            }
+            return safeFlags;
+        },
+        defaultFlags
+    );
+};
+
+export const validate = (flags: unknown): FeatureFlags => {
     try {
         return schema.parse(flags);
     } catch (error) {
-        console.error('Invalid flags', error);
-        return defaultFlags;
+        return buildSafeFeatureFlags(flags);
     }
 };
