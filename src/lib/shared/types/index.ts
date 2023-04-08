@@ -25,5 +25,6 @@ export * from './accepted-insurance';
 export * from './provider-availability';
 export * from './connection-request';
 export * from './nodeEnvironment';
+export * from './feature-flags';
 
 export * as Mocks from './__mocks__';
