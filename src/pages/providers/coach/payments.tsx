@@ -96,7 +96,7 @@ export default function PaymentsPage({
                     paddingY={8}
                 >
                     <Alert
-                        title="You do not have access to therify Payments"
+                        title="You do not have access to Therify Payments"
                         type="error"
                     />
                 </PageContentContainer>
