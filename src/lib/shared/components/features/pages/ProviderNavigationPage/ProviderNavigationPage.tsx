@@ -67,16 +67,15 @@ const getMenusByRole = ({
     }
 
     return {
-        primaryMenu: [
-            ...COACH_MAIN_MENU,
-            ...(withPaymentsLink ? [PAYMENTS] : []),
-            ...(hasChatEnabled ? [CHAT] : []),
-        ] as NavigationLink[],
-        secondaryMenu: [...COACH_SECONDARY_MENU],
+        primaryMenu: [...COACH_MAIN_MENU, ...(hasChatEnabled ? [CHAT] : [])],
+        secondaryMenu: [
+            ...(withPaymentsLink ? [{ ...PAYMENTS, icon: undefined }] : []),
+            ...COACH_SECONDARY_MENU,
+        ],
         mobileMenu: [
             ...COACH_MOBILE_MENU,
             ...(withPaymentsLink ? [PAYMENTS] : []),
             ...(hasChatEnabled ? [CHAT] : []),
-        ] as NavigationLink[],
+        ],
     };
 };
