@@ -9,6 +9,7 @@ describe('findInsuranceMatches', () => {
             insurance: 'Aetna',
         });
         const profileA = generateRandomProfile({
+            designation: 'therapist',
             acceptedInsurances: [
                 generateRandomAcceptedInsurance({
                     country: 'US',
@@ -18,6 +19,7 @@ describe('findInsuranceMatches', () => {
             ],
         });
         const profileB = generateRandomProfile({
+            designation: 'therapist',
             acceptedInsurances: [
                 generateRandomAcceptedInsurance({
                     country: 'US',
@@ -34,6 +36,7 @@ describe('findInsuranceMatches', () => {
             insurance: "I don't have insurance",
         });
         const profileA = generateRandomProfile({
+            designation: 'therapist',
             acceptedInsurances: [
                 generateRandomAcceptedInsurance({
                     country: 'US',
@@ -43,6 +46,7 @@ describe('findInsuranceMatches', () => {
             ],
         });
         const profileB = generateRandomProfile({
+            designation: 'therapist',
             acceptedInsurances: [
                 generateRandomAcceptedInsurance({
                     country: 'US',
@@ -53,5 +57,39 @@ describe('findInsuranceMatches', () => {
         });
         const matches = findInsuranceMatches(member, [profileA, profileB]);
         expect(matches).toEqual([profileA, profileB]);
+    });
+    test('coaches are recommended regardless of members insurance status', () => {
+        const member = generateRandomMemberProfile({
+            insurance: 'Aetna',
+        });
+        const profileA = generateRandomProfile({
+            designation: 'therapist',
+            acceptedInsurances: [
+                generateRandomAcceptedInsurance({
+                    country: 'US',
+                    state: 'Alaska',
+                    insurances: ['Aetna', 'BlueCross Blue Shield'],
+                }),
+            ],
+        });
+        const profileB = generateRandomProfile({
+            designation: 'therapist',
+            acceptedInsurances: [
+                generateRandomAcceptedInsurance({
+                    country: 'US',
+                    state: 'Alaska',
+                    insurances: ['BlueCross Blue Shield'],
+                }),
+            ],
+        });
+        const profileC = generateRandomProfile({
+            designation: 'coach',
+        });
+        const matches = findInsuranceMatches(member, [
+            profileA,
+            profileB,
+            profileC,
+        ]);
+        expect(matches).toEqual([profileA, profileC]);
     });
 });

@@ -11,7 +11,6 @@ import { MembersServiceParams } from '../params';
 export interface CarePageProps {
     user: TherifyUser.TherifyUser;
     recommendations?: {
-        coaches: ProviderProfile[];
         idealMatches: ProviderProfile[];
         ethnicMatches: ProviderProfile[];
         genderMatches: ProviderProfile[];

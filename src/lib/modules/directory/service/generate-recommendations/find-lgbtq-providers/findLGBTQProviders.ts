@@ -1,11 +1,11 @@
 import { CommunitiesServed } from '@/lib/shared/types';
-import type { ProviderProfile } from '@/lib/shared/types/provider-profile';
+import { RecommendedProviderProfile } from '@/lib/shared/types/provider-profile/recommended-provider-profile';
 import type { SelfAssessment } from '@/lib/shared/types/self-assessment';
 
 export function findLGBTQProviders(
     selfAssessment: SelfAssessment.SelfAssessment,
-    providerProfiles: ProviderProfile.ProviderProfile[]
-): ProviderProfile.ProviderProfile[] {
+    providerProfiles: RecommendedProviderProfile.RecommendedProviderProfile[]
+): RecommendedProviderProfile.RecommendedProviderProfile[] {
     const { isRequired } = selfAssessment.preferences.lgbtq;
 
     return !isRequired && !selfAssessment.isLGBTQ

@@ -14,6 +14,7 @@ export function findLocationMatches(
     profiles: ProviderProfile[]
 ): ProviderProfile[] {
     return profiles.filter((profile) => {
+        if (profile.designation === 'coach') return true;
         const licensedStates = getLicensedStates(profile);
         return licensedStates.includes(state);
     });

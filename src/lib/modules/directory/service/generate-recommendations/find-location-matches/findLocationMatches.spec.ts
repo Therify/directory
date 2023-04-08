@@ -10,6 +10,7 @@ describe('findLocationMatches', () => {
             state: 'Alabama',
         });
         const profileA = generateRandomProfile({
+            designation: 'therapist',
             credentials: [
                 generateRandomCredential({
                     state: 'Alabama',
@@ -18,6 +19,7 @@ describe('findLocationMatches', () => {
             ],
         });
         const profileB = generateRandomProfile({
+            designation: 'therapist',
             credentials: [],
         });
         const matches = findLocationMatches(memberProfile, [
@@ -25,5 +27,29 @@ describe('findLocationMatches', () => {
             profileB,
         ]);
         expect(matches).toEqual([profileA]);
+    });
+    test('coaches are recommended regarldess of credentialling', () => {
+        const memberProfile = generateRandomMemberProfile({
+            country: 'US',
+            state: 'Alabama',
+        });
+        const profileA = generateRandomProfile({
+            designation: 'therapist',
+            credentials: [
+                generateRandomCredential({
+                    state: 'Alabama',
+                    country: 'US',
+                }),
+            ],
+        });
+        const profileB = generateRandomProfile({
+            designation: 'coach',
+            credentials: [],
+        });
+        const matches = findLocationMatches(memberProfile, [
+            profileA,
+            profileB,
+        ]);
+        expect(matches).toEqual([profileA, profileB]);
     });
 });
