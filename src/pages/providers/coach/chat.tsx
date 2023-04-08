@@ -34,7 +34,10 @@ export default function ChatPage({ user }: ChatPageProps) {
                 )}
                 displayName={user.givenName}
                 accessToken={user.chatAccessToken!}
-                allowSessionInvoicing={flags.hasStripeConnectAccess}
+                allowSessionInvoicing={
+                    flags.hasStripeConnectAccess &&
+                    !!user.stripeConnectAccountId
+                }
             />
         </ProviderNavigationPage>
     );
