@@ -78,6 +78,7 @@ export default function TherapistProfileEditorPage({
             <LoadingContainer isLoading={isLoading || isRefetching}>
                 <ProfileEditor
                     onBack={router.back}
+                    canEditSessionPrice
                     providerProfile={refetchedProfile ?? profile}
                     practice={practice}
                     isSavingProfile={isUpdatingProfile}

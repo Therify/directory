@@ -66,6 +66,7 @@ export default function PracticeProfileCreatePage({
             mobileMenu={[...PRACTICE_ADMIN_MOBILE_MENU]}
         >
             <ProfileEditor
+                canEditSessionPrice
                 providerProfile={profile}
                 practice={practice}
                 isSavingProfile={isUpdatingProfile}
