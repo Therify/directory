@@ -35,7 +35,8 @@ export default function CoachClientsPage({
                     designation={ProfileType.coach}
                     baseConnectionRequests={connectionRequests}
                     onInvoiceClient={
-                        flags.hasStripeConnectAccess
+                        flags.hasStripeConnectAccess &&
+                        user.stripeConnectAccountId
                             ? ({ member }) =>
                                   onInvoiceClient({
                                       memberId: member.id,
