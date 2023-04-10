@@ -38,6 +38,9 @@ export const factory = ({ prisma }: GenerateRecommendationsParams) => {
             prisma.providerProfile.findMany({
                 where: {
                     newClientStatus: 'accepting',
+                    directoryListing: {
+                        status: 'listed',
+                    },
                     connectionRequests: {
                         none: {
                             memberId,

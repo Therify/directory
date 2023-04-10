@@ -40,6 +40,7 @@ export const useSessionInvoicing = (providerId: string) => {
                 createAlert({
                     type: 'error',
                     title: error,
+                    requireInteraction: true,
                 });
             }
         },
@@ -49,6 +50,7 @@ export const useSessionInvoicing = (providerId: string) => {
                 return createAlert({
                     type: 'error',
                     title: error.message,
+                    requireInteraction: true,
                 });
             }
             createAlert({

@@ -22,7 +22,7 @@ export default function CoachClientsPage({
 }: ProviderClientsPageProps) {
     const { flags } = useFeatureFlags(user);
     const { onInvoiceClient, ConfirmationUi } = useSessionInvoicing(
-        user.userId
+        user?.userId
     );
     const canInvoiceClient =
         flags.hasStripeConnectAccess && user.stripeConnectAccountId;
