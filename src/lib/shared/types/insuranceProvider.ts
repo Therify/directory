@@ -22,6 +22,7 @@ export const ENTRIES = [
     'HealthFirst',
     'Humana',
     'Kaiser',
+    'Medavie Blue Cross',
     'Medicaid',
     'Medicare',
     'Meritian Health',
