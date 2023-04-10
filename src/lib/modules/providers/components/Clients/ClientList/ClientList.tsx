@@ -73,8 +73,10 @@ export const ClientList = ({
                             onTerminateConnectionRequest(connectionRequest)
                         }
                         onView={() => onViewMemberDetails(connectionRequest)}
-                        onInvoiceClient={() =>
-                            onInvoiceClient?.(connectionRequest)
+                        onInvoiceClient={
+                            onInvoiceClient
+                                ? () => onInvoiceClient(connectionRequest)
+                                : undefined
                         }
                         onReimbursmentRequest={() => {
                             onReimbursmentRequest(connectionRequest);

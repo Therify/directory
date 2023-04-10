@@ -80,7 +80,6 @@ export const useSessionInvoicing = (providerId: string) => {
 
     return {
         onInvoiceClient: (member: InvoicedMember) => {
-            console.log({ member });
             setMember(member);
             setShowModal(true);
         },

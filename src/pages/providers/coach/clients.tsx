@@ -24,6 +24,8 @@ export default function CoachClientsPage({
     const { onInvoiceClient, ConfirmationUi } = useSessionInvoicing(
         user.userId
     );
+    const canInvoiceClient =
+        flags.hasStripeConnectAccess && user.stripeConnectAccountId;
     return (
         <ProviderNavigationPage
             currentPath={URL_PATHS.PROVIDERS.COACH.CLIENTS}
@@ -35,8 +37,7 @@ export default function CoachClientsPage({
                     designation={ProfileType.coach}
                     baseConnectionRequests={connectionRequests}
                     onInvoiceClient={
-                        flags.hasStripeConnectAccess &&
-                        user.stripeConnectAccountId
+                        canInvoiceClient
                             ? ({ member }) =>
                                   onInvoiceClient({
                                       memberId: member.id,
@@ -46,7 +47,7 @@ export default function CoachClientsPage({
                     }
                 />
             )}
-            {flags.hasStripeConnectAccess && <ConfirmationUi />}
+            {canInvoiceClient && <ConfirmationUi />}
         </ProviderNavigationPage>
     );
 }
