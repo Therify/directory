@@ -1,5 +1,7 @@
 import { StripeInvoice } from '@/lib/shared/vendors/stripe';
 import { AccountsService } from '@/lib/modules/accounts/service';
+import { isValidTherifyPriceId } from '@/lib/shared/types';
+import { NodeEnvironment } from '@/lib/shared/types/nodeEnvironment';
 
 interface HandleGroupPracticePaymentInput {
     invoice: StripeInvoice.Type;
@@ -21,6 +23,14 @@ export const handleGroupPracticePayment = async ({
     priceId,
     seats,
 }: HandleGroupPracticePaymentInput) => {
+    if (
+        !isValidTherifyPriceId(
+            priceId,
+            process.env.VERCEL_ENV as NodeEnvironment
+        )
+    ) {
+        throw new Error(`Unexpected price id: ${priceId}`);
+    }
     return await accounts.billing.handleGroupPracticePlanPayment({
         startDate,
         endDate,

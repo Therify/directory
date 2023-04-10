@@ -3,7 +3,7 @@ import { ProviderProfile, EvidenceBasedApproach } from '@/lib/shared/types';
 import { Autocomplete, TextField } from '@mui/material';
 import { InputWrapper } from '@/lib/shared/components/ui';
 
-type EvidenceBasedApproach = typeof EvidenceBasedApproach.ENTRIES[number];
+type EvidenceBasedApproach = (typeof EvidenceBasedApproach.ENTRIES)[number];
 
 interface EvidenceBasedApproachInputProps {
     control: Control<ProviderProfile.ProviderProfile>;

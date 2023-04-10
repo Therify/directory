@@ -1,7 +1,7 @@
 const SEND_VERIFICATION_EMAIL_ERROR_CODES = [400, 401, 403, 409, 429] as const;
 
 type SendVerificationEmailErrorCode =
-    typeof SEND_VERIFICATION_EMAIL_ERROR_CODES[number];
+    (typeof SEND_VERIFICATION_EMAIL_ERROR_CODES)[number];
 
 class SendVerificationEmailError extends Error {
     constructor(

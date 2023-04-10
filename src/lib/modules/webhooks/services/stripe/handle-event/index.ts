@@ -16,17 +16,21 @@ export const handleEventFactory =
                 return eventHandlers.invoices.paymentFailed(object);
             case 'invoice.paid':
                 return eventHandlers.invoices.paid(object);
+            case 'invoice.updated':
+                return eventHandlers.invoices.updated(object);
+            case 'invoice.sent':
+                return eventHandlers.invoices.sent(object);
             case 'customer.subscription.updated':
                 return eventHandlers.subscriptions.updated(
                     object,
                     previous_attributes
                 );
             default:
-                handleUknownEvent(type);
+                handleUnknownEvent(type);
         }
     };
 
-const handleUknownEvent = (type: string) => {
+const handleUnknownEvent = (type: string) => {
     console.log(`Unexpected event type: ${type}`);
     if (process.env.NODE_ENV !== 'development') {
         throw new UnknownStripeEventTypeError(type);

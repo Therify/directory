@@ -3,7 +3,7 @@ import { Language, ProviderProfile } from '@/lib/shared/types';
 import { Autocomplete, TextField } from '@mui/material';
 import { InputWrapper } from '@/lib/shared/components/ui';
 
-type LanguagesSpoken = typeof Language.ENTRIES[number];
+type LanguagesSpoken = (typeof Language.ENTRIES)[number];
 
 interface LanguagesInputProps {
     control: Control<ProviderProfile.ProviderProfile>;

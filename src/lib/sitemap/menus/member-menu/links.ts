@@ -7,6 +7,12 @@ export const HOME: NavigationLink = {
     path: URL_PATHS.MEMBERS.HOME,
 } as const;
 
+export const CARE: NavigationLink = {
+    icon: NAVIGATION_ICON.CARE,
+    displayName: 'Care',
+    path: URL_PATHS.MEMBERS.CARE,
+};
+
 export const FAVORITES: NavigationLink = {
     icon: NAVIGATION_ICON.FAVORITES,
     displayName: 'Favorites',
@@ -37,4 +43,9 @@ export const CHAT: NavigationLink = {
     icon: NAVIGATION_ICON.CHAT,
     displayName: 'Messaging',
     path: URL_PATHS.MEMBERS.CHAT,
+};
+
+export const BILLING_AND_PAYMENTS: NavigationLink = {
+    displayName: 'Billing & Payments',
+    path: URL_PATHS.MEMBERS.ACCOUNT.BILLING_AND_PAYMENTS,
 };

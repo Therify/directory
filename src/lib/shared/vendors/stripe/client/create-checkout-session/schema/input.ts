@@ -9,6 +9,15 @@ export const schema = z.object({
     checkoutMode: z.enum(['payment', 'setup', 'subscription']),
     submitMessage: z.string().optional(),
     allowPromotionCodes: z.boolean().optional().default(true),
+    expiresInSeconds: z.number().optional(),
+    metadata: z.record(z.string()).optional(),
+    connectedAccountData: z
+        .object({
+            stripeConnectAccountId: z.string(),
+            applicationFeeInCents: z.number(),
+            receiptEmail: z.string(),
+        })
+        .optional(),
 });
 
 export type Input = z.infer<typeof schema>;

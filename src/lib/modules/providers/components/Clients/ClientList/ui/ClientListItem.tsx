@@ -3,12 +3,11 @@ import {
     MailOutline,
     PaidOutlined,
     PendingOutlined,
-    ChatBubbleOutlineRounded,
     CircleRounded,
     DoNotDisturbAltRounded,
     CheckCircleOutlineRounded,
     PreviewRounded,
-    PersonRemoveOutlined,
+    CreditCardOutlined,
 } from '@mui/icons-material';
 
 import {
@@ -32,9 +31,9 @@ export const ClientListItem = ({
     isSmallScreen,
     onAccept,
     onDecline,
-    onTerminate,
     onView,
     onReimbursmentRequest,
+    onInvoiceClient,
 }: {
     connectionRequest: ConnectionRequest.Type;
     isSmallScreen?: boolean;
@@ -42,6 +41,7 @@ export const ClientListItem = ({
     onDecline: () => void;
     onTerminate: () => void;
     onView?: () => void;
+    onInvoiceClient?: () => void;
     onReimbursmentRequest: () => void;
 }) => {
     const isPending =
@@ -79,6 +79,16 @@ export const ClientListItem = ({
                       icon: <PaidOutlined />,
                       onClick: onReimbursmentRequest,
                   },
+                  ...(onInvoiceClient
+                      ? [
+                            {
+                                icon: <CreditCardOutlined />,
+                                text: 'Send Session Invoice',
+                                title: 'This will create a Mental Health Coaching Session invoice for the member so they can purchase a session with you. Payment transfers can be viewed in your Stripe Connect Dashboard once the invoice has been paid.',
+                                onClick: onInvoiceClient,
+                            },
+                        ]
+                      : []),
                   // TODO: We need to be able to handle this without breaking confidentiality
                   //   {
                   //       text: 'Remove Client',

@@ -1,6 +1,6 @@
-import type { RegisterProviderWithInitationTransaction } from './definition';
+import type { RegisterProviderWithInvitationTransaction } from './definition';
 
-export const step: RegisterProviderWithInitationTransaction['claimProfile'] = {
+export const step: RegisterProviderWithInvitationTransaction['claimProfile'] = {
     async commit(
         { prisma },
         {

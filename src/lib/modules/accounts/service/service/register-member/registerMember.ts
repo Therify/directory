@@ -7,6 +7,8 @@ import {
     OUTPUT_SCHEMA,
     CONTEXT,
     assignAuth0Role,
+    createStripeCustomer,
+    updateUserEntity,
 } from './transaction';
 
 export const registerMember = TransactionV2.generateTransaction<
@@ -20,6 +22,8 @@ export const registerMember = TransactionV2.generateTransaction<
         [TRANSACTION_STEPS.CREATE_AUTH0_USER]: createAuth0User,
         [TRANSACTION_STEPS.ASSIGN_AUTH0_ROLE]: assignAuth0Role,
         [TRANSACTION_STEPS.CREATE_THERIFY_USER_ENTRY]: createTherifyUserEntity,
+        [TRANSACTION_STEPS.CREATE_STRIPE_CUSTOMER]: createStripeCustomer,
+        [TRANSACTION_STEPS.UPDATE_THERIFY_USER_ENTRY]: updateUserEntity,
     },
     context: CONTEXT,
 });

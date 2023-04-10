@@ -8,7 +8,7 @@ export const SUBHEAD_SIZE = {
     LARGE: 'large',
 } as const;
 
-export type SubheadSize = typeof SUBHEAD_SIZE[keyof typeof SUBHEAD_SIZE];
+export type SubheadSize = (typeof SUBHEAD_SIZE)[keyof typeof SUBHEAD_SIZE];
 
 interface SubheadProps {
     size?: SubheadSize;

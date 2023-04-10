@@ -20,7 +20,8 @@ export default function NotFoundPage() {
 
     const emailBody = `
         Hi Therify Team,
-        I'm experiencing a server side issue. Here are some details:
+        I'm experiencing a server side issue while trying to access this page:
+        ${typeof window !== 'undefined' ? window?.location.href : ''}
     
         What I was trying to do:
         Please describe what you were trying to do when you encountered this issue. Include as much detail as possible.
@@ -52,10 +53,12 @@ export default function NotFoundPage() {
                             type="outlined"
                             color="info"
                             onClick={() => {
-                                router.back();
+                                if (typeof window !== 'undefined') {
+                                    window.location.reload();
+                                }
                             }}
                         >
-                            Go Back
+                            Refresh
                         </Button>
                         <Button onClick={() => router.push(URL_PATHS.ROOT)}>
                             Go Home

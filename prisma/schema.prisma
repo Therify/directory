@@ -30,6 +30,7 @@ model User {
   updatedAt                     DateTime @default(now()) @map("updated_at") @db.Timestamp(6)
   roles                         Role[]
   stripeCustomerId              String?  @unique @map("stripe_customer_id")
+  stripeConnectAccountId        String?  @unique @map("stripe_connect_account_id")
 
   account                    Account?                     @relation(fields: [accountId], references: [id])
   accountId                  String?
@@ -39,12 +40,15 @@ model User {
   practiceProvider           PracticeProvider?
   chatAccessToken            String?                      @map("chat_access_token")
 
-  memberProfile      MemberProfile?
-  selfAssessments    SelfAssessment[]
-  connectionRequests ConnectionRequest[]
-  managedPractice    Practice?
-  memberChannels     Channel[]           @relation("member")
-  providerChannels   Channel[]           @relation("provider")
+  memberProfile          MemberProfile?
+  selfAssessments        SelfAssessment[]
+  connectionRequests     ConnectionRequest[]
+  managedPractice        Practice?
+  memberChannels         Channel[]           @relation("member")
+  providerChannels       Channel[]           @relation("provider")
+  memberSessionInvoice   SessionInvoice[]    @relation("member")
+  providerSessionInvoice SessionInvoice[]    @relation("provider")
+  redeemedSessions       RedeemedSession[]
 
   @@map("users")
 }
@@ -110,49 +114,99 @@ enum PlanStatus {
 }
 
 model Plan {
-  id                   String          @id @default(cuid())
+  id                   String            @id @default(cuid())
   seats                Int
-  account              Account?        @relation(fields: [accountId], references: [id])
-  startDate            DateTime        @map("start_date")
-  endDate              DateTime        @map("end_date")
-  accountId            String?         @map("account_id") // Missing account id means individual plan
-  billingUserId        String?         @map("billing_user_id")
-  createdAt            DateTime        @default(now()) @map("created_at")
-  updatedAt            DateTime        @updatedAt @map("updated_at")
+  account              Account?          @relation(fields: [accountId], references: [id])
+  startDate            DateTime          @map("start_date")
+  endDate              DateTime          @map("end_date")
+  accountId            String?           @map("account_id") // Missing account id means individual plan
+  billingUserId        String?           @map("billing_user_id")
+  createdAt            DateTime          @default(now()) @map("created_at")
+  updatedAt            DateTime          @updatedAt @map("updated_at")
   status               PlanStatus
-  stripeCustomerId     String?         @map("stripe_customer_id")
-  stripeSubscriptionId String?         @map("stripe_subscription_id")
-  stripePriceId        String?         @map("stripe_price_id")
-  renews               Boolean         @default(true)
+  stripeCustomerId     String?           @map("stripe_customer_id")
+  stripeSubscriptionId String?           @map("stripe_subscription_id")
+  stripePriceId        String?           @map("stripe_price_id")
+  renews               Boolean           @default(true)
   invoices             StripeInvoice[]
-  coveredSessions      Int             @default(0) @map("covered_sessions")
-  practice             Practice?       @relation(fields: [practiceId], references: [id])
+  coveredSessions      Int               @default(0) @map("covered_sessions")
+  practice             Practice?         @relation(fields: [practiceId], references: [id])
   practiceId           String?
+  redeemedSessions     RedeemedSession[]
 
   @@index([stripeCustomerId, stripeSubscriptionId])
   @@map("plans")
 }
 
 model StripeInvoice {
-  id              String   @id @default(cuid())
-  plan            Plan?    @relation(fields: [planId], references: [id])
-  planId          String?  @map("plan_id")
-  invoiceId       String   @map("invoice_id") @db.VarChar(255)
-  user            User?    @relation(fields: [userId], references: [id])
-  userId          String   @map("user_id")
-  account         Account? @relation(fields: [accountId], references: [id])
-  accountId       String?  @map("account_id")
+  id              String          @id @default(cuid())
+  plan            Plan?           @relation(fields: [planId], references: [id])
+  planId          String?         @map("plan_id")
+  invoiceId       String          @map("invoice_id") @db.VarChar(255)
+  user            User?           @relation(fields: [userId], references: [id])
+  userId          String          @map("user_id")
+  account         Account?        @relation(fields: [accountId], references: [id])
+  accountId       String?         @map("account_id")
   status          String
   total           Int
-  amountDue       Int      @map("amount_due")
-  amountPaid      Int      @map("amoint_paid")
-  amountRemaining Int      @map("amount_remaining")
-  invoicePdf      String?  @map("invoice_pdf")
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
+  amountDue       Int             @map("amount_due")
+  amountPaid      Int             @map("amoint_paid")
+  amountRemaining Int             @map("amount_remaining")
+  invoicePdf      String?         @map("invoice_pdf")
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+  invoiceNumber   String?         @map("invoice_number")
+  SessionInvoice  SessionInvoice?
 
   @@index([invoiceId, userId])
   @@map("billing_provider_invoices")
+}
+
+enum SessionInvoiceStatus {
+  draft
+  open
+  void
+  paid
+  uncollectible
+}
+
+model SessionInvoice {
+  id            String               @id @default(cuid())
+  invoice       StripeInvoice        @relation(fields: [invoiceId], references: [id])
+  invoiceId     String               @unique @map("invoice_id")
+  status        SessionInvoiceStatus
+  dateOfSession DateTime?            @map("date_of_session")
+  createdAt     DateTime             @default(now()) @map("created_at")
+  updatedAt     DateTime             @updatedAt @map("updated_at")
+  providerId    String               @map("provider_id")
+  provider      User                 @relation("provider", fields: [providerId], references: [id])
+  memberId      String               @map("member_id")
+  member        User                 @relation("member", fields: [memberId], references: [id])
+
+  @@map("session_invoices")
+}
+
+enum RedeemedSessionStatus {
+  claimed
+  available
+  voided
+}
+
+model RedeemedSession {
+  id                  String                @id @default(cuid())
+  plan                Plan                  @relation(fields: [planId], references: [id])
+  planId              String                @map("plan_id")
+  memberId            String                @map("member_id")
+  profileId           String                @map("profile_id")
+  providerProfile     ProviderProfile       @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  member              User                  @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  status              RedeemedSessionStatus
+  dateOfSession       DateTime              @map("date_of_session")
+  createdAt           DateTime              @default(now()) @map("created_at")
+  updatedAt           DateTime              @updatedAt @map("updated_at")
+  jotformSubmissionId String?               @map("jotform_submission_id")
+
+  @@map("redeemed_sessions")
 }
 
 model Practice {
@@ -258,6 +312,7 @@ model ProviderProfile {
   offersSlidingScale         Boolean                      @default(false) @map("offers_sliding_scale")
   profileImageUrl            String?                      @map("profile_image_url")
   yearsOfExperience          String?                      @map("years_of_experience")
+  stripeSessionPriceId       String?                      @unique @map("stripe_price_id")
   minimumRate                Int                          @map("minimum_rate")
   maximumRate                Int?                         @map("maximum_rate")
   idealClientDescription     String?                      @map("ideal_client_description") @db.Text
@@ -289,6 +344,7 @@ model ProviderProfile {
   practiceProfile            PracticeProfile?
   connectionRequests         ConnectionRequest[]
   offersChat                 Boolean                      @default(false) @map("offers_chat")
+  redeemedSessions           RedeemedSession[]
 
   @@map("provider_profiles")
 }
@@ -309,17 +365,18 @@ model MemberProfile {
 }
 
 model SelfAssessment {
-  id        String   @id @default(cuid()) @map("self_assessment_id")
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String   @map("user_id")
-  concerns  String[]
-  goals     String[]
-  notes     String?  @db.Text
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  id                  String   @id @default(cuid()) @map("self_assessment_id")
+  userId              String?  @map("user_id")
+  preferences         Json     @default("{}")
+  concerns            String[]
+  isLGBTQ             Boolean  @default(false) @map("is_lgbtq")
+  isCaregiver         Boolean  @default(false) @map("is_caregiver")
+  isInCrisis          Boolean  @default(false) @map("is_in_crisis")
+  hasSuicidalIdeation Boolean  @default(false) @map("has_suicidal_ideation")
+  phq9Score           Int      @default(0) @map("phq9_score")
 
-  // /* ------------------------------- Preferences ------------------------------ */
-  // Example Preference `{"religion": {"selection": "Religion", "isDealbreaker": false}}`
-  preferences Json @default("{}") @db.Json
+  createdAt DateTime @default(now()) @map("created_at")
+  User      User?    @relation(fields: [userId], references: [id])
 
   @@map("self_assessments")
 }

@@ -27,6 +27,8 @@ import { CloudinaryUploadResult } from '../../../media/components/hooks/userClou
 interface ProfileEditorProps {
     providerProfile?: Partial<ProviderProfile.ProviderProfile>;
     practice: ProviderPractice.Type;
+    canEditSessionPrice?: boolean;
+    allowProfileDesignationChange?: boolean;
     isSavingProfile: boolean;
     onBack?: () => void;
     onSubmit: (profile: ProviderProfile.ProviderProfile) => Promise<void>;
@@ -36,6 +38,8 @@ export function ProfileEditor({
     providerProfile,
     practice,
     isSavingProfile,
+    canEditSessionPrice,
+    allowProfileDesignationChange,
     onBack,
     onSubmit,
 }: ProfileEditorProps) {
@@ -180,6 +184,10 @@ export function ProfileEditor({
                         <SlotWrapper>
                             <ProfileEditorForm
                                 control={providerProfileForm.control}
+                                canEditSessionPrice={canEditSessionPrice}
+                                allowProfileDesignationChange={
+                                    allowProfileDesignationChange
+                                }
                                 onDeleteImage={onDeleteImage}
                                 onImageUploadSuccess={onImageUploadSuccess}
                                 onImageUploadError={onImageUploadError}

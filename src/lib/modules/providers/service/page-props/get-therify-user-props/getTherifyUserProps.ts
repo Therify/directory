@@ -33,7 +33,7 @@ export const factory = (params: ProvidersServiceParams) => {
                 },
             };
         }
-        // TODO: Handle firebaseToken
+
         const props: ProviderTherifyUserPageProps = {
             user,
         };

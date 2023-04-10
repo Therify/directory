@@ -3,7 +3,7 @@ import { ProviderProfile, Religion } from '@/lib/shared/types';
 import { Autocomplete, TextField } from '@mui/material';
 import { InputWrapper } from '@/lib/shared/components/ui';
 
-type Religions = typeof Religion.ENTRIES[number];
+type Religions = (typeof Religion.ENTRIES)[number];
 
 interface ReligionsInputProps {
     control: Control<ProviderProfile.ProviderProfile>;

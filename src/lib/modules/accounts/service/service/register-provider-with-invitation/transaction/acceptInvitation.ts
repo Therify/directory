@@ -1,12 +1,12 @@
 import { RegisterProviderWithInvitation } from '@/lib/modules/registration/features';
 import { InvitationStatus } from '@prisma/client';
 import { isAfter } from 'date-fns';
-import type { RegisterProviderWithInitationTransaction } from './definition';
+import type { RegisterProviderWithInvitationTransaction } from './definition';
 
 interface CreateTherifyUserEntityFactory {
     (
         params: RegisterProviderWithInvitation.Input
-    ): RegisterProviderWithInitationTransaction['acceptInvitation'];
+    ): RegisterProviderWithInvitationTransaction['acceptInvitation'];
 }
 
 export const factory: CreateTherifyUserEntityFactory = ({ invitationId }) => {

@@ -1,11 +1,11 @@
 import { getNodeEnvironmentConfiguration } from '@/lib/shared/configuration';
 import { RegisterProviderWithInvitation } from '@/lib/modules/registration/features';
-import { RegisterProviderWithInitationTransaction } from './definition';
+import { RegisterProviderWithInvitationTransaction } from './definition';
 
 interface CreateAuth0UserFactory {
     (
         params: RegisterProviderWithInvitation.Input
-    ): RegisterProviderWithInitationTransaction['createAuth0User'];
+    ): RegisterProviderWithInvitationTransaction['createAuth0User'];
 }
 
 export const factory: CreateAuth0UserFactory = ({ emailAddress, password }) => {

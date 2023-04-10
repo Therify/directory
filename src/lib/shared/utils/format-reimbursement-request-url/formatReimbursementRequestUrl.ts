@@ -18,6 +18,11 @@ export function formatReimbursementRequestUrl(
     baseUrl: string,
     connectionRequest: ConnectionRequest.Type
 ): string {
+    const therifyDetails = generateTherifyReimbursementDetails({
+        memberId: connectionRequest.member.id,
+        providerProfileId: connectionRequest.providerProfile.id,
+        practiceId: connectionRequest.providerProfile.practice.id,
+    });
     return `${baseUrl}?${REIMBURSMENT_KEY_MAPS.map(
         ([queryKey, connectionRequestKey]) => {
             const value = getParamValue(
@@ -28,7 +33,15 @@ export function formatReimbursementRequestUrl(
         }
     )
         .filter(Boolean)
-        .join('&')}`;
+        .join('&')}&therifydetails=${therifyDetails}`;
+}
+
+export function generateTherifyReimbursementDetails(details: {
+    memberId: string;
+    providerProfileId: string;
+    practiceId: string;
+}) {
+    return encodeURIComponent(JSON.stringify(details));
 }
 
 function getParamValue(

@@ -9,7 +9,7 @@ export const ROLES = {
     MEMBER: 'member',
 } as const;
 
-export type Role = typeof ROLES[keyof typeof ROLES];
+export type Role = (typeof ROLES)[keyof typeof ROLES];
 
 export const DEVELOPMENT_ROLE_IDS: Record<Role, string> = {
     [ROLES.PROVIDER_COACH]: 'rol_T8VOm2u51wqS9416',

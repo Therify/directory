@@ -29,13 +29,14 @@ import {
     CheckCircleOutlineRounded,
     PreviewRounded,
     EmailOutlined,
-    PersonRemoveOutlined,
 } from '@mui/icons-material';
-import { ConnectionStatus, ProfileType } from '@prisma/client';
+import { ConnectionStatus } from '@prisma/client';
 import { format } from 'date-fns';
 
 const REIMBURSEMENT_REQUEST_URL =
-    'https://hipaa.jotform.com/221371005584146?' as const;
+    process.env.NEXT_PUBLIC_VERCEL_ENV === 'production'
+        ? ('https://hipaa.jotform.com/221371005584146' as const)
+        : ('https://form.jotform.com/230950700793153' as const);
 
 type ProfileConnectionRequest =
     PracticeProfileConnectionRequests.Type['profileConnectionRequests'][number]['connectionRequests'][number];

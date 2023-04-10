@@ -11,6 +11,7 @@ export const schema = z.lazy(() =>
         roles: true,
         accountId: true,
         chatAccessToken: true,
+        stripeConnectAccountId: true,
     })
         .extend({
             userId: z.string(),

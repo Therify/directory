@@ -15,7 +15,7 @@ export const BLOCK_QUOTE_SIZE = {
 } as const;
 
 export type BlockQuoteSize =
-    typeof BLOCK_QUOTE_SIZE[keyof typeof BLOCK_QUOTE_SIZE];
+    (typeof BLOCK_QUOTE_SIZE)[keyof typeof BLOCK_QUOTE_SIZE];
 
 export const TEST_IDS = {
     QUOTE: 'block-quote',

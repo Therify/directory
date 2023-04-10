@@ -6,7 +6,7 @@ export const CAPTION_SIZE = {
     NORMAL: 'normal',
 } as const;
 
-export type CaptionSize = typeof CAPTION_SIZE[keyof typeof CAPTION_SIZE];
+export type CaptionSize = (typeof CAPTION_SIZE)[keyof typeof CAPTION_SIZE];
 
 interface CaptionProps {
     size?: CaptionSize;

@@ -69,6 +69,8 @@ export default function PracticeProfileCreatePage({
             mobileMenu={[...PRACTICE_ADMIN_MOBILE_MENU]}
         >
             <ProfileEditor
+                canEditSessionPrice
+                allowProfileDesignationChange
                 practice={practice}
                 isSavingProfile={isCreatingProfile}
                 onSubmit={async (profile) => {

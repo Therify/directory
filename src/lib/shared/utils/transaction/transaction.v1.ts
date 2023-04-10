@@ -52,7 +52,8 @@ export async function executeTransaction<
         debug && console.info(`Running step: ${stepTitle.toString()}`);
         try {
             const result = await step.commit(context, results);
-            const parsedResult = resultSchema.shape[stepTitle].parse(result);
+            const parsedResult =
+                resultSchema.shape[stepTitle as keyof ZRS].parse(result);
             results[stepTitle] = parsedResult;
             completedSteps.push(step);
         } catch (error) {

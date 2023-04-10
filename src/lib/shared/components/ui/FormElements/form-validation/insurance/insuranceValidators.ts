@@ -3,7 +3,7 @@ export const INSURANCE_VALIDATION_TYPES = {
 } as const;
 
 export type InsuranceValidationType =
-    typeof INSURANCE_VALIDATION_TYPES[keyof typeof INSURANCE_VALIDATION_TYPES];
+    (typeof INSURANCE_VALIDATION_TYPES)[keyof typeof INSURANCE_VALIDATION_TYPES];
 
 export const createInsuranceValidationErrorMessages = (fieldName?: string) => ({
     [INSURANCE_VALIDATION_TYPES.REQUIRED]: `${
@@ -12,7 +12,7 @@ export const createInsuranceValidationErrorMessages = (fieldName?: string) => ({
 });
 
 export const getInsuranceValidationErrorMessage = (
-    error?: typeof INSURANCE_VALIDATION_TYPES[keyof typeof INSURANCE_VALIDATION_TYPES],
+    error?: (typeof INSURANCE_VALIDATION_TYPES)[keyof typeof INSURANCE_VALIDATION_TYPES],
     fieldName?: string
 ): string | undefined => {
     if (!error) return undefined;

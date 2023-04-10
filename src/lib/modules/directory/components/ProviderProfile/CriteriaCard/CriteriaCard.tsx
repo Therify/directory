@@ -17,7 +17,7 @@ export const CRITERIA_CARD_TYPES = {
 } as const;
 
 export type CriteriaCardType =
-    typeof CRITERIA_CARD_TYPES[keyof typeof CRITERIA_CARD_TYPES];
+    (typeof CRITERIA_CARD_TYPES)[keyof typeof CRITERIA_CARD_TYPES];
 
 const CRITERIA_CARD_BG_COLORS: Record<CriteriaCardType, string> = {
     [CRITERIA_CARD_TYPES.INSURANCE]: '#EEEDF9',

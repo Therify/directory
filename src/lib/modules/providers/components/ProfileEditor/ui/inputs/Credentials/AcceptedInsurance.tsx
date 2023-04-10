@@ -17,6 +17,16 @@ type InsuranceByState = Record<
     string,
     AcceptedInsurance.AcceptedInsurance['insurances']
 >;
+
+function generateLocationKey({
+    country,
+    state,
+}: {
+    state: string;
+    country?: string;
+}) {
+    return country ? `${state}, ${country}` : state;
+}
 export const AcceptedInsuranceInput = ({
     control,
     locationOptions,
@@ -29,11 +39,12 @@ export const AcceptedInsuranceInput = ({
         }) => {
             const insurancesByState = acceptedInsurances.reduce(
                 (acc, value) => {
-                    acc[`${value.state}, ${value.country}`] = value.insurances;
+                    acc[generateLocationKey(value)] = value.insurances;
                     return acc;
                 },
                 {} as InsuranceByState
             );
+            console.log({ insurancesByState });
             const hasMultipleCountries =
                 new Set(locationOptions.map((l) => l.country)).size > 1;
             return (
@@ -62,14 +73,18 @@ export const AcceptedInsuranceInput = ({
                                 onChange={(_, value) => {
                                     const update = Object.entries(
                                         insurancesByState
-                                    ).map(([stateKey, insurances]) => ({
-                                        state: stateKey,
-                                        insurances:
-                                            locationKey === stateKey
-                                                ? value
-                                                : insurances,
-                                    }));
-
+                                    ).map(([stateKey, insurances]) => {
+                                        const [state, country] =
+                                            stateKey.split(', ');
+                                        return {
+                                            country,
+                                            state,
+                                            insurances:
+                                                locationKey === stateKey
+                                                    ? value
+                                                    : insurances,
+                                        };
+                                    });
                                     onChange(update);
                                 }}
                                 value={insurancesByState[locationKey] ?? []}
