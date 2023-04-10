@@ -129,6 +129,7 @@ const ConfirmationModal = ({
 }: ConfirmationModalProps) => (
     <Modal
         isOpen
+        showCloseButton={false}
         onClose={closeModal}
         title={'Send Session Invoice' + (memberName ? ` to ${memberName}` : '')}
         message={`An invoice for 1 coaching session will be created for ${
