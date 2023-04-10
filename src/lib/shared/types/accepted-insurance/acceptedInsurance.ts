@@ -23,6 +23,7 @@ export const ACCEPTED_INSURANCES = [
     'HealthFirst',
     'Humana',
     'Kaiser',
+    'Medavie Blue Cross',
     'Medicaid',
     'Medicare',
     'Meritian Health',
