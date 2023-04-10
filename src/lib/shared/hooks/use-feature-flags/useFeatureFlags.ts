@@ -9,11 +9,12 @@ export const useFeatureFlags = (user: TherifyUser.TherifyUser | undefined) => {
     useEffect(() => {
         if (user && ldClient) {
             const context = ldClient.getContext();
-            if (context?.key !== user.userId)
+            if (context?.key !== user.userId) {
                 ldClient.identify({
                     key: user.userId,
-                    custom: { email: user.emailAddress },
+                    email: user.emailAddress,
                 });
+            }
         }
         if (!user && ldClient) {
             ldClient.identify({
