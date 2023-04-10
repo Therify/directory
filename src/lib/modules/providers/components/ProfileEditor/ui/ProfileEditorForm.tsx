@@ -32,6 +32,8 @@ interface EditorFormProps {
     control: Control<ProviderProfile.ProviderProfile>;
     isSubmitDisabled: boolean;
     isSubmittingForm: boolean;
+    canEditSessionPrice?: boolean;
+    allowProfileDesignationChange?: boolean;
     licensedStates?: Region.StateAndCountry[];
     onImageUploadSuccess: (
         error: Error | null,
@@ -72,6 +74,8 @@ export const ProfileEditorForm = ({
     hideFloatingButton,
     watchedProfileValues,
     setSupervisor,
+    canEditSessionPrice,
+    allowProfileDesignationChange,
 }: EditorFormProps) => {
     const isNewProfile = !watchedProfileValues.id;
     const theme = useTheme();
@@ -152,13 +156,17 @@ export const ProfileEditorForm = ({
                     </FloatingButtons>
                 )}
                 <Divider sx={{ mb: 4 }} />
-                <FormSectionTitle style={{ marginTop: 0 }}>
-                    Profile Type
-                </FormSectionTitle>
-                <DesignationInput
-                    control={control}
-                    disabled={isSubmittingForm}
-                />
+                {allowProfileDesignationChange && (
+                    <>
+                        <FormSectionTitle style={{ marginTop: 0 }}>
+                            Profile Type
+                        </FormSectionTitle>
+                        <DesignationInput
+                            control={control}
+                            disabled={isSubmittingForm}
+                        />
+                    </>
+                )}
                 <FormSectionTitle style={{ margin: 0 }}>
                     New Clients
                 </FormSectionTitle>
@@ -188,12 +196,16 @@ export const ProfileEditorForm = ({
                     disabled={isSubmittingForm}
                     setSupervisor={setSupervisor}
                 />
-                <PricingInputs
-                    control={control}
-                    offersSlidingScale={watchedProfileValues.offersSlidingScale}
-                    minimumRate={watchedProfileValues.minimumRate}
-                    disabled={isSubmittingForm}
-                />
+                {canEditSessionPrice && (
+                    <PricingInputs
+                        control={control}
+                        offersSlidingScale={
+                            watchedProfileValues.offersSlidingScale
+                        }
+                        minimumRate={watchedProfileValues.minimumRate}
+                        disabled={isSubmittingForm}
+                    />
+                )}
                 <PracticeSection
                     control={control}
                     isTherapist={isTherapist}

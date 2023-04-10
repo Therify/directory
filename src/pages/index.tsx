@@ -41,7 +41,7 @@ const LOGIN_IMAGES = [
 const getUserRedirectPath = (user: TherifyUser.TherifyUser): string => {
     const [role] = user.roles;
     if (role === Role.member) {
-        return URL_PATHS.DIRECTORY.MEMBER_DIRECTORY;
+        return URL_PATHS.MEMBERS.CARE;
     } else if (user.plan === null) {
         return URL_PATHS.PROVIDERS.ONBOARDING.BILLING;
     } else if (user.isPracticeAdmin) {

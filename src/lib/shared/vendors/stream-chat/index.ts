@@ -3,6 +3,7 @@ import { withStreamChatConfiguration } from './configuration';
 import { CreateChannel } from './create-channel';
 import { CreateToken } from './create-token';
 import { DeleteUser } from './delete-user';
+import { SendSystemMessageToChannel } from './send-system-message-to-channel';
 import { UpsertUser } from './upsert-user';
 
 export const vendorStreamChat = withStreamChatConfiguration((CONFIG) => {
@@ -21,6 +22,9 @@ export const vendorStreamChat = withStreamChatConfiguration((CONFIG) => {
             streamChat,
         }),
         deleteUser: DeleteUser.factory({
+            streamChat,
+        }),
+        sendSystemMessageToChannel: SendSystemMessageToChannel.factory({
             streamChat,
         }),
     };

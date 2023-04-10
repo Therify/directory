@@ -7,7 +7,6 @@ export * as EvidenceBasedApproach from './evidenceBasedApproach';
 export * as AreaOfFocus from './areaOfFocus';
 export * from './address';
 export * from './alert';
-export * from './self-assessment';
 export * from './religion';
 export * from './gender';
 export * from './issues';
@@ -25,5 +24,7 @@ export * from './provider-supervisor';
 export * from './accepted-insurance';
 export * from './provider-availability';
 export * from './connection-request';
+export * from './nodeEnvironment';
+export * from './feature-flags';
 
 export * as Mocks from './__mocks__';

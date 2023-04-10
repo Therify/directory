@@ -1,4 +1,4 @@
-import { SelfAssessment } from '@/lib/shared/types';
+import { SelfAssessment } from '@/lib/shared/types/self-assessment';
 import * as z from 'zod';
 
 export const schema = z.object({

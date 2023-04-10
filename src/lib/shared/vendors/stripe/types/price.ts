@@ -12,14 +12,16 @@ export const schema = z.object({
     metadata: z.record(z.string()),
     nickname: z.string().nullable(),
     product: z.string(),
-    recurring: z.object({
-        aggregate_usage: z
-            .enum(['sum', 'last_during_period', 'last_ever', 'max'])
-            .nullable(),
-        interval: z.enum(['month', 'year', 'week', 'day']),
-        interval_count: z.number(),
-        usage_type: z.enum(['licensed', 'metered']),
-    }),
+    recurring: z
+        .object({
+            aggregate_usage: z
+                .enum(['sum', 'last_during_period', 'last_ever', 'max'])
+                .nullable(),
+            interval: z.enum(['month', 'year', 'week', 'day']),
+            interval_count: z.number(),
+            usage_type: z.enum(['licensed', 'metered']),
+        })
+        .nullable(),
     tax_behavior: z.enum(['exclusive', 'inclusive', 'unspecified']),
     tiers_mode: z.enum(['graduated', 'volume']).nullable(),
     transform_quantity: z

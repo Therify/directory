@@ -1,3 +1,4 @@
+import { ComponentType } from 'react';
 import type { AppProps, AppType } from 'next/app';
 import { ThemeProvider } from '@mui/material/styles';
 import { ApplicationContainer } from '@/lib/shared/components/ui';
@@ -9,27 +10,38 @@ import { therifyDesignSystem } from '@/lib/shared/components/themes/therify-desi
 import { InAppNotificationsContext } from '@/lib/modules/notifications/components/context';
 import { Globals } from '@/lib/shared/components/styles';
 import { Alerts } from '@/lib/modules/alerts/context';
+import { ErrorBoundary } from '@/lib/shared/components/features/error-boundary';
+import { withLDProvider } from 'launchdarkly-react-client-sdk';
+
+const LAUNCHDARKLY_CLIENT_SIDE_ID =
+    process.env.NEXT_PUBLIC_LAUNCHDARKLY_CLIENT_SIDE_ID;
 
 const App: AppType = ({ Component, pageProps }: AppProps) => {
     return (
         <ThemeProvider theme={therifyDesignSystem}>
             <Globals />
-            <Auth0UserProvider>
-                <TherifyUser.Provider>
-                    <FirebaseClient.Provider>
-                        <InAppNotificationsContext.Provider>
-                            <Alerts.Provider>
-                                <ApplicationContainer>
-                                    <Component {...pageProps} />
-                                </ApplicationContainer>
-                            </Alerts.Provider>
-                        </InAppNotificationsContext.Provider>
-                    </FirebaseClient.Provider>
-                </TherifyUser.Provider>
-            </Auth0UserProvider>
+            <ApplicationContainer>
+                <ErrorBoundary>
+                    <Auth0UserProvider>
+                        <TherifyUser.Provider>
+                            <FirebaseClient.Provider>
+                                <InAppNotificationsContext.Provider>
+                                    <Alerts.Provider>
+                                        <Component {...pageProps} />
+                                    </Alerts.Provider>
+                                </InAppNotificationsContext.Provider>
+                            </FirebaseClient.Provider>
+                        </TherifyUser.Provider>
+                    </Auth0UserProvider>
+                </ErrorBoundary>
+            </ApplicationContainer>
         </ThemeProvider>
     );
 };
+
+const FeatureFlagWrappedApp = withLDProvider({
+    clientSideID: LAUNCHDARKLY_CLIENT_SIDE_ID!,
+})(App as ComponentType<{}>);
 
 export default withTRPC<AppRouter>({
     config({ ctx }) {
@@ -59,4 +71,4 @@ export default withTRPC<AppRouter>({
      * @link https://trpc.io/docs/ssr
      */
     ssr: true,
-})(App);
+})(FeatureFlagWrappedApp);

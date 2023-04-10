@@ -1,6 +1,9 @@
 import { ConnectionStatus } from '@prisma/client';
 import { ConnectionRequest, UNITED_STATES } from '../../types';
-import { formatReimbursementRequestUrl } from './formatReimbursementRequestUrl';
+import {
+    formatReimbursementRequestUrl,
+    generateTherifyReimbursementDetails,
+} from './formatReimbursementRequestUrl';
 
 const baseUrl = 'https://therify.co';
 const mockConnectionRequest: ConnectionRequest.Type = {
@@ -55,13 +58,18 @@ describe('formatReimbursementRequestUrl', () => {
         ['billingemail', mockConnectionRequest.providerProfile.practice.email],
         ['practice', mockConnectionRequest.providerProfile.practice.name],
     ];
+    const therifyDetails = generateTherifyReimbursementDetails({
+        memberId: mockConnectionRequest.member.id,
+        providerProfileId: mockConnectionRequest.providerProfile.id,
+        practiceId: mockConnectionRequest.providerProfile.practice.id,
+    });
     it('should return the correct url', () => {
         expect(
             formatReimbursementRequestUrl(baseUrl, mockConnectionRequest)
         ).toEqual(
             `${baseUrl}?${expectedValues
                 .map((tuple) => tuple.join('='))
-                .join('&')}`
+                .join('&')}&therifydetails=${therifyDetails}`
         );
     });
 

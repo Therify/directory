@@ -3,7 +3,7 @@ import { Ethnicity, ProviderProfile } from '@/lib/shared/types';
 import { Autocomplete, TextField } from '@mui/material';
 import { InputWrapper } from '@/lib/shared/components/ui';
 
-type Ethnicities = typeof Ethnicity.ENTRIES[number];
+type Ethnicities = (typeof Ethnicity.ENTRIES)[number];
 
 interface EthnicitiesInputProps {
     control: Control<ProviderProfile.ProviderProfile>;

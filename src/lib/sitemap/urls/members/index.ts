@@ -6,9 +6,11 @@ export const MEMBER_PATHS = {
     HOME: './members/home',
     FAVORITES: '/members/favorites',
     DIRECTORY: '/members/directory',
+    CARE: '/members/care',
     CHAT: '/members/chat',
     CONTENT: CONTENT_PATHS,
     ACCOUNT: {
         INVALID_PLAN: '/members/account/invalid-plan',
+        BILLING_AND_PAYMENTS: '/members/account/billing',
     },
 } as const;

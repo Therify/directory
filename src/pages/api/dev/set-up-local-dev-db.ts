@@ -121,6 +121,17 @@ export default async function handler(
             accountId: account.id,
         },
     });
+    const memberPlan = await prisma.plan.create({
+        data: {
+            seats: 10,
+            startDate: new Date().toISOString(),
+            endDate: addYears(new Date(), 1).toISOString(),
+            accountId: account.id,
+            status: 'active',
+            renews: false,
+            coveredSessions: 6,
+        },
+    });
     const memberEmail = `${emailName}+member@${emailDomain}`;
     const memberResult = await AccountsService.registerMember({
         emailAddress: memberEmail,

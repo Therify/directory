@@ -1,5 +1,5 @@
 import { ListSelfAssessmentsByUserId } from '@/lib/modules/members/features';
-import { SelfAssessment } from '@/lib/shared/types';
+import { SelfAssessment } from '@/lib/shared/types/self-assessment';
 import { Role } from '@prisma/client';
 import { MembersServiceParams } from '../../params';
 

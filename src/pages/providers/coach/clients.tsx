@@ -6,6 +6,8 @@ import { ProviderNavigationPage } from '@/lib/shared/components/features/pages/P
 import { ProviderClientsPageProps } from '@/lib/modules/providers/service/page-props/get-clients-page-props/getProviderClientsPageProps';
 import { ProviderClientListPage } from '@/lib/shared/components/features/pages/ProviderClientListPage/ProviderClientListPage';
 import { ProfileType } from '@prisma/client';
+import { useFeatureFlags } from '@/lib/shared/hooks';
+import { useSessionInvoicing } from '@/lib/modules/accounts/components/hooks';
 
 export const getServerSideProps = RBAC.requireCoachAuth(
     withPageAuthRequired({
@@ -18,6 +20,12 @@ export default function CoachClientsPage({
     user,
     connectionRequests,
 }: ProviderClientsPageProps) {
+    const { flags } = useFeatureFlags(user);
+    const { onInvoiceClient, ConfirmationUi } = useSessionInvoicing(
+        user?.userId
+    );
+    const canInvoiceClient =
+        flags.hasStripeConnectAccess && user.stripeConnectAccountId;
     return (
         <ProviderNavigationPage
             currentPath={URL_PATHS.PROVIDERS.COACH.CLIENTS}
@@ -28,8 +36,18 @@ export default function CoachClientsPage({
                     user={user}
                     designation={ProfileType.coach}
                     baseConnectionRequests={connectionRequests}
+                    onInvoiceClient={
+                        canInvoiceClient
+                            ? ({ member }) =>
+                                  onInvoiceClient({
+                                      memberId: member.id,
+                                      givenName: member.givenName,
+                                  })
+                            : undefined
+                    }
                 />
             )}
+            {canInvoiceClient && <ConfirmationUi />}
         </ProviderNavigationPage>
     );
 }
