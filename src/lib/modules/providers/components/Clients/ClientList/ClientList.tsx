@@ -17,6 +17,7 @@ interface ClientListProps {
     onTerminateConnectionRequest: HandleConnectionRequestAction;
     onReimbursmentRequest: HandleConnectionRequestAction;
     onViewMemberDetails: HandleConnectionRequestAction;
+    onInvoiceClient?: HandleConnectionRequestAction;
 }
 
 export const ClientList = ({
@@ -26,6 +27,7 @@ export const ClientList = ({
     onTerminateConnectionRequest,
     onReimbursmentRequest,
     onViewMemberDetails,
+    onInvoiceClient,
 }: ClientListProps) => {
     const isSmallScreen = useMediaQuery((theme: Theme) =>
         theme.breakpoints.down('md')
@@ -71,6 +73,11 @@ export const ClientList = ({
                             onTerminateConnectionRequest(connectionRequest)
                         }
                         onView={() => onViewMemberDetails(connectionRequest)}
+                        onInvoiceClient={
+                            onInvoiceClient
+                                ? () => onInvoiceClient(connectionRequest)
+                                : undefined
+                        }
                         onReimbursmentRequest={() => {
                             onReimbursmentRequest(connectionRequest);
                         }}

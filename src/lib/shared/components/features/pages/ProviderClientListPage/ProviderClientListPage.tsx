@@ -19,12 +19,14 @@ interface ProviderClientListPageProps {
     baseConnectionRequests: ConnectionRequest.Type[];
     designation: ProfileType;
     user: TherifyUser.TherifyUser;
+    onInvoiceClient?: (connectionRequest: ConnectionRequest.Type) => void;
 }
 
 export function ProviderClientListPage({
     baseConnectionRequests,
     designation,
     user,
+    onInvoiceClient,
 }: ProviderClientListPageProps) {
     const theme = useTheme();
     const {
@@ -70,6 +72,7 @@ export function ProviderClientListPage({
                         connectionRequest,
                     })
                 }
+                onInvoiceClient={onInvoiceClient}
                 onReimbursmentRequest={(connectionRequest) =>
                     window?.open(
                         formatReimbursementRequestUrl(
