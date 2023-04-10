@@ -40,6 +40,7 @@ export const useSessionInvoicing = (providerId: string) => {
                 createAlert({
                     type: 'error',
                     title: error,
+                    requireInteraction: true,
                 });
             }
         },
@@ -49,6 +50,7 @@ export const useSessionInvoicing = (providerId: string) => {
                 return createAlert({
                     type: 'error',
                     title: error.message,
+                    requireInteraction: true,
                 });
             }
             createAlert({
@@ -127,6 +129,7 @@ const ConfirmationModal = ({
 }: ConfirmationModalProps) => (
     <Modal
         isOpen
+        showCloseButton={false}
         onClose={closeModal}
         title={'Send Session Invoice' + (memberName ? ` to ${memberName}` : '')}
         message={`An invoice for 1 coaching session will be created for ${
