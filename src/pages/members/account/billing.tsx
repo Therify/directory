@@ -83,7 +83,7 @@ export default function BillingPage({
                     />
                 )}
 
-                {user.plan && (
+                {user?.plan && (
                     <>
                         <Divider />
                         <Box marginTop={8}>
