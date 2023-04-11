@@ -6,7 +6,7 @@ import {
     handleOneTimePayment,
     handlePlanChange,
 } from './handlers';
-import { getProductByEnvironment, PRODUCTS } from '@/lib/shared/types';
+import { getProductsByEnvironment, PRODUCTS } from '@/lib/shared/types';
 import { NodeEnvironment } from '@/lib/shared/types/nodeEnvironment';
 
 type HandlerResult = inferAsyncReturnType<
@@ -15,10 +15,9 @@ type HandlerResult = inferAsyncReturnType<
     | typeof handleOneTimePayment
 >;
 
-const GROUP_PRACTICE_PLAN = getProductByEnvironment(
-    PRODUCTS.GROUP_PRACTICE_PLAN,
+const GROUP_PRACTICE_PLAN = getProductsByEnvironment(
     process.env.VERCEL_ENV as NodeEnvironment
-);
+)[PRODUCTS.GROUP_PRACTICE_PLAN];
 
 export const handleInvoicePaidFactory =
     ({ accounts }: StripeWebhookParams) =>

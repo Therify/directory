@@ -1,14 +1,13 @@
 import { HandlePracticeOnboarding } from '@/lib/modules/onboarding/features';
-import { getProductByEnvironment, PRODUCTS } from '@/lib/shared/types';
+import { getProductsByEnvironment, PRODUCTS } from '@/lib/shared/types';
 import { NodeEnvironment } from '@/lib/shared/types/nodeEnvironment';
 import { URL_PATHS } from '@/lib/sitemap';
 
 import { HandlePracticeOnboardingTransaction } from './definition';
 
-const PRODUCT = getProductByEnvironment(
-    PRODUCTS.GROUP_PRACTICE_PLAN,
+const GROUP_PRACTICE_PRODUCT = getProductsByEnvironment(
     process.env.NEXT_PUBLIC_VERCEL_ENV as NodeEnvironment
-);
+)[PRODUCTS.GROUP_PRACTICE_PLAN];
 
 export const factory = ({
     seatCount,
@@ -17,8 +16,8 @@ export const factory = ({
     async commit({ stripe }, { getUserDetails: { stripeCustomerId } }) {
         const priceId =
             billingCycle === 'year'
-                ? PRODUCT.PRICES.ANNUAL
-                : PRODUCT.PRICES.DEFAULT;
+                ? GROUP_PRACTICE_PRODUCT.PRICES.ANNUAL
+                : GROUP_PRACTICE_PRODUCT.PRICES.MONTHLY;
 
         const { url: checkoutSessionUrl, id: checkoutSessionId } =
             await stripe.createCheckoutSession({
