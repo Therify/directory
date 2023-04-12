@@ -6,7 +6,10 @@ import {
     GetVerificationEmailStatus,
     RegisterMember,
 } from '@/lib/modules/registration/features';
-import { HandlePracticeOnboarding } from '@/lib/modules/onboarding/features';
+import {
+    HandlePracticeOnboarding,
+    HandleAccountOnboarding,
+} from '@/lib/modules/onboarding/features';
 import {
     GetUserDetailsById,
     GetPracticeByOwnerId,
@@ -23,6 +26,7 @@ import {
     handleStripeConnectOnboardingResolver,
     createStripeConnectLoginUrlResolver,
     createCoachingSessionInvoiceResolver,
+    handleAccountOnboardingResolver,
 } from './resolvers';
 import { Context } from '../../../server/context';
 import {
@@ -47,6 +51,11 @@ export const router = trpc
         input: GetPracticeByOwnerId.inputSchema,
         output: GetPracticeByOwnerId.outputSchema,
         resolve: getPracticeByOwnerIdResolver,
+    })
+    .mutation(HandleAccountOnboarding.TRPC_ROUTE, {
+        input: HandleAccountOnboarding.inputSchema,
+        output: HandleAccountOnboarding.outputSchema,
+        resolve: handleAccountOnboardingResolver,
     })
     .mutation(HandlePracticeOnboarding.TRPC_ROUTE, {
         input: HandlePracticeOnboarding.inputSchema,
