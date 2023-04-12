@@ -1,0 +1,27 @@
+import { z } from 'zod';
+import { TransactionV1 } from '@/lib/shared/utils';
+import { AccountsServiceParams as Context } from '../../params';
+
+export const transactionDefinition = z.object({
+    getUserDetails: z.object({
+        stripeCustomerId: z.string(),
+        userId: z.string(),
+    }),
+    handleAccountEntity: z.object({
+        accountId: z.string(),
+        created: z.boolean(),
+    }),
+    defendAgainstDuplicatePlans: z.object({
+        hasPlan: z.boolean(),
+    }),
+    createStripeCheckoutSession: z.object({
+        checkoutSessionId: z.string(),
+        checkoutSessionUrl: z.string(),
+    }),
+});
+
+export type HandleAccountOnboardingTransaction =
+    TransactionV1.TransactionDefinition<
+        Context,
+        typeof transactionDefinition.shape
+    >;

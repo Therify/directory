@@ -10,8 +10,6 @@ export const factory =
     async ({
         checkoutMode,
         customerId,
-        priceId,
-        quantity = 1,
         successUrl,
         cancelUrl,
         submitMessage,
@@ -19,10 +17,26 @@ export const factory =
         connectedAccountData,
         expiresInSeconds,
         metadata,
+        ...priceData
     }: Input): Promise<Stripe.Checkout.Session> => {
+        if ('lineItems' in priceData && priceData.lineItems.length === 0) {
+            throw new Error('No prices provided.');
+        }
+        const lineItems: Stripe.Checkout.SessionCreateParams['line_items'] =
+            'priceId' in priceData
+                ? [
+                      {
+                          price: priceData.priceId,
+                          quantity: priceData.quantity ?? 1,
+                      },
+                  ]
+                : priceData.lineItems.map(({ priceId, quantity }) => ({
+                      price: priceId,
+                      quantity: quantity ?? 1,
+                  }));
         return await stripe.checkout.sessions.create({
             customer: customerId,
-            line_items: [{ price: priceId, quantity }],
+            line_items: lineItems,
             mode: checkoutMode,
             success_url: successUrl,
             cancel_url: cancelUrl,
