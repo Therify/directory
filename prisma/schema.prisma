@@ -32,7 +32,8 @@ model User {
   stripeCustomerId              String?  @unique @map("stripe_customer_id")
   stripeConnectAccountId        String?  @unique @map("stripe_connect_account_id")
 
-  account                    Account?                     @relation(fields: [accountId], references: [id])
+  managedAccount             Account?                     @relation("managedAccount")
+  account                    Account?                     @relation("users", fields: [accountId], references: [id])
   accountId                  String?
   stripeInvoices             StripeInvoice[]
   practiceProviderInvitation PracticeProviderInvitation[]
@@ -62,7 +63,9 @@ model Account {
   registrationCodeId String?            @map("registration_code_id")
   plans              Plan[]
   stripeInvoices     StripeInvoice[]
-  users              User[]
+  users              User[]             @relation("users")
+  accountOwner       User?              @relation("managedAccount", fields: [accountOwnerId], references: [id])
+  accountOwnerId     String?            @unique @map("account_owner_id")
 
   @@map("accounts")
 }
