@@ -7,6 +7,7 @@ export const ROLES = {
     PROVIDER_COACH: 'provider_coach',
     PROVIDER_THERAPIST: 'provider_therapist',
     MEMBER: 'member',
+    ACCOUNT_OWNER: 'account_owner',
 } as const;
 
 export type Role = (typeof ROLES)[keyof typeof ROLES];
@@ -15,12 +16,14 @@ export const DEVELOPMENT_ROLE_IDS: Record<Role, string> = {
     [ROLES.PROVIDER_COACH]: 'rol_T8VOm2u51wqS9416',
     [ROLES.PROVIDER_THERAPIST]: 'rol_Q5c1eazH8inTeFfT',
     [ROLES.MEMBER]: 'rol_XvAIKC4g5d6B9v7Y',
+    [ROLES.ACCOUNT_OWNER]: 'rol_eyReP6Yl643o6FRj',
 } as const;
 
 export const PRODUCTION_ROLE_IDS: Record<Role, string> = {
     [ROLES.PROVIDER_COACH]: 'rol_nKnoFcFN8W2dDZZd',
     [ROLES.PROVIDER_THERAPIST]: 'rol_8HwHJ0QZ1j8K7Cqf',
     [ROLES.MEMBER]: 'rol_Bj8KcmEAWxLWRj5L',
+    [ROLES.ACCOUNT_OWNER]: 'rol_480dWAIISFbu2iZu',
 } as const;
 
 export const ROLES_BY_ENVIRONMENT: Record<
