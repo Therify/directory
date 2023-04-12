@@ -20,7 +20,7 @@ export const factory =
         ...priceData
     }: Input): Promise<Stripe.Checkout.Session> => {
         if ('lineItems' in priceData && priceData.lineItems.length === 0) {
-            throw new Error('No prices provided.');
+            throw new Error('No line items provided.');
         }
         const lineItems: Stripe.Checkout.SessionCreateParams['line_items'] =
             'priceId' in priceData
