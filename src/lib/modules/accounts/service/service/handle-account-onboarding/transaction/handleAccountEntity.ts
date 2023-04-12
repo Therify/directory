@@ -7,19 +7,19 @@ interface HandlePracticeOnboardingEntityFactory {
     ): HandleAccountOnboardingTransaction['handleAccountEntity'];
 }
 
-export const factory: HandlePracticeOnboardingEntityFactory = ({
-    name,
-    accountId,
-}) => {
+export const factory: HandlePracticeOnboardingEntityFactory = ({ name }) => {
     if (name.toLowerCase().includes('therify')) {
         throw new Error('Account name cannot include "Therify"');
     }
     return {
-        async commit({ prisma }, { getUserDetails: { userId } }) {
-            if (accountId) {
+        async commit(
+            { prisma },
+            { getUserDetails: { userId, managedAccountId } }
+        ) {
+            if (managedAccountId) {
                 const { id: foundAccountId } = await prisma.account.update({
                     where: {
-                        id: accountId,
+                        id: managedAccountId,
                     },
                     data: {
                         name,

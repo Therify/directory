@@ -6,6 +6,7 @@ export const transactionDefinition = z.object({
     getUserDetails: z.object({
         stripeCustomerId: z.string(),
         userId: z.string(),
+        managedAccountId: z.string().optional(),
     }),
     handleAccountEntity: z.object({
         accountId: z.string(),
