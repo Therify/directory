@@ -10,12 +10,14 @@ export const accountSchema = AccountSchema.pick({
 });
 
 export const schema = z
-    .discriminatedUnion('seatCount', [
+    .discriminatedUnion('planType', [
         accountSchema.extend({
-            seatCount: z.literal(1),
+            planType: z.literal('individual'),
             billingCycle: z.enum(['month', 'biannual', 'annual']),
+            seatCount: z.literal(1),
         }),
         accountSchema.extend({
+            planType: z.literal('team'),
             seatCount: z.number().min(2).max(50),
             billingCycle: z.enum(['biannual', 'annual']),
         }),

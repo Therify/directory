@@ -1,7 +1,7 @@
 import * as z from 'zod';
 
 export const successSchema = z.object({
-    practiceId: z.string(),
+    accountId: z.string(),
     checkoutSessionId: z.string(),
     checkoutSessionUrl: z.string(),
     errors: z.array(z.string()),
