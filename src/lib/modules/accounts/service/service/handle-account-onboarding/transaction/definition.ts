@@ -15,6 +15,10 @@ export const transactionDefinition = z.object({
     defendAgainstDuplicatePlans: z.object({
         hasPlan: z.boolean(),
     }),
+    handleRegistrationCode: z.object({
+        registrationCode: z.string().optional(),
+        created: z.boolean(),
+    }),
     createStripeCheckoutSession: z.object({
         checkoutSessionId: z.string(),
         checkoutSessionUrl: z.string(),

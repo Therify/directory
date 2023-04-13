@@ -8,6 +8,7 @@ import {
     CreateStripeCheckoutSession,
     DefendAgainstDuplicatePlans,
     GetUserDetails,
+    HandleRegistrationCode,
 } from './transaction';
 
 export function factory(context: Context) {
@@ -22,6 +23,7 @@ export function factory(context: Context) {
                 handleAccountEntity: HandleAccountEntity.factory(params),
                 defendAgainstDuplicatePlans:
                     DefendAgainstDuplicatePlans.factory(params),
+                handleRegistrationCode: HandleRegistrationCode.factory(params),
                 createStripeCheckoutSession:
                     CreateStripeCheckoutSession.factory(params),
             },
