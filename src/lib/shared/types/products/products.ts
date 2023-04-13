@@ -111,3 +111,15 @@ export function isValidTherifyPriceId(
     });
     return prices.includes(id);
 }
+
+export function isValidMembershipPriceId(
+    id: string,
+    environment: NodeEnvironment
+) {
+    const products = getProductsByEnvironment(environment);
+    const prices = [
+        ...Object.values(products[PRODUCTS.GROUP_MEMBER_PLAN].PRICES),
+        ...Object.values(products[PRODUCTS.INDIVIDUAL_MEMBER_PLAN].PRICES),
+    ];
+    return prices.includes(id);
+}
