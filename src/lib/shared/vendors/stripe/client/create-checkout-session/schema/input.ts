@@ -1,8 +1,6 @@
 import * as z from 'zod';
 
-export const schema = z.object({
-    priceId: z.string(),
-    quantity: z.number().optional(),
+const baseSchema = z.object({
     customerId: z.string(),
     successUrl: z.string(),
     cancelUrl: z.string(),
@@ -19,6 +17,16 @@ export const schema = z.object({
         })
         .optional(),
 });
+const priceOptionSchema = z.object({
+    priceId: z.string(),
+    quantity: z.number().optional(),
+});
+export const schema = z.union([
+    baseSchema.merge(priceOptionSchema),
+    baseSchema.extend({
+        lineItems: priceOptionSchema.array(),
+    }),
+]);
 
 export type Input = z.infer<typeof schema>;
 

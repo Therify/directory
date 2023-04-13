@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { vendorAuth0 } from '@/lib/shared/vendors/auth0';
+import { vendorStreamChat } from '@/lib/shared/vendors/stream-chat';
 import { vendorStripe } from '@/lib/shared/vendors/stripe';
 import { firebaseAdminVendor } from '@/lib/shared/vendors/firebase-admin';
 
@@ -17,7 +18,7 @@ import { GetUserDetailsById } from './get-user-details-by-id';
 import { CreateFirebaseAuthToken } from './create-firebase-auth-token';
 import { GetAccountByRegistrationCode } from './get-account-by-registration-code';
 import { RegisterProviderWithInvitation } from './register-provider-with-invitation';
-import { vendorStreamChat } from '@/lib/shared/vendors/stream-chat';
+import { HandleAccountOnboarding } from './handle-account-onboarding';
 
 const factoryParams: AccountsServiceParams = {
     prisma,
@@ -38,6 +39,7 @@ export const AccountsService = {
     getUserDetailsById: GetUserDetailsById.factory(factoryParams),
     getPracticeByOwnerId: GetPracticeByOwnerId.factory(factoryParams),
     handlePracticeOnboarding: HandlePracticeOnboarding.factory(factoryParams),
+    handleAccountOnboarding: HandleAccountOnboarding.factory(factoryParams),
     registerMember: registerMember,
     createFirebaseAuthToken: CreateFirebaseAuthToken.factory(factoryParams),
     getAccountByRegistrationCode:
