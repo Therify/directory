@@ -44,6 +44,9 @@ export default function AccountOnboardingPage() {
     const accountDetailsForm = useForm<HandleAccountOnboarding.Input>({
         mode: 'onChange',
         defaultValues: {
+            coveredSessions: 0,
+            seatCount: 1,
+            name: 'Individual Member Plan',
             ...getStoredAccountDetails(),
         },
     });
@@ -65,9 +68,8 @@ export default function AccountOnboardingPage() {
         if (accountData?.name) {
             accountDetailsForm.setValue('name', accountData.name);
         }
-        accountDetailsForm.setValue('coveredSessions', 0);
-        accountDetailsForm.setValue('seatCount', 1);
         accountDetailsForm.setValue('planType', 'individual');
+        accountDetailsForm.setValue('billingCycle', 'month');
     }, [accountDetailsForm, accountData?.name]);
 
     useEffect(() => {
@@ -110,6 +112,7 @@ export default function AccountOnboardingPage() {
     const handleAccountOnboarding = async function () {
         setErrorMessage(undefined);
         const accountDetails = accountDetailsForm.getValues();
+        console.log({ accountDetails });
         submitAccount(accountDetails);
     };
 
