@@ -6,6 +6,7 @@ import {
     NodeEnvironment,
     PRODUCTS,
 } from '@/lib/shared/types';
+import { LineItem } from '@/lib/shared/vendors/stripe/types/lineItem';
 
 const COVERED_COACHING_SESSION = getProductsByEnvironment(
     process.env.VERCEL_ENV as NodeEnvironment
@@ -25,7 +26,13 @@ export const handleMembershipPayment = async ({
 }: HandlePaymentInput) => {
     const [item1, item2] = invoice.lines.data;
 
-    const { plan, coveredSessions } = isValidMembershipPriceId(
+    const {
+        plan,
+        coveredSessions,
+    }: {
+        plan: LineItem;
+        coveredSessions: LineItem | undefined;
+    } = isValidMembershipPriceId(
         item1.price.id,
         process.env.VERCEL_ENV as NodeEnvironment
     )
@@ -45,7 +52,7 @@ export const handleMembershipPayment = async ({
         throw new Error('Invalid covered sessions price id');
     }
     const numberOfCoveredSessions =
-        coveredSessions?.quantity && coveredSessions.quantity > 1
+        !!coveredSessions?.quantity && coveredSessions.quantity > 1
             ? Math.floor(coveredSessions.quantity / plan.quantity)
             : coveredSessions?.quantity ?? 0;
     if (isNaN(numberOfCoveredSessions)) {
