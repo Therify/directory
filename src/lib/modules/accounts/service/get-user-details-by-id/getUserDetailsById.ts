@@ -19,9 +19,9 @@ export const factory =
                 roles: true,
             },
         });
-        const [role] = roles;
-        const isProvider =
-            role === Role.provider_coach || role === Role.provider_therapist;
+        const isProvider = ['provider_coach, provider_therapist'].some(
+            (providerRole) => roles.includes(providerRole as Role)
+        );
         if (isProvider) {
             return await ProvidersService.getTherifyUser({ userId });
         }

@@ -48,8 +48,8 @@ export const factory = ({
                 ],
                 customerId: stripeCustomerId,
                 checkoutMode: 'subscription',
-                cancelUrl: `${process.env.APPLICATION_URL}${URL_PATHS.MEMBERS.ONBOARDING.BILLING}`,
-                successUrl: `${process.env.APPLICATION_URL}${URL_PATHS.MEMBERS.ONBOARDING.BILLING_SUCCESS}`,
+                cancelUrl: `${process.env.APPLICATION_URL}${URL_PATHS.ACCOUNT_OWNER.ONBOARDING.BILLING}`,
+                successUrl: `${process.env.APPLICATION_URL}${URL_PATHS.ACCOUNT_OWNER.ONBOARDING.BILLING_SUCCESS}`,
                 allowPromotionCodes: true,
                 metadata: {
                     priceId,

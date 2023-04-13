@@ -23,6 +23,11 @@ export const factory: HandlePracticeOnboardingEntityFactory = ({ name }) => {
                     },
                     data: {
                         name,
+                        users: {
+                            connect: {
+                                id: userId,
+                            },
+                        },
                     },
                 });
                 return {
@@ -34,6 +39,11 @@ export const factory: HandlePracticeOnboardingEntityFactory = ({ name }) => {
                 data: {
                     name,
                     accountOwnerId: userId,
+                    users: {
+                        connect: {
+                            id: userId,
+                        },
+                    },
                 },
             });
 
