@@ -38,10 +38,19 @@ const LOGIN_IMAGES = [
     'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673453028/app.therify.co/login/3_sssprg.jpg',
 ] as const;
 
+function handleMemberRouting(user: TherifyUser.TherifyUser): string {
+    const adminIstillOnboarding =
+        user.roles.includes('account_owner') && !user.plan;
+    console.log('plan', user.plan);
+    if (adminIstillOnboarding)
+        return URL_PATHS.ACCOUNT_OWNER.ONBOARDING.BILLING;
+    return URL_PATHS.MEMBERS.CARE;
+}
+
 const getUserRedirectPath = (user: TherifyUser.TherifyUser): string => {
     const [role] = user.roles;
-    if (role === Role.member) {
-        return URL_PATHS.MEMBERS.CARE;
+    if (user.roles.includes('member')) {
+        return handleMemberRouting(user);
     } else if (user.plan === null) {
         return URL_PATHS.PROVIDERS.ONBOARDING.BILLING;
     } else if (user.isPracticeAdmin) {
@@ -67,7 +76,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const { user } = await AccountsService.getUserDetailsById({
         userId: session.user.sub,
     });
-
     if (!user) {
         return {
             props: {
