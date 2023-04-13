@@ -9,3 +9,5 @@ export { registerMemberResolver } from './register-member';
 export { handleStripeConnectOnboardingResolver } from './handle-stripe-connect-onboarding';
 export { createStripeConnectLoginUrlResolver } from './create-stripe-connect-login-url';
 export { createCoachingSessionInvoiceResolver } from './create-coaching-session-invoice';
+export { registerAccountOwnerResolver } from './register-account-owner';
+export { getAccountByOwnerIdResolver } from './get-account-by-owner-id';

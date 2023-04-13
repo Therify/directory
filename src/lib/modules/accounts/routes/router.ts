@@ -5,6 +5,7 @@ import {
     SendEmailVerification,
     GetVerificationEmailStatus,
     RegisterMember,
+    RegisterAccountOwner,
 } from '@/lib/modules/registration/features';
 import { HandlePracticeOnboarding } from '@/lib/modules/onboarding/features';
 import {
@@ -23,6 +24,8 @@ import {
     handleStripeConnectOnboardingResolver,
     createStripeConnectLoginUrlResolver,
     createCoachingSessionInvoiceResolver,
+    registerAccountOwnerResolver,
+    getAccountByOwnerIdResolver,
 } from './resolvers';
 import { Context } from '../../../server/context';
 import {
@@ -30,6 +33,7 @@ import {
     CreateStripeConnectLoginUrl,
     CreateCoachingSessionInvoice,
 } from '../features/billing';
+import { GetAccountByOwnerId } from '../features';
 
 export const router = trpc
     .router<Context>()
@@ -72,6 +76,16 @@ export const router = trpc
         input: RegisterProviderWithInvitation.inputSchema,
         output: RegisterProviderWithInvitation.outputSchema,
         resolve: registerProviderWithInvitationResolver,
+    })
+    .mutation(RegisterAccountOwner.TRPC_ROUTE, {
+        input: RegisterAccountOwner.inputSchema,
+        output: RegisterAccountOwner.outputSchema,
+        resolve: registerAccountOwnerResolver,
+    })
+    .query(GetAccountByOwnerId.TRPC_ROUTE, {
+        input: GetAccountByOwnerId.inputSchema,
+        output: GetAccountByOwnerId.outputSchema,
+        resolve: getAccountByOwnerIdResolver,
     })
     .mutation(RegisterMember.TRPC_ROUTE, {
         input: RegisterMember.inputSchema,
