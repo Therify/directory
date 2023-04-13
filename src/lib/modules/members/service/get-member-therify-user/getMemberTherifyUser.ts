@@ -42,7 +42,7 @@ export const factory =
             },
         });
 
-        if (!user || !user.account) return { user: null };
+        if (!user) return { user: null };
 
         const {
             emailAddress,
@@ -51,12 +51,12 @@ export const factory =
             createdAt,
             roles,
             accountId,
-            account: { plans },
+            account,
             memberChannels,
             chatAccessToken,
         } = user;
 
-        const [newestPlan] = plans;
+        const [newestPlan] = account?.plans ?? [];
         const plan = newestPlan
             ? {
                   ...newestPlan,
