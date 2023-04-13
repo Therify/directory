@@ -37,6 +37,7 @@ function calculatePrice({
     coveredSessions: number;
     billingCycle: 'month' | 'biannual' | 'annual';
 }): number {
+    console.log({ seats, coveredSessions, billingCycle });
     const isIndividual = seats === 1;
     const isTeam = seats > 1;
     const hasCoveredSessions = coveredSessions > 0;
@@ -153,6 +154,10 @@ export const AccountDetailsForm = ({
     if (!control) throw new Error('control is required');
     const [wantsCoveredSessions, setWantsCoveredSessions] = useState(false);
     const [isTeamAccount, setIsTeamAccount] = useState(false);
+    const { field: planType } = useController({
+        control,
+        name: 'planType',
+    });
     const { field: accountNameField } = useController({
         control,
         name: 'name',
@@ -263,8 +268,10 @@ export const AccountDetailsForm = ({
                                     seatCountField.onChange(2);
                                     billingCycleField.onChange('biannual');
                                     accountNameField.onChange('');
+                                    planType.onChange('team');
                                 } else {
                                     seatCountField.onChange(1);
+                                    planType.onChange('individual');
                                     billingCycleField.onChange('month');
                                     accountNameField.onChange(
                                         defaultValues?.name
@@ -313,6 +320,7 @@ export const AccountDetailsForm = ({
                                     <SeatCountInput
                                         control={control}
                                         max={maximumSeats}
+                                        defaultValue={minimumSeats}
                                         min={isTeamAccount ? 2 : 1}
                                         onInputBlur={onInputBlur}
                                         disabled={disabled}
@@ -329,7 +337,7 @@ export const AccountDetailsForm = ({
                 </SectionTitle>
                 <BillingCycleButtons
                     control={control}
-                    defaultValue={defaultValues?.billingCycle}
+                    defaultValue={'month'}
                     disabled={disabled}
                     isTeamAccount={isTeamAccount}
                 />

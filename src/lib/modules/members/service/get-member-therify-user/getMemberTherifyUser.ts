@@ -55,7 +55,6 @@ export const factory =
             memberChannels,
             chatAccessToken,
         } = user;
-
         const [newestPlan] = account?.plans ?? [];
         const plan = newestPlan
             ? {

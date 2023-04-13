@@ -21,7 +21,6 @@ import { TRPCClientError } from '@trpc/client';
 import Link from 'next/link';
 import { URL_PATHS } from '@/lib/sitemap';
 import { RBAC } from '@/lib/shared/utils';
-import { AccountsService } from '@/lib/modules/accounts/service';
 
 const REGISTRATION_STEPS = ['Registration', 'Payment', 'Onboarding'] as const;
 
@@ -29,9 +28,9 @@ export const getServerSideProps = RBAC.requireMemberAuth(
     withPageAuthRequired({})
 );
 
-function getDefaultAccountName(user: { name?: string | null } = {}) {
-    if (user.name) {
-        return `${user.name}'s Account - ${new Date().getFullYear()}`;
+function getDefaultAccountName(user: { sub?: string | null } = {}) {
+    if (user.sub) {
+        return `${user.sub}'s Account - ${new Date().getFullYear()}`;
     }
     return `Account - ${new Date().getFullYear()}`;
 }
@@ -49,7 +48,6 @@ export default function AccountOnboardingPage() {
         },
     });
     const billingCycle = accountDetailsForm.watch('billingCycle');
-
     const { isLoading: isLoadingAccount, data: accountData } = trpc.useQuery(
         [
             'accounts.accounts.get-account-by-owner-id',
@@ -68,6 +66,8 @@ export default function AccountOnboardingPage() {
             accountDetailsForm.setValue('name', accountData.name);
         }
         accountDetailsForm.setValue('coveredSessions', 0);
+        accountDetailsForm.setValue('seatCount', 1);
+        accountDetailsForm.setValue('planType', 'individual');
     }, [accountDetailsForm, accountData?.name]);
 
     useEffect(() => {
@@ -76,41 +76,41 @@ export default function AccountOnboardingPage() {
         }
     }, [accountDetailsForm, user?.sub]);
 
-    // const { isLoading: isHandlingAccountSubmission, mutate: submitAccount } =
-    //     trpc.useMutation(`accounts.${HandleAccountOnboarding.TRPC_ROUTE}`, {
-    //         onSuccess(response) {
-    //             const parseResult =
-    //                 HandleAccountOnboarding.outputSuccessSchema.safeParse(
-    //                     response
-    //                 );
-    //             if (parseResult.success) {
-    //                 window.location.href = parseResult.data.checkoutSessionUrl;
-    //                 return;
-    //             }
-    //             const [error] = response.errors;
-    //             if (error) {
-    //                 setErrorMessage(error);
-    //                 return;
-    //             }
-    //         },
-    //         onError(error) {
-    //             if (error instanceof TRPCClientError) {
-    //                 try {
-    //                     const [trpcError] = JSON.parse(error.message) as {
-    //                         message: string;
-    //                     }[];
-    //                     setErrorMessage(trpcError.message ?? error.message);
-    //                     return;
-    //                 } catch (e) {}
-    //             }
-    //             setErrorMessage(error.message);
-    //         },
-    //     });
+    const { isLoading: isHandlingAccountSubmission, mutate: submitAccount } =
+        trpc.useMutation('accounts.onboarding.handle-account-onboarding', {
+            onSuccess(response) {
+                const parseResult =
+                    HandleAccountOnboarding.outputSuccessSchema.safeParse(
+                        response
+                    );
+                if (parseResult.success) {
+                    window.location.href = parseResult.data.checkoutSessionUrl;
+                    return;
+                }
+                const [error] = response.errors;
+                if (error) {
+                    setErrorMessage(error);
+                    return;
+                }
+            },
+            onError(error) {
+                if (error instanceof TRPCClientError) {
+                    try {
+                        const [trpcError] = JSON.parse(error.message) as {
+                            message: string;
+                        }[];
+                        setErrorMessage(trpcError.message ?? error.message);
+                        return;
+                    } catch (e) {}
+                }
+                setErrorMessage(error.message);
+            },
+        });
 
     const handleAccountOnboarding = async function () {
         setErrorMessage(undefined);
         const accountDetails = accountDetailsForm.getValues();
-        console.log(accountDetails);
+        submitAccount(accountDetails);
     };
 
     return (
@@ -122,7 +122,11 @@ export default function AccountOnboardingPage() {
                 >
                     <FormContainer
                         errorMessage={errorMessage}
-                        isLoading={isLoadingUser || isLoadingAccount}
+                        isLoading={
+                            isLoadingUser ||
+                            isLoadingAccount ||
+                            isHandlingAccountSubmission
+                        }
                     >
                         <AccountDetailsForm
                             defaultValues={{
@@ -142,7 +146,11 @@ export default function AccountOnboardingPage() {
                                 )
                             }
                             billingCycle={billingCycle}
-                            disabled={isLoadingUser || isLoadingAccount}
+                            disabled={
+                                isLoadingUser ||
+                                isLoadingAccount ||
+                                isHandlingAccountSubmission
+                            }
                         />
                     </FormContainer>
                     <ButtonContainer>
@@ -164,7 +172,8 @@ export default function AccountOnboardingPage() {
                             disabled={
                                 !accountDetailsForm.formState.isValid ||
                                 isLoadingUser ||
-                                isLoadingAccount
+                                isLoadingAccount ||
+                                isHandlingAccountSubmission
                             }
                             endIcon={<NextIcon />}
                             onClick={handleAccountOnboarding}

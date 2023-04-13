@@ -41,6 +41,7 @@ const LOGIN_IMAGES = [
 function handleMemberRouting(user: TherifyUser.TherifyUser): string {
     const adminIstillOnboarding =
         user.roles.includes('account_owner') && !user.plan;
+    console.log('plan', user.plan);
     if (adminIstillOnboarding)
         return URL_PATHS.ACCOUNT_OWNER.ONBOARDING.BILLING;
     return URL_PATHS.MEMBERS.CARE;
@@ -72,12 +73,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             },
         };
     }
-    console.log('session', session);
-    console.info('Getting user details');
     const { user } = await AccountsService.getUserDetailsById({
         userId: session.user.sub,
     });
-    console.log('user', user);
     if (!user) {
         return {
             props: {
