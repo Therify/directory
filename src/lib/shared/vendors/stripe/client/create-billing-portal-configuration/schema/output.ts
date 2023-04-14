@@ -1,18 +1,17 @@
 import * as z from 'zod';
 
 export const schema = z.object({
-    customerId: z.string(),
     configurationId: z.string(),
-    returnUrl: z.string(),
+    liveMode: z.boolean(),
 });
 
-export type Input = z.infer<typeof schema>;
+export type Output = z.infer<typeof schema>;
 
-export const validate = (value: unknown): Input => {
+export const validate = (value: unknown): Output => {
     return schema.parse(value);
 };
 
-export const isValid = (value: unknown): value is Input => {
+export const isValid = (value: unknown): value is Output => {
     try {
         validate(value);
         return true;

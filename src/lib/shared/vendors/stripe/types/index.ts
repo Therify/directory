@@ -9,3 +9,4 @@ export * as StripeInvoice from './invoice';
 export * as StripeLineItem from './lineItem';
 export * as StripePrice from './price';
 export * as StripeCheckoutSession from './checkout-session';
+export * as StripeBillingPortalConfig from './billing-portal-configuration';

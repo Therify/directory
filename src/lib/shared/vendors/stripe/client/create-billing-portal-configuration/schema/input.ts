@@ -1,9 +1,14 @@
 import * as z from 'zod';
 
 export const schema = z.object({
-    customerId: z.string(),
-    configurationId: z.string(),
-    returnUrl: z.string(),
+    headline: z.string().optional(),
+    metadata: z.record(z.string()).optional(),
+    products: z
+        .object({
+            productId: z.string(),
+            priceIds: z.string().array(),
+        })
+        .array(),
 });
 
 export type Input = z.infer<typeof schema>;

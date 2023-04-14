@@ -17,6 +17,8 @@ import { CreatePrice } from './client/create-price';
 import { ArchivePrice } from './client/archive-price';
 import { CreateInvoice } from './client/create-invoice';
 import { SendInvoice } from './client/send-invoice';
+import { CreateBillingPortalConfiguration } from './client/create-billing-portal-configuration';
+import { CreateBillingPortalSession } from './client/create-billing-portal-session';
 
 export * from './types';
 export * as StripeUtils from './utils';
@@ -65,6 +67,13 @@ export const vendorStripe = withStripeConfiguration((CONFIG) => {
             stripe,
         }),
         createCheckoutSession: CreateCheckoutSession.factory({
+            stripe,
+        }),
+        createBillingPortalConfiguration:
+            CreateBillingPortalConfiguration.factory({
+                stripe,
+            }),
+        createBillingPortalSession: CreateBillingPortalSession.factory({
             stripe,
         }),
         expireCheckoutSession: ExpireCheckoutSession.factory({ stripe }),

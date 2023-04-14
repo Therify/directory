@@ -1,4 +1,3 @@
-import Stripe from 'stripe';
 import { StripeVendorFactoryParams } from '../types';
 import { Input, Output } from './schema';
 
@@ -7,8 +6,19 @@ export interface CreateBillingPortalFactoryParams
 
 export const factory =
     ({ stripe }: CreateBillingPortalFactoryParams) =>
-    async ({}: Input): Promise<Output> => {
+    async ({
+        customerId,
+        configurationId,
+        returnUrl,
+    }: Input): Promise<Output> => {
+        const configuration = await stripe.billingPortal.sessions.create({
+            customer: customerId,
+            return_url: returnUrl,
+            configuration: configurationId,
+        });
+
         return {
-            sessionUrl: '// TODO: Implement',
+            billingPortalId: configuration.id,
+            billingPortalUrl: configuration.url,
         };
     };

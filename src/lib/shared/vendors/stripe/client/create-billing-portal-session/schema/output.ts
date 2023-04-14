@@ -1,8 +1,8 @@
-import Stripe from 'stripe';
 import * as z from 'zod';
 
 export const schema = z.object({
-    sessionUrl: z.string(),
+    billingPortalUrl: z.string(),
+    billingPortalId: z.string(),
 });
 
 export type Output = z.infer<typeof schema>;
