@@ -24,6 +24,9 @@ import { format } from 'date-fns';
 import { MemberNavigationPage } from '@/lib/shared/components/features/pages';
 import { membersService } from '@/lib/modules/members/service';
 import { MemberBillingPageProps } from '@/lib/modules/members/service/get-billing-page-props/getBillingPageProps';
+// import { trpc } from '@/lib/shared/utils/trpc';
+// import { useContext } from 'react';
+// import { Alerts } from '@/lib/modules/alerts/context';
 
 export const getServerSideProps = RBAC.requireMemberAuth(
     withPageAuthRequired({
@@ -39,6 +42,34 @@ export default function BillingPage({
         (user?.plan?.status === PlanStatus.active ||
             user?.plan?.status === PlanStatus.trialing);
     const theme = useTheme();
+    // const { createAlert } = useContext(Alerts.Context);
+
+    // const {
+    //     mutate: createBillingPortalSession,
+    //     isLoading: isCreatingBillingPortalSession,
+    // } = trpc.useMutation('accounts.billing.create-billing-portal-session', {
+    //     onSuccess: ({ billingPortalSessionUrl, errors }) => {
+    //         if (billingPortalSessionUrl) {
+    //             if (typeof window !== 'undefined')
+    //                 window.open(billingPortalSessionUrl, '_blank');
+    //             return;
+    //         }
+
+    //         const [error] = errors;
+    //         if (error) {
+    //             createAlert({
+    //                 type: 'error',
+    //                 title: error,
+    //             });
+    //         }
+    //     },
+    //     onError: (error) => {
+    //         createAlert({
+    //             type: 'error',
+    //             title: error.message,
+    //         });
+    //     },
+    // });
     return (
         <MemberNavigationPage
             currentPath={URL_PATHS.MEMBERS.ACCOUNT.BILLING_AND_PAYMENTS}
@@ -59,6 +90,20 @@ export default function BillingPage({
                     Stripe&apos;s customer portal.
                 </Paragraph>
 
+                {/* <Button
+                    endIcon={<ArrowIcon />}
+                    onClick={() =>
+                        createBillingPortalSession({
+                            userId: user.userId,
+                            returnUrl: window?.location.href,
+                        })
+                    }
+                    isLoading={isCreatingBillingPortalSession}
+                    disabled={isCreatingBillingPortalSession}
+                >
+                    Launch Stripe Customer Portal
+                </Button> */}
+
                 {stripeCustomerPortalUrl ? (
                     <Link
                         href={stripeCustomerPortalUrl}
@@ -66,7 +111,7 @@ export default function BillingPage({
                         style={{ textDecoration: 'none' }}
                     >
                         <Button endIcon={<ArrowIcon />}>
-                            Launch Stripe Customer Portal
+                            Launch Stripe Customer Portal old
                         </Button>
                     </Link>
                 ) : (
