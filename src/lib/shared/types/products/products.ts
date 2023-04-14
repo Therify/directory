@@ -76,9 +76,10 @@ export const PRODUCTS_BY_ENVIRONMENT: Record<
 } as const;
 
 export const getProductsByEnvironment = (environment: NodeEnvironment) => {
-    if (environment !== 'production')
-        return PRODUCTS_BY_ENVIRONMENT['development'];
-    return PRODUCTS_BY_ENVIRONMENT['production'];
+    if (environment === 'production') {
+        return PRODUCTS_BY_ENVIRONMENT['production'];
+    }
+    return PRODUCTS_BY_ENVIRONMENT['development'];
 };
 
 /**
