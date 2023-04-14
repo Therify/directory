@@ -22,6 +22,7 @@ export const factory =
                 accountId: true,
                 chatAccessToken: true,
                 memberChannels: true,
+                managedAccount: true,
                 account: {
                     select: {
                         plans: {
@@ -35,6 +36,7 @@ export const factory =
                                 endDate: true,
                                 renews: true,
                                 seats: true,
+                                coveredSessions: true,
                             },
                         },
                     },
@@ -54,6 +56,7 @@ export const factory =
             account,
             memberChannels,
             chatAccessToken,
+            managedAccount,
         } = user;
         const [newestPlan] = account?.plans ?? [];
         const plan = newestPlan
@@ -77,6 +80,7 @@ export const factory =
                 userId,
                 plan,
                 isPracticeAdmin: false,
+                isAccountAdmin: Boolean(managedAccount),
             }),
         };
     };

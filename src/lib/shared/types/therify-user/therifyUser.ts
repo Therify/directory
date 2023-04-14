@@ -26,6 +26,7 @@ export const schema = z.lazy(() =>
                 endDate: true,
                 renews: true,
                 seats: true,
+                coveredSessions: true,
             })
                 .extend({
                     startDate: z.string(),
@@ -33,6 +34,7 @@ export const schema = z.lazy(() =>
                 })
                 .nullable(),
             isPracticeAdmin: z.boolean(),
+            isAccountAdmin: z.boolean().default(false),
         })
         .transform((user) => {
             return {

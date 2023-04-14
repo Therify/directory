@@ -1,5 +1,6 @@
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
-import { RBAC } from '@/lib/shared/utils';
+import { differenceInCalendarMonths } from 'date-fns';
+import { RBAC, formatMembershipPlanChangeRequestUrl } from '@/lib/shared/utils';
 import { Box, Link } from '@mui/material';
 import { URL_PATHS } from '@/lib/sitemap';
 import { useTheme } from '@mui/material/styles';
@@ -30,6 +31,9 @@ export const getServerSideProps = RBAC.requireMemberAuth(
         getServerSideProps: membersService.getBillingPageProps,
     })
 );
+
+const MEMRBERSHIP_PLAN_CHANGE_REQUEST_FORM_URL =
+    'https://form.jotform.com/231035598721154' as const;
 export default function BillingPage({
     stripeCustomerPortalUrl,
     user,
@@ -46,41 +50,45 @@ export default function BillingPage({
         >
             <Box padding={4} maxWidth={800} margin="auto">
                 <H3>Billing and Payments</H3>
-                <Paragraph>
-                    We partner with{' '}
-                    <Link
-                        href="https://stripe.com/"
-                        target="_blank"
-                        style={{ color: theme.palette.text.primary }}
-                    >
-                        Stripe
-                    </Link>{' '}
-                    for simplified billing. You can edit billing settings in
-                    Stripe&apos;s customer portal.
-                </Paragraph>
+                {!user?.isAccountAdmin && (
+                    <>
+                        <Paragraph>
+                            We partner with{' '}
+                            <Link
+                                href="https://stripe.com/"
+                                target="_blank"
+                                style={{ color: theme.palette.text.primary }}
+                            >
+                                Stripe
+                            </Link>{' '}
+                            for simplified billing. You can edit billing
+                            settings in Stripe&apos;s customer portal.
+                        </Paragraph>
 
-                {stripeCustomerPortalUrl ? (
-                    <Link
-                        href={stripeCustomerPortalUrl}
-                        target="_blank"
-                        style={{ textDecoration: 'none' }}
-                    >
-                        <Button endIcon={<ArrowIcon />}>
-                            Launch Stripe Customer Portal
-                        </Button>
-                    </Link>
-                ) : (
-                    <Alert
-                        icon={
-                            <CenteredContainer>
-                                <WarningRounded />
-                            </CenteredContainer>
-                        }
-                        title="Stripe Billing Issue"
-                        type="error"
-                        message="Stripe customer portal URL is not configured. Please reach
+                        {stripeCustomerPortalUrl ? (
+                            <Link
+                                href={stripeCustomerPortalUrl}
+                                target="_blank"
+                                style={{ textDecoration: 'none' }}
+                            >
+                                <Button endIcon={<ArrowIcon />}>
+                                    Launch Stripe Customer Portal
+                                </Button>
+                            </Link>
+                        ) : (
+                            <Alert
+                                icon={
+                                    <CenteredContainer>
+                                        <WarningRounded />
+                                    </CenteredContainer>
+                                }
+                                title="Stripe Billing Issue"
+                                type="error"
+                                message="Stripe customer portal URL is not configured. Please reach
                     out to Therify support."
-                    />
+                            />
+                        )}
+                    </>
                 )}
 
                 {user?.plan && (
@@ -116,8 +124,60 @@ export default function BillingPage({
                                     'MMMM do, yyyy'
                                 )}
                             </Paragraph>
+                            {user.isAccountAdmin && (
+                                <>
+                                    <Paragraph>
+                                        Seats: {user.plan.seats}
+                                    </Paragraph>
+                                    <Paragraph>
+                                        Covered Sessions Per seat:{' '}
+                                        {user.plan.coveredSessions}
+                                    </Paragraph>
+                                </>
+                            )}
                         </Box>
                     </>
+                )}
+                {user?.isAccountAdmin && user.plan && (
+                    <Box width="100%" marginTop={4}>
+                        <Divider />
+                        <H4>Request to change your plan</H4>
+                        <Paragraph>
+                            You may submit a request to update or cancel your
+                            plan by launching and submitting a plan change
+                            request. Plan changes are usually processed within
+                            2-3 business days (excluding holidays).
+                        </Paragraph>
+                        <Button
+                            endIcon={<ArrowIcon />}
+                            onClick={() => {
+                                if (typeof window !== 'undefined' && user.plan)
+                                    window.open(
+                                        formatMembershipPlanChangeRequestUrl(
+                                            MEMRBERSHIP_PLAN_CHANGE_REQUEST_FORM_URL,
+                                            {
+                                                accountId: user.accountId!,
+                                                userId: user.userId,
+                                                email: user.emailAddress,
+                                                planType:
+                                                    user.plan.seats > 1
+                                                        ? 'Team'
+                                                        : 'Individual',
+                                                billingCycle: getBillingCycle(
+                                                    user.plan.startDate,
+                                                    user.plan.endDate
+                                                ),
+                                                seatCount: user.plan.seats,
+                                                coveredSessions:
+                                                    user.plan.coveredSessions,
+                                            }
+                                        )
+                                    );
+                            }}
+                        >
+                            Launch Plan Change Form
+                        </Button>
+                    </Box>
                 )}
             </Box>
         </MemberNavigationPage>
@@ -141,5 +201,27 @@ const getPlanStatusText = (status: string) => {
             return 'Incomplete - Expired';
         default:
             return 'Unknown';
+    }
+};
+
+const getBillingCycle = (
+    startDate: string,
+    endDate: string
+): 'Month' | 'Biannual' | 'Annual' => {
+    const months = differenceInCalendarMonths(
+        new Date(endDate),
+        new Date(startDate)
+    );
+    console.log('months', months);
+    switch (months) {
+        case 1:
+            return 'Month';
+        case 6:
+            return 'Biannual';
+        case 12:
+            return 'Annual';
+        default:
+            // This will render as empty on the form
+            return '' as 'Month';
     }
 };
