@@ -37,6 +37,9 @@ export const factory = ({ prisma }: GenerateRecommendationsParams) => {
             }),
             prisma.providerProfile.findMany({
                 where: {
+                    ...(selfAssessment.phq9Score > 14 && {
+                        designation: 'therapist',
+                    }),
                     newClientStatus: 'accepting',
                     directoryListing: {
                         status: 'listed',

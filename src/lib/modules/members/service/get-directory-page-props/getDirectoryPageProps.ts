@@ -20,15 +20,6 @@ export function factory(params: MembersServiceParams) {
     const getDirectoryPageProps: GetServerSideProps<
         DirectoryPageProps
     > = async (context) => {
-        const isMemberAtRisk = await isAtRisk(context);
-        if (isMemberAtRisk) {
-            return {
-                redirect: {
-                    destination: '/members/request-appointment',
-                    permanent: false,
-                },
-            };
-        }
         const session = await getSession(context.req, context.res);
         if (!session)
             throw Error('Failed fetching Home Page Props, session not found');
