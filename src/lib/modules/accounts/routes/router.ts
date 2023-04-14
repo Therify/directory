@@ -30,12 +30,14 @@ import {
     handleAccountOnboardingResolver,
     registerAccountOwnerResolver,
     getAccountByOwnerIdResolver,
+    createBillingPortalSessionResolver,
 } from './resolvers';
 import { Context } from '../../../server/context';
 import {
     HandleStripeConnectOnboarding,
     CreateStripeConnectLoginUrl,
     CreateCoachingSessionInvoice,
+    CreateBillingPortalSession,
 } from '../features/billing';
 import { GetAccountByOwnerId } from '../features';
 
@@ -110,4 +112,9 @@ export const router = trpc
         input: SendEmailVerification.inputSchema,
         output: SendEmailVerification.outputSchema,
         resolve: sendEmailVerificationResolver,
+    })
+    .mutation(CreateBillingPortalSession.TRPC_ROUTE, {
+        input: CreateBillingPortalSession.inputSchema,
+        output: CreateBillingPortalSession.outputSchema,
+        resolve: createBillingPortalSessionResolver,
     });

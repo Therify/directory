@@ -8,3 +8,4 @@ export * as RenewPlan from './renew-plan';
 export * as CancelPlan from './cancel-plan';
 export * as HandleReimbursementSubmission from './handle-reimbursement-submission';
 export * as HandleMembershipPlanPayment from './handle-membership-plan-payment';
+export * as CreateBillingPortalSession from './create-billing-portal-session';

@@ -1,8 +1,9 @@
 import { NodeEnvironment } from '@/lib/shared/types';
 
-const CONFIGS = {
+export const CONFIGS = {
     ACCOUNT_ADMIN: 'account_admin',
     PRACTICE_ADMIN: 'practice_admin',
+    MEMBER: 'member',
 } as const;
 
 type Config = (typeof CONFIGS)[keyof typeof CONFIGS];
@@ -11,6 +12,9 @@ type Configuration = {
         CONFIGURATION_ID: string;
     };
     [CONFIGS.PRACTICE_ADMIN]: {
+        CONFIGURATION_ID: string;
+    };
+    [CONFIGS.MEMBER]: {
         CONFIGURATION_ID: string;
     };
 };
@@ -22,6 +26,9 @@ export const DEVELOPMENT_CONFIGURATIONS: Configuration = {
     [CONFIGS.PRACTICE_ADMIN]: {
         CONFIGURATION_ID: '',
     },
+    [CONFIGS.MEMBER]: {
+        CONFIGURATION_ID: '',
+    },
 } as const;
 
 export const PRODUCTION_CONFIGURATIONS: Configuration = {
@@ -29,6 +36,9 @@ export const PRODUCTION_CONFIGURATIONS: Configuration = {
         CONFIGURATION_ID: '',
     },
     [CONFIGS.PRACTICE_ADMIN]: {
+        CONFIGURATION_ID: '',
+    },
+    [CONFIGS.MEMBER]: {
         CONFIGURATION_ID: '',
     },
 } as const;

@@ -12,3 +12,4 @@ export { createStripeConnectLoginUrlResolver } from './create-stripe-connect-log
 export { createCoachingSessionInvoiceResolver } from './create-coaching-session-invoice';
 export { registerAccountOwnerResolver } from './register-account-owner';
 export { getAccountByOwnerIdResolver } from './get-account-by-owner-id';
+export { createBillingPortalSessionResolver } from './create-billing-portal-session';

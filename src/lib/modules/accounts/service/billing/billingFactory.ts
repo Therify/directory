@@ -11,6 +11,7 @@ import { HandleInvoiceSent } from './handle-invoice-sent';
 import { HandleCoachingSessionInvoiceUpdated } from './handle-coaching-session-invoice-updated';
 import { HandleReimbursementSubmission } from './handle-reimbursement-submission';
 import { HandleMembershipPlanPayment } from './handle-membership-plan-payment';
+import { CreateBillingPortalSession } from './create-billing-portal-session';
 
 export const factory = (context: AccountsServiceParams) => ({
     handleCoachingSessionPayment: HandleCoachingSessionPayment.factory(context),
@@ -29,4 +30,6 @@ export const factory = (context: AccountsServiceParams) => ({
     createCoachingSessionInvoice: CreateCoachingSessionInvoice.factory(context),
     handleReimbursementSubmission:
         HandleReimbursementSubmission.factory(context),
+
+    createBillingPortalSession: CreateBillingPortalSession.factory(context),
 });

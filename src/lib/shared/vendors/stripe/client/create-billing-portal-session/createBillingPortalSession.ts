@@ -11,14 +11,14 @@ export const factory =
         configurationId,
         returnUrl,
     }: Input): Promise<Output> => {
-        const configuration = await stripe.billingPortal.sessions.create({
+        const session = await stripe.billingPortal.sessions.create({
             customer: customerId,
             return_url: returnUrl,
             configuration: configurationId,
         });
 
         return {
-            billingPortalId: configuration.id,
-            billingPortalUrl: configuration.url,
+            billingPortalSessionId: session.id,
+            billingPortalSessionUrl: session.url,
         };
     };
