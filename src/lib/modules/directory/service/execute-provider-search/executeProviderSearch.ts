@@ -15,6 +15,11 @@ export const factory = ({ prisma }: CreateConnectionFactoryParams) => {
     return async function executeProviderSearch(
         input: ProviderSearch.Input
     ): Promise<ProviderSearch.Output> {
+        const { selfAssessment } = input;
+        const isAtRisk =
+            selfAssessment.phq9Score > 14 ||
+            selfAssessment.hasSuicidalIdeation ||
+            selfAssessment.isInCrisis;
         const profileResults = await prisma.providerProfile.findMany({
             where: {
                 OR: [
@@ -48,33 +53,35 @@ export const factory = ({ prisma }: CreateConnectionFactoryParams) => {
                             isEmpty: false,
                         },
                     },
-                    {
-                        designation: ProfileType.coach,
-                        directoryListing: {
-                            status: ListingStatus.listed,
-                        },
-                        // Practice has active plan
-                        practiceProfile: {
-                            practice: {
-                                plans: {
-                                    some: {
-                                        endDate: {
-                                            gt: new Date(),
-                                        },
-                                        startDate: {
-                                            lte: new Date(),
-                                        },
-                                        status: {
-                                            in: [
-                                                PlanStatus.active,
-                                                PlanStatus.trialing,
-                                            ],
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
+                    !isAtRisk
+                        ? {
+                              designation: ProfileType.coach,
+                              directoryListing: {
+                                  status: ListingStatus.listed,
+                              },
+                              // Practice has active plan
+                              practiceProfile: {
+                                  practice: {
+                                      plans: {
+                                          some: {
+                                              endDate: {
+                                                  gt: new Date(),
+                                              },
+                                              startDate: {
+                                                  lte: new Date(),
+                                              },
+                                              status: {
+                                                  in: [
+                                                      PlanStatus.active,
+                                                      PlanStatus.trialing,
+                                                  ],
+                                              },
+                                          },
+                                      },
+                                  },
+                              },
+                          }
+                        : {},
                 ],
             },
         });

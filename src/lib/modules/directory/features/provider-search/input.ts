@@ -1,4 +1,5 @@
 import { Country, Region, UNITED_STATES } from '@/lib/shared/types';
+import { SelfAssessment } from '@/lib/shared/types/self-assessment';
 import * as z from 'zod';
 
 export const schema = z.object({
@@ -15,6 +16,7 @@ export const schema = z.object({
     gender: z.string().optional(),
     specialties: z.string().array().optional(),
     languages: z.string().array().optional(),
+    selfAssessment: SelfAssessment.schema,
 });
 
 export type Input = z.infer<typeof schema>;

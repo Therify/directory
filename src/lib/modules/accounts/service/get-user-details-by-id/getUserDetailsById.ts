@@ -19,7 +19,7 @@ export const factory =
                 roles: true,
             },
         });
-        const isProvider = ['provider_coach, provider_therapist'].some(
+        const isProvider = ['provider_coach', 'provider_therapist'].some(
             (providerRole) => roles.includes(providerRole as Role)
         );
         if (isProvider) {

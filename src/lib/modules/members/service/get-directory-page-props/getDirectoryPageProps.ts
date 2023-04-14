@@ -8,7 +8,7 @@ import { directoryService } from '@/lib/modules/directory/service';
 import { Country, Region } from '@/lib/shared/types';
 import { URL_PATHS } from '@/lib/sitemap';
 import { GetMemberTherifyUser } from '../get-member-therify-user';
-import { isAtRisk } from '@/lib/shared/types/self-assessment/is-at-risk/isAtRisk';
+import { SelfAssessment } from '@/lib/shared/types/self-assessment';
 
 export interface DirectoryPageProps {
     providerProfiles: DirectoryProfile.DirectoryProfileCard[];
@@ -24,16 +24,26 @@ export function factory(params: MembersServiceParams) {
         if (!session)
             throw Error('Failed fetching Home Page Props, session not found');
         const getTherifyUser = GetMemberTherifyUser.factory(params);
-        const memberProfile = await params.prisma.memberProfile.findUnique({
-            where: {
-                userId: session.user.sub,
-            },
-            select: {
-                state: true,
-                country: true,
-            },
-        });
-        if (!memberProfile) {
+        const [memberProfile, rawSelfAssessment] = await Promise.all([
+            params.prisma.memberProfile.findUnique({
+                where: {
+                    userId: session.user.sub,
+                },
+                select: {
+                    state: true,
+                    country: true,
+                },
+            }),
+            params.prisma.selfAssessment.findFirst({
+                where: {
+                    userId: session.user.sub,
+                },
+                orderBy: {
+                    createdAt: 'desc',
+                },
+            }),
+        ]);
+        if (!memberProfile || !rawSelfAssessment) {
             return {
                 redirect: {
                     // TODO: redirect to the member profile editor
@@ -42,6 +52,7 @@ export function factory(params: MembersServiceParams) {
                 },
             };
         }
+        const selfAssessment = SelfAssessment.validate(rawSelfAssessment);
         const [{ user }, { profiles: providerProfiles }, memberFavorites] =
             await Promise.all([
                 getTherifyUser({
@@ -50,6 +61,7 @@ export function factory(params: MembersServiceParams) {
                 directoryService.executeProviderSearch({
                     state: memberProfile.state as Region.Type,
                     country: memberProfile.country as Country.Country,
+                    selfAssessment,
                 }),
                 params.prisma.memberFavorites.findMany({
                     where: {

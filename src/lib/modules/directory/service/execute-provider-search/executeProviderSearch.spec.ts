@@ -16,8 +16,10 @@ import {
 } from '@/lib/shared/types';
 import { DirectoryServiceParams } from '../params';
 import { factory } from './executeProviderSearch';
+import { generateRandomSelfAssessment } from '@/lib/shared/types/self-assessment/generate-random-self-assessment';
 
 const mockPrismaProviderProfile: ProviderProfile = {
+    stripeSessionPriceId: '',
     createdAt: new Date('2021-03-01'),
     updatedAt: new Date('2021-03-01'),
     id: 'test-provider-profile-id',
@@ -107,6 +109,7 @@ const mockPrismaProviderProfile: ProviderProfile = {
 };
 
 describe('executeProviderSearch', () => {
+    const selfAssessment = generateRandomSelfAssessment();
     const executeProviderSearch = factory({
         prisma: prismaMock,
     } as unknown as DirectoryServiceParams);
@@ -119,6 +122,7 @@ describe('executeProviderSearch', () => {
             const { profiles } = await executeProviderSearch({
                 state: UNITED_STATES.STATE.MAP.NEW_YORK,
                 country: UNITED_STATES.COUNTRY.CODE,
+                selfAssessment,
             });
             await expect(profiles.length).toBe(1);
         });
@@ -132,6 +136,7 @@ describe('executeProviderSearch', () => {
             const { profiles } = await executeProviderSearch({
                 state: UNITED_STATES.STATE.MAP.NEW_YORK,
                 country: UNITED_STATES.COUNTRY.CODE,
+                selfAssessment,
             });
             await expect(profiles.length).toBe(0);
         });
@@ -145,6 +150,7 @@ describe('executeProviderSearch', () => {
             const { profiles } = await executeProviderSearch({
                 state: UNITED_STATES.STATE.MAP.NEW_YORK,
                 country: UNITED_STATES.COUNTRY.CODE,
+                selfAssessment,
             });
             await expect(profiles.length).toBe(0);
         });
@@ -168,6 +174,7 @@ describe('executeProviderSearch', () => {
             const { profiles } = await executeProviderSearch({
                 state: UNITED_STATES.STATE.MAP.NEW_YORK,
                 country: UNITED_STATES.COUNTRY.CODE,
+                selfAssessment,
             });
             await expect(profiles.length).toBe(0);
         });
@@ -190,6 +197,7 @@ describe('executeProviderSearch', () => {
             const { profiles } = await executeProviderSearch({
                 state: UNITED_STATES.STATE.MAP.NEW_YORK,
                 country: UNITED_STATES.COUNTRY.CODE,
+                selfAssessment,
             });
             await expect(profiles.length).toBe(0);
         });
@@ -207,6 +215,7 @@ describe('executeProviderSearch', () => {
             const { profiles } = await executeProviderSearch({
                 state: UNITED_STATES.STATE.MAP.NEW_YORK,
                 country: UNITED_STATES.COUNTRY.CODE,
+                selfAssessment,
             });
             expect(profiles.length).toBe(1);
         });
