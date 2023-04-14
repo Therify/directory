@@ -29,6 +29,10 @@ export const factory = ({ prisma }: GenerateRecommendationsParams) => {
         memberId,
         selfAssessment,
     }: GenerateRecommendations.Input): Promise<GenerateRecommendations.Output> {
+        const isAtRisk =
+            selfAssessment.phq9Score > 14 ||
+            selfAssessment.isInCrisis ||
+            selfAssessment.hasSuicidalIdeation;
         const [rawMemberProfile, rawProviderProfiles] = await Promise.all([
             prisma.memberProfile.findUnique({
                 where: {
@@ -37,7 +41,7 @@ export const factory = ({ prisma }: GenerateRecommendationsParams) => {
             }),
             prisma.providerProfile.findMany({
                 where: {
-                    ...(selfAssessment.phq9Score > 14 && {
+                    ...(isAtRisk && {
                         designation: 'therapist',
                     }),
                     newClientStatus: 'accepting',
