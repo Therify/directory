@@ -1,3 +1,4 @@
+import React from 'react';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { RBAC } from '@/lib/shared/utils';
 import { Box, Link } from '@mui/material';
@@ -18,12 +19,16 @@ import {
     CenteredContainer,
     Badge,
     Divider,
+    Caption,
+    H5,
 } from '@/lib/shared/components/ui';
 import { PlanStatus } from '@prisma/client';
 import { format } from 'date-fns';
 import { MemberNavigationPage } from '@/lib/shared/components/features/pages';
 import { membersService } from '@/lib/modules/members/service';
 import { MemberBillingPageProps } from '@/lib/modules/members/service/get-billing-page-props/getBillingPageProps';
+import { styled } from '@mui/material/styles';
+import { PageHeader } from '@/lib/shared/components/ui/PageHeader/PageHeader';
 
 export const getServerSideProps = RBAC.requireMemberAuth(
     withPageAuthRequired({
@@ -33,7 +38,11 @@ export const getServerSideProps = RBAC.requireMemberAuth(
 export default function BillingPage({
     stripeCustomerPortalUrl,
     user,
+    registrationLink,
+    hasAvailableSeats,
 }: MemberBillingPageProps) {
+    const linkRef = React.useRef<HTMLParagraphElement>(null);
+    const [buttonText, setButtonText] = React.useState('Copy to clipboard');
     const isPlanActive =
         user &&
         (user?.plan?.status === PlanStatus.active ||
@@ -45,7 +54,11 @@ export default function BillingPage({
             user={user}
         >
             <Box padding={4} maxWidth={800} margin="auto">
-                <H3>Billing and Payments</H3>
+                <PageHeader
+                    title="Account Management"
+                    subtitle="Manage your account settings and billing information."
+                />
+                <H3 sx={{ marginTop: 8 }}>Billing and Payments</H3>
                 <Paragraph>
                     We partner with{' '}
                     <Link
@@ -119,6 +132,33 @@ export default function BillingPage({
                         </Box>
                     </>
                 )}
+                {hasAvailableSeats && registrationLink && (
+                    <>
+                        <Divider />
+                        <Box marginTop={8}>
+                            <H5>Invite a Member to your Account</H5>
+                            <Box>
+                                <Caption>
+                                    Share this link with your team.
+                                </Caption>
+                                <StyledRegistrationLink ref={linkRef}>
+                                    {registrationLink}
+                                </StyledRegistrationLink>
+                                <Button
+                                    type="outlined"
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(
+                                            registrationLink
+                                        );
+                                        setButtonText('Copied!');
+                                    }}
+                                >
+                                    {buttonText}
+                                </Button>
+                            </Box>
+                        </Box>
+                    </>
+                )}
             </Box>
         </MemberNavigationPage>
     );
@@ -143,3 +183,11 @@ const getPlanStatusText = (status: string) => {
             return 'Unknown';
     }
 };
+
+const StyledRegistrationLink = styled(Paragraph)(({ theme }) => ({
+    padding: theme.spacing(1),
+    background: theme.palette.background.default,
+    color: theme.palette.primary.main,
+    fontWeight: 600,
+    borderRadius: theme.shape.borderRadius,
+}));
