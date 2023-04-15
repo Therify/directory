@@ -1,3 +1,4 @@
+import React from 'react';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { differenceInCalendarMonths } from 'date-fns';
 import { RBAC, formatMembershipPlanChangeRequestUrl } from '@/lib/shared/utils';
@@ -19,12 +20,16 @@ import {
     CenteredContainer,
     Badge,
     Divider,
+    Caption,
+    H5,
 } from '@/lib/shared/components/ui';
 import { PlanStatus } from '@prisma/client';
 import { format } from 'date-fns';
 import { MemberNavigationPage } from '@/lib/shared/components/features/pages';
 import { membersService } from '@/lib/modules/members/service';
 import { MemberBillingPageProps } from '@/lib/modules/members/service/get-billing-page-props/getBillingPageProps';
+import { styled } from '@mui/material/styles';
+import { PageHeader } from '@/lib/shared/components/ui/PageHeader/PageHeader';
 
 export const getServerSideProps = RBAC.requireMemberAuth(
     withPageAuthRequired({
@@ -37,7 +42,11 @@ const MEMRBERSHIP_PLAN_CHANGE_REQUEST_FORM_URL =
 export default function BillingPage({
     stripeCustomerPortalUrl,
     user,
+    registrationLink,
+    hasAvailableSeats,
 }: MemberBillingPageProps) {
+    const linkRef = React.useRef<HTMLParagraphElement>(null);
+    const [buttonText, setButtonText] = React.useState('Copy to clipboard');
     const isPlanActive =
         user &&
         (user?.plan?.status === PlanStatus.active ||
@@ -64,6 +73,10 @@ export default function BillingPage({
                             for simplified billing. You can edit billing
                             settings in Stripe&apos;s customer portal.
                         </Paragraph>
+                        <PageHeader
+                            title="Account Management"
+                            subtitle="Manage your account settings and billing information."
+                        />
 
                         {stripeCustomerPortalUrl ? (
                             <Link
@@ -179,6 +192,33 @@ export default function BillingPage({
                         </Button>
                     </Box>
                 )}
+                {hasAvailableSeats && registrationLink && (
+                    <>
+                        <Divider />
+                        <Box marginTop={8}>
+                            <H5>Invite a Member to your Account</H5>
+                            <Box>
+                                <Caption>
+                                    Share this link with your team.
+                                </Caption>
+                                <StyledRegistrationLink ref={linkRef}>
+                                    {registrationLink}
+                                </StyledRegistrationLink>
+                                <Button
+                                    type="outlined"
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(
+                                            registrationLink
+                                        );
+                                        setButtonText('Copied!');
+                                    }}
+                                >
+                                    {buttonText}
+                                </Button>
+                            </Box>
+                        </Box>
+                    </>
+                )}
             </Box>
         </MemberNavigationPage>
     );
@@ -225,3 +265,10 @@ const getBillingCycle = (
             return '' as 'Month';
     }
 };
+const StyledRegistrationLink = styled(Paragraph)(({ theme }) => ({
+    padding: theme.spacing(1),
+    background: theme.palette.background.default,
+    color: theme.palette.primary.main,
+    fontWeight: 600,
+    borderRadius: theme.shape.borderRadius,
+}));
