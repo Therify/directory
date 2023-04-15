@@ -22,6 +22,8 @@ import { vendorStreamChat } from '@/lib/shared/vendors/stream-chat';
 import { GetAccountByOwnerId } from './get-account-by-owner-id';
 import { GetAccountOnboardingPageProps } from './get-account-onboarding-page-props';
 import { HandleAccountOnboarding } from './handle-account-onboarding';
+import { GetRegistrationCodeByAccountOwnerId } from './get-registration-code-by-account-owner-id';
+import { GetAccountDetailsByOwnerId } from './get-account-details-by-owner-id';
 
 const factoryParams: AccountsServiceParams = {
     prisma,
@@ -45,12 +47,16 @@ export const AccountsService = {
     registerMember: registerMember,
     registerAccountOwner,
     getAccountByOwnerId: GetAccountByOwnerId.factory(factoryParams),
+    getRegistrationCodeByAccountOwnerId:
+        GetRegistrationCodeByAccountOwnerId.factory(factoryParams),
     createFirebaseAuthToken: CreateFirebaseAuthToken.factory(factoryParams),
     getAccountByRegistrationCode:
         GetAccountByRegistrationCode.factory(factoryParams),
     billing: Billing.factory(factoryParams),
     getAccountOnboardingPageProps: GetAccountOnboardingPageProps.factory({}),
     handleAccountOnboarding: HandleAccountOnboarding.factory(factoryParams),
+    getAccountDetailsByOwnerId:
+        GetAccountDetailsByOwnerId.factory(factoryParams),
 };
 
 export type AccountsService = typeof AccountsService;

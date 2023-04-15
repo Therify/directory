@@ -10,6 +10,7 @@ import {
     CheckCircle,
     CancelRounded,
     WarningRounded,
+    Groups,
 } from '@mui/icons-material';
 import {
     Paragraph,
@@ -39,11 +40,11 @@ export const getServerSideProps = RBAC.requireMemberAuth(
 
 const MEMRBERSHIP_PLAN_CHANGE_REQUEST_FORM_URL =
     'https://form.jotform.com/231035598721154' as const;
+
 export default function BillingPage({
     stripeCustomerPortalUrl,
     user,
-    registrationLink,
-    hasAvailableSeats,
+    accountDetails,
 }: MemberBillingPageProps) {
     const linkRef = React.useRef<HTMLParagraphElement>(null);
     const [buttonText, setButtonText] = React.useState('Copy to clipboard');
@@ -58,9 +59,61 @@ export default function BillingPage({
             user={user}
         >
             <Box padding={4} maxWidth={800} margin="auto">
-                <H3>Billing and Payments</H3>
+                <PageHeader
+                    title="Account Management"
+                    subtitle="Manage your account settings and billing information."
+                />
+
+                {accountDetails?.registrationLink && (
+                    <>
+                        <Divider />
+                        <H5>Invitations</H5>
+                        <Box marginTop={8}>
+                            <Box>
+                                {accountDetails.hasAvailableSeats ? (
+                                    <>
+                                        <Paragraph>
+                                            Invite your team members to join
+                                            your account by sharing this link:
+                                        </Paragraph>
+                                        <Caption>
+                                            Share this link with your team.
+                                        </Caption>
+                                        <StyledRegistrationLink ref={linkRef}>
+                                            {accountDetails.registrationLink}
+                                        </StyledRegistrationLink>
+                                        <Button
+                                            type="outlined"
+                                            onClick={() => {
+                                                navigator.clipboard.writeText(
+                                                    accountDetails.registrationLink!
+                                                );
+                                                setButtonText('Copied!');
+                                            }}
+                                        >
+                                            {buttonText}
+                                        </Button>
+                                    </>
+                                ) : (
+                                    <Alert
+                                        type="warning"
+                                        icon={
+                                            <CenteredContainer>
+                                                <Groups />
+                                            </CenteredContainer>
+                                        }
+                                        title="your team is full"
+                                        message="Increase your seat count to invite more members."
+                                    />
+                                )}
+                            </Box>
+                        </Box>
+                    </>
+                )}
+
                 {!user?.isAccountAdmin && (
                     <>
+                        <H3>Billing and Payments</H3>
                         <Paragraph>
                             We partner with{' '}
                             <Link
@@ -73,10 +126,6 @@ export default function BillingPage({
                             for simplified billing. You can edit billing
                             settings in Stripe&apos;s customer portal.
                         </Paragraph>
-                        <PageHeader
-                            title="Account Management"
-                            subtitle="Manage your account settings and billing information."
-                        />
 
                         {stripeCustomerPortalUrl ? (
                             <Link
@@ -137,14 +186,26 @@ export default function BillingPage({
                                     'MMMM do, yyyy'
                                 )}
                             </Paragraph>
-                            {user.isAccountAdmin && (
+                            {accountDetails && (
                                 <>
                                     <Paragraph>
-                                        Seats: {user.plan.seats}
+                                        Seat Usage:{' '}
+                                        {`${accountDetails.claimedSeats} ${
+                                            accountDetails.claimedSeats === 1
+                                                ? 'seat'
+                                                : 'seats'
+                                        } claimed of ${
+                                            accountDetails.totalSeats
+                                        } total ${
+                                            accountDetails.totalSeats === 1
+                                                ? 'seat'
+                                                : 'seats'
+                                        }`}
                                     </Paragraph>
+
                                     <Paragraph>
                                         Covered Sessions Per seat:{' '}
-                                        {user.plan.coveredSessions}
+                                        {accountDetails.coveredSessions}
                                     </Paragraph>
                                 </>
                             )}
@@ -191,33 +252,6 @@ export default function BillingPage({
                             Launch Plan Change Form
                         </Button>
                     </Box>
-                )}
-                {hasAvailableSeats && registrationLink && (
-                    <>
-                        <Divider />
-                        <Box marginTop={8}>
-                            <H5>Invite a Member to your Account</H5>
-                            <Box>
-                                <Caption>
-                                    Share this link with your team.
-                                </Caption>
-                                <StyledRegistrationLink ref={linkRef}>
-                                    {registrationLink}
-                                </StyledRegistrationLink>
-                                <Button
-                                    type="outlined"
-                                    onClick={() => {
-                                        navigator.clipboard.writeText(
-                                            registrationLink
-                                        );
-                                        setButtonText('Copied!');
-                                    }}
-                                >
-                                    {buttonText}
-                                </Button>
-                            </Box>
-                        </Box>
-                    </>
                 )}
             </Box>
         </MemberNavigationPage>
