@@ -78,9 +78,6 @@ export default function BillingPage({
                                                 your account by sharing this
                                                 link:
                                             </Paragraph>
-                                            <Caption>
-                                                Share this link with your team.
-                                            </Caption>
                                             <StyledRegistrationLink
                                                 ref={linkRef}
                                                 href={
