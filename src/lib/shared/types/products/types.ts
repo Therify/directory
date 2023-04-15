@@ -30,7 +30,7 @@ export interface IndividuaMemberProduct {
 
 export interface CoveredCoachingSession {
     PRODUCT_ID: string;
-    PRICES: { DEFAULT: string };
+    PRICES: { MONTHLY: string; BIANNUAL: string; ANNUAL: string };
 }
 
 export type ProductConfigs = {

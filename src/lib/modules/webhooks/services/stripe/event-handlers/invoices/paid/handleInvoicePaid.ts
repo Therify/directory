@@ -47,11 +47,15 @@ export const handleInvoicePaidFactory =
 
         const [lineItem] = invoice.lines.data;
         const isSubscriptionChange = billing_reason === 'subscription_update';
+
         const isGroupPracticePlanPriceId = Object.values(
             GROUP_PRACTICE_PLAN.PRICES
         ).includes(lineItem.price.id);
-        const isCoachingSessionPriceId =
-            COVERED_COACHING_SESSION.PRICES.DEFAULT === lineItem.price.id;
+
+        const isCoachingSessionPriceId = Object.values(
+            COVERED_COACHING_SESSION.PRICES
+        ).includes(lineItem.price.id);
+
         const isMembershipPlanPriceId = isValidMembershipPriceId(
             lineItem.price.id,
             process.env.VERCEL_ENV as NodeEnvironment

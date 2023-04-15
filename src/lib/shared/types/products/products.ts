@@ -30,7 +30,9 @@ export const DEVELOPMENT_PRODUCT_IDS: ProductConfigs = {
     [PRODUCTS.COVERED_COACHING_SESSION]: {
         PRODUCT_ID: 'prod_NhBf9IzFhAuIQh',
         PRICES: {
-            DEFAULT: 'price_1MvnHiAllox7wzg53a4bZGu6',
+            MONTHLY: 'price_1MxELYAllox7wzg55jxta3O2',
+            BIANNUAL: 'price_1MxEM5Allox7wzg5FNV0KEy9',
+            ANNUAL: ' price_1MxEMTAllox7wzg5lg1h3SbT',
         },
     },
 } as const;
@@ -62,7 +64,9 @@ export const PRODUCTION_PRODUCT_IDS: ProductConfigs = {
     [PRODUCTS.COVERED_COACHING_SESSION]: {
         PRODUCT_ID: '',
         PRICES: {
-            DEFAULT: '',
+            MONTHLY: '',
+            BIANNUAL: '',
+            ANNUAL: '',
         },
     },
 } as const;
