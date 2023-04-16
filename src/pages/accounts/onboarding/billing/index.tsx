@@ -49,6 +49,8 @@ export default function AccountOnboardingPage() {
         } as Partial<HandleAccountOnboarding.Input>,
     });
     const billingCycle = accountDetailsForm.watch('billingCycle');
+    const planType = accountDetailsForm.watch('planType');
+    const seatCount = accountDetailsForm.watch('seatCount');
     const { isLoading: isLoadingAccount, data: accountData } = trpc.useQuery(
         [
             'accounts.accounts.get-account-by-owner-id',
@@ -73,6 +75,12 @@ export default function AccountOnboardingPage() {
             accountDetailsForm.setValue('billingUserId', user.sub);
         }
     }, [accountDetailsForm, user?.sub]);
+
+    useEffect(() => {
+        if (planType === 'individual' && seatCount !== 1) {
+            accountDetailsForm.setValue('seatCount', 1);
+        }
+    }, [accountDetailsForm, planType, seatCount]);
 
     const { isLoading: isHandlingAccountSubmission, mutate: submitAccount } =
         trpc.useMutation('accounts.onboarding.handle-account-onboarding', {
