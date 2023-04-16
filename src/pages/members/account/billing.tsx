@@ -65,58 +65,61 @@ export default function BillingPage({
                         subtitle="Manage your account settings and billing information."
                     />
 
-                    {accountDetails?.registrationLink && (
-                        <>
-                            <Divider />
-                            <H5>Invitations</H5>
-                            <Box marginTop={8}>
-                                <Box>
-                                    {accountDetails.hasAvailableSeats ? (
-                                        <>
-                                            <Paragraph>
-                                                Invite your team members to join
-                                                your account by sharing this
-                                                link:
-                                            </Paragraph>
-                                            <StyledRegistrationLink
-                                                ref={linkRef}
-                                                href={
-                                                    accountDetails.registrationLink
+                    {accountDetails?.registrationLink &&
+                        accountDetails.totalSeats > 1 && (
+                            <>
+                                <Divider />
+                                <H5>Invitations</H5>
+                                <Box marginTop={8}>
+                                    <Box>
+                                        {accountDetails.hasAvailableSeats ? (
+                                            <>
+                                                <Paragraph>
+                                                    Invite your team members to
+                                                    join your account by sharing
+                                                    this link:
+                                                </Paragraph>
+                                                <StyledRegistrationLink
+                                                    ref={linkRef}
+                                                    href={
+                                                        accountDetails.registrationLink
+                                                    }
+                                                    target="_blank"
+                                                >
+                                                    {
+                                                        accountDetails.registrationLink
+                                                    }
+                                                </StyledRegistrationLink>
+                                                <Button
+                                                    type="outlined"
+                                                    onClick={() => {
+                                                        navigator.clipboard.writeText(
+                                                            accountDetails.registrationLink!
+                                                        );
+                                                        setButtonText(
+                                                            'Copied!'
+                                                        );
+                                                    }}
+                                                >
+                                                    {buttonText}
+                                                </Button>
+                                            </>
+                                        ) : (
+                                            <Alert
+                                                type="info"
+                                                icon={
+                                                    <CenteredContainer>
+                                                        <Groups />
+                                                    </CenteredContainer>
                                                 }
-                                                target="_blank"
-                                            >
-                                                {
-                                                    accountDetails.registrationLink
-                                                }
-                                            </StyledRegistrationLink>
-                                            <Button
-                                                type="outlined"
-                                                onClick={() => {
-                                                    navigator.clipboard.writeText(
-                                                        accountDetails.registrationLink!
-                                                    );
-                                                    setButtonText('Copied!');
-                                                }}
-                                            >
-                                                {buttonText}
-                                            </Button>
-                                        </>
-                                    ) : (
-                                        <Alert
-                                            type="info"
-                                            icon={
-                                                <CenteredContainer>
-                                                    <Groups />
-                                                </CenteredContainer>
-                                            }
-                                            title="your team is full"
-                                            message="Increase your seat count to invite more members."
-                                        />
-                                    )}
+                                                title="your team is full"
+                                                message="Increase your seat count to invite more members."
+                                            />
+                                        )}
+                                    </Box>
                                 </Box>
-                            </Box>
-                        </>
-                    )}
+                            </>
+                        )}
 
                     {!user?.isAccountAdmin && (
                         <>
