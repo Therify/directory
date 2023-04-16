@@ -30,7 +30,6 @@ export const useAccountOnboardingStorage = () => {
             return acc;
         }, {});
         try {
-            console.log({ cleanedDetails });
             localStorage.setItem(STORAGE_KEY, JSON.stringify(cleanedDetails));
         } catch (e) {
             console.error('Error storing provider details', e);
