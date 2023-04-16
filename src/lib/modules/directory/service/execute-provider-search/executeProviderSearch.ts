@@ -15,44 +15,74 @@ export const factory = ({ prisma }: CreateConnectionFactoryParams) => {
     return async function executeProviderSearch(
         input: ProviderSearch.Input
     ): Promise<ProviderSearch.Output> {
-        const { selfAssessment } = input;
+        const { selfAssessment, memberId } = input;
         const isAtRisk =
             selfAssessment.phq9Score > 14 ||
             selfAssessment.hasSuicidalIdeation ||
             selfAssessment.isInCrisis;
-        const profileResults = await prisma.providerProfile.findMany({
+        const { account } = await prisma.user.findUniqueOrThrow({
             where: {
-                OR: [
-                    {
-                        designation: ProfileType.therapist,
-                        directoryListing: {
-                            status: ListingStatus.listed,
-                        },
-                        // Practice has active plan
-                        practiceProfile: {
-                            practice: {
-                                plans: {
-                                    some: {
-                                        endDate: {
-                                            gt: new Date(),
-                                        },
-                                        startDate: {
-                                            lte: new Date(),
-                                        },
-                                        status: {
-                                            in: [
-                                                PlanStatus.active,
-                                                PlanStatus.trialing,
-                                            ],
-                                        },
-                                    },
+                id: memberId,
+            },
+            select: {
+                account: {
+                    select: {
+                        plans: {
+                            orderBy: {
+                                createdAt: 'desc',
+                            },
+                            take: 1,
+                            where: {
+                                status: 'active',
+                                startDate: {
+                                    lte: new Date(),
+                                },
+                                endDate: {
+                                    gte: new Date(),
                                 },
                             },
                         },
-                        credentials: {
-                            isEmpty: false,
-                        },
                     },
+                },
+            },
+        });
+        const [plan] = account?.plans ?? [undefined];
+        const hasTherapyAccess = !!plan && plan.seats > 1;
+        const profileResults = await prisma.providerProfile.findMany({
+            where: {
+                OR: [
+                    hasTherapyAccess
+                        ? {
+                              designation: ProfileType.therapist,
+                              directoryListing: {
+                                  status: ListingStatus.listed,
+                              },
+                              // Practice has active plan
+                              practiceProfile: {
+                                  practice: {
+                                      plans: {
+                                          some: {
+                                              endDate: {
+                                                  gt: new Date(),
+                                              },
+                                              startDate: {
+                                                  lte: new Date(),
+                                              },
+                                              status: {
+                                                  in: [
+                                                      PlanStatus.active,
+                                                      PlanStatus.trialing,
+                                                  ],
+                                              },
+                                          },
+                                      },
+                                  },
+                              },
+                              credentials: {
+                                  isEmpty: false,
+                              },
+                          }
+                        : {},
                     !isAtRisk
                         ? {
                               designation: ProfileType.coach,

@@ -8,6 +8,7 @@ import { findEthnicMatches } from './find-ethnic-matches';
 import { findGenderMatches } from './find-gender-matches';
 import { findIdealMatches } from './find-ideal-matches';
 import { RecommendedProviderProfile } from '@/lib/shared/types/provider-profile/recommended-provider-profile';
+import { ProfileType } from '@prisma/client';
 
 interface GenerateRecommendationsParams extends DirectoryServiceParams {}
 
@@ -29,10 +30,39 @@ export const factory = ({ prisma }: GenerateRecommendationsParams) => {
         memberId,
         selfAssessment,
     }: GenerateRecommendations.Input): Promise<GenerateRecommendations.Output> {
+        const { account } = await prisma.user.findUniqueOrThrow({
+            where: {
+                id: memberId,
+            },
+            select: {
+                account: {
+                    select: {
+                        plans: {
+                            orderBy: {
+                                createdAt: 'desc',
+                            },
+                            take: 1,
+                            where: {
+                                status: 'active',
+                                startDate: {
+                                    lte: new Date(),
+                                },
+                                endDate: {
+                                    gte: new Date(),
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        });
+        const [plan] = account?.plans ?? [undefined];
+        const hasTherapyAccess = !!plan && plan.seats > 1;
         const isAtRisk =
             selfAssessment.phq9Score > 14 ||
             selfAssessment.isInCrisis ||
             selfAssessment.hasSuicidalIdeation;
+
         const [rawMemberProfile, rawProviderProfiles] = await Promise.all([
             prisma.memberProfile.findUnique({
                 where: {
@@ -41,9 +71,14 @@ export const factory = ({ prisma }: GenerateRecommendationsParams) => {
             }),
             prisma.providerProfile.findMany({
                 where: {
-                    ...(isAtRisk && {
-                        designation: 'therapist',
-                    }),
+                    designation: {
+                        in: [
+                            ...(hasTherapyAccess
+                                ? [ProfileType.therapist]
+                                : []),
+                            ...(!isAtRisk ? [ProfileType.coach] : []),
+                        ],
+                    },
                     newClientStatus: 'accepting',
                     directoryListing: {
                         status: 'listed',
