@@ -1,1 +1,1 @@
-export const ROUTE = 'users.get-user-details-by-id' as const;
+export const ROUTE = 'users.get-account-details-by-owner-id' as const;
