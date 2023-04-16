@@ -44,7 +44,10 @@ export const handleMembershipPayment = async ({
     );
     const isSessionIdValid =
         coveredSessions === undefined ||
-        coveredSessions.price.id === COVERED_COACHING_SESSION.PRICES.DEFAULT;
+        Object.values(COVERED_COACHING_SESSION.PRICES).includes(
+            coveredSessions.price.id
+        );
+
     if (!isPlanIdValid) {
         throw new Error('Invalid membership price id');
     }
