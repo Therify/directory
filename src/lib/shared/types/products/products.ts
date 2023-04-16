@@ -32,7 +32,7 @@ export const DEVELOPMENT_PRODUCT_IDS: ProductConfigs = {
         PRICES: {
             MONTHLY: 'price_1MxELYAllox7wzg55jxta3O2',
             BIANNUAL: 'price_1MxEM5Allox7wzg5FNV0KEy9',
-            ANNUAL: ' price_1MxEMTAllox7wzg5lg1h3SbT',
+            ANNUAL: 'price_1MxEMTAllox7wzg5lg1h3SbT',
         },
     },
 } as const;
