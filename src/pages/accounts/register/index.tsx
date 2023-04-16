@@ -7,7 +7,7 @@ import { trpc } from '@/lib/shared/utils/trpc';
 import { URL_PATHS } from '@/lib/sitemap';
 import { ROLES } from '@/lib/shared/types/roles';
 import { RegisterAccountOwner } from '@/lib/modules/registration/features';
-import { useRegistrationStorage } from '@/lib/modules/registration/components/MemberRegistrationFlow/hooks';
+import { useRegistrationStorage } from '@/lib/modules/registration/components/AccountOwnerRegistrationFlow/hooks';
 import { AccountOwnerRegistrationFlow } from '@/lib/modules/registration/components/AccountOwnerRegistrationFlow';
 
 export default function AccountOwnerRegistrationPage() {

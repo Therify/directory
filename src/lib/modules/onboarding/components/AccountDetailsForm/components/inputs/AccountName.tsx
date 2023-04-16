@@ -39,7 +39,6 @@ export const AccountNameInput = ({
                           )
                         : undefined
                 }
-                helperText="If you are an individual, you can use your name."
                 onBlur={() => {
                     onBlur();
                     onInputBlur();

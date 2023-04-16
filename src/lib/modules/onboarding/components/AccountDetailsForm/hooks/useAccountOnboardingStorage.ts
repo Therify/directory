@@ -3,7 +3,7 @@ import { HandleAccountOnboarding } from '@/lib/modules/onboarding/features';
 const STORAGE_KEY = 'therify-onboarding-account-details' as const;
 export type SafeAccountDetails = Pick<
     HandleAccountOnboarding.Input,
-    'billingCycle' | 'name' | 'seatCount'
+    'billingCycle' | 'name' | 'seatCount' | 'coveredSessions' | 'planType'
 >;
 
 export const useAccountOnboardingStorage = () => {
@@ -15,6 +15,8 @@ export const useAccountOnboardingStorage = () => {
             name: details.name,
             seatCount: details.seatCount,
             billingCycle: details.billingCycle,
+            coveredSessions: details.coveredSessions,
+            planType: details.planType,
         };
         const cleanedDetails = Object.entries(safeDetails).reduce<
             Partial<SafeAccountDetails>
