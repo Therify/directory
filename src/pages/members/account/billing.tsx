@@ -61,8 +61,8 @@ export default function BillingPage({
             <PageContainer>
                 <Box padding={4} maxWidth={800} margin="auto">
                     <PageHeader
-                        title="Account Management"
-                        subtitle="Manage your account settings and billing information."
+                        title="Billing and Payments"
+                        subtitle="Manage your billing information."
                     />
 
                     {accountDetails?.registrationLink &&
