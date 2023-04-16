@@ -1,6 +1,7 @@
 import React from 'react';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
-import { RBAC } from '@/lib/shared/utils';
+import { differenceInCalendarMonths } from 'date-fns';
+import { RBAC, formatMembershipPlanChangeRequestUrl } from '@/lib/shared/utils';
 import { Box, Link } from '@mui/material';
 import { URL_PATHS } from '@/lib/sitemap';
 import { useTheme } from '@mui/material/styles';
@@ -9,6 +10,7 @@ import {
     CheckCircle,
     CancelRounded,
     WarningRounded,
+    Groups,
 } from '@mui/icons-material';
 import {
     Paragraph,
@@ -35,13 +37,16 @@ export const getServerSideProps = RBAC.requireMemberAuth(
         getServerSideProps: membersService.getBillingPageProps,
     })
 );
+
+const MEMRBERSHIP_PLAN_CHANGE_REQUEST_FORM_URL =
+    'https://form.jotform.com/231035598721154' as const;
+
 export default function BillingPage({
     stripeCustomerPortalUrl,
     user,
-    registrationLink,
-    hasAvailableSeats,
+    accountDetails,
 }: MemberBillingPageProps) {
-    const linkRef = React.useRef<HTMLParagraphElement>(null);
+    const linkRef = React.useRef<HTMLAnchorElement>(null);
     const [buttonText, setButtonText] = React.useState('Copy to clipboard');
     const isPlanActive =
         user &&
@@ -53,113 +58,223 @@ export default function BillingPage({
             currentPath={URL_PATHS.MEMBERS.ACCOUNT.BILLING_AND_PAYMENTS}
             user={user}
         >
-            <Box padding={4} maxWidth={800} margin="auto">
-                <PageHeader
-                    title="Account Management"
-                    subtitle="Manage your account settings and billing information."
-                />
-                <H3 sx={{ marginTop: 8 }}>Billing and Payments</H3>
-                <Paragraph>
-                    We partner with{' '}
-                    <Link
-                        href="https://stripe.com/"
-                        target="_blank"
-                        style={{ color: theme.palette.text.primary }}
-                    >
-                        Stripe
-                    </Link>{' '}
-                    for simplified billing. You can edit billing settings in
-                    Stripe&apos;s customer portal.
-                </Paragraph>
-
-                {stripeCustomerPortalUrl ? (
-                    <Link
-                        href={stripeCustomerPortalUrl}
-                        target="_blank"
-                        style={{ textDecoration: 'none' }}
-                    >
-                        <Button endIcon={<ArrowIcon />}>
-                            Launch Stripe Customer Portal
-                        </Button>
-                    </Link>
-                ) : (
-                    <Alert
-                        icon={
-                            <CenteredContainer>
-                                <WarningRounded />
-                            </CenteredContainer>
-                        }
-                        title="Stripe Billing Issue"
-                        type="error"
-                        message="Stripe customer portal URL is not configured. Please reach
-                    out to Therify support."
+            <PageContainer>
+                <Box padding={4} maxWidth={800} margin="auto">
+                    <PageHeader
+                        title="Account Management"
+                        subtitle="Manage your account settings and billing information."
                     />
-                )}
 
-                {user?.plan && (
-                    <>
-                        <Divider />
-                        <Box marginTop={8}>
-                            <H4>Your Current Plan</H4>
-                            <Box marginBottom={2}>
-                                <Badge
-                                    icon={
-                                        isPlanActive ? (
-                                            <CheckCircle />
-                                        ) : (
-                                            <CancelRounded />
-                                        )
-                                    }
-                                    color={isPlanActive ? 'success' : 'error'}
-                                >
-                                    {getPlanStatusText(user.plan.status)}
-                                </Badge>
+                    {accountDetails?.registrationLink && (
+                        <>
+                            <Divider />
+                            <H5>Invitations</H5>
+                            <Box marginTop={8}>
+                                <Box>
+                                    {accountDetails.hasAvailableSeats ? (
+                                        <>
+                                            <Paragraph>
+                                                Invite your team members to join
+                                                your account by sharing this
+                                                link:
+                                            </Paragraph>
+                                            <StyledRegistrationLink
+                                                ref={linkRef}
+                                                href={
+                                                    accountDetails.registrationLink
+                                                }
+                                                target="_blank"
+                                            >
+                                                {
+                                                    accountDetails.registrationLink
+                                                }
+                                            </StyledRegistrationLink>
+                                            <Button
+                                                type="outlined"
+                                                onClick={() => {
+                                                    navigator.clipboard.writeText(
+                                                        accountDetails.registrationLink!
+                                                    );
+                                                    setButtonText('Copied!');
+                                                }}
+                                            >
+                                                {buttonText}
+                                            </Button>
+                                        </>
+                                    ) : (
+                                        <Alert
+                                            type="info"
+                                            icon={
+                                                <CenteredContainer>
+                                                    <Groups />
+                                                </CenteredContainer>
+                                            }
+                                            title="your team is full"
+                                            message="Increase your seat count to invite more members."
+                                        />
+                                    )}
+                                </Box>
                             </Box>
+                        </>
+                    )}
+
+                    {!user?.isAccountAdmin && (
+                        <>
+                            <Divider />
+                            <H3>Billing and Payments</H3>
                             <Paragraph>
-                                Period start:{' '}
-                                {format(
-                                    new Date(user.plan.startDate),
-                                    'MMMM do, yyyy'
-                                )}
-                            </Paragraph>
-                            <Paragraph>
-                                Period end:{' '}
-                                {format(
-                                    new Date(user.plan.endDate),
-                                    'MMMM do, yyyy'
-                                )}
-                            </Paragraph>
-                        </Box>
-                    </>
-                )}
-                {hasAvailableSeats && registrationLink && (
-                    <>
-                        <Divider />
-                        <Box marginTop={8}>
-                            <H5>Invite a Member to your Account</H5>
-                            <Box>
-                                <Caption>
-                                    Share this link with your team.
-                                </Caption>
-                                <StyledRegistrationLink ref={linkRef}>
-                                    {registrationLink}
-                                </StyledRegistrationLink>
-                                <Button
-                                    type="outlined"
-                                    onClick={() => {
-                                        navigator.clipboard.writeText(
-                                            registrationLink
-                                        );
-                                        setButtonText('Copied!');
+                                We partner with{' '}
+                                <Link
+                                    href="https://stripe.com/"
+                                    target="_blank"
+                                    style={{
+                                        color: theme.palette.text.primary,
                                     }}
                                 >
-                                    {buttonText}
-                                </Button>
+                                    Stripe
+                                </Link>{' '}
+                                for simplified billing. You can edit billing
+                                settings and pay invoices in Stripe&apos;s
+                                customer portal.
+                            </Paragraph>
+
+                            {stripeCustomerPortalUrl ? (
+                                <Link
+                                    href={stripeCustomerPortalUrl}
+                                    target="_blank"
+                                    style={{ textDecoration: 'none' }}
+                                >
+                                    <Button endIcon={<ArrowIcon />}>
+                                        Launch Stripe Customer Portal
+                                    </Button>
+                                </Link>
+                            ) : (
+                                <Alert
+                                    icon={
+                                        <CenteredContainer>
+                                            <WarningRounded />
+                                        </CenteredContainer>
+                                    }
+                                    title="Stripe Billing Issue"
+                                    type="error"
+                                    message="Stripe customer portal URL is not configured. Please reach
+                    out to Therify support."
+                                />
+                            )}
+                        </>
+                    )}
+
+                    {user?.plan && (
+                        <>
+                            <Divider />
+                            <Box marginTop={8}>
+                                <H4>Your Current Plan</H4>
+                                <Box marginBottom={2}>
+                                    <Badge
+                                        icon={
+                                            isPlanActive ? (
+                                                <CheckCircle />
+                                            ) : (
+                                                <CancelRounded />
+                                            )
+                                        }
+                                        color={
+                                            isPlanActive ? 'success' : 'error'
+                                        }
+                                    >
+                                        {getPlanStatusText(user.plan.status)}
+                                    </Badge>
+                                </Box>
+                                <Paragraph>
+                                    Period start:{' '}
+                                    {format(
+                                        new Date(user.plan.startDate),
+                                        'MMMM do, yyyy'
+                                    )}
+                                </Paragraph>
+                                <Paragraph>
+                                    Period end:{' '}
+                                    {format(
+                                        new Date(user.plan.endDate),
+                                        'MMMM do, yyyy'
+                                    )}
+                                </Paragraph>
+                                {accountDetails && (
+                                    <>
+                                        <Paragraph>
+                                            Seat Usage:{' '}
+                                            {`${accountDetails.claimedSeats} ${
+                                                accountDetails.claimedSeats ===
+                                                1
+                                                    ? 'seat'
+                                                    : 'seats'
+                                            } claimed of ${
+                                                accountDetails.totalSeats
+                                            } total ${
+                                                accountDetails.totalSeats === 1
+                                                    ? 'seat'
+                                                    : 'seats'
+                                            }`}
+                                        </Paragraph>
+
+                                        <Paragraph>
+                                            Covered Sessions Per seat:{' '}
+                                            {accountDetails.coveredSessions}
+                                        </Paragraph>
+                                    </>
+                                )}
                             </Box>
+                        </>
+                    )}
+                    {user?.isAccountAdmin && user.plan && (
+                        <Box width="100%" marginTop={4}>
+                            <Divider />
+                            <H4>Request to change your plan</H4>
+                            <Paragraph>
+                                You may submit a request to update or cancel
+                                your plan by launching and submitting a plan
+                                change request. Plan changes are usually
+                                processed within 2-3 business days (excluding
+                                holidays).
+                            </Paragraph>
+                            <Button
+                                endIcon={<ArrowIcon />}
+                                onClick={() => {
+                                    if (
+                                        typeof window !== 'undefined' &&
+                                        user.plan
+                                    )
+                                        window.open(
+                                            formatMembershipPlanChangeRequestUrl(
+                                                MEMRBERSHIP_PLAN_CHANGE_REQUEST_FORM_URL,
+                                                {
+                                                    accountId: user.accountId!,
+                                                    userId: user.userId,
+                                                    email: user.emailAddress,
+                                                    planType:
+                                                        user.plan.seats > 1
+                                                            ? 'Team'
+                                                            : 'Individual',
+                                                    billingCycle:
+                                                        getBillingCycle(
+                                                            user.plan.startDate,
+                                                            user.plan.endDate
+                                                        ),
+                                                    seatCount: user.plan.seats,
+                                                    coveredSessions:
+                                                        user.plan
+                                                            .coveredSessions,
+                                                }
+                                            )
+                                        );
+                                }}
+                            >
+                                Launch Plan Change Form
+                            </Button>
                         </Box>
-                    </>
-                )}
-            </Box>
+                    )}
+                </Box>
+            </PageContainer>
         </MemberNavigationPage>
     );
 }
@@ -184,10 +299,42 @@ const getPlanStatusText = (status: string) => {
     }
 };
 
-const StyledRegistrationLink = styled(Paragraph)(({ theme }) => ({
+const getBillingCycle = (
+    startDate: string,
+    endDate: string
+): 'Month' | 'Biannual' | 'Annual' => {
+    const months = differenceInCalendarMonths(
+        new Date(endDate),
+        new Date(startDate)
+    );
+    console.log('months', months);
+    switch (months) {
+        case 1:
+            return 'Month';
+        case 6:
+            return 'Biannual';
+        case 12:
+            return 'Annual';
+        default:
+            // This will render as empty on the form
+            return '' as 'Month';
+    }
+};
+const StyledRegistrationLink = styled(Link)(({ theme }) => ({
+    ...theme.typography.body2,
     padding: theme.spacing(1),
     background: theme.palette.background.default,
     color: theme.palette.primary.main,
     fontWeight: 600,
     borderRadius: theme.shape.borderRadius,
+    marginBottom: theme.spacing(2),
+    display: 'block',
+}));
+
+const PageContainer = styled(Box)(({ theme }) => ({
+    wisth: '100%',
+    height: '100%',
+    overflow: 'auto',
+    margin: '0 auto',
+    padding: theme.spacing(8, 0),
 }));
