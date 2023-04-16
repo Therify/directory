@@ -285,7 +285,7 @@ export const AccountDetailsForm = ({
                 )}
                 <Box marginTop={12}>
                     <Divider />
-                    <Paragraph bold marginTop={8}>
+                    <Paragraph marginTop={8}>
                         How would you like to be billed for your Therify
                         subscription?
                     </Paragraph>
@@ -299,7 +299,7 @@ export const AccountDetailsForm = ({
                 />
                 {planType.value === 'team' && (
                     <Stack marginTop={12}>
-                        <Paragraph bold>
+                        <Paragraph>
                             How many seats would you like to purchase?
                         </Paragraph>
                         <Subhead textAlign="center">{seatCount}</Subhead>
@@ -321,7 +321,7 @@ export const AccountDetailsForm = ({
                     </Stack>
                 )}
                 <Stack marginTop={10}>
-                    <Paragraph bold>
+                    <Paragraph>
                         {getCoveredSessionPrompt(isTeamAccount)}
                     </Paragraph>
                     <RadioGroup
@@ -365,7 +365,7 @@ export const AccountDetailsForm = ({
                 </Stack>
                 {wantsCoveredSessions && (
                     <Stack marginTop={12}>
-                        <Paragraph bold>
+                        <Paragraph>
                             {renderCoveredSessionPrompt({
                                 isTeam: isTeamAccount,
                                 billingCycle,
