@@ -205,7 +205,7 @@ export default function BillingPage({
                                 {accountDetails && (
                                     <>
                                         <Paragraph>
-                                            Seat Usage:{' '}
+                                            Usage:{' '}
                                             {`${accountDetails.claimedSeats} ${
                                                 accountDetails.claimedSeats ===
                                                 1
