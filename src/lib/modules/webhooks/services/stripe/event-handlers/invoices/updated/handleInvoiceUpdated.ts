@@ -1,5 +1,3 @@
-import { isValidTherifyPriceId } from '@/lib/shared/types';
-import { NodeEnvironment } from '@/lib/shared/types/nodeEnvironment';
 import { StripeInvoice } from '@/lib/shared/vendors/stripe';
 import { StripeWebhookParams } from '../../../webhookParams';
 
@@ -15,20 +13,16 @@ export const handleInvoiceUpdatedFactory =
         if (!priceId) {
             throw new Error('No price id found on invoice');
         }
-        if (
-            isValidTherifyPriceId(
-                priceId,
-                process.env.VERCEL_ENV as NodeEnvironment
-            )
-        ) {
-            // this not a coaching session invoice
-            return { success: true };
+        if (invoice.billing_reason === 'manual') {
+            // this is a coaching session invoice
+            const { sessionInvoiceId } =
+                await accounts.billing.handleCoachingSessionInvoiceUpdated({
+                    customerId: invoice.customer,
+                    priceId,
+                    invoice,
+                });
+            return { success: !!sessionInvoiceId };
         }
-        const { sessionInvoiceId } =
-            await accounts.billing.handleCoachingSessionInvoiceUpdated({
-                customerId: invoice.customer,
-                priceId,
-                invoice,
-            });
-        return { success: !!sessionInvoiceId };
+        // this not a coaching session invoice
+        return { success: true };
     };
