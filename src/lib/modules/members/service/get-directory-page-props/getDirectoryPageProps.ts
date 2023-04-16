@@ -46,8 +46,7 @@ export function factory(params: MembersServiceParams) {
         if (!memberProfile || !rawSelfAssessment) {
             return {
                 redirect: {
-                    // TODO: redirect to the member profile editor
-                    destination: '/member/profile',
+                    destination: URL_PATHS.MEMBERS.CARE,
                     permanent: false,
                 },
             };
