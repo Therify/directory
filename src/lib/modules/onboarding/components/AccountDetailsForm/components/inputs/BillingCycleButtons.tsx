@@ -8,6 +8,7 @@ interface BillingCycleButtonsProps {
     defaultValue?: HandleAccountOnboarding.Input['billingCycle'];
     disabled?: boolean;
     isTeamAccount?: boolean;
+    onInputBlur: () => void;
 }
 
 const BILLING_CYCLE_OPTIONS = {
@@ -21,6 +22,7 @@ export const BillingCycleButtons = ({
     control,
     disabled,
     isTeamAccount,
+    onInputBlur,
 }: BillingCycleButtonsProps) => {
     return (
         <Controller
@@ -35,7 +37,10 @@ export const BillingCycleButtons = ({
                     color="primary"
                     value={value}
                     exclusive
-                    onChange={onChange}
+                    onChange={(e) => {
+                        onChange(e);
+                        onInputBlur();
+                    }}
                     aria-label="Subscription Cycle"
                     disabled={disabled}
                     {...{
@@ -43,14 +48,16 @@ export const BillingCycleButtons = ({
                         onBlur,
                     }}
                 >
-                    <ToggleButton
-                        disabled={isTeamAccount}
-                        value={BILLING_CYCLE_OPTIONS.MONTHLY}
-                    >
-                        Monthly
-                    </ToggleButton>
+                    {!isTeamAccount && (
+                        <ToggleButton
+                            disabled={isTeamAccount}
+                            value={BILLING_CYCLE_OPTIONS.MONTHLY}
+                        >
+                            Monthly
+                        </ToggleButton>
+                    )}
                     <ToggleButton value={BILLING_CYCLE_OPTIONS.BIANNUAL}>
-                        Biannual
+                        Biannually
                     </ToggleButton>
                     <ToggleButton value={BILLING_CYCLE_OPTIONS.ANNUALLY}>
                         Annually

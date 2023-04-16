@@ -16,7 +16,6 @@ import {
     Paragraph,
     Subhead,
     Caption,
-    Toggle,
     Divider,
 } from '@/lib/shared/components/ui';
 import {
@@ -26,7 +25,18 @@ import {
     SeatCountInput,
 } from './components/inputs';
 import { SafeAccountDetails } from './hooks';
-import { useState } from 'react';
+const COVERED_SESSION_PRICE = 70;
+const SEAT_PRICING = {
+    INDIVIDUAL: {
+        MONTHLY: 19,
+        BIANNUAL: 16,
+        ANNUAL: 15,
+    },
+    TEAM: {
+        BIANNUAL: 11,
+        ANNUAL: 10,
+    },
+} as const;
 
 function calculatePrice({
     seats,
@@ -37,36 +47,36 @@ function calculatePrice({
     coveredSessions: number;
     billingCycle: 'month' | 'biannual' | 'annual';
 }): number {
-    console.log({ seats, coveredSessions, billingCycle });
     const isIndividual = seats === 1;
     const isTeam = seats > 1;
     const hasCoveredSessions = coveredSessions > 0;
-    const COVERED_SESSION_ADDON = hasCoveredSessions ? 70 * coveredSessions : 0;
+    const COVERED_SESSION_ADDON = hasCoveredSessions
+        ? COVERED_SESSION_PRICE * coveredSessions
+        : 0;
     if (isIndividual) {
-        const MONTHLY_SEAT_COST = 19;
-        const BIANNUAL_SEAT_COST = 16;
-        const ANNUAL_SEAT_COST = 14;
         switch (billingCycle) {
             case 'month':
-                return MONTHLY_SEAT_COST + COVERED_SESSION_ADDON;
+                return SEAT_PRICING.INDIVIDUAL.MONTHLY + COVERED_SESSION_ADDON;
             case 'biannual':
-                return BIANNUAL_SEAT_COST * 6 + COVERED_SESSION_ADDON;
+                return (
+                    SEAT_PRICING.INDIVIDUAL.BIANNUAL * 6 + COVERED_SESSION_ADDON
+                );
             case 'annual':
-                return ANNUAL_SEAT_COST * 12 + COVERED_SESSION_ADDON;
+                return (
+                    SEAT_PRICING.INDIVIDUAL.ANNUAL * 12 + COVERED_SESSION_ADDON
+                );
         }
     }
     if (isTeam) {
-        const BIANNUAL_SEAT_COST = 11;
-        const ANNUAL_SEAT_COST = 10;
         switch (billingCycle) {
             case 'biannual':
                 return (
-                    BIANNUAL_SEAT_COST * 6 * seats +
+                    SEAT_PRICING.TEAM.BIANNUAL * 6 * seats +
                     COVERED_SESSION_ADDON * seats
                 );
             case 'annual':
                 return (
-                    ANNUAL_SEAT_COST * 12 * seats +
+                    SEAT_PRICING.TEAM.ANNUAL * 12 * seats +
                     COVERED_SESSION_ADDON * seats
                 );
             default:
@@ -108,15 +118,11 @@ function renderCoveredSessionPrompt({
     if (isTeam) {
         return `How many sessions would you like to cover per employee, ${renderBillingCycle(
             billingCycle
-        )}`;
+        )}?`;
     }
     return `How many sessions would you like to have ${renderBillingCycle(
         billingCycle
-    )}`;
-}
-
-function formatPrice(price: number) {
-    return `$${price.toFixed(2)}`;
+    )}?`;
 }
 
 function calculateSeatTotal({
@@ -129,26 +135,35 @@ function calculateSeatTotal({
     billingCycle: 'month' | 'biannual' | 'annual';
 }) {
     if (isTeamAccount) {
-        const BIANNUAL_SEAT_COST = 11;
-        const ANNUAL_SEAT_COST = 10;
         switch (billingCycle) {
             case 'biannual':
-                return BIANNUAL_SEAT_COST * 6 * seats;
+                return SEAT_PRICING.TEAM.BIANNUAL * 6 * seats;
             case 'annual':
-                return ANNUAL_SEAT_COST * 12 * seats;
+                return SEAT_PRICING.TEAM.ANNUAL * 12 * seats;
             default:
                 return 0;
         }
     }
-    return 0;
+    switch (billingCycle) {
+        case 'month':
+            return SEAT_PRICING.INDIVIDUAL.MONTHLY;
+        case 'biannual':
+            return SEAT_PRICING.INDIVIDUAL.BIANNUAL * 6;
+        case 'annual':
+            return SEAT_PRICING.INDIVIDUAL.ANNUAL * 12;
+        default:
+            return 0;
+    }
 }
 
 function calculateCoveredSessionsTotal({
     coveredSessions,
+    seats,
 }: {
     coveredSessions: number;
+    seats: number;
 }) {
-    return coveredSessions * 70;
+    return coveredSessions * COVERED_SESSION_PRICE * seats;
 }
 export interface AccountDetailsFormProps {
     defaultValues?: Partial<SafeAccountDetails>;
@@ -156,7 +171,6 @@ export interface AccountDetailsFormProps {
     minimumSeats?: number;
     maximumSeats?: number;
     sessionPrice: number;
-    seatPrice: number;
     seatCount: number;
     billingCycle: HandleAccountOnboarding.Input['billingCycle'];
     coveredSessions: number;
@@ -166,7 +180,7 @@ export interface AccountDetailsFormProps {
     onInputBlur: () => void;
 }
 
-function getCoveredSessionPropmpt(isTeam: boolean) {
+function getCoveredSessionPrompt(isTeam: boolean) {
     return isTeam
         ? 'Would you like to pre-pay for sessions with a mental health coach for your employees?'
         : 'Would you like to pre-pay for sessions with a mental health coach?';
@@ -187,8 +201,6 @@ export const AccountDetailsForm = ({
 }: AccountDetailsFormProps) => {
     const theme = useTheme();
     if (!control) throw new Error('control is required');
-    const [wantsCoveredSessions, setWantsCoveredSessions] = useState(false);
-    const [isTeamAccount, setIsTeamAccount] = useState(false);
     const { field: planType } = useController({
         control,
         name: 'planType',
@@ -209,181 +221,200 @@ export const AccountDetailsForm = ({
         control,
         name: 'seatCount',
     });
+    const wantsCoveredSessions = coveredSessionField.value > 0;
+    const isTeamAccount = planType.value === 'team';
     return (
         <Box width="100%">
             <Header>Almost done! Just a few more details.</Header>
             <Form onSubmit={(e) => e.preventDefault()}>
-                <Stack spacing={8}>
-                    <Stack>
-                        <Paragraph>
-                            Are you purchasing a plan for yourself (1 person) or
-                            for a team (2-50 people)?
-                        </Paragraph>
-                        <RadioGroup
-                            defaultChecked
-                            defaultValue={'myself'}
-                            onChange={(e) => {
-                                const selectedTeamAccount =
-                                    e.target.value === 'team';
-                                setIsTeamAccount(selectedTeamAccount);
-                                if (selectedTeamAccount) {
-                                    seatCountField.onChange(2);
-                                    billingCycleField.onChange('biannual');
-                                    accountNameField.onChange('');
-                                    planType.onChange('team');
-                                } else {
-                                    seatCountField.onChange(1);
-                                    planType.onChange('individual');
-                                    billingCycleField.onChange('month');
-                                    accountNameField.onChange(
-                                        defaultValues?.name
-                                    );
-                                }
-                            }}
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                            }}
-                        >
-                            <FormControlLabel
-                                value={'myself'}
-                                control={<Radio />}
-                                label="Myself"
-                                itemType="https://schema.org/Boolean"
-                                sx={{
-                                    flex: 1,
-                                }}
-                            />
-                            <FormControlLabel
-                                value={'team'}
-                                control={<Radio />}
-                                label="Team"
-                                itemType="https://schema.org/Boolean"
-                                sx={{
-                                    flex: 1,
-                                }}
-                            />
-                        </RadioGroup>
-                        <Paragraph my={8}>
-                            How would you like to be billed for your Therify
-                            subscription?
-                        </Paragraph>
-                        <BillingCycleButtons
+                <Paragraph marginTop={8}>
+                    Are you purchasing a plan for yourself or for a team?
+                </Paragraph>
+                <RadioGroup
+                    defaultChecked
+                    defaultValue={planType.value}
+                    onChange={(e) => {
+                        const selectedTeamAccount = e.target.value === 'team';
+                        if (selectedTeamAccount) {
+                            if (billingCycleField.value === 'month') {
+                                billingCycleField.onChange('biannual');
+                            }
+                            seatCountField.onChange(2);
+                            accountNameField.onChange('');
+                            planType.onChange('team');
+                        } else {
+                            seatCountField.onChange(1);
+                            planType.onChange('individual');
+                            accountNameField.onChange(defaultValues?.name);
+                        }
+                    }}
+                    onBlur={onInputBlur}
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                    }}
+                >
+                    <FormControlLabel
+                        value={'individual'}
+                        control={<Radio />}
+                        label="Myself (1 person)"
+                        itemType="https://schema.org/Boolean"
+                        sx={{
+                            flex: 1,
+                        }}
+                    />
+                    <FormControlLabel
+                        value={'team'}
+                        control={<Radio />}
+                        label="Team (2-50 people)"
+                        itemType="https://schema.org/Boolean"
+                        sx={{
+                            flex: 1,
+                        }}
+                    />
+                </RadioGroup>
+                {billingCycle !== 'month' && isTeamAccount && (
+                    <Stack marginTop={12}>
+                        <AccountNameInput
                             control={control}
-                            defaultValue={'month'}
+                            defaultValue={defaultValues?.name}
+                            onInputBlur={onInputBlur}
                             disabled={disabled}
-                            isTeamAccount={isTeamAccount}
                         />
-                        {billingCycle !== 'month' && isTeamAccount && (
-                            <Stack spacing={8} my={8}>
-                                <AccountNameInput
-                                    control={control}
-                                    defaultValue={defaultValues?.name}
-                                    onInputBlur={onInputBlur}
-                                    disabled={disabled}
-                                />{' '}
-                                <SectionTitle>
-                                    How many seats would you like to purchase?
-                                    (1 seat = 1 employee)
-                                </SectionTitle>
-                                <Subhead textAlign="center">
-                                    {seatCount}
-                                </Subhead>
-                                <Box
-                                    display="flex"
-                                    width="100%"
-                                    marginRight={4}
-                                >
-                                    <Paragraph>{2}</Paragraph>
-                                    <SeatCountInput
-                                        control={control}
-                                        max={maximumSeats}
-                                        defaultValue={minimumSeats}
-                                        min={isTeamAccount ? 2 : 1}
-                                        onInputBlur={onInputBlur}
-                                        disabled={disabled}
-                                    />
-                                    <Paragraph>{maximumSeats}</Paragraph>
-                                </Box>
-                            </Stack>
-                        )}
                     </Stack>
-                    <Stack>
-                        <Paragraph>
-                            {getCoveredSessionPropmpt(isTeamAccount)}
+                )}
+                <Box marginTop={12}>
+                    <Divider />
+                    <Paragraph bold marginTop={8}>
+                        How would you like to be billed for your Therify
+                        subscription?
+                    </Paragraph>
+                </Box>
+                <BillingCycleButtons
+                    control={control}
+                    defaultValue={'month'}
+                    disabled={disabled}
+                    isTeamAccount={isTeamAccount}
+                    onInputBlur={onInputBlur}
+                />
+                {planType.value === 'team' && (
+                    <Stack marginTop={12}>
+                        <Paragraph bold>
+                            How many seats would you like to purchase?
                         </Paragraph>
-                        <RadioGroup
-                            onChange={(e) => {
-                                const selectedCoveredSessions =
-                                    e.target.value === 'yes';
-                                setWantsCoveredSessions(
-                                    selectedCoveredSessions
-                                );
-                                coveredSessionField.onChange(
-                                    selectedCoveredSessions === true ? 1 : 0
-                                );
-                            }}
-                            defaultValue={'no'}
-                            defaultChecked
+                        <Subhead textAlign="center">{seatCount}</Subhead>
+                        <Box display="flex" width="100%" marginRight={4}>
+                            <Paragraph>{2}</Paragraph>
+                            <SeatCountInput
+                                control={control}
+                                max={maximumSeats}
+                                defaultValue={minimumSeats}
+                                min={isTeamAccount ? 2 : 1}
+                                onInputBlur={onInputBlur}
+                                disabled={disabled}
+                            />
+                            <Paragraph>{maximumSeats}</Paragraph>
+                        </Box>
+                        <Caption secondary margin={0}>
+                            1 seat = 1 employee
+                        </Caption>
+                    </Stack>
+                )}
+                <Stack marginTop={10}>
+                    <Paragraph bold>
+                        {getCoveredSessionPrompt(isTeamAccount)}
+                    </Paragraph>
+                    <RadioGroup
+                        onChange={(e) => {
+                            const selectedCoveredSessions =
+                                e.target.value === 'yes';
+                            coveredSessionField.onChange(
+                                selectedCoveredSessions === true ? 1 : 0
+                            );
+                            onInputBlur();
+                        }}
+                        defaultValue={
+                            coveredSessionField.value > 0 ? 'yes' : 'no'
+                        }
+                        defaultChecked
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            width: '100%',
+                        }}
+                    >
+                        <FormControlLabel
+                            value={'no'}
+                            control={<Radio />}
+                            label="No"
+                            itemType="https://schema.org/Boolean"
                             sx={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                width: '100%',
+                                flex: 1,
                             }}
-                        >
-                            <FormControlLabel
-                                value={'yes'}
-                                control={<Radio />}
-                                label="Yes"
-                                itemType="https://schema.org/Boolean"
-                                sx={{
-                                    flex: 1,
-                                }}
+                        />
+                        <FormControlLabel
+                            value={'yes'}
+                            control={<Radio />}
+                            label="Yes"
+                            itemType="https://schema.org/Boolean"
+                            sx={{
+                                flex: 1,
+                            }}
+                        />
+                    </RadioGroup>
+                </Stack>
+                {wantsCoveredSessions && (
+                    <Stack marginTop={12}>
+                        <Paragraph bold>
+                            {renderCoveredSessionPrompt({
+                                isTeam: isTeamAccount,
+                                billingCycle,
+                            })}
+                        </Paragraph>
+                        <Subhead textAlign="center">{coveredSessions}</Subhead>
+                        <Box display="flex" width="100%" marginRight={4}>
+                            <Paragraph>{minCoveredSessions}</Paragraph>
+                            <CoveredSessionsInput
+                                control={control}
+                                max={maxCoveredSessions}
+                                min={minCoveredSessions}
+                                onInputBlur={onInputBlur}
+                                disabled={disabled}
                             />
-                            <FormControlLabel
-                                value={'no'}
-                                control={<Radio />}
-                                label="No"
-                                itemType="https://schema.org/Boolean"
-                                sx={{
-                                    flex: 1,
-                                }}
-                            />
-                        </RadioGroup>
-                        {wantsCoveredSessions && (
+                            <Paragraph>{maxCoveredSessions}</Paragraph>
+                        </Box>
+                        <Caption secondary margin={0}>
+                            ${COVERED_SESSION_PRICE} per covered session
+                        </Caption>
+                    </Stack>
+                )}
+                <Stack marginTop={10}>
+                    <Divider />
+                    <Box marginBottom={4}>
+                        <SectionTitle>Your plan summary:</SectionTitle>
+                    </Box>
+                    <>
+                        {!isTeamAccount && (
                             <>
-                                <SectionTitle>
-                                    {renderCoveredSessionPrompt({
-                                        isTeam: isTeamAccount,
-                                        billingCycle,
-                                    })}
-                                </SectionTitle>
-                                <Subhead textAlign="center">
-                                    {coveredSessions}
-                                </Subhead>
                                 <Box
-                                    display="flex"
-                                    width="100%"
-                                    marginRight={4}
+                                    sx={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                    }}
                                 >
-                                    <Paragraph>{minCoveredSessions}</Paragraph>
-                                    <CoveredSessionsInput
-                                        control={control}
-                                        max={maxCoveredSessions}
-                                        min={minCoveredSessions}
-                                        onInputBlur={onInputBlur}
-                                        disabled={disabled}
-                                    />
-                                    <Paragraph>{maxCoveredSessions}</Paragraph>
+                                    <Box>Individual Plan:</Box>{' '}
+                                    <Box sx={{ fontWeight: 'bold' }}>
+                                        $
+                                        {calculateSeatTotal({
+                                            seats: seatCount,
+                                            billingCycle,
+                                            isTeamAccount,
+                                        })}
+                                    </Box>
                                 </Box>
+                                <Divider />
                             </>
                         )}
-                    </Stack>
-                </Stack>
-                <>
-                    <Divider sx={{ margin: `40px 0` }} />
-                    <SectionTitle>Your plan summary:</SectionTitle>
-                    <>
                         {isTeamAccount && (
                             <>
                                 <Box
@@ -409,7 +440,7 @@ export const AccountDetailsForm = ({
                         )}
                         {wantsCoveredSessions && (
                             <>
-                                <Paragraph
+                                <Box
                                     sx={{
                                         display: 'flex',
                                         justifyContent: 'space-between',
@@ -417,16 +448,20 @@ export const AccountDetailsForm = ({
                                 >
                                     <Box>
                                         <b>{coveredSessions}</b> covered
-                                        sessions:
+                                        sessions
+                                        {planType.value === 'team'
+                                            ? ' per seat'
+                                            : ''}
+                                        :
                                     </Box>
                                     <Box sx={{ fontWeight: 'bold' }}>
                                         $
                                         {calculateCoveredSessionsTotal({
                                             coveredSessions,
-                                        })}{' '}
-                                        {isTeamAccount && '/seat'}
+                                            seats: seatCount,
+                                        })}
                                     </Box>
-                                </Paragraph>
+                                </Box>
                                 <Divider />
                             </>
                         )}
@@ -451,11 +486,16 @@ export const AccountDetailsForm = ({
                     {seatCount === maximumSeats && (
                         <Paragraph>
                             Need more than {maximumSeats} seats?{' '}
-                            <Link>Contact us</Link> about our enterprise
-                            pricing.
+                            <Link
+                                href="https://www.therify.co/contact"
+                                target="_blank"
+                            >
+                                Contact us
+                            </Link>{' '}
+                            about our enterprise pricing.
                         </Paragraph>
                     )}
-                </>
+                </Stack>
                 <Paragraph marginTop={4}>
                     Therify partners with{' '}
                     <b>

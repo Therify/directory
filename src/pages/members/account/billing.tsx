@@ -307,7 +307,7 @@ const getBillingCycle = (
         new Date(endDate),
         new Date(startDate)
     );
-    console.log('months', months);
+
     switch (months) {
         case 1:
             return 'Month';
