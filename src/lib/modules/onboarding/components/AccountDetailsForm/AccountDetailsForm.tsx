@@ -448,7 +448,9 @@ export const AccountDetailsForm = ({
                                 >
                                     <Box>
                                         <b>{coveredSessions}</b> covered
-                                        sessions
+                                        {coveredSessions === 1
+                                            ? ' session'
+                                            : ' sessions'}
                                         {planType.value === 'team'
                                             ? ' per seat'
                                             : ''}
