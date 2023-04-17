@@ -35,12 +35,16 @@ export const usePlanMonitoring = (
             (isPlanExpired || !isPlanActive) &&
             !INVALID_PLAN_ROUTES.includes(router.pathname)
         ) {
+            if (user?.isAccountAdmin) {
+                router.push(URL_PATHS.MEMBERS.ACCOUNT.BILLING_AND_PAYMENTS);
+                return;
+            }
             const invalidPath = user.roles.includes(Role.member)
                 ? URL_PATHS.MEMBERS.ACCOUNT.INVALID_PLAN
                 : URL_PATHS.PROVIDERS.ACCOUNT.BILLING_AND_SUBSCRIPTION;
             router.push(invalidPath);
         }
-    }, [hasPlanStarted, isPlanExpired, isPlanActive, router, user?.roles]);
+    }, [hasPlanStarted, isPlanExpired, isPlanActive, router, user]);
     return {
         hasAccess: Boolean(hasPlanStarted && isPlanActive && !isPlanExpired),
     };
