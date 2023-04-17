@@ -46,6 +46,7 @@ export const CHAT: NavigationLink = {
 };
 
 export const BILLING_AND_PAYMENTS: NavigationLink = {
+    icon: NAVIGATION_ICON.BILLING,
     displayName: 'Billing & Payments',
     path: URL_PATHS.MEMBERS.ACCOUNT.BILLING_AND_PAYMENTS,
 };

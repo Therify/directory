@@ -60,6 +60,7 @@ export function factory(params: MembersServiceParams) {
                 directoryService.executeProviderSearch({
                     state: memberProfile.state as Region.Type,
                     country: memberProfile.country as Country.Country,
+                    memberId: session.user.sub,
                     selfAssessment,
                 }),
                 params.prisma.memberFavorites.findMany({

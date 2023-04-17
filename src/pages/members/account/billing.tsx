@@ -204,25 +204,36 @@ export default function BillingPage({
                                 </Paragraph>
                                 {accountDetails && (
                                     <>
-                                        <Paragraph>
-                                            Usage:{' '}
-                                            {`${accountDetails.claimedSeats} ${
-                                                accountDetails.claimedSeats ===
-                                                1
-                                                    ? 'seat'
-                                                    : 'seats'
-                                            } claimed of ${
-                                                accountDetails.totalSeats
-                                            } total ${
-                                                accountDetails.totalSeats === 1
-                                                    ? 'seat'
-                                                    : 'seats'
-                                            }`}
-                                        </Paragraph>
+                                        {accountDetails.totalSeats > 1 && (
+                                            <Paragraph>
+                                                Usage:{' '}
+                                                {`${
+                                                    accountDetails.claimedSeats
+                                                } ${
+                                                    accountDetails.claimedSeats ===
+                                                    1
+                                                        ? 'seat'
+                                                        : 'seats'
+                                                } claimed of ${
+                                                    accountDetails.totalSeats
+                                                } total ${
+                                                    accountDetails.totalSeats ===
+                                                    1
+                                                        ? 'seat'
+                                                        : 'seats'
+                                                }`}
+                                            </Paragraph>
+                                        )}
 
                                         <Paragraph>
-                                            Covered Sessions Per seat:{' '}
-                                            {accountDetails.coveredSessions}
+                                            Covered Sessions{' '}
+                                            {accountDetails.totalSeats > 1 &&
+                                                'per seat '}
+                                            {getBillingCycleDisplayText(
+                                                user.plan.startDate,
+                                                user.plan.endDate
+                                            )}
+                                            : {accountDetails.coveredSessions}
                                         </Paragraph>
                                     </>
                                 )}
@@ -323,6 +334,24 @@ const getBillingCycle = (
             return '' as 'Month';
     }
 };
+const getBillingCycleDisplayText = (startDate: string, endDate: string) => {
+    const months = differenceInCalendarMonths(
+        new Date(endDate),
+        new Date(startDate)
+    );
+
+    switch (months) {
+        case 1:
+            return 'per month';
+        case 6:
+            return 'every 6 months';
+        case 12:
+            return 'per year';
+        default:
+            return '';
+    }
+};
+
 const StyledRegistrationLink = styled(Link)(({ theme }) => ({
     ...theme.typography.body2,
     padding: theme.spacing(1),
