@@ -3,22 +3,30 @@ import { inferAsyncReturnType } from '@trpc/server';
 import { StripeInvoice, StripeUtils } from '@/lib/shared/vendors/stripe';
 import {
     handleGroupPracticePayment,
+    handleMembershipPayment,
     handleOneTimePayment,
     handlePlanChange,
 } from './handlers';
-import { getProductByEnvironment, PRODUCTS } from '@/lib/shared/types';
+import {
+    getProductsByEnvironment,
+    isValidMembershipPriceId,
+    PRODUCTS,
+} from '@/lib/shared/types';
 import { NodeEnvironment } from '@/lib/shared/types/nodeEnvironment';
 
 type HandlerResult = inferAsyncReturnType<
     | typeof handleGroupPracticePayment
     | typeof handlePlanChange
     | typeof handleOneTimePayment
+    | typeof handleMembershipPayment
 >;
 
-const GROUP_PRACTICE_PLAN = getProductByEnvironment(
-    PRODUCTS.GROUP_PRACTICE_PLAN,
+const ALL_PRODUCTS = getProductsByEnvironment(
     process.env.VERCEL_ENV as NodeEnvironment
 );
+const GROUP_PRACTICE_PLAN = ALL_PRODUCTS[PRODUCTS.GROUP_PRACTICE_PLAN];
+const COVERED_COACHING_SESSION =
+    ALL_PRODUCTS[PRODUCTS.COVERED_COACHING_SESSION];
 
 export const handleInvoicePaidFactory =
     ({ accounts }: StripeWebhookParams) =>
@@ -39,9 +47,19 @@ export const handleInvoicePaidFactory =
 
         const [lineItem] = invoice.lines.data;
         const isSubscriptionChange = billing_reason === 'subscription_update';
+
         const isGroupPracticePlanPriceId = Object.values(
             GROUP_PRACTICE_PLAN.PRICES
         ).includes(lineItem.price.id);
+
+        const isCoachingSessionPriceId = Object.values(
+            COVERED_COACHING_SESSION.PRICES
+        ).includes(lineItem.price.id);
+
+        const isMembershipPlanPriceId = isValidMembershipPriceId(
+            lineItem.price.id,
+            process.env.VERCEL_ENV as NodeEnvironment
+        );
 
         let result: HandlerResult | undefined = undefined;
         if (!subscriptionId) {
@@ -72,6 +90,13 @@ export const handleInvoicePaidFactory =
                 endDate: StripeUtils.getDateFromStripeTimestamp(
                     lineItem.period.end
                 ).toISOString(),
+            });
+        } else if (isMembershipPlanPriceId || isCoachingSessionPriceId) {
+            result = await handleMembershipPayment({
+                accounts,
+                invoice,
+                customerId,
+                subscriptionId,
             });
         }
 

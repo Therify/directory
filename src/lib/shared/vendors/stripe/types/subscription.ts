@@ -89,8 +89,8 @@ export const schema = z.object({
             }),
         })
         .nullable(),
-    plan: stripePlan,
-    quantity: z.number(),
+    plan: stripePlan.nullable(),
+    quantity: z.number().nullable(),
     schedule: z.string().nullable(),
     start_date: z.number(),
     start_proration_behavior: z.string().optional(),

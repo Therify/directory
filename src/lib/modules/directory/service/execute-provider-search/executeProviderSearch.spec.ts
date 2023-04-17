@@ -1,6 +1,11 @@
 import { prismaMock } from '@/lib/prisma/__mock__';
 import { addYears } from 'date-fns';
-import { ProviderProfile, ProfileType, NewClientStatus } from '@prisma/client';
+import {
+    ProviderProfile,
+    ProfileType,
+    NewClientStatus,
+    User,
+} from '@prisma/client';
 import {
     AgeGroup,
     AreaOfFocus,
@@ -16,8 +21,10 @@ import {
 } from '@/lib/shared/types';
 import { DirectoryServiceParams } from '../params';
 import { factory } from './executeProviderSearch';
+import { generateRandomSelfAssessment } from '@/lib/shared/types/self-assessment/generate-random-self-assessment';
 
 const mockPrismaProviderProfile: ProviderProfile = {
+    stripeSessionPriceId: '',
     createdAt: new Date('2021-03-01'),
     updatedAt: new Date('2021-03-01'),
     id: 'test-provider-profile-id',
@@ -106,19 +113,43 @@ const mockPrismaProviderProfile: ProviderProfile = {
     practiceStartDate: new Date('2010-09-01T00:00:00.000Z'),
 };
 
+const mockPrismaUser = {
+    account: {
+        plans: [
+            {
+                seats: 2,
+            },
+        ],
+    },
+} as unknown as User;
+
+const memberId = 'test-user-id';
 describe('executeProviderSearch', () => {
+    const selfAssessment = {
+        ...generateRandomSelfAssessment(),
+        phq9Score: 0,
+        hasSuicidalIdeation: false,
+        isInCrisis: false,
+    };
     const executeProviderSearch = factory({
         prisma: prismaMock,
     } as unknown as DirectoryServiceParams);
+
+    beforeEach(() => {
+        prismaMock.user.findUniqueOrThrow.mockResolvedValue(mockPrismaUser);
+    });
 
     describe('therapists', () => {
         it('should return valid profiles', async () => {
             prismaMock.providerProfile.findMany.mockResolvedValue([
                 mockPrismaProviderProfile,
             ]);
+
             const { profiles } = await executeProviderSearch({
                 state: UNITED_STATES.STATE.MAP.NEW_YORK,
                 country: UNITED_STATES.COUNTRY.CODE,
+                selfAssessment,
+                memberId,
             });
             await expect(profiles.length).toBe(1);
         });
@@ -132,6 +163,8 @@ describe('executeProviderSearch', () => {
             const { profiles } = await executeProviderSearch({
                 state: UNITED_STATES.STATE.MAP.NEW_YORK,
                 country: UNITED_STATES.COUNTRY.CODE,
+                selfAssessment,
+                memberId,
             });
             await expect(profiles.length).toBe(0);
         });
@@ -145,6 +178,8 @@ describe('executeProviderSearch', () => {
             const { profiles } = await executeProviderSearch({
                 state: UNITED_STATES.STATE.MAP.NEW_YORK,
                 country: UNITED_STATES.COUNTRY.CODE,
+                selfAssessment,
+                memberId,
             });
             await expect(profiles.length).toBe(0);
         });
@@ -168,6 +203,8 @@ describe('executeProviderSearch', () => {
             const { profiles } = await executeProviderSearch({
                 state: UNITED_STATES.STATE.MAP.NEW_YORK,
                 country: UNITED_STATES.COUNTRY.CODE,
+                selfAssessment,
+                memberId,
             });
             await expect(profiles.length).toBe(0);
         });
@@ -190,8 +227,60 @@ describe('executeProviderSearch', () => {
             const { profiles } = await executeProviderSearch({
                 state: UNITED_STATES.STATE.MAP.NEW_YORK,
                 country: UNITED_STATES.COUNTRY.CODE,
+                selfAssessment,
+                memberId,
             });
             await expect(profiles.length).toBe(0);
+        });
+
+        it('should not return therapists for Individual plan holders', async () => {
+            prismaMock.user.findUniqueOrThrow.mockResolvedValue({
+                account: {
+                    plans: [
+                        {
+                            seats: 1,
+                        },
+                    ],
+                },
+            } as unknown as User);
+            prismaMock.providerProfile.findMany.mockResolvedValue([]);
+            await executeProviderSearch({
+                state: UNITED_STATES.STATE.MAP.NEW_YORK,
+                country: UNITED_STATES.COUNTRY.CODE,
+                selfAssessment,
+                memberId,
+            });
+            const [prismaInput] =
+                prismaMock.providerProfile.findMany.mock.calls[0];
+            const therapistArg = prismaInput?.where?.OR ?? [];
+
+            expect((therapistArg as Array<unknown>)[0]).toEqual({});
+        });
+
+        it('should return therapists for Team plan holders', async () => {
+            prismaMock.user.findUniqueOrThrow.mockResolvedValue({
+                account: {
+                    plans: [
+                        {
+                            seats: 2,
+                        },
+                    ],
+                },
+            } as unknown as User);
+            prismaMock.providerProfile.findMany.mockResolvedValue([]);
+            await executeProviderSearch({
+                state: UNITED_STATES.STATE.MAP.NEW_YORK,
+                country: UNITED_STATES.COUNTRY.CODE,
+                selfAssessment,
+                memberId,
+            });
+            const [prismaInput] =
+                prismaMock.providerProfile.findMany.mock.calls[0];
+            const therapistArg = prismaInput?.where?.OR ?? [];
+            console.log(therapistArg);
+            expect(
+                (therapistArg as [{ designation: ProfileType }])[0].designation
+            ).toBe(ProfileType.therapist);
         });
     });
 
@@ -207,8 +296,34 @@ describe('executeProviderSearch', () => {
             const { profiles } = await executeProviderSearch({
                 state: UNITED_STATES.STATE.MAP.NEW_YORK,
                 country: UNITED_STATES.COUNTRY.CODE,
+                selfAssessment,
+                memberId,
             });
             expect(profiles.length).toBe(1);
+        });
+
+        it('should filter out coaches when user is at risk', async () => {
+            prismaMock.providerProfile.findMany.mockResolvedValue([
+                {
+                    ...mockPrismaProviderProfile,
+                    credentials: [],
+                    designation: ProfileType.coach,
+                },
+            ]);
+            await executeProviderSearch({
+                state: UNITED_STATES.STATE.MAP.NEW_YORK,
+                country: UNITED_STATES.COUNTRY.CODE,
+                selfAssessment: {
+                    ...selfAssessment,
+                    isInCrisis: true,
+                },
+                memberId,
+            });
+            const [prismaInput] =
+                prismaMock.providerProfile.findMany.mock.calls[0];
+            const [_, coachArgument] =
+                (prismaInput?.where?.OR as unknown[]) ?? [];
+            expect(coachArgument).toEqual({});
         });
     });
 });

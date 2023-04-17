@@ -15,15 +15,6 @@ export const factory = (params: MembersServiceParams) => {
     const getFavoritesPageProps: GetServerSideProps<
         FavoritesPageProps
     > = async (context) => {
-        const isMemberAtRisk = await isAtRisk(context);
-        if (isMemberAtRisk) {
-            return {
-                redirect: {
-                    destination: '/members/request-appointment',
-                    permanent: false,
-                },
-            };
-        }
         const session = await getSession(context.req, context.res);
         if (!session) {
             return {
