@@ -35,15 +35,6 @@ export const factory = (params: GetCarePagePropsParams) => {
                 },
             };
         }
-        const isMemberAtRisk = await isAtRisk(context);
-        if (isMemberAtRisk) {
-            return {
-                redirect: {
-                    destination: '/members/request-appointment',
-                    permanent: false,
-                },
-            };
-        }
         const getTherifyUser = GetMemberTherifyUser.factory(params);
         const { user } = await getTherifyUser({
             userId: session.user.sub,

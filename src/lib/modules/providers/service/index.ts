@@ -3,7 +3,6 @@ import { prisma } from '@/lib/prisma';
 import { ProvidersServiceParams } from './params';
 import { profilesFactory } from './profiles';
 import { pagePropsFactory } from './page-props';
-import { AccountsService } from '../../accounts/service/service';
 import { GetDashboardProps } from './dashboard/get-dashboard-props';
 import { invitationsFactory } from './invitations';
 import { GetProviderTherifyUser } from './get-provider-therify-user';

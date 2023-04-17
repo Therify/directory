@@ -1,6 +1,5 @@
-import { Account } from '@prisma/client';
 import { AccountsServiceParams } from '../params';
-import { GetAccountByOwnerId } from '../../../features';
+import { GetAccountByOwnerId } from '../../features';
 
 export const factory = ({ prisma }: AccountsServiceParams) => {
     return async function getAccountByOwnerId({

@@ -28,12 +28,7 @@ export const getServerSideProps = RBAC.requireMemberAuth(
     withPageAuthRequired({})
 );
 
-function getDefaultAccountName(user: { sub?: string | null } = {}) {
-    if (user.sub) {
-        return `${user.sub}'s Account - ${new Date().getFullYear()}`;
-    }
-    return `Account - ${new Date().getFullYear()}`;
-}
+const defaultIndividualAccountName = 'Individual Member Plan';
 
 export default function AccountOnboardingPage() {
     const theme = useTheme();
@@ -44,13 +39,18 @@ export default function AccountOnboardingPage() {
     const accountDetailsForm = useForm<HandleAccountOnboarding.Input>({
         mode: 'onChange',
         defaultValues: {
+            billingUserId: user?.sub ?? '',
             coveredSessions: 0,
             seatCount: 1,
-            name: 'Individual Member Plan',
+            name: defaultIndividualAccountName,
+            billingCycle: 'month',
+            planType: 'individual',
             ...getStoredAccountDetails(),
-        },
+        } as Partial<HandleAccountOnboarding.Input>,
     });
     const billingCycle = accountDetailsForm.watch('billingCycle');
+    const planType = accountDetailsForm.watch('planType');
+    const seatCount = accountDetailsForm.watch('seatCount');
     const { isLoading: isLoadingAccount, data: accountData } = trpc.useQuery(
         [
             'accounts.accounts.get-account-by-owner-id',
@@ -68,8 +68,6 @@ export default function AccountOnboardingPage() {
         if (accountData?.name) {
             accountDetailsForm.setValue('name', accountData.name);
         }
-        accountDetailsForm.setValue('planType', 'individual');
-        accountDetailsForm.setValue('billingCycle', 'month');
     }, [accountDetailsForm, accountData?.name]);
 
     useEffect(() => {
@@ -77,6 +75,12 @@ export default function AccountOnboardingPage() {
             accountDetailsForm.setValue('billingUserId', user.sub);
         }
     }, [accountDetailsForm, user?.sub]);
+
+    useEffect(() => {
+        if (planType === 'individual' && seatCount !== 1) {
+            accountDetailsForm.setValue('seatCount', 1);
+        }
+    }, [accountDetailsForm, planType, seatCount]);
 
     const { isLoading: isHandlingAccountSubmission, mutate: submitAccount } =
         trpc.useMutation('accounts.onboarding.handle-account-onboarding', {
@@ -133,7 +137,7 @@ export default function AccountOnboardingPage() {
                     >
                         <AccountDetailsForm
                             defaultValues={{
-                                name: getDefaultAccountName(user),
+                                name: defaultIndividualAccountName,
                             }}
                             control={accountDetailsForm.control}
                             sessionPrice={100}
@@ -141,7 +145,6 @@ export default function AccountOnboardingPage() {
                             coveredSessions={accountDetailsForm.watch(
                                 'coveredSessions'
                             )}
-                            seatPrice={billingCycle === 'annual' ? 372 : 39}
                             maximumSeats={50}
                             onInputBlur={() =>
                                 storeAccountDetails(

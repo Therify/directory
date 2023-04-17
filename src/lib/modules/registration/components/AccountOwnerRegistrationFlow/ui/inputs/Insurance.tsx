@@ -29,7 +29,16 @@ export const InsuranceInput = ({
                 required
                 id="insurance"
                 label="Insurance"
-                options={asSelectOptions([...InsuranceProvider.ENTRIES])}
+                options={asSelectOptions([...InsuranceProvider.ENTRIES]).map(
+                    (option) =>
+                        option.value === "I don't have insurance"
+                            ? {
+                                  ...option,
+                                  displayText:
+                                      "I don't have or wont use insurance",
+                              }
+                            : option
+                )}
                 sx={{
                     width: '100%',
                 }}
