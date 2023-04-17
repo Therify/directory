@@ -107,12 +107,12 @@ function getIndividualPlanPriceId(
 ) {
     switch (billingCycle) {
         case 'month':
-            return PRODUCTS[PRODUCT_KEYS.INDIVIDUAL_MEMBER_PLAN].PRICES.MONTHLY;
+            return PRODUCTS[PRODUCT_KEYS.MEMBER_INDIVIDUAL_PLAN].PRICES.MONTHLY;
         case 'biannual':
-            return PRODUCTS[PRODUCT_KEYS.INDIVIDUAL_MEMBER_PLAN].PRICES
+            return PRODUCTS[PRODUCT_KEYS.MEMBER_INDIVIDUAL_PLAN].PRICES
                 .BIANNUAL;
         case 'annual':
-            return PRODUCTS[PRODUCT_KEYS.INDIVIDUAL_MEMBER_PLAN].PRICES.ANNUAL;
+            return PRODUCTS[PRODUCT_KEYS.MEMBER_INDIVIDUAL_PLAN].PRICES.ANNUAL;
         default:
             throw new Error('Invalid individual plan billing cycle');
     }
@@ -125,9 +125,9 @@ function getTeamPlanPriceId(
 ) {
     switch (billingCycle) {
         case 'biannual':
-            return PRODUCTS[PRODUCT_KEYS.GROUP_MEMBER_PLAN].PRICES.BIANNUAL;
+            return PRODUCTS[PRODUCT_KEYS.MEMBER_TEAM_PLAN].PRICES.BIANNUAL;
         case 'annual':
-            return PRODUCTS[PRODUCT_KEYS.GROUP_MEMBER_PLAN].PRICES.ANNUAL;
+            return PRODUCTS[PRODUCT_KEYS.MEMBER_TEAM_PLAN].PRICES.ANNUAL;
         default:
             throw new Error('Invalid team plan billing cycle');
     }

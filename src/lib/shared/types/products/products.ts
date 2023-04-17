@@ -12,7 +12,7 @@ export const DEVELOPMENT_PRODUCT_IDS: ProductConfigs = {
             ANNUAL: 'price_1MlGl1Allox7wzg5qhovHhDp',
         },
     },
-    [PRODUCTS.INDIVIDUAL_MEMBER_PLAN]: {
+    [PRODUCTS.MEMBER_INDIVIDUAL_PLAN]: {
         PRODUCT_ID: 'prod_NhBU0ErNIM7hxM',
         PRICES: {
             MONTHLY: 'price_1Mvn7yAllox7wzg5hYYwBeiS',
@@ -20,7 +20,7 @@ export const DEVELOPMENT_PRODUCT_IDS: ProductConfigs = {
             ANNUAL: 'price_1Mvn7yAllox7wzg54f6KW7xe',
         },
     },
-    [PRODUCTS.GROUP_MEMBER_PLAN]: {
+    [PRODUCTS.MEMBER_TEAM_PLAN]: {
         PRODUCT_ID: 'prod_NhBlhlLQ2HoRpZ',
         PRICES: {
             BIANNUAL: 'price_1MvnNUAllox7wzg5xmrPbAkE',
@@ -45,28 +45,27 @@ export const PRODUCTION_PRODUCT_IDS: ProductConfigs = {
             ANNUAL: 'price_1MlHjSAllox7wzg5HKWnEHKS',
         },
     },
-    [PRODUCTS.INDIVIDUAL_MEMBER_PLAN]: {
-        // TODO: Update these with the production product IDs
-        PRODUCT_ID: '',
+    [PRODUCTS.MEMBER_INDIVIDUAL_PLAN]: {
+        PRODUCT_ID: 'prod_NjAFvw1FPIG4sh',
         PRICES: {
-            MONTHLY: '',
-            BIANNUAL: '',
-            ANNUAL: '',
+            MONTHLY: 'price_1Mxhv4Allox7wzg5Dq9Cpmd9',
+            BIANNUAL: 'price_1Mxhv4Allox7wzg5tVff5Hez',
+            ANNUAL: 'price_1Mxhv4Allox7wzg5OMA8MNf3',
         },
     },
-    [PRODUCTS.GROUP_MEMBER_PLAN]: {
-        PRODUCT_ID: '',
+    [PRODUCTS.MEMBER_TEAM_PLAN]: {
+        PRODUCT_ID: 'prod_NjAGcVI56YT54G',
         PRICES: {
-            BIANNUAL: '',
-            ANNUAL: '',
+            BIANNUAL: 'price_1MxhwJAllox7wzg5hII05Gxs',
+            ANNUAL: 'price_1MxhwJAllox7wzg5dVh0vMt5',
         },
     },
     [PRODUCTS.COVERED_COACHING_SESSION]: {
-        PRODUCT_ID: '',
+        PRODUCT_ID: 'prod_NjAJgTK6CnTc59',
         PRICES: {
-            MONTHLY: '',
-            BIANNUAL: '',
-            ANNUAL: '',
+            MONTHLY: 'price_1MxhybAllox7wzg5ayezzR95',
+            BIANNUAL: 'price_1MxhybAllox7wzg5AtDCpwWY',
+            ANNUAL: 'price_1MxhybAllox7wzg5ryFWLORm',
         },
     },
 } as const;
@@ -122,8 +121,8 @@ export function isValidMembershipPriceId(
 ) {
     const products = getProductsByEnvironment(environment);
     const prices = [
-        ...Object.values(products[PRODUCTS.GROUP_MEMBER_PLAN].PRICES),
-        ...Object.values(products[PRODUCTS.INDIVIDUAL_MEMBER_PLAN].PRICES),
+        ...Object.values(products[PRODUCTS.MEMBER_TEAM_PLAN].PRICES),
+        ...Object.values(products[PRODUCTS.MEMBER_INDIVIDUAL_PLAN].PRICES),
     ];
     return prices.includes(id);
 }

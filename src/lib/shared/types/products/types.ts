@@ -1,7 +1,7 @@
 export const PRODUCTS = {
     GROUP_PRACTICE_PLAN: 'group_practice_plan',
-    GROUP_MEMBER_PLAN: 'group_member_plan',
-    INDIVIDUAL_MEMBER_PLAN: 'individual_member_plan',
+    MEMBER_TEAM_PLAN: 'member_team_plan',
+    MEMBER_INDIVIDUAL_PLAN: 'member_individual_plan',
     COVERED_COACHING_SESSION: 'covered_coaching_session',
 } as const;
 
@@ -35,7 +35,7 @@ export interface CoveredCoachingSession {
 
 export type ProductConfigs = {
     [PRODUCTS.GROUP_PRACTICE_PLAN]: GroupPracticeProduct;
-    [PRODUCTS.GROUP_MEMBER_PLAN]: GroupMemberProduct;
-    [PRODUCTS.INDIVIDUAL_MEMBER_PLAN]: IndividuaMemberProduct;
+    [PRODUCTS.MEMBER_TEAM_PLAN]: GroupMemberProduct;
+    [PRODUCTS.MEMBER_INDIVIDUAL_PLAN]: IndividuaMemberProduct;
     [PRODUCTS.COVERED_COACHING_SESSION]: CoveredCoachingSession;
 };
