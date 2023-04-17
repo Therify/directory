@@ -185,6 +185,10 @@ export function SelfAssessmentForm({
                         }}
                     />
                     <Divider />
+                    <Paragraph bold>
+                        Over the last 2 weeks, how often have you been bothered
+                        by any of the following problems?
+                    </Paragraph>
                     {PHQ9Questions.map((question, index) => {
                         const questionName = `phq9Question${
                             index + 1

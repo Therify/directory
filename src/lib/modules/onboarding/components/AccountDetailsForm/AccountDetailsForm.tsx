@@ -186,6 +186,12 @@ function getCoveredSessionPrompt(isTeam: boolean) {
         : 'Would you like to pre-pay for sessions with a mental health coach?';
 }
 
+function getCoveredSessionHelperText(isTeam: boolean) {
+    return isTeam
+        ? 'If you choose not to cover session for your employees, Therify will bill them directly for sessions.'
+        : 'If you choose not to pre-pay, payment will be collected at the time of each session.';
+}
+
 export const AccountDetailsForm = ({
     defaultValues,
     control,
@@ -362,6 +368,9 @@ export const AccountDetailsForm = ({
                             }}
                         />
                     </RadioGroup>
+                    <Caption secondary size="small" margin={0} marginTop={4}>
+                        {getCoveredSessionHelperText(isTeamAccount)}
+                    </Caption>
                 </Stack>
                 {wantsCoveredSessions && (
                     <Stack marginTop={12}>
