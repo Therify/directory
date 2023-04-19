@@ -237,7 +237,7 @@ model Practice {
   practiceProvider           PracticeProvider[]
   practiceProviderInvitation PracticeProviderInvitation[]
   practiceProfile            PracticeProfile[]
-  RedeemedSession            RedeemedSession[]
+  redeemedSessions           RedeemedSession[]
 
   @@map("practices")
 }
