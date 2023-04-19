@@ -201,8 +201,10 @@ model RedeemedSession {
   plan                Plan                  @relation(fields: [planId], references: [id])
   planId              String                @map("plan_id")
   memberId            String                @map("member_id")
-  profileId           String                @map("profile_id")
-  providerProfile     ProviderProfile       @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId           String?               @map("profile_id")
+  providerProfile     ProviderProfile?      @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  practiceId          String?               @map("practice_id")
+  practice            Practice?             @relation(fields: [practiceId], references: [id], onDelete: Cascade)
   member              User                  @relation(fields: [memberId], references: [id], onDelete: Cascade)
   status              RedeemedSessionStatus
   dateOfSession       DateTime              @map("date_of_session")
@@ -235,6 +237,7 @@ model Practice {
   practiceProvider           PracticeProvider[]
   practiceProviderInvitation PracticeProviderInvitation[]
   practiceProfile            PracticeProfile[]
+  RedeemedSession            RedeemedSession[]
 
   @@map("practices")
 }
