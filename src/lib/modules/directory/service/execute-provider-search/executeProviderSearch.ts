@@ -147,7 +147,6 @@ const getInRegionCredentials = (
 
         return (
             parsedCredential.success &&
-            // TODO: All DB credentials need a country added or a default value, otherwise this will fail
             parsedCredential.data.country === country &&
             parsedCredential.data.state === region &&
             new Date(parsedCredential.data.expirationDate).getTime() >
