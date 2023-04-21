@@ -7,10 +7,12 @@ import {
     ActionConfirmationModal,
     ClientList,
     MemberDetailsModal,
+    ReimbursementModal,
 } from '@/lib/modules/providers/components/Clients';
 import { useProviderConnectionRequests } from '@/lib/modules/providers/components/hooks';
 import { H1 } from '@/lib/shared/components/ui';
 import { ProfileType } from '@prisma/client';
+import { useFeatureFlags } from '@/lib/shared/hooks';
 
 const REIMBURSEMENT_REQUEST_URL =
     'https://hipaa.jotform.com/221371005584146?' as const;
@@ -29,6 +31,7 @@ export function ProviderClientListPage({
     onInvoiceClient,
 }: ProviderClientListPageProps) {
     const theme = useTheme();
+    const { flags } = useFeatureFlags(user);
     const {
         connectionRequests,
         confirmationConnectionRequest,
@@ -40,6 +43,8 @@ export function ProviderClientListPage({
         baseConnectionRequests ?? []
     );
     const [memberDetails, setMemberDetails] =
+        useState<ConnectionRequest.Type>();
+    const [reimbursementDetails, setReimbursementDetails] =
         useState<ConnectionRequest.Type>();
     return (
         <PageContainer>
@@ -73,15 +78,20 @@ export function ProviderClientListPage({
                     })
                 }
                 onInvoiceClient={onInvoiceClient}
-                onReimbursmentRequest={(connectionRequest) =>
+                onReimbursmentRequest={(connectionRequest) => {
+                    if (flags.useIframeReimbursementRequest) {
+                        setReimbursementDetails(connectionRequest);
+                        return;
+                    }
                     window?.open(
-                        formatReimbursementRequestUrl(
-                            REIMBURSEMENT_REQUEST_URL,
-                            connectionRequest
-                        ),
+                        formatReimbursementRequestUrl({
+                            baseUrl: REIMBURSEMENT_REQUEST_URL,
+                            connectionRequest,
+                            designation,
+                        }),
                         '_blank'
-                    )
-                }
+                    );
+                }}
             />
             {memberDetails && (
                 <MemberDetailsModal
@@ -103,6 +113,14 @@ export function ProviderClientListPage({
                             message,
                         })
                     }
+                />
+            )}
+
+            {reimbursementDetails && (
+                <ReimbursementModal
+                    designation={designation}
+                    connectionRequest={reimbursementDetails}
+                    onClose={() => setReimbursementDetails(undefined)}
                 />
             )}
         </PageContainer>

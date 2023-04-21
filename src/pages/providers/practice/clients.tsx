@@ -1,5 +1,6 @@
 import { Alerts } from '@/lib/modules/alerts/context';
 import { UpdateConnectionRequestStatus } from '@/lib/modules/directory/features';
+import { ReimbursementModal } from '@/lib/modules/providers/components/Clients';
 import { ProvidersService } from '@/lib/modules/providers/service';
 import { PracticeClientsPageProps } from '@/lib/modules/providers/service/page-props/get-practice-clients-page-props/getPracticeClientsPageProps';
 import { PracticeAdminNavigationPage } from '@/lib/shared/components/features/pages/PracticeAdminNavigationPage';
@@ -10,12 +11,16 @@ import {
     Modal,
     Textarea,
 } from '@/lib/shared/components/ui';
-import { PracticeProfileConnectionRequests } from '@/lib/shared/types';
+import { useFeatureFlags } from '@/lib/shared/hooks';
+import {
+    ConnectionRequest,
+    PracticeProfileConnectionRequests,
+} from '@/lib/shared/types';
 import { RBAC } from '@/lib/shared/utils';
 import { trpc } from '@/lib/shared/utils/trpc';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { Box, CircularProgress } from '@mui/material';
-import { ConnectionStatus } from '@prisma/client';
+import { ConnectionStatus, ProfileType } from '@prisma/client';
 import { useContext, useMemo, useState } from 'react';
 
 export const getServerSideProps = RBAC.requireProviderAuth(
@@ -29,11 +34,12 @@ type ConfirmationConnectionRequest =
           profile: PracticeProfileConnectionRequests.Type['profileConnectionRequests'][number]['providerProfile'];
       })
     | undefined;
-type ConnectionAction = 'accept' | 'decline' | 'terminate';
+type ConnectionAction = 'accept' | 'decline' | 'terminate' | 'reimburse';
 export default function PracticeClientsPage({
     practiceConnectionRequests: basePracticeConnectionRequests,
     user,
 }: PracticeClientsPageProps) {
+    const { flags } = useFeatureFlags(user);
     const { createAlert } = useContext(Alerts.Context);
     const [practiceConnectionRequests, setPracticeConnectionRequests] =
         useState(basePracticeConnectionRequests);
@@ -223,7 +229,16 @@ export default function PracticeClientsPage({
         >
             {practiceConnectionRequests && (
                 <PracticeClientListPage
+                    useIframeReimbursementRequest={
+                        flags.useIframeReimbursementRequest
+                    }
                     practiceConnectionRequests={practiceConnectionRequests}
+                    onReimbursementRequest={(ids) =>
+                        setTargetConnection({
+                            action: 'reimburse',
+                            ids,
+                        })
+                    }
                     onAcceptConnectionRequest={(ids) =>
                         setTargetConnection({
                             action: 'accept',
@@ -244,19 +259,38 @@ export default function PracticeClientsPage({
                     }
                 />
             )}
-            {targetConnection && confirmationConnectionRequest && (
-                <ConfirmationModal
-                    action={targetConnection.action}
-                    connectionRequest={confirmationConnectionRequest}
-                    onClose={closeModal}
-                    onPrimaryButtonClick={() => {
-                        handleUpdateConnectionRequest(targetConnection);
-                    }}
-                    isLoading={isLoading}
-                    textAreaValue={updateMessage}
-                    onTextAreaChange={(message) => setUpdateMessage(message)}
-                />
-            )}
+            {targetConnection &&
+                targetConnection.action !== 'reimburse' &&
+                confirmationConnectionRequest && (
+                    <ConfirmationModal
+                        action={targetConnection.action}
+                        connectionRequest={confirmationConnectionRequest}
+                        onClose={closeModal}
+                        onPrimaryButtonClick={() => {
+                            handleUpdateConnectionRequest(targetConnection);
+                        }}
+                        isLoading={isLoading}
+                        textAreaValue={updateMessage}
+                        onTextAreaChange={(message) =>
+                            setUpdateMessage(message)
+                        }
+                    />
+                )}
+            {flags.useIframeReimbursementRequest &&
+                targetConnection &&
+                targetConnection.action === 'reimburse' &&
+                confirmationConnectionRequest && (
+                    <ProfileReimbursementModal
+                        designation={
+                            confirmationConnectionRequest.profile.designation
+                        }
+                        practice={practiceConnectionRequests.practice}
+                        confirmationConnectionRequest={
+                            confirmationConnectionRequest
+                        }
+                        onClose={closeModal}
+                    />
+                )}
         </PracticeAdminNavigationPage>
     );
 }
@@ -351,4 +385,38 @@ const getConfirmationModalContent = (
                 textareaPlaceholder: `Share any additional details here`,
             };
     }
+};
+
+const ProfileReimbursementModal = ({
+    confirmationConnectionRequest,
+    designation,
+    practice,
+    onClose,
+}: {
+    designation: ProfileType;
+    confirmationConnectionRequest: Exclude<
+        ConfirmationConnectionRequest,
+        undefined
+    >;
+    practice: PracticeProfileConnectionRequests.Type['practice'];
+    onClose: () => void;
+}) => {
+    const connectionRequest: ConnectionRequest.Type = {
+        connectionStatus: confirmationConnectionRequest.connectionStatus,
+        connectionMessage: confirmationConnectionRequest.connectionMessage,
+        createdAt: confirmationConnectionRequest.createdAt,
+        updatedAt: confirmationConnectionRequest.updatedAt,
+        member: confirmationConnectionRequest.member,
+        providerProfile: {
+            ...confirmationConnectionRequest.profile,
+            practice,
+        },
+    };
+    return (
+        <ReimbursementModal
+            designation={designation}
+            connectionRequest={connectionRequest}
+            onClose={onClose}
+        />
+    );
 };
