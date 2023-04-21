@@ -51,6 +51,8 @@ interface PracticeClientListPageProps {
     onAcceptConnectionRequest: ConnectionActionHandler;
     onDeclineConnectionRequest: ConnectionActionHandler;
     onTerminateConnectionRequest: ConnectionActionHandler;
+    onReimbursementRequest: ConnectionActionHandler;
+    useIframeReimbursementRequest: boolean;
 }
 
 export function PracticeClientListPage({
@@ -58,6 +60,8 @@ export function PracticeClientListPage({
     onAcceptConnectionRequest,
     onDeclineConnectionRequest,
     onTerminateConnectionRequest,
+    onReimbursementRequest,
+    useIframeReimbursementRequest,
 }: PracticeClientListPageProps) {
     const { profileConnectionRequests, practice } = practiceConnectionRequests;
     const { pendingConnectionRequests, acceptedConnectionRequests } =
@@ -210,6 +214,21 @@ export function PracticeClientListPage({
                                                             }
                                                             connectionRequest={
                                                                 connectionRequest
+                                                            }
+                                                            onReimbursementRequest={
+                                                                useIframeReimbursementRequest
+                                                                    ? () =>
+                                                                          onReimbursementRequest(
+                                                                              {
+                                                                                  memberId:
+                                                                                      connectionRequest
+                                                                                          .member
+                                                                                          .id,
+                                                                                  profileId:
+                                                                                      providerProfile.id,
+                                                                              }
+                                                                          )
+                                                                    : undefined
                                                             }
                                                             onAccept={() =>
                                                                 onAcceptConnectionRequest(
@@ -463,6 +482,7 @@ const ClientListItem = ({
     onView,
     onTerminate,
     onEmail,
+    onReimbursementRequest,
 }: {
     connectionRequest: ProfileConnectionRequest;
     providerProfile: ConnectionProviderProfile;
@@ -470,6 +490,7 @@ const ClientListItem = ({
     isSmallScreen?: boolean;
     onAccept: () => void;
     onDecline: () => void;
+    onReimbursementRequest?: () => void;
     onView?: () => void;
     onTerminate?: () => void;
     onEmail?: () => void;
@@ -518,17 +539,23 @@ const ClientListItem = ({
                       text: 'Reimbursement Request',
                       icon: <PaidOutlined />,
                       onClick: () => {
+                          if (onReimbursementRequest) {
+                              // feature flag is on
+                              onReimbursementRequest();
+                              return;
+                          }
                           window.open(
-                              formatReimbursementRequestUrl(
-                                  REIMBURSEMENT_REQUEST_URL,
-                                  {
+                              formatReimbursementRequestUrl({
+                                  baseUrl: REIMBURSEMENT_REQUEST_URL,
+                                  designation: providerProfile.designation,
+                                  connectionRequest: {
                                       ...connectionRequest,
                                       providerProfile: {
                                           ...providerProfile,
                                           practice,
                                       },
-                                  }
-                              ),
+                                  },
+                              }),
                               '_blank'
                           );
                       },
