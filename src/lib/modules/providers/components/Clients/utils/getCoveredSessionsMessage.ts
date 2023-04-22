@@ -19,7 +19,9 @@ export const getCoveredSessionsMessage = ({
         return `${name} has used all of their covered sessions from Therify. They will use their insurance benefit or pay out of pocket.`;
     }
 
-    return `${name} has ${remainingSessions} covered sessions remaining from Therify until ${format(
+    return `${name} has ${remainingSessions} covered ${
+        remainingSessions === 1 ? 'session' : 'sessions'
+    } remaining from Therify until ${format(
         new Date(planEndDate),
         'MMMM dd, yyyy'
     )}`;

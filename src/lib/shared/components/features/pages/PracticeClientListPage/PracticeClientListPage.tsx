@@ -500,6 +500,8 @@ const ClientListItem = ({
         connectionRequest.connectionStatus === ConnectionStatus.pending;
     const isAccepted =
         connectionRequest.connectionStatus === ConnectionStatus.accepted;
+    const hasCoveredSessions =
+        connectionRequest.member.plan?.coveredSessions ?? 0 > 0;
     const hasRemainingCoveredSessions =
         connectionRequest.member.plan?.remainingSessions ?? 0 > 0;
     const mobileActions = [
@@ -538,36 +540,40 @@ const ClientListItem = ({
                       text: 'Send Email',
                       onClick: onEmail,
                   },
-                  ...(hasRemainingCoveredSessions
-                      ? [
-                            {
-                                text: 'Reimbursement Request',
-                                icon: <PaidOutlined />,
-                                onClick: () => {
-                                    if (onReimbursementRequest) {
-                                        // feature flag is on
-                                        onReimbursementRequest();
-                                        return;
-                                    }
-                                    window.open(
-                                        formatReimbursementRequestUrl({
-                                            baseUrl: REIMBURSEMENT_REQUEST_URL,
-                                            designation:
-                                                providerProfile.designation,
-                                            connectionRequest: {
-                                                ...connectionRequest,
-                                                providerProfile: {
-                                                    ...providerProfile,
-                                                    practice,
-                                                },
-                                            },
-                                        }),
-                                        '_blank'
-                                    );
-                                },
-                            },
-                        ]
-                      : []),
+                  {
+                      disabled: !hasRemainingCoveredSessions,
+                      title: hasRemainingCoveredSessions
+                          ? `${
+                                connectionRequest.member.plan
+                                    ?.remainingSessions ?? 0
+                            } covered sessions remaining.`
+                          : `Member has no covered sessions${
+                                hasCoveredSessions ? ' remaining' : ''
+                            }.`,
+                      text: 'Reimbursement Request',
+                      icon: <PaidOutlined />,
+                      onClick: () => {
+                          if (onReimbursementRequest) {
+                              // feature flag is on
+                              onReimbursementRequest();
+                              return;
+                          }
+                          window.open(
+                              formatReimbursementRequestUrl({
+                                  baseUrl: REIMBURSEMENT_REQUEST_URL,
+                                  designation: providerProfile.designation,
+                                  connectionRequest: {
+                                      ...connectionRequest,
+                                      providerProfile: {
+                                          ...providerProfile,
+                                          practice,
+                                      },
+                                  },
+                              }),
+                              '_blank'
+                          );
+                      },
+                  },
                   ...(onTerminate
                       ? [
                             // TODO: We need to be able to handle this without breaking confidentiality
