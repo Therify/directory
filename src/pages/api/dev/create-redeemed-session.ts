@@ -20,7 +20,7 @@ const redemeedSessionInputSchema = z.object({
     dateOfSession: z.string(),
 });
 
-const API_KEY = get('THERIFYDEV_CREATE_REDEEMED_SESSION').asString();
+const API_KEY = get('THERIFY_DEV_CREATE_REDEEMED_SESSION').asString();
 
 export default async function handler(
     req: NextApiRequest,
