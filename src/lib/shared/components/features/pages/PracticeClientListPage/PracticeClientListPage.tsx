@@ -500,6 +500,8 @@ const ClientListItem = ({
         connectionRequest.connectionStatus === ConnectionStatus.pending;
     const isAccepted =
         connectionRequest.connectionStatus === ConnectionStatus.accepted;
+    const hasRemainingCoveredSessions =
+        connectionRequest.member.plan?.remainingSessions ?? 0 > 0;
     const mobileActions = [
         ...(isPending
             ? [
@@ -536,31 +538,36 @@ const ClientListItem = ({
                       text: 'Send Email',
                       onClick: onEmail,
                   },
-                  {
-                      text: 'Reimbursement Request',
-                      icon: <PaidOutlined />,
-                      onClick: () => {
-                          if (onReimbursementRequest) {
-                              // feature flag is on
-                              onReimbursementRequest();
-                              return;
-                          }
-                          window.open(
-                              formatReimbursementRequestUrl({
-                                  baseUrl: REIMBURSEMENT_REQUEST_URL,
-                                  designation: providerProfile.designation,
-                                  connectionRequest: {
-                                      ...connectionRequest,
-                                      providerProfile: {
-                                          ...providerProfile,
-                                          practice,
-                                      },
-                                  },
-                              }),
-                              '_blank'
-                          );
-                      },
-                  },
+                  ...(hasRemainingCoveredSessions
+                      ? [
+                            {
+                                text: 'Reimbursement Request',
+                                icon: <PaidOutlined />,
+                                onClick: () => {
+                                    if (onReimbursementRequest) {
+                                        // feature flag is on
+                                        onReimbursementRequest();
+                                        return;
+                                    }
+                                    window.open(
+                                        formatReimbursementRequestUrl({
+                                            baseUrl: REIMBURSEMENT_REQUEST_URL,
+                                            designation:
+                                                providerProfile.designation,
+                                            connectionRequest: {
+                                                ...connectionRequest,
+                                                providerProfile: {
+                                                    ...providerProfile,
+                                                    practice,
+                                                },
+                                            },
+                                        }),
+                                        '_blank'
+                                    );
+                                },
+                            },
+                        ]
+                      : []),
                   ...(onTerminate
                       ? [
                             // TODO: We need to be able to handle this without breaking confidentiality

@@ -48,6 +48,8 @@ export const ClientListItem = ({
         connectionRequest.connectionStatus === ConnectionStatus.pending;
     const isAccepted =
         connectionRequest.connectionStatus === ConnectionStatus.accepted;
+    const hasRemainingCoveredSessions =
+        connectionRequest.member.plan?.remainingSessions ?? 0 > 0;
     const mobileActions = [
         ...(isPending
             ? [
@@ -74,11 +76,15 @@ export const ClientListItem = ({
         ...(isSmallScreen ? mobileActions : []),
         ...(isAccepted
             ? [
-                  {
-                      text: 'Reimbursement Request',
-                      icon: <PaidOutlined />,
-                      onClick: onReimbursmentRequest,
-                  },
+                  ...(hasRemainingCoveredSessions
+                      ? [
+                            {
+                                text: 'Reimbursement Request',
+                                icon: <PaidOutlined />,
+                                onClick: onReimbursmentRequest,
+                            },
+                        ]
+                      : []),
                   ...(onInvoiceClient
                       ? [
                             {
