@@ -26,13 +26,13 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<any>
 ) {
-    if (req.method !== 'POST' || API_KEY === 'undefined') {
+    if (req.method !== 'POST' || API_KEY === undefined) {
         return res.status(404).end();
     }
-    // if (req.headers.api_key !== API_KEY) {
-    //     console.log('Invalid API key', { key: req.headers.api_key });
-    //     return res.status(400).end();
-    // }
+    if (req.headers.api_key !== API_KEY) {
+        console.log('Invalid API key', { key: req.headers.api_key });
+        return res.status(400).end();
+    }
     const input = redemeedSessionInputSchema.parse(req.body);
     const dateOfSession = new Date(input.dateOfSession);
     if (!isValid(dateOfSession)) {
