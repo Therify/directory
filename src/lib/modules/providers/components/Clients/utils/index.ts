@@ -1,0 +1,1 @@
+export { getCoveredSessionsMessage } from './getCoveredSessionsMessage';
