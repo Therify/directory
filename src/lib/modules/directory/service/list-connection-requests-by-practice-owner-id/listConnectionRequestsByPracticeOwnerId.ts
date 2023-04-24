@@ -1,5 +1,8 @@
 import { ListConnectionRequestsByPracticeOwnerId } from '@/lib/modules/directory/features';
-import { PracticeProfileConnectionRequests } from '@/lib/shared/types';
+import {
+    ConnectionRequest,
+    PracticeProfileConnectionRequests,
+} from '@/lib/shared/types';
 import { DirectoryServiceParams } from '../params';
 
 export function factory({ prisma }: DirectoryServiceParams) {
@@ -76,6 +79,7 @@ export function factory({ prisma }: DirectoryServiceParams) {
                                         startDate: true,
                                         endDate: true,
                                         coveredSessions: true,
+                                        redeemedSessions: true,
                                     },
                                 },
                             },
@@ -123,14 +127,37 @@ export function factory({ prisma }: DirectoryServiceParams) {
                 .map(([profileId, connectionRequests]) => ({
                     providerProfile: profilesById[profileId],
                     connectionRequests: connectionRequests
-                        .map((connection) => ({
-                            ...connection,
-                            member: {
-                                ...connection.member,
-                                plan:
-                                    connection.member.account?.plans[0] ?? null,
-                            },
-                        }))
+                        .map((connection) => {
+                            const rawPlan = connection.member.account?.plans[0];
+                            let plan: ConnectionRequest.Type['member']['plan'] =
+                                null;
+                            if (rawPlan) {
+                                const {
+                                    redeemedSessions,
+                                    coveredSessions,
+                                    endDate,
+                                    startDate,
+                                    ...planDetails
+                                } = rawPlan;
+                                const remainingSessions =
+                                    (coveredSessions ?? 0) -
+                                    (redeemedSessions ?? []).length;
+                                plan = {
+                                    ...planDetails,
+                                    startDate: startDate.toISOString(),
+                                    endDate: endDate.toISOString(),
+                                    coveredSessions,
+                                    remainingSessions,
+                                };
+                            }
+                            return {
+                                ...connection,
+                                member: {
+                                    ...connection.member,
+                                    plan,
+                                },
+                            };
+                        })
                         .sort((a, b) => {
                             return a.member.givenName.localeCompare(
                                 b.member.givenName

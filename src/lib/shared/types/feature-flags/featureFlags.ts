@@ -3,6 +3,7 @@ import * as z from 'zod';
 export const schema = z.object({
     didFlagsLoad: z.boolean(),
     hasStripeConnectAccess: z.boolean(),
+    useIframeReimbursementRequest: z.boolean(),
 });
 
 export type Type = z.infer<typeof schema>;
@@ -13,6 +14,7 @@ export const defaultFlags: FeatureFlags = {
     // so if we see false in the client, it means we're fully falling back to default flags
     didFlagsLoad: false,
     hasStripeConnectAccess: false,
+    useIframeReimbursementRequest: false,
 };
 
 export const isValid = (flags: unknown): boolean => {

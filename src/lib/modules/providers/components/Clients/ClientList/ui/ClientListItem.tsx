@@ -48,6 +48,10 @@ export const ClientListItem = ({
         connectionRequest.connectionStatus === ConnectionStatus.pending;
     const isAccepted =
         connectionRequest.connectionStatus === ConnectionStatus.accepted;
+    const hasCoveredSessions =
+        connectionRequest.member.plan?.coveredSessions ?? 0 > 0;
+    const hasRemainingCoveredSessions =
+        connectionRequest.member.plan?.remainingSessions ?? 0 > 0;
     const mobileActions = [
         ...(isPending
             ? [
@@ -75,10 +79,20 @@ export const ClientListItem = ({
         ...(isAccepted
             ? [
                   {
+                      disabled: !hasRemainingCoveredSessions,
+                      title: hasRemainingCoveredSessions
+                          ? `${
+                                connectionRequest.member.plan
+                                    ?.remainingSessions ?? 0
+                            } covered sessions remaining.`
+                          : `Member has no covered sessions${
+                                hasCoveredSessions ? ' remaining' : ''
+                            }.`,
                       text: 'Reimbursement Request',
                       icon: <PaidOutlined />,
                       onClick: onReimbursmentRequest,
                   },
+
                   ...(onInvoiceClient
                       ? [
                             {

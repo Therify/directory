@@ -1,4 +1,4 @@
-import { ConnectionStatus } from '@prisma/client';
+import { ConnectionStatus, ProfileType } from '@prisma/client';
 import { ConnectionRequest, UNITED_STATES } from '../../types';
 import {
     formatReimbursementRequestUrl,
@@ -42,6 +42,7 @@ const mockConnectionRequest: ConnectionRequest.Type = {
     },
 };
 describe('formatReimbursementRequestUrl', () => {
+    const designation = ProfileType.therapist;
     const expectedValues = [
         ['clientname[first]', mockConnectionRequest.member.givenName],
         ['clientname[last]', mockConnectionRequest.member.surname],
@@ -63,13 +64,39 @@ describe('formatReimbursementRequestUrl', () => {
         providerProfileId: mockConnectionRequest.providerProfile.id,
         practiceId: mockConnectionRequest.providerProfile.practice.id,
     });
-    it('should return the correct url', () => {
+
+    it('should return the correct url for new window', () => {
         expect(
-            formatReimbursementRequestUrl(baseUrl, mockConnectionRequest)
+            formatReimbursementRequestUrl({
+                baseUrl,
+                connectionRequest: mockConnectionRequest,
+                designation,
+            })
         ).toEqual(
-            `${baseUrl}?${expectedValues
-                .map((tuple) => tuple.join('='))
-                .join('&')}&therifydetails=${therifyDetails}`
+            `${baseUrl}?${[
+                ...expectedValues.map((tuple) => tuple.join('=')),
+                `servicerendered=Therapy`,
+                `therifydetails=${therifyDetails}`,
+            ].join('&')}`
+        );
+    });
+
+    it('should return the correct url for iframe', () => {
+        expect(
+            formatReimbursementRequestUrl({
+                baseUrl,
+                connectionRequest: mockConnectionRequest,
+                designation,
+                hideTitle: true,
+            })
+        ).toEqual(
+            `${baseUrl}?${[
+                ...expectedValues.map((tuple) => tuple.join('=')),
+                'hidetitle=1',
+                'accessedfrom=directory',
+                `servicerendered=Therapy`,
+                `therifydetails=${therifyDetails}`,
+            ].join('&')}`
         );
     });
 
@@ -84,10 +111,11 @@ describe('formatReimbursementRequestUrl', () => {
             },
         } as unknown as ConnectionRequest.Type;
         expect(
-            formatReimbursementRequestUrl(
+            formatReimbursementRequestUrl({
                 baseUrl,
-                requestMissingLastName
-            ).includes(lastNameKey)
+                designation: ProfileType.therapist,
+                connectionRequest: requestMissingLastName,
+            }).includes(lastNameKey)
         ).toBe(false);
     });
 });

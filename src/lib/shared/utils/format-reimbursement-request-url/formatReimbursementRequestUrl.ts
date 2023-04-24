@@ -1,6 +1,7 @@
+import { ProfileType } from '@prisma/client';
 import { ConnectionRequest } from '../../types';
 
-const REIMBURSMENT_KEY_MAPS = [
+const REIMBURSEMENT_KEY_MAPS = [
     ['clientname[first]', 'member.givenName'],
     ['clientname[last]', 'member.surname'],
     ['clientemail', 'member.emailAddress'],
@@ -14,16 +15,25 @@ const REIMBURSMENT_KEY_MAPS = [
     ['practice', 'providerProfile.practice.name'],
 ] as const;
 
-export function formatReimbursementRequestUrl(
-    baseUrl: string,
-    connectionRequest: ConnectionRequest.Type
-): string {
+type ServiceRendered = 'Mental Health Coaching' | 'Therapy';
+
+export function formatReimbursementRequestUrl({
+    baseUrl,
+    connectionRequest,
+    designation,
+    hideTitle,
+}: {
+    baseUrl: string;
+    connectionRequest: ConnectionRequest.Type;
+    designation: ProfileType;
+    hideTitle?: boolean;
+}): string {
     const therifyDetails = generateTherifyReimbursementDetails({
         memberId: connectionRequest.member.id,
         providerProfileId: connectionRequest.providerProfile.id,
         practiceId: connectionRequest.providerProfile.practice.id,
     });
-    return `${baseUrl}?${REIMBURSMENT_KEY_MAPS.map(
+    const reimbursementValues = REIMBURSEMENT_KEY_MAPS.map(
         ([queryKey, connectionRequestKey]) => {
             const value = getParamValue(
                 connectionRequest,
@@ -31,9 +41,20 @@ export function formatReimbursementRequestUrl(
             );
             if (value) return `${queryKey}=${value}`;
         }
-    )
-        .filter(Boolean)
-        .join('&')}&therifydetails=${therifyDetails}`;
+    ).filter(Boolean);
+
+    const serviceRendered: ServiceRendered =
+        designation === ProfileType.therapist
+            ? 'Therapy'
+            : 'Mental Health Coaching';
+
+    const queryValues = [
+        ...reimbursementValues,
+        ...(hideTitle ? ['hidetitle=1', 'accessedfrom=directory'] : []),
+        `servicerendered=${serviceRendered}`,
+        `therifydetails=${therifyDetails}`,
+    ];
+    return `${baseUrl}?${queryValues.join('&')}`;
 }
 
 export function generateTherifyReimbursementDetails(details: {

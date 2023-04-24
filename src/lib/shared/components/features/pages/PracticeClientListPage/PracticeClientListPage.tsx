@@ -31,7 +31,7 @@ import {
     EmailOutlined,
 } from '@mui/icons-material';
 import { ConnectionStatus } from '@prisma/client';
-import { format } from 'date-fns';
+import { getCoveredSessionsMessage } from '@/lib/modules/providers/components/Clients/utils';
 
 const REIMBURSEMENT_REQUEST_URL =
     process.env.NEXT_PUBLIC_VERCEL_ENV === 'production'
@@ -51,6 +51,8 @@ interface PracticeClientListPageProps {
     onAcceptConnectionRequest: ConnectionActionHandler;
     onDeclineConnectionRequest: ConnectionActionHandler;
     onTerminateConnectionRequest: ConnectionActionHandler;
+    onReimbursementRequest: ConnectionActionHandler;
+    useIframeReimbursementRequest: boolean;
 }
 
 export function PracticeClientListPage({
@@ -58,6 +60,8 @@ export function PracticeClientListPage({
     onAcceptConnectionRequest,
     onDeclineConnectionRequest,
     onTerminateConnectionRequest,
+    onReimbursementRequest,
+    useIframeReimbursementRequest,
 }: PracticeClientListPageProps) {
     const { profileConnectionRequests, practice } = practiceConnectionRequests;
     const { pendingConnectionRequests, acceptedConnectionRequests } =
@@ -211,6 +215,21 @@ export function PracticeClientListPage({
                                                             connectionRequest={
                                                                 connectionRequest
                                                             }
+                                                            onReimbursementRequest={
+                                                                useIframeReimbursementRequest
+                                                                    ? () =>
+                                                                          onReimbursementRequest(
+                                                                              {
+                                                                                  memberId:
+                                                                                      connectionRequest
+                                                                                          .member
+                                                                                          .id,
+                                                                                  profileId:
+                                                                                      providerProfile.id,
+                                                                              }
+                                                                          )
+                                                                    : undefined
+                                                            }
                                                             onAccept={() =>
                                                                 onAcceptConnectionRequest(
                                                                     {
@@ -329,16 +348,17 @@ export function PracticeClientListPage({
                     </Paragraph>
                     <Paragraph size={PARAGRAPH_SIZE.SMALL}>
                         {targetConnection.member.plan &&
-                        targetConnection.member.plan.coveredSessions > 0
-                            ? `${targetConnection.member.givenName} has ${
-                                  targetConnection.member.plan.coveredSessions
-                              } covered sessions from Therify until ${format(
-                                  new Date(
-                                      targetConnection.member.plan.endDate
-                                  ),
-                                  'MMMM dd, yyyy'
-                              )}`
-                            : 'No covered sessions. They will likely be using their insurance benefit to cover session costs or will pay out of pocket.'}
+                            getCoveredSessionsMessage({
+                                coveredSessions:
+                                    targetConnection.member.plan
+                                        .coveredSessions,
+                                remainingSessions:
+                                    targetConnection.member.plan
+                                        .remainingSessions,
+                                name: targetConnection.member.givenName,
+                                planEndDate:
+                                    targetConnection.member.plan.endDate,
+                            })}
                     </Paragraph>
                     <Paragraph bold size={PARAGRAPH_SIZE.LARGE}>
                         Contact
@@ -463,6 +483,7 @@ const ClientListItem = ({
     onView,
     onTerminate,
     onEmail,
+    onReimbursementRequest,
 }: {
     connectionRequest: ProfileConnectionRequest;
     providerProfile: ConnectionProviderProfile;
@@ -470,6 +491,7 @@ const ClientListItem = ({
     isSmallScreen?: boolean;
     onAccept: () => void;
     onDecline: () => void;
+    onReimbursementRequest?: () => void;
     onView?: () => void;
     onTerminate?: () => void;
     onEmail?: () => void;
@@ -478,6 +500,10 @@ const ClientListItem = ({
         connectionRequest.connectionStatus === ConnectionStatus.pending;
     const isAccepted =
         connectionRequest.connectionStatus === ConnectionStatus.accepted;
+    const hasCoveredSessions =
+        connectionRequest.member.plan?.coveredSessions ?? 0 > 0;
+    const hasRemainingCoveredSessions =
+        connectionRequest.member.plan?.remainingSessions ?? 0 > 0;
     const mobileActions = [
         ...(isPending
             ? [
@@ -515,20 +541,35 @@ const ClientListItem = ({
                       onClick: onEmail,
                   },
                   {
+                      disabled: !hasRemainingCoveredSessions,
+                      title: hasRemainingCoveredSessions
+                          ? `${
+                                connectionRequest.member.plan
+                                    ?.remainingSessions ?? 0
+                            } covered sessions remaining.`
+                          : `Member has no covered sessions${
+                                hasCoveredSessions ? ' remaining' : ''
+                            }.`,
                       text: 'Reimbursement Request',
                       icon: <PaidOutlined />,
                       onClick: () => {
+                          if (onReimbursementRequest) {
+                              // feature flag is on
+                              onReimbursementRequest();
+                              return;
+                          }
                           window.open(
-                              formatReimbursementRequestUrl(
-                                  REIMBURSEMENT_REQUEST_URL,
-                                  {
+                              formatReimbursementRequestUrl({
+                                  baseUrl: REIMBURSEMENT_REQUEST_URL,
+                                  designation: providerProfile.designation,
+                                  connectionRequest: {
                                       ...connectionRequest,
                                       providerProfile: {
                                           ...providerProfile,
                                           practice,
                                       },
-                                  }
-                              ),
+                                  },
+                              }),
                               '_blank'
                           );
                       },
