@@ -20,6 +20,13 @@ const redemeedSessionInputSchema = z.object({
     dateOfSession: z.string(),
 });
 
+const inputSchema = z.union([
+    redemeedSessionInputSchema,
+    z.object({
+        sessions: z.array(redemeedSessionInputSchema),
+    }),
+]);
+
 const API_KEY = get('THERIFY_DEV_CREATE_REDEEMED_SESSION').asString();
 
 export default async function handler(
@@ -33,7 +40,32 @@ export default async function handler(
         console.log('Invalid API key', { key: req.headers.api_key });
         return res.status(400).end();
     }
-    const input = redemeedSessionInputSchema.parse(req.body);
+    const input = inputSchema.parse(req.body);
+    if ('sessions' in input) {
+        const createManyData = input.sessions.map(
+            ({ dateOfSession: rawDateOfSession, ...session }) => {
+                const dateOfSession = new Date(rawDateOfSession);
+                if (!isValid(dateOfSession)) {
+                    throw new Error(
+                        'Invalid date of session for submission: ' +
+                            session.jotformSubmissionId
+                    );
+                }
+                return {
+                    ...session,
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                    dateOfSession,
+                };
+            }
+        );
+        const redeemedSessions = await prisma.redeemedSession.createMany({
+            data: createManyData,
+        });
+        return res.status(200).json({
+            redeemedSessions,
+        });
+    }
     const dateOfSession = new Date(input.dateOfSession);
     if (!isValid(dateOfSession)) {
         throw new Error('Invalid date of session');
