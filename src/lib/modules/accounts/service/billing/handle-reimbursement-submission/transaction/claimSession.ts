@@ -12,7 +12,7 @@ export const factory: GetTherifyUserDetailsFactory = ({ submissionId }) => ({
         { prisma },
         {
             getMemberDetails: { memberId, planId, dateOfSession },
-            getProviderDetails: { providerProfileId },
+            getProviderDetails: { providerProfileId, practiceId },
         }
     ) {
         const { id } = await prisma.redeemedSession.create({
@@ -20,6 +20,7 @@ export const factory: GetTherifyUserDetailsFactory = ({ submissionId }) => ({
                 planId,
                 memberId,
                 profileId: providerProfileId,
+                practiceId,
                 status: RedeemedSessionStatus.claimed,
                 jotformSubmissionId: submissionId,
                 dateOfSession,

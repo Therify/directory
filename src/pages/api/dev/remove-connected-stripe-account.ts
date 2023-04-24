@@ -4,7 +4,7 @@ import { get } from 'env-var';
 import { vendorStripe } from '@/lib/shared/vendors/stripe';
 import { prisma } from '@/lib/prisma';
 
-const API_KEY = get('REMOVE_STRIPE_CONNECT_ACCOUNT').asString();
+const API_KEY = get('THERIFY_DEV_REMOVE_STRIPE_CONNECT_ACCOUNT').asString();
 
 export default async function handler(
     req: NextApiRequest,
