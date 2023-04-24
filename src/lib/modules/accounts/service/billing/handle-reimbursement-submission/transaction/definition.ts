@@ -10,6 +10,7 @@ export const handleReimbursementSubmissionDefinition = z.object({
     }),
     getProviderDetails: z.object({
         providerProfileId: z.string(),
+        practiceId: z.string(),
     }),
     claimSession: z.object({
         coveredSessionId: z.string(),

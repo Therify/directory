@@ -62,6 +62,7 @@ export function factory({ prisma }: DirectoryServiceParams) {
                                         startDate: true,
                                         endDate: true,
                                         coveredSessions: true,
+                                        redeemedSessions: true,
                                     },
                                 },
                             },
@@ -90,11 +91,28 @@ export function factory({ prisma }: DirectoryServiceParams) {
             },
         });
         return connectionRequests.map((rawRequest) => {
-            const plan = (rawRequest.member.account?.plans?.[0] ??
-                null) as ConnectionRequest.Type['member']['plan'];
+            const rawPlan = rawRequest.member.account?.plans?.[0] ?? null;
+            let plan: ConnectionRequest.Type['member']['plan'] = null;
+            if (rawPlan) {
+                const {
+                    redeemedSessions,
+                    coveredSessions,
+                    endDate,
+                    startDate,
+                    ...planDetails
+                } = rawPlan;
+                const remainingSessions =
+                    (coveredSessions ?? 0) - (redeemedSessions ?? []).length;
+                plan = {
+                    ...planDetails,
+                    startDate: startDate.toISOString(),
+                    endDate: endDate.toISOString(),
+                    coveredSessions,
+                    remainingSessions,
+                };
+            }
             const practice =
                 rawRequest.providerProfile.practiceProfile?.practice;
-
             const connectionRequest = {
                 ...rawRequest,
                 member: {

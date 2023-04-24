@@ -40,6 +40,7 @@ export const schema = z.object({
                 endDate: z.string(),
                 status: PlanSchema.shape.status,
                 coveredSessions: z.number(),
+                remainingSessions: z.number(),
             })
             .nullable(),
     }),

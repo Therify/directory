@@ -6,7 +6,7 @@ import {
 import { ConnectionRequest } from '@/lib/shared/types';
 import { Link } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { format } from 'date-fns';
+import { getCoveredSessionsMessage } from '../utils';
 
 interface MemberDetailsModalProps {
     connectionRequest: ConnectionRequest.Type;
@@ -37,14 +37,14 @@ export const MemberDetailsModal = ({
             </Paragraph>
             <Paragraph size={PARAGRAPH_SIZE.SMALL}>
                 {connectionRequest.member.plan &&
-                connectionRequest.member.plan.coveredSessions > 0
-                    ? `${connectionRequest.member.givenName} has ${
-                          connectionRequest.member.plan.coveredSessions
-                      } covered sessions from Therify until ${format(
-                          new Date(connectionRequest.member.plan.endDate),
-                          'MMMM dd, yyyy'
-                      )}`
-                    : 'No covered sessions. They will use their insurance benefit to cover sessions or pay out of pocket.'}
+                    getCoveredSessionsMessage({
+                        coveredSessions:
+                            connectionRequest.member.plan.coveredSessions,
+                        remainingSessions:
+                            connectionRequest.member.plan.remainingSessions,
+                        name: connectionRequest.member.givenName,
+                        planEndDate: connectionRequest.member.plan.endDate,
+                    })}
             </Paragraph>
             <Paragraph bold size={PARAGRAPH_SIZE.LARGE}>
                 Contact
