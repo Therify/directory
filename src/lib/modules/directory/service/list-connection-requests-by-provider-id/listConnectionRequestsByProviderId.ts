@@ -1,7 +1,7 @@
 import { ListConnectionRequestsByProviderId } from '@/lib/modules/directory/features';
 import { ConnectionRequest } from '@/lib/shared/types';
-import { isArray } from 'util';
 import { DirectoryServiceParams } from '../params';
+import { isBefore } from 'date-fns';
 
 export function factory({ prisma }: DirectoryServiceParams) {
     return async function listConnectionRequestsByProviderId({
@@ -40,6 +40,7 @@ export function factory({ prisma }: DirectoryServiceParams) {
                         givenName: true,
                         surname: true,
                         emailAddress: true,
+                        redeemedSessions: true,
                         memberProfile: {
                             select: {
                                 goals: true,
@@ -62,7 +63,6 @@ export function factory({ prisma }: DirectoryServiceParams) {
                                         startDate: true,
                                         endDate: true,
                                         coveredSessions: true,
-                                        redeemedSessions: true,
                                     },
                                 },
                             },
@@ -94,15 +94,18 @@ export function factory({ prisma }: DirectoryServiceParams) {
             const rawPlan = rawRequest.member.account?.plans?.[0] ?? null;
             let plan: ConnectionRequest.Type['member']['plan'] = null;
             if (rawPlan) {
-                const {
-                    redeemedSessions,
-                    coveredSessions,
-                    endDate,
-                    startDate,
-                    ...planDetails
-                } = rawPlan;
+                const { coveredSessions, endDate, startDate, ...planDetails } =
+                    rawPlan;
+                const sessionsInPlan =
+                    rawRequest.member.redeemedSessions.filter(
+                        (session) =>
+                            // dateOfSession is after startDate and before endDate
+                            isBefore(startDate, session.dateOfSession) &&
+                            isBefore(session.dateOfSession, endDate)
+                    );
+
                 const remainingSessions =
-                    (coveredSessions ?? 0) - (redeemedSessions ?? []).length;
+                    (coveredSessions ?? 0) - sessionsInPlan.length;
                 plan = {
                     ...planDetails,
                     startDate: startDate.toISOString(),
