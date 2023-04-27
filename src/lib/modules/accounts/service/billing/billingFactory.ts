@@ -12,12 +12,14 @@ import { HandleCoachingSessionInvoiceUpdated } from './handle-coaching-session-i
 import { HandleReimbursementSubmission } from './handle-reimbursement-submission';
 import { HandleMembershipPlanPayment } from './handle-membership-plan-payment';
 import { GetProviderSessionInvoicesByMemberId } from './get-provider-session-invoices-by-member-id';
+import { VoidCoachingSessionInvoice } from './void-coaching-session-invoice';
 
 export const factory = (context: AccountsServiceParams) => ({
     handleCoachingSessionPayment: HandleCoachingSessionPayment.factory(context),
     handleCoachingSessionInvoiceUpdated:
         HandleCoachingSessionInvoiceUpdated.factory(context),
     handleInvoiceSent: HandleInvoiceSent.factory(context),
+    voidCoachingSessionInvoice: VoidCoachingSessionInvoice.factory(context),
     handleMembershipPlanPayment: HandleMembershipPlanPayment.factory(context),
     handleGroupPracticePlanPayment:
         HandleGroupPracticePlanPayment.factory(context),
