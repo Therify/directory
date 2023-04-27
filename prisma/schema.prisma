@@ -317,6 +317,7 @@ model ProviderProfile {
   bio                        String?                      @db.Text
   npiNumber                  String?                      @map("npi_number")
   offersSlidingScale         Boolean                      @default(false) @map("offers_sliding_scale")
+  videoUrl                   String?                      @map("video_url")
   profileImageUrl            String?                      @map("profile_image_url")
   yearsOfExperience          String?                      @map("years_of_experience")
   stripeSessionPriceId       String?                      @unique @map("stripe_price_id")

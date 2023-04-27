@@ -5,3 +5,4 @@ export * from './Practice';
 export * from './Designation';
 export * from './NewClientStatus';
 export * from './Pricing';
+export * from './Video';
