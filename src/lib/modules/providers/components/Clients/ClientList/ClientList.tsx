@@ -17,6 +17,7 @@ interface ClientListProps {
     onTerminateConnectionRequest: HandleConnectionRequestAction;
     onReimbursmentRequest: HandleConnectionRequestAction;
     onViewMemberDetails: HandleConnectionRequestAction;
+    onClientSelect: HandleConnectionRequestAction;
     onInvoiceClient?: HandleConnectionRequestAction;
 }
 
@@ -27,6 +28,7 @@ export const ClientList = ({
     onTerminateConnectionRequest,
     onReimbursmentRequest,
     onViewMemberDetails,
+    onClientSelect,
     onInvoiceClient,
 }: ClientListProps) => {
     const isSmallScreen = useMediaQuery((theme: Theme) =>
@@ -72,7 +74,12 @@ export const ClientList = ({
                         onTerminate={() =>
                             onTerminateConnectionRequest(connectionRequest)
                         }
-                        onView={() => onViewMemberDetails(connectionRequest)}
+                        onClientSelect={() => {
+                            onClientSelect(connectionRequest);
+                        }}
+                        onViewSummary={() =>
+                            onViewMemberDetails(connectionRequest)
+                        }
                         onInvoiceClient={
                             onInvoiceClient
                                 ? () => onInvoiceClient(connectionRequest)
