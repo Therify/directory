@@ -25,6 +25,8 @@ export function generateRandomProfile(
         bio: faker.lorem.paragraph(),
         npiNumber: faker.datatype.number().toString(),
         offersChat: faker.datatype.boolean(),
+        videoUrl:
+            'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
         profileImageUrl: faker.image.imageUrl(640, 640),
         yearsOfExperience: faker.datatype.number().toString(),
         minimumRate: faker.datatype.number(),

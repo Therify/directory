@@ -27,6 +27,7 @@ import { useRef, useState } from 'react';
 import useOnScreen from '@/lib/shared/hooks/use-on-screen';
 import { ProfileType } from '@prisma/client';
 import { ImageSection } from './inputs/Image';
+import { VideoSection } from './inputs/Video';
 
 interface EditorFormProps {
     control: Control<ProviderProfile.ProviderProfile>;
@@ -41,6 +42,12 @@ interface EditorFormProps {
     ) => void;
     onImageUploadError: (error: string | Error) => void;
     onDeleteImage: () => void;
+    onVideoUploadSuccess: (
+        error: Error | null,
+        result: CloudinaryUploadResult
+    ) => void;
+    onVideoUploadError: (error: string | Error) => void;
+    onDeleteVideo: () => void;
     onSubmitForm: () => void;
     onBack?: () => void;
     onShowProfilePreview?: () => void;
@@ -52,6 +59,7 @@ interface EditorFormProps {
         id: ProviderProfile.ProviderProfile['id'];
         designation: ProviderProfile.ProviderProfile['designation'];
         profileImageUrl: ProviderProfile.ProviderProfile['profileImageUrl'];
+        videoUrl: ProviderProfile.ProviderProfile['videoUrl'];
         offersSlidingScale: ProviderProfile.ProviderProfile['offersSlidingScale'];
         offersChat: ProviderProfile.ProviderProfile['offersChat'];
         minimumRate: ProviderProfile.ProviderProfile['minimumRate'];
@@ -66,6 +74,9 @@ export const ProfileEditorForm = ({
     onDeleteImage,
     onImageUploadSuccess,
     onImageUploadError,
+    onDeleteVideo,
+    onVideoUploadSuccess,
+    onVideoUploadError,
     onSubmitForm,
     isSubmittingForm,
     isSubmitDisabled,
@@ -181,6 +192,13 @@ export const ProfileEditorForm = ({
                     profileImageUrl={
                         watchedProfileValues.profileImageUrl ?? undefined
                     }
+                    disabled={isSubmittingForm}
+                />
+                <VideoSection
+                    onDeleteVideo={onDeleteVideo}
+                    onVideoUploadError={onVideoUploadError}
+                    onVideoUploadSuccess={onVideoUploadSuccess}
+                    profileVideoUrl={watchedProfileValues.videoUrl ?? undefined}
                     disabled={isSubmittingForm}
                 />
                 <IdentitySection

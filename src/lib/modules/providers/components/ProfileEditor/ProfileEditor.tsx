@@ -173,6 +173,27 @@ export function ProfileEditor({
         providerProfileForm.setValue('profileImageUrl', result.info.secure_url);
     };
 
+    const onDeleteVideo = () => {
+        providerProfileForm.setValue('videoUrl', null);
+    };
+    const onVideoUploadError = (error: Error | string) => {
+        createAlert({
+            type: 'error',
+            title: 'There was an error uploading your video.',
+        });
+        console.error(error);
+        return;
+    };
+    const onVideoUploadSuccess = (
+        error: Error | null,
+        result: CloudinaryUploadResult
+    ) => {
+        if (error) {
+            onImageUploadError(error);
+            return;
+        }
+        providerProfileForm.setValue('videoUrl', result.info.secure_url);
+    };
     return (
         <>
             <TwoColumnGrid
@@ -188,6 +209,9 @@ export function ProfileEditor({
                                 allowProfileDesignationChange={
                                     allowProfileDesignationChange
                                 }
+                                onVideoUploadError={onVideoUploadError}
+                                onVideoUploadSuccess={onVideoUploadSuccess}
+                                onDeleteVideo={onDeleteVideo}
                                 onDeleteImage={onDeleteImage}
                                 onImageUploadSuccess={onImageUploadSuccess}
                                 onImageUploadError={onImageUploadError}
@@ -219,6 +243,7 @@ export function ProfileEditor({
                                     surname: watchedProfile.surname,
                                     profileImageUrl:
                                         watchedProfile.profileImageUrl,
+                                    videoUrl: watchedProfile.videoUrl,
                                     offersSlidingScale:
                                         watchedProfile.offersSlidingScale,
                                     offersChat: watchedProfile.offersChat,

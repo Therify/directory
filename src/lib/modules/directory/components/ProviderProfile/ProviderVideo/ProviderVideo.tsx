@@ -47,7 +47,7 @@ export function ProviderVideo({
                 style={{ width: '100%', maxWidth: 800, minHeight: 500 }}
                 postBodySlot={
                     <Box sx={{ height: '100%', width: '100%' }}>
-                        <VideoPlayer {...videoPlayerProps} />
+                        <VideoPlayer {...videoPlayerProps} controls />
                     </Box>
                 }
             />
@@ -60,6 +60,11 @@ const VideoContainer = styled(Stack)(({ theme }) => ({
     borderRadius: theme.spacing(1),
     height: 125,
     overflow: 'hidden',
+    transition: 'all 0.2s ease-in-out',
+    [':hover']: {
+        cursor: 'pointer',
+        transform: 'scale(1.005)',
+    },
 }));
 const PreviewImage = styled(Box)<Pick<ProviderVideoProps, 'profileImageUrl'>>(
     ({ theme, profileImageUrl }) => ({
@@ -72,9 +77,6 @@ const PreviewImage = styled(Box)<Pick<ProviderVideoProps, 'profileImageUrl'>>(
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        ['hover']: {
-            cursor: 'pointer',
-        },
         ['::after']: {
             content: '""',
             position: 'absolute',
@@ -96,10 +98,6 @@ const PlayButtonContainer = styled(Box)(({ theme }) => ({
     height: 50,
     background: '#fff',
     zIndex: 2,
-    ['hover']: {
-        cursor: 'pointer',
-        transform: 'scale(1.1)',
-    },
 }));
 const StyledPlayButton = styled(ArrowRight)(({ theme }) => ({
     color: theme.palette.primary.main,
