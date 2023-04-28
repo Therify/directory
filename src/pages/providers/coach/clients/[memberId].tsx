@@ -45,7 +45,7 @@ export default function ClientDetailsPage({
         isVoidingInvoice,
     } = useSessionInvoicing(user?.userId);
 
-    const handleVoidSuccess: OnVoidInvoiceCallback = (result, error) => {
+    const voidInvoiceCallback: OnVoidInvoiceCallback = (result, error) => {
         console.log('handleVoidSuccess', { result, error });
         if (error) {
             createAlert({
@@ -144,7 +144,7 @@ export default function ClientDetailsPage({
                                 memberId: memberDetails.id,
                                 providerId: user.userId,
                             },
-                            handleVoidSuccess
+                            voidInvoiceCallback
                         );
                     }}
                 />
