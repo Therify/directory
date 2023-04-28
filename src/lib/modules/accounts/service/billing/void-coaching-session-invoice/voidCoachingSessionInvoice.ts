@@ -11,7 +11,7 @@ export const factory =
     }: VoidCoachingSessionInvoice.Input): Promise<{
         voided: true;
     }> => {
-        const { status, invoice } =
+        const { status, invoice: stripeInvoice } =
             await prisma.sessionInvoice.findFirstOrThrow({
                 where: {
                     id: sessionInvoiceId,
@@ -34,7 +34,8 @@ export const factory =
                 "Session invoice cannot be voided in it's current state"
             );
         }
-        const { voided } = await stripe.voidInvoice(invoice.id);
+
+        const { voided } = await stripe.voidInvoice(stripeInvoice.invoiceId);
         return {
             voided,
         };

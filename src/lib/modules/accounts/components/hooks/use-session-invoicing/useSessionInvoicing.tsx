@@ -8,15 +8,29 @@ import {
     Modal,
     DatePicker,
 } from '@/lib/shared/components/ui';
+import { VoidCoachingSessionInvoice } from '../../../features/billing';
 interface InvoicedMember {
     memberId: string;
     givenName?: string;
 }
+type OnVoidInvoiceSuccessArgs = [
+    result: VoidCoachingSessionInvoice.Output,
+    error: null
+];
+type OnVoidInvoiceFailureArgs = [result: null, error: Error];
+
+export type OnVoidInvoiceCallback = (
+    ...args: OnVoidInvoiceSuccessArgs | OnVoidInvoiceFailureArgs
+) => void;
+
 export const useSessionInvoicing = (providerId: string) => {
     const { createAlert } = useContext(Alerts.Context);
     const [showModal, setShowModal] = useState(false);
     const [member, setMember] = useState<InvoicedMember | null>(null);
     const [sessionDate, setSessionDate] = useState<Date | null>(null);
+
+    const [onVoidSuccess, setOnVoidSuccess] =
+        useState<OnVoidInvoiceCallback | null>(null);
     const closeModal = () => {
         setShowModal(false);
         setSessionDate(null);
@@ -80,11 +94,45 @@ export const useSessionInvoicing = (providerId: string) => {
         });
     };
 
+    const { mutate: voidInvoice, isLoading: isVoidingInvoice } =
+        trpc.useMutation('accounts.billing.void-coaching-session-invoice', {
+            onSuccess: (result) => {
+                console.log('success', result);
+                onVoidSuccess?.(result, null);
+            },
+            onError: (error) => {
+                console.log('error', error);
+                if (error instanceof Error) {
+                    onVoidSuccess?.(null, error);
+                    // return createAlert({
+                    //     title: error.message,
+                    //     type: 'error',
+                    // });
+                    return;
+                }
+                onVoidSuccess?.(
+                    null,
+                    new Error(
+                        (error as { message: string }).message ??
+                            'Error voiding invoice'
+                    )
+                );
+            },
+        });
+
     return {
         onInvoiceClient: (member: InvoicedMember) => {
             setMember(member);
             setShowModal(true);
         },
+        onVoidInvoice: (
+            input: VoidCoachingSessionInvoice.Input,
+            callbackFn: OnVoidInvoiceCallback
+        ) => {
+            setOnVoidSuccess(callbackFn);
+            return voidInvoice(input);
+        },
+        isVoidingInvoice,
         isCreatingSessionInvoice,
         ConfirmationUi: () => (
             <>
@@ -160,3 +208,42 @@ const ConfirmationModal = ({
         fullWidthButtons
     />
 );
+
+// const VoidInvoiceConfirmationModal = () =>  <Modal
+// isOpen
+// title={
+//     invoiceToVoid.dateOfSession
+//         ? `Session on ${format(
+//               new Date(invoiceToVoid.dateOfSession),
+//               'MMMM dd, yyyy'
+//           )}`
+//         : 'Void Invoice'
+// }
+// message="Are you sure you want to void this invoice? It will no longer be possible to collect payment for this charge."
+// showCloseButton={false}
+// fullWidthButtons
+// onClose={() => setInvoiceToVoid(null)}
+// postBodySlot={
+//     isVoidingInvoice ? (
+//         <CenteredContainer fillSpace>
+//             <CircularProgress />
+//         </CenteredContainer>
+//     ) : null
+// }
+// secondaryButtonText="Cancel"
+// secondaryButtonOnClick={() => setInvoiceToVoid(null)}
+// secondaryButtonDisabled={isVoidingInvoice}
+// primaryButtonText="Void"
+// primaryButtonEndIcon={<MoneyOff />}
+// primaryButtonDisabled={isVoidingInvoice}
+// primaryButtonOnClick={() => {
+//     onVoidInvoice(
+//         {
+//             sessionInvoiceId: invoiceToVoid.id,
+//             memberId: memberDetails.id,
+//             providerId: user.userId,
+//         },
+//         handleVoidSuccess
+//     );
+// }}
+// />

@@ -9,35 +9,48 @@ import {
     BADGE_COLOR,
     BADGE_SIZE,
     ListItem,
+    FloatingList,
 } from '@/lib/shared/components/ui';
 import { ProviderClientDetailsPageProps } from '../../../service/page-props/get-client-details-page-props';
 import { format } from 'date-fns';
 import { SessionInvoiceStatus } from '@prisma/client';
+import { MoneyOff } from '@mui/icons-material';
 
 interface ClientDetailsProps {
     memberDetails: ProviderClientDetailsPageProps['memberDetails'];
     provider: ProviderClientDetailsPageProps['user'];
     invoices: ProviderClientDetailsPageProps['invoices'];
     onCreateInvoice?: () => void;
+    onVoidInvoice: (
+        invoice: ProviderClientDetailsPageProps['invoices'][number]
+    ) => void;
 }
 export const ClientDetails = ({
     memberDetails,
     invoices,
     onCreateInvoice,
+    onVoidInvoice,
 }: ClientDetailsProps) => {
+    const canBeVoided = (status: string) => {
+        const voidableStatuses: string[] = [
+            SessionInvoiceStatus.draft,
+            SessionInvoiceStatus.open,
+        ];
+        return !voidableStatuses.includes(status);
+    };
     return (
         <PageContainer>
             <TitleContainer>
                 <Title>
                     {memberDetails.givenName} {memberDetails.surname}
-                    <Box>
-                        {onCreateInvoice && (
-                            <Button onClick={onCreateInvoice}>
-                                Send Session Invoice
-                            </Button>
-                        )}
-                    </Box>
                 </Title>
+                <Box>
+                    {onCreateInvoice && (
+                        <Button onClick={onCreateInvoice}>
+                            Send Session Invoice
+                        </Button>
+                    )}
+                </Box>
             </TitleContainer>
             <Container>
                 <List style={{ width: '100%' }}>
@@ -66,8 +79,39 @@ export const ClientDetails = ({
                                           )
                                         : ''}
                                 </Paragraph>
-                                <Box width={'25%'}>
+                                <Box className="invoice-status">
                                     {getBadge(invoice.status)}
+                                    <FloatingList
+                                        sx={{ marginLeft: 2 }}
+                                        // headerSlot={
+                                        //     isPending &&
+                                        //     isSmallScreen && (
+                                        //         <Badge
+                                        //             color={BADGE_COLOR.WARNING}
+                                        //             icon={<PendingOutlined />}
+                                        //             size={BADGE_SIZE.SMALL}
+                                        //         >
+                                        //             Pending
+                                        //         </Badge>
+                                        //     )
+                                        // }
+                                        listItems={[
+                                            {
+                                                disabled: canBeVoided(
+                                                    invoice.status
+                                                ),
+                                                title: canBeVoided(
+                                                    invoice.status
+                                                )
+                                                    ? 'The invoice is not voidable in its current state'
+                                                    : 'The invoice will no longer be available for payment.',
+                                                text: 'Void Invoice',
+                                                icon: <MoneyOff />,
+                                                onClick: () =>
+                                                    onVoidInvoice(invoice),
+                                            },
+                                        ]}
+                                    />
                                 </Box>
                             </LineItemContent>
                         </ListItem>
@@ -82,10 +126,6 @@ const getBadge = (status: SessionInvoiceStatus) => {
     let badgeColor: (typeof BADGE_COLOR)[keyof typeof BADGE_COLOR] =
         BADGE_COLOR.WARNING;
     let badgeText = 'Awaiting Payment';
-    const failureStatuses = [
-        SessionInvoiceStatus.uncollectible,
-        SessionInvoiceStatus.void,
-    ];
     switch (status) {
         case SessionInvoiceStatus.paid:
             badgeColor = BADGE_COLOR.SUCCESS;
@@ -97,7 +137,7 @@ const getBadge = (status: SessionInvoiceStatus) => {
             break;
         case SessionInvoiceStatus.void:
             badgeColor = BADGE_COLOR.NEUTRAL_LIGHT;
-            badgeText = 'Void';
+            badgeText = 'Voided';
             break;
         case SessionInvoiceStatus.draft:
             badgeColor = BADGE_COLOR.NEUTRAL_LIGHT;
@@ -121,6 +161,7 @@ const PageContainer = styled(Box)(({ theme }) => ({
 
 const Title = styled(H1)(({ theme }) => ({
     ...theme.typography.h3,
+    margin: 0,
 }));
 const Container = styled(Box)(({ theme }) => ({
     margin: theme.spacing(6, 6),
@@ -137,11 +178,12 @@ const LineItemContent = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     width: '100%',
     '& >:first-child': {
-        width: '75%',
+        flex: 1,
     },
-    '& >:last-child': {
-        width: ' 25%',
+    '& .invoice-status': {
+        width: '25%',
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
 }));
