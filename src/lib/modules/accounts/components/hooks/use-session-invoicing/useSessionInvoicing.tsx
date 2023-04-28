@@ -28,6 +28,8 @@ export const useSessionInvoicing = (providerId: string) => {
     const [showModal, setShowModal] = useState(false);
     const [member, setMember] = useState<InvoicedMember | null>(null);
     const [sessionDate, setSessionDate] = useState<Date | null>(null);
+    const [createSessionSuccessCallbackFn, setCreateSessionSuccessCbFn] =
+        useState<(() => void) | null>(null);
     let voidSessionCallbackFn: OnVoidInvoiceCallback | null = null;
 
     const closeModal = () => {
@@ -42,10 +44,13 @@ export const useSessionInvoicing = (providerId: string) => {
         onSuccess: ({ invoiceId, errors }) => {
             if (invoiceId) {
                 closeModal();
-                return createAlert({
+                createAlert({
                     type: 'success',
                     title: 'Session invoice created',
                 });
+                createSessionSuccessCallbackFn?.();
+                setCreateSessionSuccessCbFn(null);
+                return;
             }
             const [error] = errors;
             if (error) {
@@ -114,9 +119,13 @@ export const useSessionInvoicing = (providerId: string) => {
         });
 
     return {
-        onInvoiceClient: (member: InvoicedMember) => {
+        onInvoiceClient: (
+            member: InvoicedMember,
+            successCallback?: () => void
+        ) => {
             setMember(member);
             setShowModal(true);
+            setCreateSessionSuccessCbFn(() => successCallback ?? null);
         },
         onVoidInvoice: (
             input: VoidCoachingSessionInvoice.Input,

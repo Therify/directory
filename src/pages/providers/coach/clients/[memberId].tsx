@@ -81,6 +81,9 @@ export default function ClientDetailsPage({
             type: 'error',
         });
     };
+    const refreshWindow = () => {
+        if (typeof window !== 'undefined') window.location.reload();
+    };
     if (!user) return null;
     return (
         <ProviderNavigationPage
@@ -93,10 +96,13 @@ export default function ClientDetailsPage({
                 invoices={invoices}
                 onBack={router.back}
                 onCreateInvoice={() =>
-                    onInvoiceClient({
-                        memberId: memberDetails.id,
-                        givenName: memberDetails.givenName,
-                    })
+                    onInvoiceClient(
+                        {
+                            memberId: memberDetails.id,
+                            givenName: memberDetails.givenName,
+                        },
+                        refreshWindow
+                    )
                 }
                 onVoidInvoice={(invoice) => setInvoiceToVoid(invoice)}
             />
