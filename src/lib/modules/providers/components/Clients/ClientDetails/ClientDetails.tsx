@@ -96,6 +96,12 @@ export const ClientDetails = ({
                             to sign up for a Stripe Connect account.
                         </Paragraph>
                     )}
+                    {provider.stripeConnectAccountId &&
+                        invoices.length === 0 && (
+                            <Paragraph marginTop={4}>
+                                No invoices have been created for this client.
+                            </Paragraph>
+                        )}
                     {invoices.map((invoice) => (
                         <ListItem key={invoice.id}>
                             <LineItemContent>
@@ -211,7 +217,7 @@ const LineItemContent = styled(Box)(({ theme }) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
-    '& >:first-child': {
+    '& >:first-of-type': {
         flex: 1,
     },
     '& .invoice-status': {
