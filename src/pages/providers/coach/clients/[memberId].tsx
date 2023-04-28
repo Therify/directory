@@ -46,7 +46,6 @@ export default function ClientDetailsPage({
     } = useSessionInvoicing(user?.userId);
 
     const voidInvoiceCallback: OnVoidInvoiceCallback = (result, error) => {
-        console.log('handleVoidSuccess', { result, error });
         if (error) {
             createAlert({
                 title: error.message,
