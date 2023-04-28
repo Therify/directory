@@ -29,9 +29,7 @@ export const factory =
         });
         return {
             invoices: sessionInvoices.sort(
-                (a, b) =>
-                    (b.dateOfSession?.getTime() ?? 0) -
-                    (a.dateOfSession?.getTime() ?? 0)
+                (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
             ),
         };
     };

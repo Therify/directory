@@ -1,4 +1,5 @@
 import { useContext, useState } from 'react';
+import { useRouter } from 'next/router';
 import { ProviderNavigationPage } from '@/lib/shared/components/features/pages';
 import { URL_PATHS } from '@/lib/sitemap';
 import { RBAC } from '@/lib/shared/utils';
@@ -30,6 +31,7 @@ export default function ClientDetailsPage({
     invoices: ssInvoices,
 }: ProviderClientDetailsPageProps) {
     const { createAlert } = useContext(Alerts.Context);
+    const router = useRouter();
     const [invoices, setInvoices] =
         useState<ProviderClientDetailsPageProps['invoices']>(ssInvoices);
     const [invoiceToVoid, setInvoiceToVoid] = useState<
@@ -89,6 +91,7 @@ export default function ClientDetailsPage({
                 provider={user}
                 memberDetails={memberDetails}
                 invoices={invoices}
+                onBack={router.back}
                 onCreateInvoice={() =>
                     onInvoiceClient({
                         memberId: memberDetails.id,
