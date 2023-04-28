@@ -95,14 +95,17 @@ export default function ClientDetailsPage({
                 memberDetails={memberDetails}
                 invoices={invoices}
                 onBack={router.back}
-                onCreateInvoice={() =>
-                    onInvoiceClient(
-                        {
-                            memberId: memberDetails.id,
-                            givenName: memberDetails.givenName,
-                        },
-                        refreshWindow
-                    )
+                onCreateInvoice={
+                    user.stripeConnectAccountId
+                        ? () =>
+                              onInvoiceClient(
+                                  {
+                                      memberId: memberDetails.id,
+                                      givenName: memberDetails.givenName,
+                                  },
+                                  refreshWindow
+                              )
+                        : undefined
                 }
                 onVoidInvoice={(invoice) => setInvoiceToVoid(invoice)}
             />

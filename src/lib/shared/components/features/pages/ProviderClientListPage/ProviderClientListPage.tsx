@@ -65,7 +65,8 @@ export function ProviderClientListPage({
                 connectionRequests={connectionRequests}
                 designation={designation}
                 onClientSelect={
-                    designation === ProfileType.coach
+                    designation === ProfileType.coach &&
+                    user.stripeConnectAccountId
                         ? handleClientSelect
                         : setMemberDetails
                 }

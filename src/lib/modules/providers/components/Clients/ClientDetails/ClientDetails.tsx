@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Link } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import {
     H1,
@@ -16,6 +16,7 @@ import { ProviderClientDetailsPageProps } from '../../../service/page-props/get-
 import { format } from 'date-fns';
 import { SessionInvoiceStatus } from '@prisma/client';
 import { ChevronLeft, MoneyOff } from '@mui/icons-material';
+import { URL_PATHS } from '@/lib/sitemap';
 
 interface ClientDetailsProps {
     memberDetails: ProviderClientDetailsPageProps['memberDetails'];
@@ -29,6 +30,7 @@ interface ClientDetailsProps {
 }
 export const ClientDetails = ({
     memberDetails,
+    provider,
     invoices,
     onBack,
     onCreateInvoice,
@@ -65,7 +67,7 @@ export const ClientDetails = ({
                     {memberDetails.givenName} {memberDetails.surname}
                 </Title>
                 <Box>
-                    {onCreateInvoice && (
+                    {onCreateInvoice && provider.stripeConnectAccountId && (
                         <Button onClick={onCreateInvoice}>
                             Send Session Invoice
                         </Button>
@@ -84,6 +86,16 @@ export const ClientDetails = ({
                             </Paragraph>
                         </LineItemContent>
                     </ListItem>
+                    {!provider.stripeConnectAccountId && (
+                        <Paragraph marginTop={4}>
+                            You must have a Therify Stripe Connect account to
+                            send invoices to your clients. Please visit your{' '}
+                            <Link href={URL_PATHS.PROVIDERS.COACH.PAYMENTS}>
+                                payments page
+                            </Link>{' '}
+                            to sign up for a Stripe Connect account.
+                        </Paragraph>
+                    )}
                     {invoices.map((invoice) => (
                         <ListItem key={invoice.id}>
                             <LineItemContent>
