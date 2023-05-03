@@ -19,12 +19,13 @@ export const factory = (params: ProvidersServiceParams) => {
     const getClientDetailsPageProps: GetServerSideProps<
         ProviderClientDetailsPageProps
     > = async (context) => {
-        const { memberId } = context.query;
-        if (typeof memberId !== 'string') {
+        const { memberId: memberIdentifier } = context.query;
+        if (typeof memberIdentifier !== 'string') {
             return {
                 notFound: true,
             };
         }
+        const memberId = `auth0|${memberIdentifier}`;
         const session = await getSession(context.req, context.res);
         if (!session) {
             return {

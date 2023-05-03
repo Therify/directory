@@ -50,7 +50,12 @@ export function ProviderClientListPage({
     const [reimbursementDetails, setReimbursementDetails] =
         useState<ConnectionRequest.Type>();
     const handleClientSelect = (cr: ConnectionRequest.Type) =>
-        router.push(`${URL_PATHS.PROVIDERS.COACH.CLIENTS}/${cr.member.id}`);
+        router.push(
+            `${URL_PATHS.PROVIDERS.COACH.CLIENTS}/${cr.member.id.replace(
+                'auth0|',
+                ''
+            )}`
+        );
 
     return (
         <PageContainer>

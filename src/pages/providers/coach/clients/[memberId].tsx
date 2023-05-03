@@ -21,7 +21,6 @@ import {
     OnVoidInvoiceCallback,
 } from '@/lib/modules/accounts/components/hooks';
 import { trpc } from '@/lib/shared/utils/trpc';
-import { ConnectionRequest } from '@/lib/shared/types';
 
 export const getServerSideProps = RBAC.requireCoachAuth(
     withPageAuthRequired({
