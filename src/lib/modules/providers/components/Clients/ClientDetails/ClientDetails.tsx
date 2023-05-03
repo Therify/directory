@@ -1,7 +1,12 @@
+import { useState } from 'react';
+import { format } from 'date-fns';
+import { ProfileType, SessionInvoiceStatus } from '@prisma/client';
 import { Box, Link } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
+import { URL_PATHS } from '@/lib/sitemap';
 import {
     H1,
+    H3,
     Button,
     List,
     Paragraph,
@@ -13,13 +18,22 @@ import {
     FloatingList,
 } from '@/lib/shared/components/ui';
 import { ProviderClientDetailsPageProps } from '../../../service/page-props/get-client-details-page-props';
-import { format } from 'date-fns';
-import { SessionInvoiceStatus } from '@prisma/client';
-import { ChevronLeft, MoneyOff } from '@mui/icons-material';
-import { URL_PATHS } from '@/lib/sitemap';
+import {
+    ChevronLeft,
+    MoneyOff,
+    LocationOnOutlined,
+    CorporateFareRounded,
+    PaymentOutlined,
+    RequestQuoteOutlined,
+    HealthAndSafetyOutlined,
+    EmailOutlined,
+} from '@mui/icons-material';
+import { ProfileDetails } from './ui';
+import { ReimbursementModal } from '../ReimbursementModal';
 
 interface ClientDetailsProps {
-    memberDetails: ProviderClientDetailsPageProps['memberDetails'];
+    designation: ProfileType;
+    connectionRequest: ProviderClientDetailsPageProps['connectionRequest'];
     provider: ProviderClientDetailsPageProps['user'];
     invoices: ProviderClientDetailsPageProps['invoices'];
     onBack?: () => void;
@@ -29,7 +43,8 @@ interface ClientDetailsProps {
     ) => void;
 }
 export const ClientDetails = ({
-    memberDetails,
+    connectionRequest,
+    designation,
     provider,
     invoices,
     onBack,
@@ -37,12 +52,22 @@ export const ClientDetails = ({
     onVoidInvoice,
 }: ClientDetailsProps) => {
     const theme = useTheme();
+    const [isReimbursementModalOpen, setIsReimbursementModalOpen] =
+        useState(false);
     const canBeVoided = (status: string) => {
         const voidableStatuses: string[] = [
             SessionInvoiceStatus.draft,
             SessionInvoiceStatus.open,
         ];
         return !voidableStatuses.includes(status);
+    };
+    const hasSessionsRemaining =
+        (connectionRequest.member.plan?.coveredSessions ?? 0) -
+            (connectionRequest.member.plan?.remainingSessions ?? 0) >
+        0;
+    const openEmail = (address: string) => {
+        if (typeof window !== 'undefined')
+            window.open(`mailto:${address}`, '_blank');
     };
     return (
         <PageContainer>
@@ -63,24 +88,85 @@ export const ClientDetails = ({
                     marginTop: theme.spacing(onBack ? 4 : 6),
                 }}
             >
-                <Title>
-                    {memberDetails.givenName} {memberDetails.surname}
-                </Title>
                 <Box>
-                    {onCreateInvoice && provider.stripeConnectAccountId && (
-                        <Button onClick={onCreateInvoice}>
-                            Send Session Invoice
+                    <Title>
+                        {connectionRequest.member.givenName}{' '}
+                        {connectionRequest.member.surname}
+                    </Title>
+                    <Box>
+                        <Box display="flex" flexWrap="wrap">
+                            <IconContainer title="Organization name">
+                                <CorporateFareRounded color="info" />
+                                <Paragraph size="small">
+                                    {connectionRequest.member.account.name}
+                                </Paragraph>
+                            </IconContainer>
+                            <IconContainer title="Member's location">
+                                <LocationOnOutlined color="info" />
+                                <Paragraph size="small">
+                                    {
+                                        connectionRequest.member.memberProfile
+                                            .state
+                                    }
+                                    ,{' '}
+                                    {
+                                        connectionRequest.member.memberProfile
+                                            .country
+                                    }
+                                </Paragraph>
+                            </IconContainer>
+                        </Box>
+                        <Box display="flex" flexWrap="wrap">
+                            <IconContainer title="Member's insurance benefit">
+                                <HealthAndSafetyOutlined color="info" />
+                                <Paragraph size="small">
+                                    {
+                                        connectionRequest.member.memberProfile
+                                            .insurance
+                                    }
+                                </Paragraph>
+                            </IconContainer>
+                        </Box>
+                    </Box>
+                </Box>
+                <ButtonsContainer>
+                    {!hasSessionsRemaining &&
+                        onCreateInvoice &&
+                        provider.stripeConnectAccountId && (
+                            <Button
+                                onClick={onCreateInvoice}
+                                endIcon={<PaymentOutlined />}
+                            >
+                                Send Session Invoice
+                            </Button>
+                        )}
+                    {hasSessionsRemaining && (
+                        <Button
+                            endIcon={<RequestQuoteOutlined />}
+                            onClick={() => setIsReimbursementModalOpen(true)}
+                        >
+                            Submit Reimbursement Request
                         </Button>
                     )}
-                </Box>
+                </ButtonsContainer>
             </TitleContainer>
             <Container>
+                <ProfileDetails {...connectionRequest.member} />
+            </Container>
+            <EmailButton
+                type="outlined"
+                color="info"
+                startIcon={<EmailOutlined />}
+                onClick={() => openEmail(connectionRequest.member.emailAddress)}
+            >
+                Email
+            </EmailButton>
+
+            <Container style={{ margin: 0 }}>
                 <List style={{ width: '100%' }}>
                     <ListItem sx={{ display: 'flex', alignItems: 'center' }}>
                         <LineItemContent>
-                            <Paragraph bold noMargin>
-                                Invoice
-                            </Paragraph>
+                            <InvoiceTitle>Invoices</InvoiceTitle>
                             <Paragraph className="invoice-status" bold noMargin>
                                 Status
                             </Paragraph>
@@ -158,6 +244,13 @@ export const ClientDetails = ({
                     ))}
                 </List>
             </Container>
+            {isReimbursementModalOpen && (
+                <ReimbursementModal
+                    designation={designation}
+                    connectionRequest={connectionRequest}
+                    onClose={() => setIsReimbursementModalOpen(false)}
+                />
+            )}
         </PageContainer>
     );
 };
@@ -199,17 +292,66 @@ const PageContainer = styled(Box)(({ theme }) => ({
     width: '100%',
 }));
 
+const ButtonsContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    width: '100%',
+    marginTop: theme.spacing(4),
+    '& button': {
+        flex: 1,
+        width: '100%',
+        marginRight: theme.spacing(2),
+    },
+    [theme.breakpoints.up('md')]: {
+        width: 'auto',
+        marginTop: 0,
+        flexDirection: 'column',
+        '& button': {
+            marginBottom: theme.spacing(2),
+        },
+    },
+}));
+
 const Title = styled(H1)(({ theme }) => ({
-    ...theme.typography.h3,
-    margin: 0,
+    ...theme.typography.h2,
+}));
+const InvoiceTitle = styled(H3)(({ theme }) => ({
+    ...theme.typography.h5,
 }));
 const Container = styled(Box)(({ theme }) => ({
     margin: theme.spacing(6, 6),
 }));
+const EmailButton = styled(Button)(({ theme }) => ({
+    margin: theme.spacing(0, 6),
+    [theme.breakpoints.up('md')]: {
+        margin: theme.spacing(6, 6),
+    },
+}));
 const TitleContainer = styled(Container)(({ theme }) => ({
     display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    flexDirection: 'column',
+    [theme.breakpoints.up('md')]: {
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+    },
+}));
+
+const IconContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    marginBottom: theme.spacing(2),
+    marginRight: theme.spacing(2),
+    '& svg': {
+        marginRight: theme.spacing(2),
+        alignItems: 'center',
+        color: theme.palette.text.secondary,
+    },
+    '& p': {
+        margin: 0,
+        color: theme.palette.text.secondary,
+    },
+    '&:last-of-type': {
+        marginBottom: 0,
+    },
 }));
 
 const LineItemContent = styled(Box)(({ theme }) => ({
@@ -217,7 +359,7 @@ const LineItemContent = styled(Box)(({ theme }) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
-    '& >:first-of-type': {
+    '& > h3': {
         flex: 1,
     },
     '& .invoice-status': {

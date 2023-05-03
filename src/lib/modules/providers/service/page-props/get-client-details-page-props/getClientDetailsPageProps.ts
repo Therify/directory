@@ -6,18 +6,12 @@ import { GetProviderTherifyUser } from '../../get-provider-therify-user';
 import { URL_PATHS } from '@/lib/sitemap';
 import { GetProviderSessionInvoicesByMemberId } from '@/lib/modules/accounts/features/billing';
 import { AccountsService } from '@/lib/modules/accounts/service';
-import { prisma } from '@/lib/prisma';
+import { ConnectionRequest } from '@/lib/shared/types';
+import { directoryService } from '@/lib/modules/directory/service';
 
 export interface ProviderClientDetailsPageProps {
     user: TherifyUser.TherifyUser;
-    memberDetails: {
-        id: string;
-        givenName: string;
-        surname: string;
-        emailAddress: string;
-        // coveredSessions: number;
-        // remainingSesssions: number;
-    };
+    connectionRequest: ConnectionRequest.Type;
     invoices: GetProviderSessionInvoicesByMemberId.Output['invoices'];
 }
 
@@ -43,22 +37,9 @@ export const factory = (params: ProvidersServiceParams) => {
         const getUser = GetProviderTherifyUser.factory(params);
         const [{ user }, connectionRequest, { invoices }] = await Promise.all([
             getUser({ userId: session.user.sub }),
-            // TODO: move to service method so we can get covered and remaining sessions
-            prisma.connectionRequest.findFirst({
-                where: {
-                    memberId,
-                    providerProfile: { userId: session.user.sub },
-                },
-                select: {
-                    member: {
-                        select: {
-                            id: true,
-                            givenName: true,
-                            surname: true,
-                            emailAddress: true,
-                        },
-                    },
-                },
+            directoryService.getConnectionRequest({
+                memberId,
+                providerId: session.user.sub,
             }),
             AccountsService.billing.getProviderSessionInvoicesByMemberId({
                 memberId,
@@ -74,7 +55,11 @@ export const factory = (params: ProvidersServiceParams) => {
             };
         }
 
-        if (connectionRequest === null) {
+        if (
+            connectionRequest === null ||
+            connectionRequest.member.account === null ||
+            connectionRequest.member.memberProfile === null
+        ) {
             return {
                 notFound: true,
             };
@@ -82,7 +67,7 @@ export const factory = (params: ProvidersServiceParams) => {
 
         const props: ProviderClientDetailsPageProps = {
             user,
-            memberDetails: connectionRequest.member,
+            connectionRequest,
             invoices,
         };
         return JSON.parse(JSON.stringify({ props }));

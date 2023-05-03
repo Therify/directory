@@ -10,7 +10,7 @@ import { ClientDetails } from '@/lib/modules/providers/components/Clients';
 import { CenteredContainer, Modal } from '@/lib/shared/components/ui';
 import { format } from 'date-fns';
 import { CircularProgress } from '@mui/material';
-import { SessionInvoiceStatus } from '@prisma/client';
+import { ProfileType, SessionInvoiceStatus } from '@prisma/client';
 import { Alerts } from '@/lib/modules/alerts/context';
 import { MoneyOff } from '@mui/icons-material';
 import {
@@ -27,7 +27,7 @@ export const getServerSideProps = RBAC.requireCoachAuth(
 
 export default function ClientDetailsPage({
     user,
-    memberDetails,
+    connectionRequest,
     invoices: ssInvoices,
 }: ProviderClientDetailsPageProps) {
     const { createAlert } = useContext(Alerts.Context);
@@ -91,7 +91,8 @@ export default function ClientDetailsPage({
         >
             <ClientDetails
                 provider={user}
-                memberDetails={memberDetails}
+                designation={ProfileType.coach}
+                connectionRequest={connectionRequest}
                 invoices={invoices}
                 onBack={router.back}
                 onCreateInvoice={
@@ -99,8 +100,9 @@ export default function ClientDetailsPage({
                         ? () =>
                               onInvoiceClient(
                                   {
-                                      memberId: memberDetails.id,
-                                      givenName: memberDetails.givenName,
+                                      memberId: connectionRequest.member.id,
+                                      givenName:
+                                          connectionRequest.member.givenName,
                                   },
                                   refreshWindow
                               )
@@ -140,7 +142,7 @@ export default function ClientDetailsPage({
                         onVoidInvoice(
                             {
                                 sessionInvoiceId: invoiceToVoid.id,
-                                memberId: memberDetails.id,
+                                memberId: connectionRequest.member.id,
                                 providerId: user.userId,
                             },
                             voidInvoiceCallback

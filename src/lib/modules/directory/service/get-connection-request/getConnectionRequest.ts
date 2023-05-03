@@ -1,33 +1,31 @@
-import { ListConnectionRequestsByProviderId } from '@/lib/modules/directory/features';
+import { GetConnectionRequest } from '@/lib/modules/directory/features';
 import { ConnectionRequest } from '@/lib/shared/types';
-import { getRemainingSessionCount } from '@/lib/shared/utils';
 import { DirectoryServiceParams } from '../params';
+import { getCurrentPlan, getRemainingSessionCount } from '@/lib/shared/utils';
+import { ConnectionStatus } from '@prisma/client';
 
 export function factory({ prisma }: DirectoryServiceParams) {
-    return async function listConnectionRequestsByProviderId({
-        userId,
-        status,
-    }: ListConnectionRequestsByProviderId.Input): Promise<
-        ConnectionRequest.Type[]
+    return async function listConnectionRequest({
+        providerId,
+        memberId,
+    }: GetConnectionRequest.Input): Promise<
+        GetConnectionRequest.Output['connectionRequest']
     > {
         const { id: profileId } = await prisma.providerProfile.findFirstOrThrow(
             {
                 where: {
-                    userId,
+                    userId: providerId,
                 },
                 select: {
                     id: true,
                 },
             }
         );
-        const connectionRequests = await prisma.connectionRequest.findMany({
+        const rawRequest = await prisma.connectionRequest.findFirstOrThrow({
             where: {
                 profileId,
-                ...(status
-                    ? Array.isArray(status)
-                        ? { connectionStatus: { in: status } }
-                        : { connectionStatus: status }
-                    : {}),
+                memberId,
+                connectionStatus: ConnectionStatus.accepted,
             },
             select: {
                 connectionStatus: true,
@@ -57,13 +55,7 @@ export function factory({ prisma }: DirectoryServiceParams) {
                                     orderBy: {
                                         createdAt: 'desc',
                                     },
-                                    take: 1,
-                                    select: {
-                                        status: true,
-                                        startDate: true,
-                                        endDate: true,
-                                        coveredSessions: true,
-                                    },
+                                    take: 3,
                                 },
                             },
                         },
@@ -90,38 +82,35 @@ export function factory({ prisma }: DirectoryServiceParams) {
                 },
             },
         });
-        return connectionRequests.map((rawRequest) => {
-            const rawPlan = rawRequest.member.account?.plans?.[0] ?? null;
-            let plan: ConnectionRequest.Type['member']['plan'] = null;
-            if (rawPlan) {
-                const { coveredSessions, endDate, startDate, ...planDetails } =
-                    rawPlan;
+        const rawPlan = getCurrentPlan(rawRequest.member.account?.plans ?? []);
+        let plan: ConnectionRequest.Type['member']['plan'] = null;
+        if (rawPlan) {
+            const { coveredSessions, endDate, startDate, ...planDetails } =
+                rawPlan;
 
-                plan = {
-                    ...planDetails,
-                    startDate: startDate.toISOString(),
-                    endDate: endDate.toISOString(),
-                    coveredSessions,
-                    remainingSessions: getRemainingSessionCount(
-                        { coveredSessions, endDate, startDate },
-                        rawRequest.member.redeemedSessions
-                    ),
-                };
-            }
-            const practice =
-                rawRequest.providerProfile.practiceProfile?.practice;
-            const connectionRequest = {
-                ...rawRequest,
-                member: {
-                    ...rawRequest.member,
-                    plan,
-                },
-                providerProfile: {
-                    ...rawRequest.providerProfile,
-                    practice,
-                },
+            plan = {
+                ...planDetails,
+                startDate: startDate.toISOString(),
+                endDate: endDate.toISOString(),
+                coveredSessions,
+                remainingSessions: getRemainingSessionCount(
+                    { coveredSessions, endDate, startDate },
+                    rawRequest.member.redeemedSessions
+                ),
             };
-            return ConnectionRequest.validate(connectionRequest);
-        });
+        }
+        const practice = rawRequest.providerProfile.practiceProfile?.practice;
+        const connectionRequest = {
+            ...rawRequest,
+            member: {
+                ...rawRequest.member,
+                plan,
+            },
+            providerProfile: {
+                ...rawRequest.providerProfile,
+                practice,
+            },
+        };
+        return ConnectionRequest.validate(connectionRequest);
     };
 }

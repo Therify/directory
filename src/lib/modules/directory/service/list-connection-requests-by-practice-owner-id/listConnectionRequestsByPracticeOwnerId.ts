@@ -1,9 +1,9 @@
-import { isBefore } from 'date-fns';
 import { ListConnectionRequestsByPracticeOwnerId } from '@/lib/modules/directory/features';
 import {
     ConnectionRequest,
     PracticeProfileConnectionRequests,
 } from '@/lib/shared/types';
+import { getRemainingSessionCount } from '@/lib/shared/utils';
 import { DirectoryServiceParams } from '../params';
 
 export function factory({ prisma }: DirectoryServiceParams) {
@@ -139,28 +139,15 @@ export function factory({ prisma }: DirectoryServiceParams) {
                                     startDate,
                                     ...planDetails
                                 } = rawPlan;
-                                const sessionsInPlan =
-                                    connection.member.redeemedSessions.filter(
-                                        (session) =>
-                                            // dateOfSession is after startDate and before endDate
-                                            isBefore(
-                                                startDate,
-                                                session.dateOfSession
-                                            ) &&
-                                            isBefore(
-                                                session.dateOfSession,
-                                                endDate
-                                            )
-                                    );
-                                const remainingSessions =
-                                    (coveredSessions ?? 0) -
-                                    sessionsInPlan.length;
                                 plan = {
                                     ...planDetails,
                                     startDate: startDate.toISOString(),
                                     endDate: endDate.toISOString(),
                                     coveredSessions,
-                                    remainingSessions,
+                                    remainingSessions: getRemainingSessionCount(
+                                        { coveredSessions, endDate, startDate },
+                                        connection.member.redeemedSessions
+                                    ),
                                 };
                             }
                             return {
