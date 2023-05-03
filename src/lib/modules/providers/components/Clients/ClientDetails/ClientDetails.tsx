@@ -1,6 +1,5 @@
-import { useState } from 'react';
 import { format } from 'date-fns';
-import { ProfileType, SessionInvoiceStatus } from '@prisma/client';
+import { SessionInvoiceStatus } from '@prisma/client';
 import { Box, Link } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { URL_PATHS } from '@/lib/sitemap';
@@ -29,31 +28,30 @@ import {
     EmailOutlined,
 } from '@mui/icons-material';
 import { ProfileDetails } from './ui';
-import { ReimbursementModal } from '../ReimbursementModal';
 
 interface ClientDetailsProps {
-    designation: ProfileType;
     connectionRequest: ProviderClientDetailsPageProps['connectionRequest'];
     provider: ProviderClientDetailsPageProps['user'];
     invoices: ProviderClientDetailsPageProps['invoices'];
+    isLoading?: boolean;
     onBack?: () => void;
     onCreateInvoice?: () => void;
     onVoidInvoice: (
         invoice: ProviderClientDetailsPageProps['invoices'][number]
     ) => void;
+    onReimbursement: () => void;
 }
 export const ClientDetails = ({
     connectionRequest,
-    designation,
     provider,
     invoices,
+    isLoading,
     onBack,
     onCreateInvoice,
     onVoidInvoice,
+    onReimbursement,
 }: ClientDetailsProps) => {
     const theme = useTheme();
-    const [isReimbursementModalOpen, setIsReimbursementModalOpen] =
-        useState(false);
     const canBeVoided = (status: string) => {
         const voidableStatuses: string[] = [
             SessionInvoiceStatus.draft,
@@ -143,7 +141,7 @@ export const ClientDetails = ({
                     {hasSessionsRemaining && (
                         <Button
                             endIcon={<RequestQuoteOutlined />}
-                            onClick={() => setIsReimbursementModalOpen(true)}
+                            onClick={onReimbursement}
                         >
                             Submit Reimbursement Request
                         </Button>
@@ -151,7 +149,10 @@ export const ClientDetails = ({
                 </ButtonsContainer>
             </TitleContainer>
             <Container>
-                <ProfileDetails {...connectionRequest.member} />
+                <ProfileDetails
+                    {...connectionRequest.member}
+                    isLoading={isLoading}
+                />
             </Container>
             <EmailButton
                 type="outlined"
@@ -244,13 +245,6 @@ export const ClientDetails = ({
                     ))}
                 </List>
             </Container>
-            {isReimbursementModalOpen && (
-                <ReimbursementModal
-                    designation={designation}
-                    connectionRequest={connectionRequest}
-                    onClose={() => setIsReimbursementModalOpen(false)}
-                />
-            )}
         </PageContainer>
     );
 };

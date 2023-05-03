@@ -1,7 +1,12 @@
-import { Box, Tooltip as MuiTooltip } from '@mui/material';
+import { Box, CircularProgress, Tooltip as MuiTooltip } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { colors } from '@/lib/shared/components/themes/therify-design-system';
-import { H4, Paragraph, Caption } from '@/lib/shared/components/ui';
+import {
+    H4,
+    Paragraph,
+    Caption,
+    CenteredContainer,
+} from '@/lib/shared/components/ui';
 import { getCoveredSessionsMessage } from '../../utils';
 import { ProviderClientDetailsPageProps } from '../../../../service/page-props/get-client-details-page-props';
 import { InfoOutlined } from '@mui/icons-material';
@@ -10,17 +15,29 @@ export const ProfileDetails = ({
     givenName,
     memberProfile,
     plan,
-}: ProviderClientDetailsPageProps['connectionRequest']['member']) => {
-    const remainingSesssions = plan?.remainingSessions ?? 0;
+    isLoading,
+}: ProviderClientDetailsPageProps['connectionRequest']['member'] & {
+    isLoading?: boolean;
+}) => {
+    const remainingSessions = plan?.remainingSessions ?? 0;
     const coveredSessions = plan?.coveredSessions ?? 0;
+    const hasRemainingSessions = remainingSessions > 0;
     return (
         <Container>
-            <RemainingSessions remainingSessions={remainingSesssions}>
-                <Paragraph className="count" bold>
-                    {remainingSesssions}
-                </Paragraph>
+            <RemainingSessions hasRemainingSessions={hasRemainingSessions}>
+                {isLoading ? (
+                    <CenteredContainer marginBottom={4}>
+                        <CircularProgress
+                            color={hasRemainingSessions ? 'success' : 'info'}
+                        />
+                    </CenteredContainer>
+                ) : (
+                    <Paragraph className="count" bold>
+                        {remainingSessions}
+                    </Paragraph>
+                )}
                 <Caption margin={0}>
-                    Covered {remainingSesssions === 1 ? 'session' : 'sessions'}{' '}
+                    Covered {remainingSessions === 1 ? 'session' : 'sessions'}{' '}
                     {coveredSessions > 0 ? 'remaining' : ''}
                 </Caption>
                 <Tooltip
@@ -29,7 +46,7 @@ export const ProfileDetails = ({
                             ? getCoveredSessionsMessage({
                                   name: givenName,
                                   coveredSessions: coveredSessions,
-                                  remainingSessions: remainingSesssions,
+                                  remainingSessions,
                                   planEndDate: plan.endDate,
                               })
                             : 'No plan information could be found.'
@@ -76,18 +93,20 @@ const DetailsContainer = styled(Box)(({ theme }) => ({
     },
 }));
 
-const RemainingSessions = styled(Box)<{
-    remainingSessions: number;
-}>(({ theme, remainingSessions }) => ({
+const RemainingSessions = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'hasRemainingSessions',
+})<{
+    hasRemainingSessions: boolean;
+}>(({ theme, hasRemainingSessions }) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
     minHeight: '180px',
-    background:
-        remainingSessions > 0 ? colors.success[50] : colors.neutral.black[100],
-    color:
-        remainingSessions > 0 ? colors.success[800] : theme.palette.info.dark,
+    background: hasRemainingSessions
+        ? colors.success[50]
+        : colors.neutral.black[100],
+    color: hasRemainingSessions ? colors.success[800] : theme.palette.info.dark,
     borderRadius: theme.shape.borderRadius,
     flexDirection: 'column',
     marginBottom: theme.spacing(4),

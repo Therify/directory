@@ -119,7 +119,10 @@ export const ClientListItem = ({
         <ListItem
             key={connectionRequest.member.id}
             sx={{ width: '100%', paddingX: 0 }}
-            onClick={onClientSelect}
+            onClick={() => {
+                // Only open client page for accepted connections
+                isAccepted ? onClientSelect?.() : onViewSummary?.();
+            }}
         >
             <ClientListItemContainer>
                 <CellContainer>

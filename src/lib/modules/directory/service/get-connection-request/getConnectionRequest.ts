@@ -21,7 +21,7 @@ export function factory({ prisma }: DirectoryServiceParams) {
                 },
             }
         );
-        const rawRequest = await prisma.connectionRequest.findFirstOrThrow({
+        const rawRequest = await prisma.connectionRequest.findFirst({
             where: {
                 profileId,
                 memberId,
@@ -82,6 +82,9 @@ export function factory({ prisma }: DirectoryServiceParams) {
                 },
             },
         });
+        if (!rawRequest) {
+            return null;
+        }
         const rawPlan = getCurrentPlan(rawRequest.member.account?.plans ?? []);
         let plan: ConnectionRequest.Type['member']['plan'] = null;
         if (rawPlan) {

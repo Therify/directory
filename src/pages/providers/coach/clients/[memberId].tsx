@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { ProviderNavigationPage } from '@/lib/shared/components/features/pages';
 import { URL_PATHS } from '@/lib/sitemap';
@@ -6,7 +6,10 @@ import { RBAC } from '@/lib/shared/utils';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { ProvidersService } from '@/lib/modules/providers/service';
 import { ProviderClientDetailsPageProps } from '@/lib/modules/providers/service/page-props/get-client-details-page-props';
-import { ClientDetails } from '@/lib/modules/providers/components/Clients';
+import {
+    ClientDetails,
+    ReimbursementModal,
+} from '@/lib/modules/providers/components/Clients';
 import { CenteredContainer, Modal } from '@/lib/shared/components/ui';
 import { format } from 'date-fns';
 import { CircularProgress } from '@mui/material';
@@ -17,6 +20,8 @@ import {
     useSessionInvoicing,
     OnVoidInvoiceCallback,
 } from '@/lib/modules/accounts/components/hooks';
+import { trpc } from '@/lib/shared/utils/trpc';
+import { ConnectionRequest } from '@/lib/shared/types';
 
 export const getServerSideProps = RBAC.requireCoachAuth(
     withPageAuthRequired({
@@ -27,7 +32,7 @@ export const getServerSideProps = RBAC.requireCoachAuth(
 
 export default function ClientDetailsPage({
     user,
-    connectionRequest,
+    connectionRequest: ssConnectionRequest,
     invoices: ssInvoices,
 }: ProviderClientDetailsPageProps) {
     const { createAlert } = useContext(Alerts.Context);
@@ -37,13 +42,16 @@ export default function ClientDetailsPage({
     const [invoiceToVoid, setInvoiceToVoid] = useState<
         ProviderClientDetailsPageProps['invoices'][number] | null
     >(null);
-
+    const [isReimbursementModalOpen, setIsReimbursementModalOpen] =
+        useState(false);
     const {
         onInvoiceClient,
         ConfirmationUi: CreateInvoiceConfirmationModal,
         onVoidInvoice,
         isVoidingInvoice,
     } = useSessionInvoicing(user?.userId);
+    const timeoutRef = useRef<number>();
+    const [isInRefetchTimeout, setIsInRefetchTimeout] = useState(false);
 
     const voidInvoiceCallback: OnVoidInvoiceCallback = (result, error) => {
         if (error) {
@@ -83,15 +91,32 @@ export default function ClientDetailsPage({
     const refreshWindow = () => {
         if (typeof window !== 'undefined') window.location.reload();
     };
+    const {
+        data: refetchedConnectionRequestResult,
+        isLoading,
+        refetch: refetchConnectionRequest,
+    } = trpc.useQuery(
+        [
+            'directory.get-connection-request',
+            {
+                memberId: ssConnectionRequest.member.id,
+                providerId: user.userId,
+            },
+        ],
+        { refetchOnWindowFocus: false, enabled: false }
+    );
     if (!user) return null;
+    const { connectionRequest: refetchedConnectionRequest } =
+        refetchedConnectionRequestResult ?? {};
+    const connectionRequest = refetchedConnectionRequest ?? ssConnectionRequest;
     return (
         <ProviderNavigationPage
             currentPath={URL_PATHS.PROVIDERS.COACH.CLIENTS}
             user={user}
         >
             <ClientDetails
+                isLoading={isLoading || isInRefetchTimeout}
                 provider={user}
-                designation={ProfileType.coach}
                 connectionRequest={connectionRequest}
                 invoices={invoices}
                 onBack={router.back}
@@ -109,6 +134,9 @@ export default function ClientDetailsPage({
                         : undefined
                 }
                 onVoidInvoice={(invoice) => setInvoiceToVoid(invoice)}
+                onReimbursement={() => {
+                    setIsReimbursementModalOpen(true);
+                }}
             />
             {invoiceToVoid && (
                 <Modal
@@ -151,6 +179,21 @@ export default function ClientDetailsPage({
                 />
             )}
             <CreateInvoiceConfirmationModal />
+            {isReimbursementModalOpen && (
+                <ReimbursementModal
+                    designation={ProfileType.coach}
+                    connectionRequest={connectionRequest}
+                    onClose={() => setIsReimbursementModalOpen(false)}
+                    onSubmitCallback={() => {
+                        window.clearTimeout(timeoutRef.current);
+                        setIsInRefetchTimeout(true);
+                        timeoutRef.current = window.setTimeout(() => {
+                            refetchConnectionRequest();
+                            setIsInRefetchTimeout(false);
+                        }, 5000);
+                    }}
+                />
+            )}
         </ProviderNavigationPage>
     );
 }
