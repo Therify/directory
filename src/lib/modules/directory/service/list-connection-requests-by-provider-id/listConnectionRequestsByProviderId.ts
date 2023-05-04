@@ -1,7 +1,7 @@
 import { ListConnectionRequestsByProviderId } from '@/lib/modules/directory/features';
 import { ConnectionRequest } from '@/lib/shared/types';
+import { getRemainingSessionCount } from '@/lib/shared/utils';
 import { DirectoryServiceParams } from '../params';
-import { isBefore } from 'date-fns';
 
 export function factory({ prisma }: DirectoryServiceParams) {
     return async function listConnectionRequestsByProviderId({
@@ -96,22 +96,16 @@ export function factory({ prisma }: DirectoryServiceParams) {
             if (rawPlan) {
                 const { coveredSessions, endDate, startDate, ...planDetails } =
                     rawPlan;
-                const sessionsInPlan =
-                    rawRequest.member.redeemedSessions.filter(
-                        (session) =>
-                            // dateOfSession is after startDate and before endDate
-                            isBefore(startDate, session.dateOfSession) &&
-                            isBefore(session.dateOfSession, endDate)
-                    );
 
-                const remainingSessions =
-                    (coveredSessions ?? 0) - sessionsInPlan.length;
                 plan = {
                     ...planDetails,
                     startDate: startDate.toISOString(),
                     endDate: endDate.toISOString(),
                     coveredSessions,
-                    remainingSessions,
+                    remainingSessions: getRemainingSessionCount(
+                        { coveredSessions, endDate, startDate },
+                        rawRequest.member.redeemedSessions
+                    ),
                 };
             }
             const practice =

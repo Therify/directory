@@ -11,12 +11,15 @@ import { HandleInvoiceSent } from './handle-invoice-sent';
 import { HandleCoachingSessionInvoiceUpdated } from './handle-coaching-session-invoice-updated';
 import { HandleReimbursementSubmission } from './handle-reimbursement-submission';
 import { HandleMembershipPlanPayment } from './handle-membership-plan-payment';
+import { GetProviderSessionInvoicesByMemberId } from './get-provider-session-invoices-by-member-id';
+import { VoidCoachingSessionInvoice } from './void-coaching-session-invoice';
 
 export const factory = (context: AccountsServiceParams) => ({
     handleCoachingSessionPayment: HandleCoachingSessionPayment.factory(context),
     handleCoachingSessionInvoiceUpdated:
         HandleCoachingSessionInvoiceUpdated.factory(context),
     handleInvoiceSent: HandleInvoiceSent.factory(context),
+    voidCoachingSessionInvoice: VoidCoachingSessionInvoice.factory(context),
     handleMembershipPlanPayment: HandleMembershipPlanPayment.factory(context),
     handleGroupPracticePlanPayment:
         HandleGroupPracticePlanPayment.factory(context),
@@ -27,6 +30,8 @@ export const factory = (context: AccountsServiceParams) => ({
         HandleStripeConnectOnboarding.factory(context),
     createStripeConnectLoginUrl: CreateStripeConnectLoginUrl.factory(context),
     createCoachingSessionInvoice: CreateCoachingSessionInvoice.factory(context),
+    getProviderSessionInvoicesByMemberId:
+        GetProviderSessionInvoicesByMemberId.factory(context),
     handleReimbursementSubmission:
         HandleReimbursementSubmission.factory(context),
 });

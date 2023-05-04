@@ -1,6 +1,7 @@
 import { ProvidersServiceParams } from '../params';
 import { GetBillingPageProps } from './get-billing-page-props';
 import { GetChatPageProps } from './get-chat-page-props';
+import { GetClientDetailsPageProps } from './get-client-details-page-props';
 import { GetProviderClientsPageProps } from './get-clients-page-props';
 import { GetPracticeClientsPageProps } from './get-practice-clients-page-props';
 import { GetProviderProfileEditorPageProps } from './get-provider-profile-editor-page-props';
@@ -21,4 +22,5 @@ export const pagePropsFactory = (params: ProvidersServiceParams) => ({
     getProviderProfileEditorPageProps:
         GetProviderProfileEditorPageProps.factory(params),
     getChatPageProps: GetChatPageProps.factory(params),
+    getClientDetailsPageProps: GetClientDetailsPageProps.factory(params),
 });

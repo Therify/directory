@@ -1,4 +1,5 @@
 export * as CreateCoachingSessionInvoice from './create-coaching-session-checkout';
+export * as GetProviderSessionInvoicesByMemberId from './get-provider-session-invoices-by-member-id';
 export * as CreateStripeConnectLoginUrl from './create-stripe-connect-login-url';
 export * as HandleGroupPracticePlanPayment from './handle-group-practice-plan-payment';
 export * as HandlePlanChange from './handle-plan-change';
@@ -8,3 +9,4 @@ export * as RenewPlan from './renew-plan';
 export * as CancelPlan from './cancel-plan';
 export * as HandleReimbursementSubmission from './handle-reimbursement-submission';
 export * as HandleMembershipPlanPayment from './handle-membership-plan-payment';
+export * as VoidCoachingSessionInvoice from './void-coaching-session-invoice';
