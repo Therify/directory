@@ -13,7 +13,7 @@ import {
 } from '@/lib/shared/components/ui';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { usePracticeOnboardingStorage } from '@/lib/modules/onboarding/components';
-import { PlanStatus, Role } from '@prisma/client';
+import { PlanStatus } from '@prisma/client';
 import { useRouter } from 'next/router';
 import { URL_PATHS } from '@/lib/sitemap';
 import { useTherifyUser } from '@/lib/shared/hooks';
@@ -23,7 +23,7 @@ export const getServerSideProps = RBAC.requireProviderAuth(
     withPageAuthRequired()
 );
 
-const REGISTRATION_STEPS = ['Registration', 'Payment', 'Onboarding'] as const;
+const REGISTRATION_STEPS = ['Registration', 'Onboarding'] as const;
 const SIXTY_SECONDS = 1000 * 60;
 
 export default function BillingSuccessPage() {

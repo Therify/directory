@@ -55,7 +55,7 @@ const getUserRedirectPath = (user: TherifyUser.TherifyUser): string => {
     if (user.roles.includes('member')) {
         return handleMemberRouting(user);
     } else if (user.plan === null) {
-        return URL_PATHS.PROVIDERS.ONBOARDING.BILLING;
+        return URL_PATHS.PROVIDERS.ONBOARDING.ROOT;
     } else if (user.isPracticeAdmin) {
         return URL_PATHS.PROVIDERS.PRACTICE.PROFILES;
     } else if (role === Role.provider_therapist) {
