@@ -46,3 +46,4 @@ export * from './Typography';
 export * from './Wizard';
 export * from './Picker';
 export * from './Containers';
+export { Tooltip } from './Tooltip';

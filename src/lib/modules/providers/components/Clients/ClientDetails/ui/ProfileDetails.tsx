@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Tooltip as MuiTooltip } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { colors } from '@/lib/shared/components/themes/therify-design-system';
 import {
@@ -6,6 +6,7 @@ import {
     Paragraph,
     Caption,
     CenteredContainer,
+    Tooltip,
 } from '@/lib/shared/components/ui';
 import { getCoveredSessionsMessage } from '../../utils';
 import { ProviderClientDetailsPageProps } from '../../../../service/page-props/get-client-details-page-props';
@@ -41,6 +42,7 @@ export const ProfileDetails = ({
                     {coveredSessions > 0 ? 'remaining' : ''}
                 </Caption>
                 <Tooltip
+                    color={hasRemainingSessions ? 'success' : 'info'}
                     title={
                         plan
                             ? getCoveredSessionsMessage({
@@ -51,6 +53,7 @@ export const ProfileDetails = ({
                               })
                             : 'No plan information could be found.'
                     }
+                    style={{ marginTop: 2 }}
                 >
                     <InfoOutlined fontSize="small" />
                 </Tooltip>
@@ -118,8 +121,4 @@ const RemainingSessions = styled(Box, {
     '& .count': {
         fontSize: theme.typography.h1.fontSize,
     },
-}));
-
-const Tooltip = styled(MuiTooltip)(({ theme }) => ({
-    marginTop: theme.spacing(2),
 }));
