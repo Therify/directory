@@ -60,9 +60,7 @@ export const ClientDetails = ({
         return !voidableStatuses.includes(status);
     };
     const hasSessionsRemaining =
-        (connectionRequest.member.plan?.coveredSessions ?? 0) -
-            (connectionRequest.member.plan?.remainingSessions ?? 0) >
-        0;
+        (connectionRequest.member.plan?.remainingSessions ?? 0) > 0;
     const openEmail = (address: string) => {
         if (typeof window !== 'undefined')
             window.open(`mailto:${address}`, '_blank');
