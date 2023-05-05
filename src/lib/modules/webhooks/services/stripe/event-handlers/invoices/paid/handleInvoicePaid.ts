@@ -2,7 +2,6 @@ import { StripeWebhookParams } from '../../../webhookParams';
 import { inferAsyncReturnType } from '@trpc/server';
 import { StripeInvoice, StripeUtils } from '@/lib/shared/vendors/stripe';
 import {
-    handleGroupPracticePayment,
     handleMembershipPayment,
     handleOneTimePayment,
     handlePlanChange,
@@ -15,7 +14,6 @@ import {
 import { NodeEnvironment } from '@/lib/shared/types/nodeEnvironment';
 
 type HandlerResult = inferAsyncReturnType<
-    | typeof handleGroupPracticePayment
     | typeof handlePlanChange
     | typeof handleOneTimePayment
     | typeof handleMembershipPayment
@@ -24,7 +22,6 @@ type HandlerResult = inferAsyncReturnType<
 const ALL_PRODUCTS = getProductsByEnvironment(
     process.env.VERCEL_ENV as NodeEnvironment
 );
-const GROUP_PRACTICE_PLAN = ALL_PRODUCTS[PRODUCTS.GROUP_PRACTICE_PLAN];
 const COVERED_COACHING_SESSION =
     ALL_PRODUCTS[PRODUCTS.COVERED_COACHING_SESSION];
 
@@ -47,10 +44,6 @@ export const handleInvoicePaidFactory =
 
         const [lineItem] = invoice.lines.data;
         const isSubscriptionChange = billing_reason === 'subscription_update';
-
-        const isGroupPracticePlanPriceId = Object.values(
-            GROUP_PRACTICE_PLAN.PRICES
-        ).includes(lineItem.price.id);
 
         const isCoachingSessionPriceId = Object.values(
             COVERED_COACHING_SESSION.PRICES
@@ -75,21 +68,6 @@ export const handleInvoicePaidFactory =
                 customerId,
                 subscriptionId,
                 invoice,
-            });
-        } else if (isGroupPracticePlanPriceId) {
-            result = await handleGroupPracticePayment({
-                seats: lineItem.quantity,
-                accounts,
-                customerId,
-                subscriptionId,
-                invoice,
-                priceId: lineItem.price.id,
-                startDate: StripeUtils.getDateFromStripeTimestamp(
-                    lineItem.period.start
-                ).toISOString(),
-                endDate: StripeUtils.getDateFromStripeTimestamp(
-                    lineItem.period.end
-                ).toISOString(),
             });
         } else if (isMembershipPlanPriceId || isCoachingSessionPriceId) {
             result = await handleMembershipPayment({

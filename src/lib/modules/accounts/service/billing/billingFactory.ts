@@ -1,6 +1,5 @@
 import { AccountsServiceParams } from '../params';
 import { CancelPlan } from './cancel-plan';
-import { HandleGroupPracticePlanPayment } from './handle-group-practice-plan-payment';
 import { HandlePlanChange } from './handle-plan-change';
 import { RenewPlan } from './renew-plan';
 import { HandleStripeConnectOnboarding } from './handle-stripe-connect-onboarding';
@@ -21,8 +20,6 @@ export const factory = (context: AccountsServiceParams) => ({
     handleInvoiceSent: HandleInvoiceSent.factory(context),
     voidCoachingSessionInvoice: VoidCoachingSessionInvoice.factory(context),
     handleMembershipPlanPayment: HandleMembershipPlanPayment.factory(context),
-    handleGroupPracticePlanPayment:
-        HandleGroupPracticePlanPayment.factory(context),
     handlePlanChange: HandlePlanChange.factory(context),
     cancelPlan: CancelPlan.factory(context),
     renewPlan: RenewPlan.factory(context),
