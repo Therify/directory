@@ -290,7 +290,7 @@ export default function PracticeProfilesPage({
                                             ? 'profile'
                                             : 'profiles'}{' '}
                                         remaining for your practice.
-                                        <Tooltip title="If you need more profile listings, please reach out to Therify support to increase your profiles limit" />
+                                        <Tooltip title="If you need more profile listings, please reach out to Therify support to increase your profile limit" />
                                     </SeatCount>
                                 )}
                             </Box>
