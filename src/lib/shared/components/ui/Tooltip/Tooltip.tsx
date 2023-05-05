@@ -1,9 +1,17 @@
 import { useState } from 'react';
-import { Tooltip as MuiTooltip, TooltipProps } from '@mui/material';
+import {
+    Tooltip as MuiTooltip,
+    TooltipProps as MuiTooltipProps,
+} from '@mui/material';
 import { IconButton } from '../Button';
+import { InfoOutlined } from '@mui/icons-material';
 
+type TooltipProps = Omit<MuiTooltipProps, 'children'> & {
+    children?: MuiTooltipProps['children'];
+};
 export const Tooltip = ({
     children,
+    color,
     open: baseOpen,
     ...props
 }: TooltipProps) => {
@@ -11,14 +19,15 @@ export const Tooltip = ({
     return (
         <IconButton
             type="text"
+            size="small"
             onClick={() => {
                 setOpen(!open);
             }}
             onMouseEnter={() => setOpen(true)}
             onMouseLeave={() => setOpen(false)}
         >
-            <MuiTooltip open={open} {...props}>
-                {children}
+            <MuiTooltip open={open} color={color ?? 'info'} {...props}>
+                {children ?? <InfoOutlined fontSize="small" />}
             </MuiTooltip>
         </IconButton>
     );
