@@ -3,7 +3,7 @@ import {
     CLIENTS,
     PROFILE_EDITOR,
 } from './links';
-import { ACCOUNT, BILLING_AND_SUBSCRIPTION, LOGOUT } from '../accountLinks';
+import { ACCOUNT, LOGOUT } from '../accountLinks';
 
 export const COACH_MAIN_MENU = [
     // DASHBOARD,
@@ -13,7 +13,6 @@ export const COACH_MAIN_MENU = [
 
 export const COACH_SECONDARY_MENU = [
     // { ...ACCOUNT, icon: undefined },
-    // BILLING_AND_SUBSCRIPTION,
     LOGOUT,
 ] as const;
 
