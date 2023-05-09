@@ -1,4 +1,4 @@
-import { useContext, useState, useRef } from 'react';
+import { useContext, useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { ProviderNavigationPage } from '@/lib/shared/components/features/pages';
 import { URL_PATHS } from '@/lib/sitemap';
@@ -21,6 +21,7 @@ import {
     OnVoidInvoiceCallback,
 } from '@/lib/modules/accounts/components/hooks';
 import { trpc } from '@/lib/shared/utils/trpc';
+import { useFeatureFlags } from '@/lib/shared/hooks';
 
 export const getServerSideProps = RBAC.requireCoachAuth(
     withPageAuthRequired({
@@ -35,6 +36,7 @@ export default function ClientDetailsPage({
     invoices: ssInvoices,
 }: ProviderClientDetailsPageProps) {
     const { createAlert } = useContext(Alerts.Context);
+    const { flags } = useFeatureFlags(user);
     const router = useRouter();
     const [invoices, setInvoices] =
         useState<ProviderClientDetailsPageProps['invoices']>(ssInvoices);
@@ -90,6 +92,11 @@ export default function ClientDetailsPage({
     const refreshWindow = () => {
         if (typeof window !== 'undefined') window.location.reload();
     };
+    useEffect(() => {
+        if (flags.didFlagsLoad && !flags.canAccessClientDetailsPage) {
+            router.push(URL_PATHS.PROVIDERS.COACH.CLIENTS);
+        }
+    }, [flags.canAccessClientDetailsPage, flags.didFlagsLoad, router]);
     const {
         data: refetchedConnectionRequestResult,
         isLoading,
@@ -98,16 +105,16 @@ export default function ClientDetailsPage({
         [
             'directory.get-connection-request',
             {
-                memberId: ssConnectionRequest.member.id,
-                providerId: user.userId,
+                memberId: ssConnectionRequest?.member.id ?? '',
+                providerId: user?.userId ?? '',
             },
         ],
         { refetchOnWindowFocus: false, enabled: false }
     );
-    if (!user) return null;
     const { connectionRequest: refetchedConnectionRequest } =
         refetchedConnectionRequestResult ?? {};
     const connectionRequest = refetchedConnectionRequest ?? ssConnectionRequest;
+    if (!user || !flags.canAccessClientDetailsPage) return null;
     return (
         <ProviderNavigationPage
             currentPath={URL_PATHS.PROVIDERS.COACH.CLIENTS}
@@ -121,7 +128,8 @@ export default function ClientDetailsPage({
                 onBack={router.back}
                 onCreateInvoice={
                     user.stripeConnectAccountId
-                        ? () =>
+                        ? () => {
+                              if (!connectionRequest) return;
                               onInvoiceClient(
                                   {
                                       memberId: connectionRequest.member.id,
@@ -129,7 +137,8 @@ export default function ClientDetailsPage({
                                           connectionRequest.member.givenName,
                                   },
                                   refreshWindow
-                              )
+                              );
+                          }
                         : undefined
                 }
                 onVoidInvoice={(invoice) => setInvoiceToVoid(invoice)}
@@ -166,6 +175,8 @@ export default function ClientDetailsPage({
                     primaryButtonEndIcon={<MoneyOff />}
                     primaryButtonDisabled={isVoidingInvoice}
                     primaryButtonOnClick={() => {
+                        if (!user || !connectionRequest || !invoiceToVoid)
+                            return;
                         onVoidInvoice(
                             {
                                 sessionInvoiceId: invoiceToVoid.id,
