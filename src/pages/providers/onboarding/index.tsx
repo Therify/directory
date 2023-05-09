@@ -21,8 +21,9 @@ import { TRPCClientError } from '@trpc/client';
 import Link from 'next/link';
 import { URL_PATHS } from '@/lib/sitemap';
 import { RBAC } from '@/lib/shared/utils';
+import { useRouter } from 'next/router';
 
-const REGISTRATION_STEPS = ['Registration', 'Payment', 'Onboarding'] as const;
+const REGISTRATION_STEPS = ['Registration', 'Onboarding'] as const;
 
 export const getServerSideProps = RBAC.requireProviderAuth(
     withPageAuthRequired()
@@ -30,6 +31,7 @@ export const getServerSideProps = RBAC.requireProviderAuth(
 
 export default function PracticeOnboardingPage() {
     const theme = useTheme();
+    const router = useRouter();
     const [errorMessage, setErrorMessage] = useState<string>();
     const { getStoredPracticeDetails, storePracticeDetails } =
         usePracticeOnboardingStorage();
@@ -40,7 +42,6 @@ export default function PracticeOnboardingPage() {
             ...getStoredPracticeDetails(),
         },
     });
-    const billingCycle = practiceDetailsForm.watch('billingCycle');
     const country = practiceDetailsForm.watch('country');
 
     const { isLoading: isLoadingPractice, data: practiceData } = trpc.useQuery(
@@ -109,11 +110,15 @@ export default function PracticeOnboardingPage() {
                         response
                     );
                 if (parseResult.success) {
-                    window.location.href = parseResult.data.checkoutSessionUrl;
+                    router.push(URL_PATHS.PROVIDERS.ONBOARDING.SUCCESS);
                     return;
                 }
                 const [error] = response.errors;
                 if (error) {
+                    if (error.includes('You already have a plan set up.')) {
+                        router.push(URL_PATHS.PROVIDERS.ONBOARDING.SUCCESS);
+                        return;
+                    }
                     setErrorMessage(error);
                     return;
                 }
@@ -152,15 +157,11 @@ export default function PracticeOnboardingPage() {
                         <PracticeDetailsForm
                             defaultValues={undefined}
                             control={practiceDetailsForm.control}
-                            seatCount={practiceDetailsForm.watch('seatCount')}
-                            seatPrice={billingCycle === 'year' ? 372 : 39}
-                            maximumSeats={35}
                             onInputBlur={() =>
                                 storePracticeDetails(
                                     practiceDetailsForm.getValues()
                                 )
                             }
-                            billingCycle={billingCycle}
                             country={country}
                             disabled={
                                 isLoadingUser ||
@@ -193,7 +194,7 @@ export default function PracticeOnboardingPage() {
                             endIcon={<NextIcon />}
                             onClick={handlePracticeOnboarding}
                         >
-                            Proceed to billing
+                            Create Practice
                         </Button>
                     </ButtonContainer>
                 </StepperContainer>

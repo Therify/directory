@@ -1,35 +1,21 @@
 import { Control } from 'react-hook-form';
-import { Box, Link } from '@mui/material';
+import { Box } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { HandlePracticeOnboarding } from '@/lib/modules/onboarding/features';
-import {
-    H1,
-    H2,
-    H3,
-    Paragraph,
-    Subhead,
-    Caption,
-} from '@/lib/shared/components/ui';
+import { H1, H2, Caption } from '@/lib/shared/components/ui';
 import {
     PracticeNameInput,
     PracticeAddressInput,
     WebsiteInput,
     PhoneNumberInput,
     PracticeEmailInput,
-    SeatCountInput,
-    BillingCycleButtons,
 } from './components/inputs';
 import { SafePracticeDetails } from './hooks';
 
 export interface PracticeDetailsFormProps {
     defaultValues?: Partial<SafePracticeDetails>;
     control: Control<HandlePracticeOnboarding.Input>;
-    minimumSeats?: number;
-    maximumSeats?: number;
-    seatPrice: number;
-    billingCycle: HandlePracticeOnboarding.Input['billingCycle'];
     country: HandlePracticeOnboarding.Input['country'];
-    seatCount: number;
     disabled?: boolean;
     onInputBlur: () => void;
 }
@@ -37,11 +23,6 @@ export interface PracticeDetailsFormProps {
 export const PracticeDetailsForm = ({
     defaultValues,
     control,
-    minimumSeats = 1,
-    maximumSeats = 15,
-    seatPrice,
-    seatCount,
-    billingCycle,
     disabled,
     onInputBlur,
     country,
@@ -99,63 +80,6 @@ export const PracticeDetailsForm = ({
                     onInputBlur={onInputBlur}
                     disabled={disabled}
                 />
-                <SectionTitle>
-                    How would you like to be billed for your Therify
-                    subscription?
-                </SectionTitle>
-                <BillingCycleButtons
-                    control={control}
-                    defaultValue={defaultValues?.billingCycle}
-                    disabled={disabled}
-                />
-                <SectionTitle>
-                    How many profiles do you want to list with Therify?
-                </SectionTitle>
-                <Subhead textAlign="center">{seatCount}</Subhead>
-                <Box display="flex" width="100%" marginRight={4}>
-                    <Paragraph>{minimumSeats}</Paragraph>
-                    <SeatCountInput
-                        control={control}
-                        max={maximumSeats}
-                        min={minimumSeats}
-                        defaultValue={defaultValues?.seatCount ?? undefined}
-                        onInputBlur={onInputBlur}
-                        disabled={disabled}
-                    />
-                    <Paragraph>{maximumSeats}</Paragraph>
-                </Box>
-                <Paragraph>Your plan:</Paragraph>
-                <H3>
-                    ${seatCount * seatPrice} / {billingCycle}
-                </H3>
-                {billingCycle === 'year' && (
-                    <Caption secondary>
-                        $31 per profile per month, paid annually. (20% off the
-                        monthly rate)
-                    </Caption>
-                )}
-                {seatCount === maximumSeats && (
-                    <Paragraph>
-                        Need more than {maximumSeats} seats?{' '}
-                        <Link>Contact us</Link> about our enterprise pricing.
-                    </Paragraph>
-                )}
-                <Paragraph marginTop={4}>
-                    Therify partners with{' '}
-                    <b>
-                        <Link
-                            href="https://stripe.com/"
-                            target="_blank"
-                            style={{
-                                color: theme.palette.text.primary,
-                            }}
-                        >
-                            Stripe
-                        </Link>{' '}
-                    </b>
-                    for simplified billing. You will be redirected to
-                    Stripe&apos;s checkout experience.
-                </Paragraph>
             </Form>
         </Box>
     );

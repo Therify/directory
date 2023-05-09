@@ -58,32 +58,9 @@ export default async function handler(
         zip: '37211',
         country: UNITED_STATES.COUNTRY.CODE,
         email: `${emailName}@${emailDomain}`,
-        billingCycle: 'year',
-        seatCount: 5,
     });
     if (practiceResult.isErr()) {
         practiceResult.mapErr((err) => console.error(err));
-        return res.status(500).end();
-    }
-    const practiceId = practiceResult.value.handlePracticeEntity.practiceId;
-    //Create Plan
-    const planResult =
-        await AccountsService.billing.handleGroupPracticePlanPayment({
-            startDate: new Date().toISOString(),
-            endDate: addYears(new Date(), 1).toISOString(),
-            stripeSubscriptionId: 'test-subscription-id',
-            stripeCustomerId: practiceOwnerStripCustomerId,
-            seats: 5,
-            invoiceId: 'Test Invoice Id',
-            invoiceTotal: 100,
-            invoiceAmountDue: 100,
-            invoiceAmountPaid: 100,
-            invoiceAmountRemaining: 0,
-            invoiceStatus: 'paid',
-            priceId: DEVELOPMENT_PRODUCT_IDS.group_practice_plan.PRICES.ANNUAL,
-        });
-    if (planResult.isErr()) {
-        planResult.mapErr((err) => console.error(err));
         return res.status(500).end();
     }
 

@@ -15,25 +15,19 @@ export const practiceSchema = PracticeSchema.pick({
     website: true,
 }).extend({
     practiceId: z.string().optional(),
-    seatCount: z.number().min(1),
-    billingCycle: z.enum(['month', 'year']),
     userId: z.string(),
 });
 
-export const schema = z
-    .discriminatedUnion('country', [
-        practiceSchema.extend({
-            state: z.enum(CANADA.PROVINCE.ENTRIES),
-            country: z.literal(CANADA.COUNTRY.CODE),
-        }),
-        practiceSchema.extend({
-            state: z.enum(UNITED_STATES.STATE.ENTRIES),
-            country: z.literal(UNITED_STATES.COUNTRY.CODE),
-        }),
-    ])
-    .refine((data) => data.seatCount > 0, {
-        message: 'Must have at least one seat.',
-    });
+export const schema = z.discriminatedUnion('country', [
+    practiceSchema.extend({
+        state: z.enum(CANADA.PROVINCE.ENTRIES),
+        country: z.literal(CANADA.COUNTRY.CODE),
+    }),
+    practiceSchema.extend({
+        state: z.enum(UNITED_STATES.STATE.ENTRIES),
+        country: z.literal(UNITED_STATES.COUNTRY.CODE),
+    }),
+]);
 
 export type Input = z.infer<typeof schema>;
 

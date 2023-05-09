@@ -5,13 +5,6 @@ import { ProductConfigs, PRODUCTS, Product } from './types';
  */
 
 export const DEVELOPMENT_PRODUCT_IDS: ProductConfigs = {
-    [PRODUCTS.GROUP_PRACTICE_PLAN]: {
-        PRODUCT_ID: 'prod_N94KTDPkgySWMC',
-        PRICES: {
-            MONTHLY: 'price_1MOmC0Allox7wzg5rapKGwqU',
-            ANNUAL: 'price_1MlGl1Allox7wzg5qhovHhDp',
-        },
-    },
     [PRODUCTS.MEMBER_INDIVIDUAL_PLAN]: {
         PRODUCT_ID: 'prod_NhBU0ErNIM7hxM',
         PRICES: {
@@ -38,13 +31,6 @@ export const DEVELOPMENT_PRODUCT_IDS: ProductConfigs = {
 } as const;
 
 export const PRODUCTION_PRODUCT_IDS: ProductConfigs = {
-    [PRODUCTS.GROUP_PRACTICE_PLAN]: {
-        PRODUCT_ID: 'prod_N68tLSFmC9RrdQ',
-        PRICES: {
-            MONTHLY: 'price_1MbwAQAllox7wzg5jmrDiIdA',
-            ANNUAL: 'price_1MlHjSAllox7wzg5HKWnEHKS',
-        },
-    },
     [PRODUCTS.MEMBER_INDIVIDUAL_PLAN]: {
         PRODUCT_ID: 'prod_NjAFvw1FPIG4sh',
         PRICES: {

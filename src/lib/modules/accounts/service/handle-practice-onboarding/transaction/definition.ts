@@ -14,9 +14,8 @@ export const transactionDefinition = z.object({
     defendAgainstDuplicatePlans: z.object({
         hasPlan: z.boolean(),
     }),
-    createStripeCheckoutSession: z.object({
-        checkoutSessionId: z.string(),
-        checkoutSessionUrl: z.string(),
+    createPlan: z.object({
+        planId: z.string(),
     }),
 });
 

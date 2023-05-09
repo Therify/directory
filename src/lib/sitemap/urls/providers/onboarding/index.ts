@@ -1,5 +1,5 @@
 export const ONBOARDING_PATHS = {
-    BILLING: '/providers/onboarding/billing',
-    BILLING_SUCCESS: '/providers/onboarding/billing/success',
+    ROOT: '/providers/onboarding',
+    SUCCESS: '/providers/onboarding/success',
     INVITATIONS: '/providers/onboarding/invitations',
 } as const;
