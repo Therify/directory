@@ -6,16 +6,38 @@ import { PlanStatus } from '@prisma/client';
 import { addYears } from 'date-fns';
 import { TransactionV1 } from '@/lib/shared/utils';
 import * as z from 'zod';
-import { PracticeSchema } from '@/lib/shared/schema';
 
 const API_KEY = get('THERIFY_DEV_MOVE_TO_FREE_PRACTICE_PLANS').asString();
 
 const definition = z.object({
     getPractices: z.object({
-        practices: PracticeSchema.array(),
+        practices: z
+            .object({
+                id: z.string(),
+                practiceOwnerId: z.string(),
+                plans: z
+                    .object({
+                        id: z.string(),
+                        status: z.nativeEnum(PlanStatus),
+                    })
+                    .array(),
+            })
+            .array(),
     }),
     invalidatePracticePlans: z.object({
         rollbackPlanIds: z.string().array(),
+        practicesWithActivePlans: z
+            .object({
+                id: z.string(),
+                practiceOwnerId: z.string(),
+                plans: z
+                    .object({
+                        id: z.string(),
+                        status: PlanStatus.active,
+                    })
+                    .array(),
+            })
+            .array(),
     }),
     createFreePlans: z.object({
         createdPlansCount: z.number(),
@@ -39,7 +61,22 @@ export default async function handler(
         {
             getPractices: {
                 async commit({ prisma }) {
-                    const practices = await prisma.practice.findMany();
+                    const practices = await prisma.practice.findMany({
+                        select: {
+                            id: true,
+                            practiceOwnerId: true,
+                            plans: {
+                                select: {
+                                    id: true,
+                                    status: true,
+                                },
+                                orderBy: {
+                                    createdAt: 'desc',
+                                },
+                                take: 1,
+                            },
+                        },
+                    });
                     return {
                         practices,
                     };
@@ -50,18 +87,15 @@ export default async function handler(
             },
             invalidatePracticePlans: {
                 async commit({ prisma }, { getPractices: { practices } }) {
-                    const plans = await prisma.plan.findMany({
-                        where: {
-                            status: PlanStatus.active,
-                            practiceId: {
-                                in: practices.map((practice) => practice.id),
-                            },
-                        },
-                        select: {
-                            id: true,
-                        },
-                    });
-                    const planIds = plans.map((plan) => plan.id);
+                    const practicesWithActivePlans = practices.filter(
+                        (practice) => {
+                            const plan = practice.plans[0];
+                            return !!plan && plan.status === PlanStatus.active;
+                        }
+                    );
+                    const planIds = practicesWithActivePlans.map(
+                        (practice) => practice.plans[0].id
+                    );
                     await prisma.plan.updateMany({
                         where: {
                             id: {
@@ -74,6 +108,7 @@ export default async function handler(
                     });
                     return {
                         rollbackPlanIds: planIds,
+                        practicesWithActivePlans,
                     };
                 },
                 async rollback(
@@ -94,9 +129,12 @@ export default async function handler(
                 },
             },
             createFreePlans: {
-                async commit({ prisma }, { getPractices: { practices } }) {
+                async commit(
+                    { prisma },
+                    { invalidatePracticePlans: { practicesWithActivePlans } }
+                ) {
                     const newPlans = await prisma.plan.createMany({
-                        data: practices.map((practice) => ({
+                        data: practicesWithActivePlans.map((practice) => ({
                             seats: 15,
                             startDate: new Date(),
                             endDate: addYears(new Date(), 500),
@@ -127,7 +165,10 @@ export default async function handler(
 
     return res.status(200).json({
         success: true,
-        practices: result.value.getPractices.practices.length,
+        allPractices: result.value.getPractices.practices.length,
+        practicesWithActivePlans:
+            result.value.invalidatePracticePlans.practicesWithActivePlans
+                .length,
         invalidatedPlans:
             result.value.invalidatePracticePlans.rollbackPlanIds.length,
         newPlans: result.value.createFreePlans.createdPlansCount,
