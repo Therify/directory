@@ -8,7 +8,18 @@ import { TransactionV1 } from '@/lib/shared/utils';
 import * as z from 'zod';
 
 const API_KEY = get('THERIFY_DEV_MOVE_TO_FREE_PRACTICE_PLANS').asString();
-
+const practicesWithActivePlanSchema = z
+    .object({
+        id: z.string(),
+        practiceOwnerId: z.string(),
+        plans: z
+            .object({
+                id: z.string(),
+                status: z.literal(PlanStatus.active),
+            })
+            .array(),
+    })
+    .array();
 const definition = z.object({
     getPractices: z.object({
         practices: z
@@ -26,18 +37,7 @@ const definition = z.object({
     }),
     invalidatePracticePlans: z.object({
         rollbackPlanIds: z.string().array(),
-        practicesWithActivePlans: z
-            .object({
-                id: z.string(),
-                practiceOwnerId: z.string(),
-                plans: z
-                    .object({
-                        id: z.string(),
-                        status: PlanStatus.active,
-                    })
-                    .array(),
-            })
-            .array(),
+        practicesWithActivePlans: practicesWithActivePlanSchema,
     }),
     createFreePlans: z.object({
         createdPlansCount: z.number(),
@@ -87,12 +87,15 @@ export default async function handler(
             },
             invalidatePracticePlans: {
                 async commit({ prisma }, { getPractices: { practices } }) {
-                    const practicesWithActivePlans = practices.filter(
-                        (practice) => {
-                            const plan = practice.plans[0];
-                            return !!plan && plan.status === PlanStatus.active;
-                        }
-                    );
+                    const practicesWithActivePlans =
+                        practicesWithActivePlanSchema.parse(
+                            practices.filter((practice) => {
+                                const plan = practice.plans[0];
+                                return (
+                                    !!plan && plan.status === PlanStatus.active
+                                );
+                            })
+                        );
                     const planIds = practicesWithActivePlans.map(
                         (practice) => practice.plans[0].id
                     );
