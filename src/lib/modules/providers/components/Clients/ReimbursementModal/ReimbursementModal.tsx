@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 import { formatReimbursementRequestUrl } from '@/lib/shared/utils';
 import { Close } from '@mui/icons-material';
 import { ProfileType } from '@prisma/client';
+import { useRef, useEffect, useState } from 'react';
 
 const REIMBURSEMENT_REQUEST_URL =
     'https://hipaa.jotform.com/221371005584146?' as const;
@@ -13,15 +14,37 @@ interface ReimbursementModalProps {
     designation: ProfileType;
     connectionRequest: ConnectionRequest.Type;
     onClose: () => void;
+    onSubmitCallback?: () => void;
 }
 
 export const ReimbursementModal = ({
     designation,
     connectionRequest,
     onClose,
+    onSubmitCallback,
 }: ReimbursementModalProps) => {
+    const timeoutRef = useRef<number>();
+    const [shouldCallCb, setShouldCallCb] = useState(false);
+
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        timeoutRef.current = window.setTimeout(() => {
+            setShouldCallCb(true);
+        }, 5000);
+
+        return () => {
+            clearTimeout(timeoutRef.current);
+        };
+    }, []);
+
+    const handleClose = () => {
+        if (shouldCallCb && onSubmitCallback) {
+            onSubmitCallback();
+        }
+        onClose();
+    };
     return (
-        <Modal open onClose={onClose}>
+        <Modal open onClose={handleClose}>
             <ModalContent>
                 <TitleContainer>
                     <Box>
@@ -33,7 +56,7 @@ export const ReimbursementModal = ({
                             {connectionRequest.member.surname}
                         </H3>
                     </Box>
-                    <IconButton color="info" type="text" onClick={onClose}>
+                    <IconButton color="info" type="text" onClick={handleClose}>
                         <Close />
                     </IconButton>
                 </TitleContainer>

@@ -8,15 +8,30 @@ import {
     Modal,
     DatePicker,
 } from '@/lib/shared/components/ui';
+import { VoidCoachingSessionInvoice } from '../../../features/billing';
 interface InvoicedMember {
     memberId: string;
     givenName?: string;
 }
+type OnVoidInvoiceSuccessArgs = [
+    result: VoidCoachingSessionInvoice.Output,
+    error: null
+];
+type OnVoidInvoiceFailureArgs = [result: null, error: Error];
+
+export type OnVoidInvoiceCallback = (
+    ...args: OnVoidInvoiceSuccessArgs | OnVoidInvoiceFailureArgs
+) => void;
+
 export const useSessionInvoicing = (providerId: string) => {
     const { createAlert } = useContext(Alerts.Context);
     const [showModal, setShowModal] = useState(false);
     const [member, setMember] = useState<InvoicedMember | null>(null);
     const [sessionDate, setSessionDate] = useState<Date | null>(null);
+    const [createSessionSuccessCallbackFn, setCreateSessionSuccessCbFn] =
+        useState<(() => void) | null>(null);
+    let voidSessionCallbackFn: OnVoidInvoiceCallback | null = null;
+
     const closeModal = () => {
         setShowModal(false);
         setSessionDate(null);
@@ -29,10 +44,13 @@ export const useSessionInvoicing = (providerId: string) => {
         onSuccess: ({ invoiceId, errors }) => {
             if (invoiceId) {
                 closeModal();
-                return createAlert({
+                createAlert({
                     type: 'success',
                     title: 'Session invoice created',
                 });
+                createSessionSuccessCallbackFn?.();
+                setCreateSessionSuccessCbFn(null);
+                return;
             }
             const [error] = errors;
             if (error) {
@@ -80,11 +98,43 @@ export const useSessionInvoicing = (providerId: string) => {
         });
     };
 
+    const { mutate: voidInvoice, isLoading: isVoidingInvoice } =
+        trpc.useMutation('accounts.billing.void-coaching-session-invoice', {
+            onSuccess(result) {
+                voidSessionCallbackFn?.(result, null);
+            },
+            onError(error) {
+                if (error instanceof Error) {
+                    voidSessionCallbackFn?.(null, error);
+                    return;
+                }
+                voidSessionCallbackFn?.(
+                    null,
+                    new Error(
+                        (error as { message: string }).message ??
+                            'Error voiding invoice'
+                    )
+                );
+            },
+        });
+
     return {
-        onInvoiceClient: (member: InvoicedMember) => {
+        onInvoiceClient: (
+            member: InvoicedMember,
+            successCallback?: () => void
+        ) => {
             setMember(member);
             setShowModal(true);
+            setCreateSessionSuccessCbFn(() => successCallback ?? null);
         },
+        onVoidInvoice: (
+            input: VoidCoachingSessionInvoice.Input,
+            callbackFn: OnVoidInvoiceCallback
+        ) => {
+            voidSessionCallbackFn = callbackFn;
+            return voidInvoice(input);
+        },
+        isVoidingInvoice,
         isCreatingSessionInvoice,
         ConfirmationUi: () => (
             <>

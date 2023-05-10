@@ -7,11 +7,6 @@ export const ACCOUNT: NavigationLink = {
     path: URL_PATHS.PROVIDERS.ACCOUNT.ACCOUNT_EDITOR,
 } as const;
 
-export const BILLING_AND_SUBSCRIPTION: NavigationLink = {
-    displayName: 'Billing & Subscription',
-    path: URL_PATHS.PROVIDERS.ACCOUNT.BILLING_AND_SUBSCRIPTION,
-};
-
 export const LOGOUT: NavigationLink = {
     displayName: 'Logout',
     path: URL_PATHS.AUTH.LOGOUT,

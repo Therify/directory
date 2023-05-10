@@ -7,6 +7,7 @@ import { DirectoryServiceParams } from './params';
 import { UpdateConnectionRequestStatus } from './update-connection-request-status';
 import { ExecuteProviderSearch } from './execute-provider-search';
 import { GenerateRecommendations } from './generate-recommendations';
+import { GetConnectionRequest } from './get-connection-request';
 
 const params: DirectoryServiceParams = {
     prisma,
@@ -20,6 +21,7 @@ export const directoryService = {
         ListConnectionRequestsByProviderId.factory(params),
     listConnectionRequestsByPracticeOwnerId:
         ListConnectionRequestsByPracticeOwnerId.factory(params),
+    getConnectionRequest: GetConnectionRequest.factory(params),
     updateConnectionRequestStatus:
         UpdateConnectionRequestStatus.factory(params),
     generateRecommendations: GenerateRecommendations.factory(params),

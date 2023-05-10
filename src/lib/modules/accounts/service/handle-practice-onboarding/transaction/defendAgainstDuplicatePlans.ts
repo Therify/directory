@@ -12,9 +12,7 @@ export const factory = (
             },
         });
         if (plan !== null) {
-            throw new Error(
-                'You already have a plan set up. You can manage your plan in your account settings.'
-            );
+            throw new Error('You already have a plan set up.');
         }
         return {
             hasPlan: Boolean(plan),

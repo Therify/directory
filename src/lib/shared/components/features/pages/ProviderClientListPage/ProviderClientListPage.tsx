@@ -13,6 +13,8 @@ import { useProviderConnectionRequests } from '@/lib/modules/providers/component
 import { H1 } from '@/lib/shared/components/ui';
 import { ProfileType } from '@prisma/client';
 import { useFeatureFlags } from '@/lib/shared/hooks';
+import { useRouter } from 'next/router';
+import { URL_PATHS } from '@/lib/sitemap';
 
 const REIMBURSEMENT_REQUEST_URL =
     'https://hipaa.jotform.com/221371005584146?' as const;
@@ -31,6 +33,7 @@ export function ProviderClientListPage({
     onInvoiceClient,
 }: ProviderClientListPageProps) {
     const theme = useTheme();
+    const router = useRouter();
     const { flags } = useFeatureFlags(user);
     const {
         connectionRequests,
@@ -46,6 +49,17 @@ export function ProviderClientListPage({
         useState<ConnectionRequest.Type>();
     const [reimbursementDetails, setReimbursementDetails] =
         useState<ConnectionRequest.Type>();
+    const handleClientSelect = (cr: ConnectionRequest.Type) =>
+        router.push(
+            `${URL_PATHS.PROVIDERS.COACH.CLIENTS}/${cr.member.id.replace(
+                'auth0|',
+                ''
+            )}`
+        );
+    const shouldAllowClientSelect =
+        flags.canAccessClientDetailsPage &&
+        designation === ProfileType.coach &&
+        user.stripeConnectAccountId;
     return (
         <PageContainer>
             <Box
@@ -58,6 +72,11 @@ export function ProviderClientListPage({
             <ClientList
                 connectionRequests={connectionRequests}
                 designation={designation}
+                onClientSelect={
+                    shouldAllowClientSelect
+                        ? handleClientSelect
+                        : setMemberDetails
+                }
                 onViewMemberDetails={setMemberDetails}
                 onAcceptConnectionRequest={(connectionRequest) =>
                     setConfirmationConnectionRequest({

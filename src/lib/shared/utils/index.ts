@@ -10,3 +10,5 @@ export * from './get-urls';
 export * from './convert-nested-dates-to-iso-string';
 export * from './format-reimbursement-request-url';
 export * from './format-membership-plan-change-request-url ';
+export * from './get-remaining-sessions-count';
+export * from './get-plan-by-date';

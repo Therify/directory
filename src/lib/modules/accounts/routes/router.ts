@@ -30,12 +30,14 @@ import {
     handleAccountOnboardingResolver,
     registerAccountOwnerResolver,
     getAccountByOwnerIdResolver,
+    voidCoachingSessionInvoiceResolver,
 } from './resolvers';
 import { Context } from '../../../server/context';
 import {
     HandleStripeConnectOnboarding,
     CreateStripeConnectLoginUrl,
     CreateCoachingSessionInvoice,
+    VoidCoachingSessionInvoice,
 } from '../features/billing';
 import { GetAccountByOwnerId } from '../features';
 
@@ -105,6 +107,11 @@ export const router = trpc
         input: CreateCoachingSessionInvoice.inputSchema,
         output: CreateCoachingSessionInvoice.outputSchema,
         resolve: createCoachingSessionInvoiceResolver,
+    })
+    .mutation(VoidCoachingSessionInvoice.TRPC_ROUTE, {
+        input: VoidCoachingSessionInvoice.inputSchema,
+        output: VoidCoachingSessionInvoice.outputSchema,
+        resolve: voidCoachingSessionInvoiceResolver,
     })
     .mutation(SendEmailVerification.TRPC_ROUTE, {
         input: SendEmailVerification.inputSchema,

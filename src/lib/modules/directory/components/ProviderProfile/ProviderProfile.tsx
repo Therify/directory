@@ -48,6 +48,7 @@ import ANIMATION_DATA from '../DirectoryCard/favoriteAnimation.json';
 import Favorite from '@mui/icons-material/Favorite';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import React from 'react';
+import { ProviderVideo } from './ProviderVideo';
 interface ProviderProfileProps {
     practice?: ProviderPractice.Type;
     isFavorited?: boolean;
@@ -154,6 +155,7 @@ export function ProviderProfile({
     languagesSpoken = [],
     credentials = [],
     ageGroups = [],
+    videoUrl = undefined,
     onConnectionRequest,
 }: ProviderProfileProps & ProviderProfileType.ProviderProfile) {
     const [isProviderFavorite, setIsProviderFavorite] =
@@ -350,7 +352,15 @@ export function ProviderProfile({
                                 )}
                             </Box>
                         </Box>
-                        <ProviderVideo />
+                        {videoUrl && (
+                            <ProviderVideo
+                                givenName={givenName}
+                                profileImageUrl={profileImageUrl}
+                                videoPlayerProps={{
+                                    url: videoUrl,
+                                }}
+                            />
+                        )}
                         <ProviderMatchCriteria>
                             {isTherapist &&
                                 allAcceptedInsurances.length > 0 && (
@@ -653,8 +663,6 @@ const ProviderCredentials = styled(Stack)(({ theme }) => ({}));
 const SessionTypeContainer = styled(Box)(({ theme }) => ({}));
 
 const ProviderState = styled(Box)(({ theme }) => ({}));
-
-const ProviderVideo = styled(Box)(({ theme }) => ({}));
 
 const ProviderMatchCriteria = styled(Box)(({ theme }) => ({
     overflowX: 'auto',

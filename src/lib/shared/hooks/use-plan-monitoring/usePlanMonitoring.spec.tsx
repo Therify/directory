@@ -97,36 +97,6 @@ describe('usePlanMonitoring', () => {
                 URL_PATHS.MEMBERS.ACCOUNT.INVALID_PLAN
             );
         });
-        it('should route to billing when provider plan is expired', () => {
-            const TestJSX = () => {
-                usePlanMonitoring(
-                    Mocks.getTherifyUser({
-                        type: 'therapist',
-                        plan: 'expired',
-                    })
-                );
-                return <div />;
-            };
-            render(<TestJSX />);
-            expect(routerMock.push).toHaveBeenCalledWith(
-                URL_PATHS.PROVIDERS.ACCOUNT.BILLING_AND_SUBSCRIPTION
-            );
-        });
-        it('should route to billing when practice owner plan is expired', () => {
-            const TestJSX = () => {
-                usePlanMonitoring(
-                    Mocks.getTherifyUser({
-                        type: 'practice-owner',
-                        plan: 'expired',
-                    })
-                );
-                return <div />;
-            };
-            render(<TestJSX />);
-            expect(routerMock.push).toHaveBeenCalledWith(
-                URL_PATHS.PROVIDERS.ACCOUNT.BILLING_AND_SUBSCRIPTION
-            );
-        });
         it('should not route to inactive plan page when already on member page with expired plan', () => {
             const TestJSX = () => {
                 usePlanMonitoring(
@@ -138,21 +108,6 @@ describe('usePlanMonitoring', () => {
                 return <div />;
             };
             routerMock.pathname = URL_PATHS.MEMBERS.ACCOUNT.INVALID_PLAN;
-            render(<TestJSX />);
-            expect(routerMock.push).not.toHaveBeenCalled();
-        });
-        it('should not route to billing when already on billing page with expired plan', () => {
-            const TestJSX = () => {
-                usePlanMonitoring(
-                    Mocks.getTherifyUser({
-                        type: 'therapist',
-                        plan: 'expired',
-                    })
-                );
-                return <div />;
-            };
-            routerMock.pathname =
-                URL_PATHS.PROVIDERS.ACCOUNT.BILLING_AND_SUBSCRIPTION;
             render(<TestJSX />);
             expect(routerMock.push).not.toHaveBeenCalled();
         });
@@ -174,7 +129,7 @@ describe('usePlanMonitoring', () => {
                 URL_PATHS.MEMBERS.ACCOUNT.INVALID_PLAN
             );
         });
-        it('should route to billing when provider plan is not active', () => {
+        it('should not route to billing when provider plan is not active', () => {
             const TestJSX = () => {
                 usePlanMonitoring(
                     Mocks.getTherifyUser({
@@ -185,11 +140,9 @@ describe('usePlanMonitoring', () => {
                 return <div />;
             };
             render(<TestJSX />);
-            expect(routerMock.push).toHaveBeenCalledWith(
-                URL_PATHS.PROVIDERS.ACCOUNT.BILLING_AND_SUBSCRIPTION
-            );
+            expect(routerMock.push).not.toHaveBeenCalled();
         });
-        it('should route to billing when practice owner plan is not active', () => {
+        it('should not route to billing when practice owner plan is not active', () => {
             const TestJSX = () => {
                 usePlanMonitoring(
                     Mocks.getTherifyUser({
@@ -200,9 +153,7 @@ describe('usePlanMonitoring', () => {
                 return <div />;
             };
             render(<TestJSX />);
-            expect(routerMock.push).toHaveBeenCalledWith(
-                URL_PATHS.PROVIDERS.ACCOUNT.BILLING_AND_SUBSCRIPTION
-            );
+            expect(routerMock.push).not.toHaveBeenCalled();
         });
         it('should not route to inactive plan page when already on member page with non-active plan', () => {
             const TestJSX = () => {
@@ -215,21 +166,6 @@ describe('usePlanMonitoring', () => {
                 return <div />;
             };
             routerMock.pathname = URL_PATHS.MEMBERS.ACCOUNT.INVALID_PLAN;
-            render(<TestJSX />);
-            expect(routerMock.push).not.toHaveBeenCalled();
-        });
-        it('should not route to billing when already on billing page with non-active plan', () => {
-            const TestJSX = () => {
-                usePlanMonitoring(
-                    Mocks.getTherifyUser({
-                        type: 'therapist',
-                        plan: 'inactive',
-                    })
-                );
-                return <div />;
-            };
-            routerMock.pathname =
-                URL_PATHS.PROVIDERS.ACCOUNT.BILLING_AND_SUBSCRIPTION;
             render(<TestJSX />);
             expect(routerMock.push).not.toHaveBeenCalled();
         });

@@ -2,8 +2,7 @@ import * as z from 'zod';
 
 export const successSchema = z.object({
     practiceId: z.string(),
-    checkoutSessionId: z.string(),
-    checkoutSessionUrl: z.string(),
+    planId: z.string(),
     errors: z.array(z.string()),
 });
 
