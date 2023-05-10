@@ -56,7 +56,10 @@ export function ProviderClientListPage({
                 ''
             )}`
         );
-
+    const shouldAllowClientSelect =
+        flags.canAccessClientDetailsPage &&
+        designation === ProfileType.coach &&
+        user.stripeConnectAccountId;
     return (
         <PageContainer>
             <Box
@@ -70,8 +73,7 @@ export function ProviderClientListPage({
                 connectionRequests={connectionRequests}
                 designation={designation}
                 onClientSelect={
-                    designation === ProfileType.coach &&
-                    user.stripeConnectAccountId
+                    shouldAllowClientSelect
                         ? handleClientSelect
                         : setMemberDetails
                 }
