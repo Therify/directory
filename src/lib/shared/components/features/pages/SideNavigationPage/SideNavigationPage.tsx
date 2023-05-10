@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { List, Box, Color } from '@mui/material';
+import { List, Box } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import {
     Banner,
