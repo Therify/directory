@@ -3,7 +3,7 @@ import { Box, Link } from '@mui/material';
 import { Paragraph } from '../Typography/Paragraph';
 import { ArrowCircleRightRounded } from '@mui/icons-material';
 
-interface BannerProps {
+export interface BannerProps {
     message: string;
     color?: 'primary' | 'secondary' | 'success' | 'error' | 'warning' | 'info';
     linkUrl?: string;

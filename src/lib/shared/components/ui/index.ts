@@ -15,6 +15,7 @@ export {
     TEST_IDS as BADGE_TEST_IDS,
 } from './Badge';
 export { Banner } from './Banner';
+export type { BannerProps } from './Banner';
 export { BlockQuote, BLOCK_QUOTE_SIZE } from './BlockQuote';
 export { CallToActionCard } from './CallToActionCard';
 export { Carousel } from './Carousel';
