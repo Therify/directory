@@ -1,5 +1,5 @@
 import { ProfileType } from '@prisma/client';
-import { CANADA, ConnectionRequest } from '../../types';
+import { CANADA, ConnectionRequest } from '@/lib/shared/types';
 
 const REIMBURSEMENT_KEY_MAPS = [
     ['clientname[first]', 'member.givenName'],
