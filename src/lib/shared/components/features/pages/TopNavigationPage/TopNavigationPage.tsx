@@ -4,8 +4,10 @@ import { LogoutRounded as LogoutIcon } from '@mui/icons-material';
 import { styled, useTheme } from '@mui/material/styles';
 import { NavigationLink, URL_PATHS } from '@/lib/sitemap';
 import { TherifyUser } from '@/lib/shared/types';
-import { usePlanMonitoring } from '@/lib/shared/hooks';
+import { usePlanMonitoring, useFeatureFlags } from '@/lib/shared/hooks';
 import {
+    Banner,
+    BannerProps,
     Button,
     BUTTON_TYPE,
     TopNavigationLayout,
@@ -42,6 +44,7 @@ export const TopNavigationPage = ({
     const { hasAccess } = usePlanMonitoring(user);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const theme = useTheme();
+    const { flags } = useFeatureFlags(user ?? undefined);
     const {
         drawer: notificationDrawer,
         notifications,
@@ -53,6 +56,18 @@ export const TopNavigationPage = ({
 
     return (
         <TopNavigationLayout
+            bannerSlot={
+                flags.bannerContent.message && (
+                    <Banner
+                        message={flags.bannerContent.message}
+                        color={
+                            flags.bannerContent.color as BannerProps['color']
+                        }
+                        linkText={flags.bannerContent.linkText}
+                        linkUrl={flags.bannerContent.linkUrl}
+                    />
+                )
+            }
             navigationSlot={
                 user && (
                     <TopNavigationBar

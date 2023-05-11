@@ -13,6 +13,17 @@ describe('SideNavigationLayout', () => {
         expect(getByText('Topbar')).toBeVisible();
     });
 
+    it('renders banner content', () => {
+        const { getByText } = render(
+            <SideNavigationLayout
+                bannerSlot={<div>Banner</div>}
+                topbarSlot={<div>Topbar</div>}
+                navigationSlot={<div />}
+            ></SideNavigationLayout>
+        );
+        expect(getByText('Banner')).toBeVisible();
+    });
+
     it('renders navigation content', () => {
         const { getByText } = render(
             <SideNavigationLayout
@@ -20,7 +31,7 @@ describe('SideNavigationLayout', () => {
                 navigationSlot={<div>Navigation</div>}
             ></SideNavigationLayout>
         );
-        expect(getByText('Navigation')).not.toBeVisible();
+        expect(getByText('Navigation')).toBeInTheDocument();
     });
 
     it('renders children content', () => {
