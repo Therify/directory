@@ -1,5 +1,5 @@
 import { ConnectionStatus, ProfileType } from '@prisma/client';
-import { ConnectionRequest, UNITED_STATES } from '../../types';
+import { CANADA, ConnectionRequest, UNITED_STATES } from '../../types';
 import {
     formatReimbursementRequestUrl,
     generateTherifyReimbursementDetails,
@@ -117,5 +117,28 @@ describe('formatReimbursementRequestUrl', () => {
                 connectionRequest: requestMissingLastName,
             }).includes(lastNameKey)
         ).toBe(false);
+    });
+
+    it('should prefill Candian Province', () => {
+        const requestWithCanadianProvince = {
+            ...mockConnectionRequest,
+            member: {
+                ...mockConnectionRequest.member,
+                memberProfile: {
+                    ...mockConnectionRequest.member.memberProfile,
+                    state: CANADA.PROVINCE.MAP.ALBERTA,
+                    country: CANADA.COUNTRY.CODE,
+                },
+            },
+        } as unknown as ConnectionRequest.Type;
+        const url = formatReimbursementRequestUrl({
+            baseUrl,
+            designation: ProfileType.therapist,
+            connectionRequest: requestWithCanadianProvince,
+        });
+        expect(
+            url.includes(`clientprovince=${CANADA.PROVINCE.MAP.ALBERTA}`)
+        ).toBe(true);
+        expect(url.includes('clientstate')).toBe(false);
     });
 });
