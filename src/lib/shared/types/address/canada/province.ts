@@ -1,8 +1,9 @@
 import * as z from 'zod';
-export const ENTRIES = ['Alberta', 'Ontario'] as const;
+export const ENTRIES = ['Alberta', 'British Columbia', 'Ontario'] as const;
 
 export const MAP = {
     ALBERTA: 'Alberta',
+    BRITISH_COLUMBIA: 'British Columbia',
     ONTARIO: 'Ontario',
 } as const;
 
