@@ -29,10 +29,7 @@ export const resolve: ProcedureResolver<
         }
         return {
             practiceId: result.value.handlePracticeEntity.practiceId,
-            checkoutSessionId:
-                result.value.createStripeCheckoutSession.checkoutSessionId,
-            checkoutSessionUrl:
-                result.value.createStripeCheckoutSession.checkoutSessionUrl,
+            planId: result.value.createPlan.planId,
             errors: [],
         };
     } catch (error) {

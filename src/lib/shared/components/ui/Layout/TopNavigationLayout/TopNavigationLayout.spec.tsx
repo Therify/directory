@@ -11,6 +11,16 @@ describe('TopNavigationLayout', () => {
         expect(getByText('Navigation')).toBeInTheDocument();
     });
 
+    it('renders banner content', () => {
+        const { getByText } = render(
+            <TopNavigationLayout
+                bannerSlot={<div>Banner</div>}
+                navigationSlot={<div>Navigation</div>}
+            ></TopNavigationLayout>
+        );
+        expect(getByText('Banner')).toBeInTheDocument();
+    });
+
     it('renders children content', () => {
         const { getByText } = render(
             <TopNavigationLayout navigationSlot={<div>Navigation</div>}>

@@ -45,7 +45,7 @@ export const ActionButtons = ({
                     type="outlined"
                     onClick={onView}
                 >
-                    View Member
+                    Member Summary
                 </Button>
             )}
         </>

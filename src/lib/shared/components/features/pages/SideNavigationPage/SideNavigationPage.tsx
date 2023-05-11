@@ -1,10 +1,15 @@
 import { useState } from 'react';
 import { List, Box } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
-import { Button, BUTTON_TYPE } from '@/lib/shared/components/ui';
+import {
+    Banner,
+    Button,
+    BUTTON_TYPE,
+    BannerProps,
+} from '@/lib/shared/components/ui';
 import { ActionNavListItem } from '@/lib/shared/components/ui/Navigation/NavigationMenu';
 import { NavigationLink, URL_PATHS } from '@/lib/sitemap';
-import { usePlanMonitoring } from '@/lib/shared/hooks';
+import { usePlanMonitoring, useFeatureFlags } from '@/lib/shared/hooks';
 import { TherifyUser } from '@/lib/shared/types';
 import {
     SideNavigationLayout,
@@ -44,6 +49,7 @@ export const SideNavigationPage = ({
     const { hasAccess } = usePlanMonitoring(user);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const theme = useTheme();
+    const { flags } = useFeatureFlags(user);
     const {
         drawer: notificationDrawer,
         notifications,
@@ -54,6 +60,18 @@ export const SideNavigationPage = ({
     } = useInAppNotificationDrawer();
     return (
         <SideNavigationLayout
+            bannerSlot={
+                flags.bannerContent.message && (
+                    <Banner
+                        message={flags.bannerContent.message}
+                        color={
+                            flags.bannerContent.color as BannerProps['color']
+                        }
+                        linkText={flags.bannerContent.linkText}
+                        linkUrl={flags.bannerContent.linkUrl}
+                    />
+                )
+            }
             topbarSlot={
                 <SecondaryTopBar
                     menu={secondaryMenu}

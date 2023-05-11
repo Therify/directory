@@ -24,6 +24,7 @@ import {
     Divider,
     FormValidation,
     IconButton,
+    Tooltip,
 } from '@/lib/shared/components/ui';
 import { SideNavigationPage } from '@/lib/shared/components/features/pages';
 import {
@@ -279,15 +280,19 @@ export default function PracticeProfilesPage({
                                         }}
                                     />
                                 )}
-                                <SeatCount
-                                    italic
-                                    isOverPlanCapacity={isOverPlanCapacity}
-                                >
-                                    {profiles.length}{' '}
-                                    {user?.plan?.seats &&
-                                        ` of ${user.plan.seats}`}{' '}
-                                    profiles active for your practice.
-                                </SeatCount>
+                                {user?.plan?.seats !== undefined && (
+                                    <SeatCount
+                                        italic
+                                        isOverPlanCapacity={isOverPlanCapacity}
+                                    >
+                                        {user.plan.seats - profiles.length}{' '}
+                                        {user.plan.seats - profiles.length === 1
+                                            ? 'profile'
+                                            : 'profiles'}{' '}
+                                        remaining for your practice.
+                                        <Tooltip title="If you need more profile listings, please reach out to Therify support to increase your profile limit" />
+                                    </SeatCount>
+                                )}
                             </Box>
                         </Box>
                         <Box className="admin-controls">
@@ -994,7 +999,7 @@ const ProfileActions = ({
                                 color="info"
                                 onClick={onListingButtonClick}
                             >
-                                Publish to directory
+                                Publish profile
                             </ListingButton>
                         )}
                     </>

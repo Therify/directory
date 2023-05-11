@@ -13,10 +13,10 @@ export const getCoveredSessionsMessage = ({
     planEndDate,
 }: GetCoveredSessionsMessageProps) => {
     if (coveredSessions === 0) {
-        return `No covered sessions. ${name} will use their insurance benefit to cover sessions or pay out of pocket.`;
+        return `No covered sessions. ${name} will use insurance benefits to cover sessions or pay out of pocket.`;
     }
     if (remainingSessions === 0) {
-        return `${name} has used all of their covered sessions from Therify. They will use their insurance benefit or pay out of pocket.`;
+        return `${name} has used all covered sessions from Therify. ${name} will now use insurance benefits or pay out of pocket.`;
     }
 
     return `${name} has ${remainingSessions} covered ${

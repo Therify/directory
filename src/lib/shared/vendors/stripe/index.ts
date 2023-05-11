@@ -17,6 +17,7 @@ import { CreatePrice } from './client/create-price';
 import { ArchivePrice } from './client/archive-price';
 import { CreateInvoice } from './client/create-invoice';
 import { SendInvoice } from './client/send-invoice';
+import { VoidInvoice } from './client/void-invoice';
 
 export * from './types';
 export * as StripeUtils from './utils';
@@ -49,6 +50,7 @@ export const vendorStripe = withStripeConfiguration((CONFIG) => {
         }),
         createInvoice: CreateInvoice.factory({ stripe }),
         sendInvoice: SendInvoice.factory({ stripe }),
+        voidInvoice: VoidInvoice.factory({ stripe }),
         createProduct: CreateProduct.factory({
             stripe,
         }),

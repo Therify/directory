@@ -5,7 +5,7 @@ import { Role } from '@prisma/client';
 
 const THERIFY_COACHING_FEE_IN_CENTS = 2000;
 export const factory =
-    ({ prisma, stripe, streamChat }: AccountsServiceParams) =>
+    ({ prisma, stripe }: AccountsServiceParams) =>
     async ({
         memberId,
         providerId,

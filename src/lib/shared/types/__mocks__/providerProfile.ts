@@ -24,6 +24,8 @@ export const getMockProviderProfile = (
     bio: 'Seeking therapy is a big step that provokes pressing emotional questions: “How can therapy help me? Am I ready to spill my guts to a stranger?” There are logistical challenges: “What will this cost? How can I make the time?” In these days of navigating the ongoing impacts of the pandemic, you likely need support more than ever as you evaluate how you want to live, love, and work. In my practice, I help clients confront the challenges in their lives, including depression, anxiety, substance misuse, and relationship difficulties.',
     npiNumber: '12345',
     offersSlidingScale: true,
+    videoUrl:
+        'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
     profileImageUrl:
         'https://images.pexels.com/photos/1722198/pexels-photo-1722198.jpeg?auto=compress&cs=tinysrgb&w=1600',
     yearsOfExperience: '10+',

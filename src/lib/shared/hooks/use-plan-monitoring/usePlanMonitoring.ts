@@ -6,10 +6,9 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
 const INVALID_PLAN_ROUTES = [
-    URL_PATHS.PROVIDERS.ACCOUNT.BILLING_AND_SUBSCRIPTION,
     URL_PATHS.MEMBERS.ACCOUNT.INVALID_PLAN,
     URL_PATHS.MEMBERS.ACCOUNT.BILLING_AND_PAYMENTS,
-];
+] as string[];
 
 export const usePlanMonitoring = (
     user: TherifyUser.TherifyUser | null | undefined
@@ -39,10 +38,11 @@ export const usePlanMonitoring = (
                 router.push(URL_PATHS.MEMBERS.ACCOUNT.BILLING_AND_PAYMENTS);
                 return;
             }
-            const invalidPath = user.roles.includes(Role.member)
-                ? URL_PATHS.MEMBERS.ACCOUNT.INVALID_PLAN
-                : URL_PATHS.PROVIDERS.ACCOUNT.BILLING_AND_SUBSCRIPTION;
-            router.push(invalidPath);
+            if (user.roles.includes(Role.member)) {
+                router.push(URL_PATHS.MEMBERS.ACCOUNT.INVALID_PLAN);
+                return;
+            }
+            // Providers should always have access to the app
         }
     }, [hasPlanStarted, isPlanExpired, isPlanActive, router, user]);
     return {

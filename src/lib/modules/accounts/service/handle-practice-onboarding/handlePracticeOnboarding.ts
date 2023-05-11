@@ -5,9 +5,9 @@ import { TransactionV1 } from '@/lib/shared/utils';
 import {
     transactionDefinition,
     HandlePracticeEntity,
-    CreateStripeCheckoutSession,
     DefendAgainstDuplicatePlans,
     GetUserDetails,
+    CreatePlan,
 } from './transaction';
 
 export function factory(context: Context) {
@@ -22,8 +22,7 @@ export function factory(context: Context) {
                 handlePracticeEntity: HandlePracticeEntity.factory(params),
                 defendAgainstDuplicatePlans:
                     DefendAgainstDuplicatePlans.factory(params),
-                createStripeCheckoutSession:
-                    CreateStripeCheckoutSession.factory(params),
+                createPlan: CreatePlan.factory(params),
             },
             true
         );

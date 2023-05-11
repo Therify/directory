@@ -4,6 +4,13 @@ export const schema = z.object({
     didFlagsLoad: z.boolean(),
     hasStripeConnectAccess: z.boolean(),
     useIframeReimbursementRequest: z.boolean(),
+    canAccessClientDetailsPage: z.boolean(),
+    bannerContent: z.object({
+        message: z.string().optional(),
+        color: z.string().optional(),
+        linkUrl: z.string().optional(),
+        linkText: z.string().optional(),
+    }),
 });
 
 export type Type = z.infer<typeof schema>;
@@ -15,6 +22,8 @@ export const defaultFlags: FeatureFlags = {
     didFlagsLoad: false,
     hasStripeConnectAccess: false,
     useIframeReimbursementRequest: false,
+    canAccessClientDetailsPage: false,
+    bannerContent: {},
 };
 
 export const isValid = (flags: unknown): boolean => {

@@ -31,7 +31,8 @@ export const ClientListItem = ({
     isSmallScreen,
     onAccept,
     onDecline,
-    onView,
+    onViewSummary,
+    onClientSelect,
     onReimbursmentRequest,
     onInvoiceClient,
 }: {
@@ -40,7 +41,8 @@ export const ClientListItem = ({
     onAccept: () => void;
     onDecline: () => void;
     onTerminate: () => void;
-    onView?: () => void;
+    onViewSummary?: () => void;
+    onClientSelect?: () => void;
     onInvoiceClient?: () => void;
     onReimbursmentRequest: () => void;
 }) => {
@@ -70,8 +72,8 @@ export const ClientListItem = ({
 
         {
             icon: <PreviewRounded />,
-            text: ' View Member Details',
-            onClick: onView,
+            text: ' View Member Summary',
+            onClick: onViewSummary,
         },
     ];
     const actionList = [
@@ -117,7 +119,10 @@ export const ClientListItem = ({
         <ListItem
             key={connectionRequest.member.id}
             sx={{ width: '100%', paddingX: 0 }}
-            onClick={onView}
+            onClick={() => {
+                // Only open client page for accepted connections
+                isAccepted ? onClientSelect?.() : onViewSummary?.();
+            }}
         >
             <ClientListItemContainer>
                 <CellContainer>
@@ -170,7 +175,7 @@ export const ClientListItem = ({
                             connectionRequest={connectionRequest}
                             onAccept={onAccept}
                             onDecline={onDecline}
-                            onView={onView}
+                            onView={onViewSummary}
                         />
                     )}
                     {isPending && isSmallScreen && (

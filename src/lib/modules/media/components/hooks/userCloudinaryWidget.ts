@@ -6,7 +6,7 @@ declare global {
     }
 }
 
-interface CreateUploadImageParams {
+export interface CreateUploadImageParams {
     cloudName: string;
     uploadPreset: string;
     multiple: boolean;
@@ -15,6 +15,11 @@ interface CreateUploadImageParams {
     folder: string;
     maxImageFileSize: number;
     maxImageWidth: number;
+    cropping?: boolean;
+    resourceType?: 'image' | 'raw' | 'video' | 'auto';
+    showSkipCropButton?: boolean;
+    croppingCoordinatesMode?: 'custom' | 'face' | 'adv_face' | 'adv_eager';
+    clientAllowedFormats?: string[];
 }
 
 export interface CloudinaryUploadResult {
@@ -33,9 +38,10 @@ interface UseCloudinaryWidgetParams {
     buttonRef: React.RefObject<HTMLButtonElement>;
     onUploadResult: OnUploadResultCallback;
     folder?: string;
+    params?: CreateUploadImageParams;
 }
 
-const DEFAULT_CLOUDINARY_PARAMS: CreateUploadImageParams = {
+export const DEFAULT_CLOUDINARY_PARAMS: CreateUploadImageParams = {
     cloudName: 'dbrkfldqn',
     uploadPreset: 'rbk8hvus',
     multiple: false,
@@ -44,13 +50,28 @@ const DEFAULT_CLOUDINARY_PARAMS: CreateUploadImageParams = {
     folder: 'default',
     maxImageFileSize: 15000000,
     maxImageWidth: 5000,
+    resourceType: 'image',
+    cropping: true,
+    showSkipCropButton: false,
+    croppingCoordinatesMode: 'face',
+    clientAllowedFormats: [
+        'jpg',
+        'png',
+        'jpeg',
+        'gif',
+        'video/mp4',
+        'video/quicktime',
+        'video/x-msvideo',
+    ],
 };
 
 export function useCloudinaryWidget({
     buttonRef,
     onUploadResult,
     folder,
+    params,
 }: UseCloudinaryWidgetParams) {
+    const uploadParams = params || DEFAULT_CLOUDINARY_PARAMS;
     useEffect(() => {
         if (typeof window === 'undefined') {
             return;
@@ -58,7 +79,7 @@ export function useCloudinaryWidget({
         let _buttonRef = buttonRef.current;
         const widget = window.cloudinary.createUploadWidget(
             {
-                ...DEFAULT_CLOUDINARY_PARAMS,
+                ...uploadParams,
                 folder: folder || DEFAULT_CLOUDINARY_PARAMS.folder,
             },
             onUploadResult
@@ -72,5 +93,5 @@ export function useCloudinaryWidget({
             if (!_buttonRef) return;
             _buttonRef.removeEventListener('click', handleClick);
         };
-    }, [buttonRef, onUploadResult, folder]);
+    }, [buttonRef, onUploadResult, folder, uploadParams]);
 }
