@@ -16,6 +16,7 @@ const practicesWithActivePlanSchema = z
             .object({
                 id: z.string(),
                 status: z.literal(PlanStatus.active),
+                stripeSubscriptionId: z.string().nullable(),
             })
             .array(),
     })
@@ -30,6 +31,7 @@ const definition = z.object({
                     .object({
                         id: z.string(),
                         status: z.nativeEnum(PlanStatus),
+                        stripeSubscriptionId: z.string().nullable(),
                     })
                     .array(),
             })
@@ -38,6 +40,7 @@ const definition = z.object({
     invalidatePracticePlans: z.object({
         rollbackPlanIds: z.string().array(),
         practicesWithActivePlans: practicesWithActivePlanSchema,
+        subscriptionIds: z.string().nullable().array(),
     }),
     createFreePlans: z.object({
         createdPlansCount: z.number(),
@@ -69,6 +72,7 @@ export default async function handler(
                                 select: {
                                     id: true,
                                     status: true,
+                                    stripeSubscriptionId: true,
                                 },
                                 orderBy: {
                                     createdAt: 'desc',
@@ -112,6 +116,9 @@ export default async function handler(
                     return {
                         rollbackPlanIds: planIds,
                         practicesWithActivePlans,
+                        subscriptionIds: practicesWithActivePlans.map(
+                            (practice) => practice.plans[0].stripeSubscriptionId
+                        ),
                     };
                 },
                 async rollback(
@@ -175,5 +182,6 @@ export default async function handler(
         invalidatedPlans:
             result.value.invalidatePracticePlans.rollbackPlanIds.length,
         newPlans: result.value.createFreePlans.createdPlansCount,
+        subscriptionIds: result.value.invalidatePracticePlans.subscriptionIds,
     });
 }
