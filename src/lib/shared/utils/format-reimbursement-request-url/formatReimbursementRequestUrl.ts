@@ -1,5 +1,5 @@
 import { ProfileType } from '@prisma/client';
-import { ConnectionRequest } from '../../types';
+import { CANADA, ConnectionRequest } from '@/lib/shared/types';
 
 const REIMBURSEMENT_KEY_MAPS = [
     ['clientname[first]', 'member.givenName'],
@@ -39,7 +39,15 @@ export function formatReimbursementRequestUrl({
                 connectionRequest,
                 connectionRequestKey
             );
-            if (value) return `${queryKey}=${value}`;
+            if (value) {
+                const isClientProvinceKey =
+                    queryKey === 'clientstate' &&
+                    connectionRequest.member.memberProfile.country ===
+                        CANADA.COUNTRY.CODE;
+                const key = isClientProvinceKey ? 'clientprovince' : queryKey;
+                return `${key}=${value}`;
+            }
+            return undefined;
         }
     ).filter(Boolean);
 
