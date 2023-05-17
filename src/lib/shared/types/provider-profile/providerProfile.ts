@@ -4,7 +4,7 @@ import { ProviderProfileSchema } from '../../schema';
 import { ProviderCredential } from '../provider-credential';
 import { ProviderSupervisor } from '../provider-supervisor';
 import { AcceptedInsurance } from '../accepted-insurance';
-import { convertNestedDatesToISOString } from '../../utils';
+import { convertNestedDatesToISOString } from '../../utils/convert-nested-dates-to-iso-string';
 
 export const schema = ProviderProfileSchema.extend({
     pronouns: Pronoun.schema,

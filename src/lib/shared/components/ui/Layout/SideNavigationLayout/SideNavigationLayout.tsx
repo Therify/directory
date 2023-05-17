@@ -4,15 +4,18 @@ import { styled } from '@mui/material/styles';
 
 interface SideNavigationLayoutProps {
     topbarSlot: React.ReactNode;
+    bannerSlot?: React.ReactNode;
     navigationSlot: React.ReactNode;
 }
 export const SideNavigationLayout = ({
     topbarSlot,
+    bannerSlot,
     navigationSlot,
     children,
 }: PropsWithChildren<SideNavigationLayoutProps>) => {
     return (
         <LayoutContainer>
+            {bannerSlot}
             {topbarSlot}
             <ContentContainer>
                 <SideBarContainer component="nav">
