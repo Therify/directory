@@ -17,7 +17,7 @@ import { useRouter } from 'next/router';
 import { URL_PATHS } from '@/lib/sitemap';
 
 const REIMBURSEMENT_REQUEST_URL =
-    'https://hipaa.jotform.com/221371005584146?' as const;
+    'https://hipaa.jotform.com/221371005584146' as const;
 
 interface ProviderClientListPageProps {
     baseConnectionRequests: ConnectionRequest.Type[];
