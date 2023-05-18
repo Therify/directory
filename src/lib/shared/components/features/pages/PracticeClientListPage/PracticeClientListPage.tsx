@@ -34,9 +34,7 @@ import { ConnectionStatus } from '@prisma/client';
 import { getCoveredSessionsMessage } from '@/lib/modules/providers/components/Clients/utils';
 
 const REIMBURSEMENT_REQUEST_URL =
-    process.env.NEXT_PUBLIC_VERCEL_ENV === 'production'
-        ? ('https://hipaa.jotform.com/221371005584146' as const)
-        : ('https://form.jotform.com/230950700793153' as const);
+    'https://hipaa.jotform.com/221371005584146' as const;
 
 type ProfileConnectionRequest =
     PracticeProfileConnectionRequests.Type['profileConnectionRequests'][number]['connectionRequests'][number];
