@@ -8,7 +8,7 @@ import { ProfileType } from '@prisma/client';
 import { useRef, useEffect, useState } from 'react';
 
 const REIMBURSEMENT_REQUEST_URL =
-    'https://hipaa.jotform.com/221371005584146?' as const;
+    'https://hipaa.jotform.com/221371005584146' as const;
 
 interface ReimbursementModalProps {
     designation: ProfileType;
