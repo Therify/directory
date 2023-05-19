@@ -29,7 +29,7 @@ export const PracticeNameInput = ({
             <Input
                 required
                 fullWidth
-                autoComplete="off"
+                autoComplete="nope"
                 id="name"
                 label="Practice Name"
                 errorMessage={

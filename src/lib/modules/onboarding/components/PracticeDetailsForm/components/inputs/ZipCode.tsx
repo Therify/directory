@@ -44,7 +44,7 @@ export const ZipCodeInput = ({
                     id="zip-code"
                     placeholder="Zip Code *"
                     type="tel"
-                    autoComplete="off"
+                    autoComplete="nope"
                     errorMessage={
                         isTouched
                             ? error?.message ??
