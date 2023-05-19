@@ -54,7 +54,7 @@ export const PracticeEmailInput = ({
                     errorMessage={
                         shouldShowErrorMessage ? errorMessage : undefined
                     }
-                    autoComplete="nope"
+                    autoComplete="off"
                     type="email"
                     helperText={helperText}
                     onBlur={() => {

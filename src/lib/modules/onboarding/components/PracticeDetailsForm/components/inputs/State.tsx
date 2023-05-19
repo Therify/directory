@@ -44,7 +44,7 @@ export const StateInput = ({
                 <Select
                     required
                     fullWidth
-                    autoComplete="nope"
+                    autoComplete="off"
                     id="state"
                     placeholder={regionName}
                     errorMessage={

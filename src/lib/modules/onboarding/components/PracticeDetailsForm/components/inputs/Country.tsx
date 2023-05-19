@@ -44,7 +44,7 @@ export const CountryInput = ({
         }) => (
             <Select
                 required
-                autoComplete="nope"
+                autoComplete="off"
                 fullWidth
                 id="country"
                 placeholder="Country"

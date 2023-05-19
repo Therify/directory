@@ -27,7 +27,7 @@ export const CityInput = ({
             fieldState: { error, isTouched },
         }) => (
             <Input
-                autoComplete="nope"
+                autoComplete="off"
                 required
                 fullWidth
                 id="city"

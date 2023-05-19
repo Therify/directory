@@ -32,7 +32,7 @@ export const PracticeDetailsForm = ({
     return (
         <Box width="100%">
             <Header>Tell us about your practice.</Header>
-            <Form autoComplete="nope" onSubmit={(e) => e.preventDefault()}>
+            <Form autoComplete="off" onSubmit={(e) => e.preventDefault()}>
                 <PracticeNameInput
                     control={control}
                     defaultValue={defaultValues?.name}
