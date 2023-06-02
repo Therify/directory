@@ -7,6 +7,8 @@ interface ReimbursementRequestHandlerParams {
     payload: ReimbursementRequest.ReimbursementRequest;
 }
 
+const EXCLUDED_ORGANIZATIONS = ['indeed', 'critical mass'];
+
 export const factory =
     ({ accounts }: JotformWebhookParams) =>
     async ({ submissionId, payload }: ReimbursementRequestHandlerParams) => {
@@ -17,9 +19,14 @@ export const factory =
             providername,
             practice: practiceName,
             clientemail,
+            clientemployer,
         } = payload;
         const dateString = `${dateofsession.year}-${dateofsession.month}-${dateofsession.day}`;
         const dateOfSession = new Date(dateString);
+        const isOrganizationKnownInApp = !EXCLUDED_ORGANIZATIONS.includes(
+            clientemployer.toLowerCase().trim()
+        );
+        console.log({ isOrganizationKnownInApp });
         if (!isValid(dateOfSession)) {
             throw new Error('Date of session is invalid!');
         }
@@ -45,7 +52,7 @@ export const factory =
                 });
                 throw new Error(`${errorMessage} - ${submissionId}`);
             }
-        } else {
+        } else if (isOrganizationKnownInApp) {
             await accounts.billing.handleRawReimbursementSubmission({
                 dateOfSession,
                 submissionId,
