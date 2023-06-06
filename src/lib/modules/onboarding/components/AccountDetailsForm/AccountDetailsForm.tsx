@@ -170,7 +170,6 @@ export interface AccountDetailsFormProps {
     control: Control<HandleAccountOnboarding.Input>;
     minimumSeats?: number;
     maximumSeats?: number;
-    sessionPrice: number;
     seatCount: number;
     billingCycle: HandleAccountOnboarding.Input['billingCycle'];
     coveredSessions: number;

@@ -29,7 +29,6 @@ export const getServerSideProps = RBAC.requireMemberAuth(
 );
 
 const defaultIndividualAccountName = 'Individual Member Plan';
-const COST_OF_SESSION = 100;
 
 export default function DTCAccountOnboardingPage() {
     const theme = useTheme();
@@ -142,7 +141,6 @@ export default function DTCAccountOnboardingPage() {
                                 name: defaultIndividualAccountName,
                             }}
                             control={accountDetailsForm.control}
-                            sessionPrice={COST_OF_SESSION}
                             seatCount={1}
                             coveredSessions={accountDetailsForm.watch(
                                 'coveredSessions'
