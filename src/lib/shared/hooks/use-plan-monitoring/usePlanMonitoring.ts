@@ -14,6 +14,8 @@ export const usePlanMonitoring = (
     user: TherifyUser.TherifyUser | null | undefined
 ) => {
     const router = useRouter();
+    const isDtCMemeberWithNoPlan =
+        user?.roles.includes(Role.member_dtc) && !user?.plan;
     const isPlanExpired =
         !!user?.plan?.endDate &&
         isAfter(new Date(), new Date(user.plan.endDate));
@@ -27,6 +29,10 @@ export const usePlanMonitoring = (
 
     useEffect(() => {
         if (!user?.roles) return;
+        if (isDtCMemeberWithNoPlan) {
+            router.push(URL_PATHS.MEMBERS.ONBOARDING.BILLING);
+            return;
+        }
 
         if (!hasPlanStarted && router.pathname !== URL_PATHS.ACCESS_COUNTDOWN) {
             router.push(URL_PATHS.ACCESS_COUNTDOWN);
@@ -44,7 +50,14 @@ export const usePlanMonitoring = (
             }
             // Providers should always have access to the app
         }
-    }, [hasPlanStarted, isPlanExpired, isPlanActive, router, user]);
+    }, [
+        hasPlanStarted,
+        isPlanExpired,
+        isPlanActive,
+        router,
+        user,
+        isDtCMemeberWithNoPlan,
+    ]);
     return {
         hasAccess: Boolean(hasPlanStarted && isPlanActive && !isPlanExpired),
     };
