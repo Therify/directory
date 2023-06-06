@@ -7,6 +7,7 @@ export { getPracticeByOwnerIdResolver } from './get-practice-by-owner-id';
 export { handlePracticeOnboardingResolver } from './handle-practice-onboarding';
 export { handleAccountOnboardingResolver } from './handle-account-onboarding';
 export { registerMemberResolver } from './register-member';
+export { registerDTCMemberResolver } from './register-dtc-member';
 export { handleStripeConnectOnboardingResolver } from './handle-stripe-connect-onboarding';
 export { createStripeConnectLoginUrlResolver } from './create-stripe-connect-login-url';
 export { createCoachingSessionInvoiceResolver } from './create-coaching-session-invoice';

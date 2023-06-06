@@ -5,6 +5,7 @@ import {
     SendEmailVerification,
     GetVerificationEmailStatus,
     RegisterMember,
+    RegisterDTCMember,
     RegisterAccountOwner,
 } from '@/lib/modules/registration/features';
 import {
@@ -19,6 +20,7 @@ import {
     registerProviderResolver,
     registerProviderWithInvitationResolver,
     registerMemberResolver,
+    registerDTCMemberResolver,
     sendEmailVerificationResolver,
     getVerificationEmailStatusResolver,
     getUserDetailsByIdResolver,
@@ -102,6 +104,11 @@ export const router = trpc
         input: RegisterMember.inputSchema,
         output: RegisterMember.outputSchema,
         resolve: registerMemberResolver,
+    })
+    .mutation(RegisterDTCMember.TRPC_ROUTE, {
+        input: RegisterDTCMember.inputSchema,
+        output: RegisterDTCMember.outputSchema,
+        resolve: registerDTCMemberResolver,
     })
     .mutation(CreateCoachingSessionInvoice.TRPC_ROUTE, {
         input: CreateCoachingSessionInvoice.inputSchema,
