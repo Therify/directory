@@ -298,7 +298,7 @@ export const AccountDetailsForm = ({
                         />
                     </Stack>
                 )}
-                <Box marginTop={12}>
+                <Box marginTop={allowTeamAccount ? 12 : 0}>
                     {allowTeamAccount && <Divider />}
                     <Paragraph marginTop={8}>
                         How would you like to be billed for your Therify
@@ -505,7 +505,8 @@ export const AccountDetailsForm = ({
                     </Stack>
                     {seatCount === maximumSeats && (
                         <Paragraph>
-                            Need more than {maximumSeats} seats?{' '}
+                            Need more than {maximumSeats}{' '}
+                            {maximumSeats === 1 ? 'seat' : 'seats'}?{' '}
                             <Link
                                 href="https://www.therify.co/contact"
                                 target="_blank"
