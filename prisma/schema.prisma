@@ -18,6 +18,7 @@ enum Role {
   provider_coach
   provider_therapist
   member
+  member_dtc
 }
 
 model User {

@@ -30,27 +30,32 @@ export const getServerSideProps = RBAC.requireMemberAuth(
 
 const defaultIndividualAccountName = 'Individual Member Plan';
 
-export default function AccountOnboardingPage() {
+export default function DTCAccountOnboardingPage() {
     const theme = useTheme();
     const [errorMessage, setErrorMessage] = useState<string>();
     const { getStoredAccountDetails, storeAccountDetails } =
         useAccountOnboardingStorage();
     const { user, isLoading: isLoadingUser } = useUser();
+    const individualAccountDetails: {
+        seatCount: 1;
+        name: string;
+        planType: 'individual';
+    } = {
+        seatCount: 1,
+        name: defaultIndividualAccountName,
+        planType: 'individual',
+    };
     const accountDetailsForm = useForm<HandleAccountOnboarding.Input>({
         mode: 'onChange',
         defaultValues: {
             billingUserId: user?.sub ?? '',
             coveredSessions: 0,
-            seatCount: 1,
-            name: defaultIndividualAccountName,
             billingCycle: 'month',
-            planType: 'individual',
             ...getStoredAccountDetails(),
+            ...individualAccountDetails,
         } as Partial<HandleAccountOnboarding.Input>,
     });
     const billingCycle = accountDetailsForm.watch('billingCycle');
-    const planType = accountDetailsForm.watch('planType');
-    const seatCount = accountDetailsForm.watch('seatCount');
     const { isLoading: isLoadingAccount, data: accountData } = trpc.useQuery(
         [
             'accounts.accounts.get-account-by-owner-id',
@@ -75,12 +80,6 @@ export default function AccountOnboardingPage() {
             accountDetailsForm.setValue('billingUserId', user.sub);
         }
     }, [accountDetailsForm, user?.sub]);
-
-    useEffect(() => {
-        if (planType === 'individual' && seatCount !== 1) {
-            accountDetailsForm.setValue('seatCount', 1);
-        }
-    }, [accountDetailsForm, planType, seatCount]);
 
     const { isLoading: isHandlingAccountSubmission, mutate: submitAccount } =
         trpc.useMutation('accounts.onboarding.handle-account-onboarding', {
@@ -115,9 +114,10 @@ export default function AccountOnboardingPage() {
 
     const handleAccountOnboarding = async function () {
         setErrorMessage(undefined);
-        const accountDetails = accountDetailsForm.getValues();
-        console.log({ accountDetails });
-        submitAccount(accountDetails);
+        submitAccount({
+            ...accountDetailsForm.getValues(),
+            ...individualAccountDetails,
+        });
     };
 
     return (
@@ -136,15 +136,16 @@ export default function AccountOnboardingPage() {
                         }
                     >
                         <AccountDetailsForm
+                            allowTeamAccount={false}
                             defaultValues={{
                                 name: defaultIndividualAccountName,
                             }}
                             control={accountDetailsForm.control}
-                            seatCount={accountDetailsForm.watch('seatCount')}
+                            seatCount={1}
                             coveredSessions={accountDetailsForm.watch(
                                 'coveredSessions'
                             )}
-                            maximumSeats={50}
+                            maximumSeats={1}
                             onInputBlur={() =>
                                 storeAccountDetails(
                                     accountDetailsForm.getValues()

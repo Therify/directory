@@ -116,11 +116,11 @@ function renderCoveredSessionPrompt({
     billingCycle: 'month' | 'biannual' | 'annual';
 }) {
     if (isTeam) {
-        return `How many sessions would you like to cover per employee, ${renderBillingCycle(
+        return `How many mental health coaching sessions would you like to cover per employee, ${renderBillingCycle(
             billingCycle
         )}?`;
     }
-    return `How many sessions would you like to have ${renderBillingCycle(
+    return `How many mental health coaching sessions would you like to have ${renderBillingCycle(
         billingCycle
     )}?`;
 }
@@ -170,13 +170,13 @@ export interface AccountDetailsFormProps {
     control: Control<HandleAccountOnboarding.Input>;
     minimumSeats?: number;
     maximumSeats?: number;
-    sessionPrice: number;
     seatCount: number;
     billingCycle: HandleAccountOnboarding.Input['billingCycle'];
     coveredSessions: number;
     minCoveredSessions?: number;
     maxCoveredSessions?: number;
     disabled?: boolean;
+    allowTeamAccount?: boolean;
     onInputBlur: () => void;
 }
 
@@ -188,11 +188,12 @@ function getCoveredSessionPrompt(isTeam: boolean) {
 
 function getCoveredSessionHelperText(isTeam: boolean) {
     return isTeam
-        ? 'If you choose not to cover session for your employees, Therify will bill them directly for sessions.'
+        ? 'If you choose not to cover sessions for your employees, Therify will bill them directly for sessions.'
         : 'If you choose not to pre-pay, payment will be collected at the time of each session.';
 }
 
 export const AccountDetailsForm = ({
+    allowTeamAccount = true,
     defaultValues,
     control,
     minimumSeats = 1,
@@ -233,52 +234,60 @@ export const AccountDetailsForm = ({
         <Box width="100%">
             <Header>Almost done! Just a few more details.</Header>
             <Form onSubmit={(e) => e.preventDefault()}>
-                <Paragraph marginTop={8}>
-                    Are you purchasing a plan for yourself or for a team?
-                </Paragraph>
-                <RadioGroup
-                    defaultChecked
-                    defaultValue={planType.value}
-                    onChange={(e) => {
-                        const selectedTeamAccount = e.target.value === 'team';
-                        if (selectedTeamAccount) {
-                            if (billingCycleField.value === 'month') {
-                                billingCycleField.onChange('biannual');
-                            }
-                            seatCountField.onChange(2);
-                            accountNameField.onChange('');
-                            planType.onChange('team');
-                        } else {
-                            seatCountField.onChange(1);
-                            planType.onChange('individual');
-                            accountNameField.onChange(defaultValues?.name);
-                        }
-                    }}
-                    onBlur={onInputBlur}
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                    }}
-                >
-                    <FormControlLabel
-                        value={'individual'}
-                        control={<Radio />}
-                        label="Myself (1 person)"
-                        itemType="https://schema.org/Boolean"
-                        sx={{
-                            flex: 1,
-                        }}
-                    />
-                    <FormControlLabel
-                        value={'team'}
-                        control={<Radio />}
-                        label="Team (2-50 people)"
-                        itemType="https://schema.org/Boolean"
-                        sx={{
-                            flex: 1,
-                        }}
-                    />
-                </RadioGroup>
+                {allowTeamAccount && (
+                    <>
+                        <Paragraph marginTop={8}>
+                            Are you purchasing a plan for yourself or for a
+                            team?
+                        </Paragraph>
+                        <RadioGroup
+                            defaultChecked
+                            defaultValue={planType.value}
+                            onChange={(e) => {
+                                const selectedTeamAccount =
+                                    e.target.value === 'team';
+                                if (selectedTeamAccount) {
+                                    if (billingCycleField.value === 'month') {
+                                        billingCycleField.onChange('biannual');
+                                    }
+                                    seatCountField.onChange(2);
+                                    accountNameField.onChange('');
+                                    planType.onChange('team');
+                                } else {
+                                    seatCountField.onChange(1);
+                                    planType.onChange('individual');
+                                    accountNameField.onChange(
+                                        defaultValues?.name
+                                    );
+                                }
+                            }}
+                            onBlur={onInputBlur}
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                            }}
+                        >
+                            <FormControlLabel
+                                value={'individual'}
+                                control={<Radio />}
+                                label="Myself (1 person)"
+                                itemType="https://schema.org/Boolean"
+                                sx={{
+                                    flex: 1,
+                                }}
+                            />
+                            <FormControlLabel
+                                value={'team'}
+                                control={<Radio />}
+                                label="Team (2-50 people)"
+                                itemType="https://schema.org/Boolean"
+                                sx={{
+                                    flex: 1,
+                                }}
+                            />
+                        </RadioGroup>
+                    </>
+                )}
                 {billingCycle !== 'month' && isTeamAccount && (
                     <Stack marginTop={12}>
                         <AccountNameInput
@@ -290,7 +299,7 @@ export const AccountDetailsForm = ({
                     </Stack>
                 )}
                 <Box marginTop={12}>
-                    <Divider />
+                    {allowTeamAccount && <Divider />}
                     <Paragraph marginTop={8}>
                         How would you like to be billed for your Therify
                         subscription?

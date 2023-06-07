@@ -110,7 +110,7 @@ export const MemberRegistrationFlow = ({
                                 typography={'h3'}
                                 sx={{ fontWeight: 700, display: 'inline' }}
                             >
-                                {account?.name}
+                                {account?.name ?? 'the account provided'}
                             </Typography>{' '}
                             is are currently at capacity.
                         </H3>

@@ -40,10 +40,14 @@ const LOGIN_IMAGES = [
 
 function handleMemberRouting(user: TherifyUser.TherifyUser): string {
     const adminIstillOnboarding =
-        user.roles.includes('account_owner') && !user.plan;
+        user.roles.includes(Role.account_owner) && !user.plan;
+    const isDtcMemberInOnboarding =
+        user.roles.includes(Role.member_dtc) && !user.plan;
 
     if (adminIstillOnboarding)
         return URL_PATHS.ACCOUNT_OWNER.ONBOARDING.BILLING;
+
+    if (isDtcMemberInOnboarding) return URL_PATHS.MEMBERS.ONBOARDING.BILLING;
 
     if (user.isAccountAdmin)
         return URL_PATHS.MEMBERS.ACCOUNT.BILLING_AND_PAYMENTS;
