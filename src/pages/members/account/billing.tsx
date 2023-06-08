@@ -265,7 +265,7 @@ export default function BillingPage({
                     </Paragraph>
 
                     <Button
-                        isDisabled={isBillingPortalSessionLoading}
+                        disabled={isBillingPortalSessionLoading}
                         isLoading={isBillingPortalSessionLoading}
                         onClick={() =>
                             createBillingPortalSession({
