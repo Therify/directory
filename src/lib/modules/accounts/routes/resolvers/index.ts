@@ -14,3 +14,4 @@ export { createCoachingSessionInvoiceResolver } from './create-coaching-session-
 export { voidCoachingSessionInvoiceResolver } from './void-coaching-session-invoice';
 export { registerAccountOwnerResolver } from './register-account-owner';
 export { getAccountByOwnerIdResolver } from './get-account-by-owner-id';
+export { createStripeBillingPortalSessionResolver } from './create-stripe-billing-portal-session';
