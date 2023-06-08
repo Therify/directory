@@ -33,6 +33,7 @@ import {
     registerAccountOwnerResolver,
     getAccountByOwnerIdResolver,
     voidCoachingSessionInvoiceResolver,
+    createStripeBillingPortalSessionResolver,
 } from './resolvers';
 import { Context } from '../../../server/context';
 import {
@@ -40,6 +41,7 @@ import {
     CreateStripeConnectLoginUrl,
     CreateCoachingSessionInvoice,
     VoidCoachingSessionInvoice,
+    CreateStripeBillingPortalSession,
 } from '../features/billing';
 import { GetAccountByOwnerId } from '../features';
 
@@ -124,4 +126,9 @@ export const router = trpc
         input: SendEmailVerification.inputSchema,
         output: SendEmailVerification.outputSchema,
         resolve: sendEmailVerificationResolver,
+    })
+    .mutation(CreateStripeBillingPortalSession.TRPC_ROUTE, {
+        input: CreateStripeBillingPortalSession.inputSchema,
+        output: CreateStripeBillingPortalSession.outputSchema,
+        resolve: createStripeBillingPortalSessionResolver,
     });
