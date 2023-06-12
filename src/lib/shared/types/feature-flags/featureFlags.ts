@@ -1,11 +1,27 @@
 import * as z from 'zod';
 
+export const SERVER_FLAGS = {
+    DID_FLAGS_LOAD: 'did-flags-load',
+    HAS_STRIPE_CONNECT_ACCESS: 'has-stripe-connect-access',
+    USE_IFRAME_REIMBURSEMENT_REQUEST: 'use-iframe-reimbursement-request',
+    CAN_ACCESS_CLIENT_DETAILS_PAGE: 'can-access-client-details-page',
+    BANNER_CONTENT: 'banner-content',
+} as const;
+
+export const CLIENT_FLAGS = {
+    DID_FLAGS_LOAD: 'didFlagsLoad',
+    HAS_STRIPE_CONNECT_ACCESS: 'hasStripeConnectAccess',
+    USE_IFRAME_REIMBURSEMENT_REQUEST: 'useIframeReimbursementRequest',
+    CAN_ACCESS_CLIENT_DETAILS_PAGE: 'canAccessClientDetailsPage',
+    BANNER_CONTENT: 'bannerContent',
+} as const;
+
 export const schema = z.object({
-    didFlagsLoad: z.boolean(),
-    hasStripeConnectAccess: z.boolean(),
-    useIframeReimbursementRequest: z.boolean(),
-    canAccessClientDetailsPage: z.boolean(),
-    bannerContent: z.object({
+    [CLIENT_FLAGS.DID_FLAGS_LOAD]: z.boolean(),
+    [CLIENT_FLAGS.HAS_STRIPE_CONNECT_ACCESS]: z.boolean(),
+    [CLIENT_FLAGS.USE_IFRAME_REIMBURSEMENT_REQUEST]: z.boolean(),
+    [CLIENT_FLAGS.CAN_ACCESS_CLIENT_DETAILS_PAGE]: z.boolean(),
+    [CLIENT_FLAGS.BANNER_CONTENT]: z.object({
         message: z.string().optional(),
         color: z.string().optional(),
         linkUrl: z.string().optional(),
@@ -17,13 +33,13 @@ export type Type = z.infer<typeof schema>;
 type FeatureFlags = Type;
 
 export const defaultFlags: FeatureFlags = {
-    // `didFlagsLoad` should always be true from the server,
+    // `didFlagsLoad` should always be true from LaunchDarkly,
     // so if we see false in the client, it means we're fully falling back to default flags
-    didFlagsLoad: false,
-    hasStripeConnectAccess: false,
-    useIframeReimbursementRequest: false,
-    canAccessClientDetailsPage: false,
-    bannerContent: {},
+    [CLIENT_FLAGS.DID_FLAGS_LOAD]: false,
+    [CLIENT_FLAGS.HAS_STRIPE_CONNECT_ACCESS]: false,
+    [CLIENT_FLAGS.USE_IFRAME_REIMBURSEMENT_REQUEST]: false,
+    [CLIENT_FLAGS.CAN_ACCESS_CLIENT_DETAILS_PAGE]: false,
+    [CLIENT_FLAGS.BANNER_CONTENT]: {},
 };
 
 export const isValid = (flags: unknown): boolean => {
