@@ -6,6 +6,7 @@ export const SERVER_FLAGS = {
     USE_IFRAME_REIMBURSEMENT_REQUEST: 'use-iframe-reimbursement-request',
     CAN_ACCESS_CLIENT_DETAILS_PAGE: 'can-access-client-details-page',
     BANNER_CONTENT: 'banner-content',
+    IS_DTC_REGISTRATION_OPEN: 'is-dtc-registration-open',
 } as const;
 
 export const CLIENT_FLAGS = {
@@ -14,6 +15,7 @@ export const CLIENT_FLAGS = {
     USE_IFRAME_REIMBURSEMENT_REQUEST: 'useIframeReimbursementRequest',
     CAN_ACCESS_CLIENT_DETAILS_PAGE: 'canAccessClientDetailsPage',
     BANNER_CONTENT: 'bannerContent',
+    IS_DTC_REGISTRATION_OPEN: 'isDtcRegistrationOpen',
 } as const;
 
 export const schema = z.object({
@@ -27,6 +29,7 @@ export const schema = z.object({
         linkUrl: z.string().optional(),
         linkText: z.string().optional(),
     }),
+    [CLIENT_FLAGS.IS_DTC_REGISTRATION_OPEN]: z.boolean(),
 });
 
 export type Type = z.infer<typeof schema>;
@@ -40,6 +43,7 @@ export const defaultFlags: FeatureFlags = {
     [CLIENT_FLAGS.USE_IFRAME_REIMBURSEMENT_REQUEST]: false,
     [CLIENT_FLAGS.CAN_ACCESS_CLIENT_DETAILS_PAGE]: false,
     [CLIENT_FLAGS.BANNER_CONTENT]: {},
+    [CLIENT_FLAGS.IS_DTC_REGISTRATION_OPEN]: false,
 };
 
 export const isValid = (flags: unknown): boolean => {

@@ -10,10 +10,13 @@ import { ROLES } from '@/lib/shared/types/roles';
 import { RegisterMember } from '@/lib/modules/registration/features';
 import { MemberRegistrationFlow } from '@/lib/modules/registration/components';
 import { useRegistrationStorage } from '@/lib/modules/registration/components/MemberRegistrationFlow/hooks';
+import { vendorLaunchDarkly } from '@/lib/shared/vendors/launchdarkly';
+import { FeatureFlags } from '@/lib/shared/types';
 
 export default function MemberRegistrationPage() {
     const router = useRouter();
     const [registrationError, setRegistrationError] = useState<string>();
+    const [isRegistrationComplete, setIsRegistrationComplete] = useState(false);
     const { clearRegistrationStorage } = useRegistrationStorage();
     const handleError = (errorMessage: string) => {
         setRegistrationError(errorMessage);
@@ -23,6 +26,7 @@ export default function MemberRegistrationPage() {
         onSuccess(response, { emailAddress }) {
             if (response.wasSuccessful) {
                 clearRegistrationStorage();
+                setIsRegistrationComplete(true);
                 router.push(
                     `${
                         URL_PATHS.MEMBERS.REGISTER_SUCCESS
@@ -33,10 +37,12 @@ export default function MemberRegistrationPage() {
 
                 return;
             }
+            setIsRegistrationComplete(false);
             const [error] = response.errors ?? [];
             handleError(error ?? 'Could not create user.');
         },
         onError(error) {
+            setIsRegistrationComplete(false);
             setRegistrationError(error.message);
         },
     });
@@ -56,7 +62,7 @@ export default function MemberRegistrationPage() {
                     errorMessage={registrationError}
                     clearErrorMessage={() => setRegistrationError(undefined)}
                     isRegisteringMember={mutation.isLoading}
-                    isRegistrationComplete={mutation.isSuccess}
+                    isRegistrationComplete={isRegistrationComplete}
                     role={ROLES.MEMBER}
                     hasSeatsAvailable
                 />
@@ -89,6 +95,17 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
                     `registrationCode=${registrationCode}`,
                 permanent: false,
             },
+        };
+    }
+    const isDTCRegistrationOpen = await vendorLaunchDarkly.getFlagForContext(
+        FeatureFlags.SERVER_FLAGS.IS_DTC_REGISTRATION_OPEN,
+        {
+            key: 'DTC_MEMBER_REGISTRATION_OPEN_EVALUATION',
+        }
+    );
+    if (!isDTCRegistrationOpen) {
+        return {
+            notFound: true,
         };
     }
     return { props: {} };
