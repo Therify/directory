@@ -1,11 +1,15 @@
 import { init, LDClient } from 'launchdarkly-node-server-sdk';
 import { withLaunchDarklyConfiguration } from './configuration';
-import { GetFlagForContext, CreateContextFromUser } from './methods';
+import {
+    GetFlagForUser,
+    GetFlagForContext,
+    CreateContextFromUser,
+} from './methods';
 const globalLaunchDarklyClient = global as unknown as {
     launchdarklyClient: LDClient;
 };
 
-export const launchDarklyVendor = withLaunchDarklyConfiguration((CONFIG) => {
+export const vendorLaunchDarkly = withLaunchDarklyConfiguration((CONFIG) => {
     if (!globalLaunchDarklyClient.launchdarklyClient) {
         globalLaunchDarklyClient.launchdarklyClient = init(
             CONFIG.LAUNCHDARKLY_SDK_KEY
@@ -15,5 +19,8 @@ export const launchDarklyVendor = withLaunchDarklyConfiguration((CONFIG) => {
     return {
         createContextFromUser: CreateContextFromUser.method,
         getFlagForContext: GetFlagForContext.factory(client),
+        getFlagForUser: GetFlagForUser.factory(client),
     };
 });
+
+export type VendorLaunchDarkly = typeof vendorLaunchDarkly;
