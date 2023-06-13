@@ -9,6 +9,7 @@ import {
     assignAuth0Role,
     createStripeCustomer,
     updateUserEntity,
+    checkRegistrationOpen,
 } from './transaction';
 
 export const registerDTCMember = TransactionV2.generateTransaction<
@@ -19,6 +20,7 @@ export const registerDTCMember = TransactionV2.generateTransaction<
     inputSchema: INPUT_SCHEMA,
     outputsSchema: OUTPUT_SCHEMA,
     transactions: {
+        [TRANSACTION_STEPS.CHECK_REGISTRATION_OPEN]: checkRegistrationOpen,
         [TRANSACTION_STEPS.CREATE_AUTH0_USER]: createAuth0User,
         [TRANSACTION_STEPS.ASSIGN_AUTH0_ROLE]: assignAuth0Role,
         [TRANSACTION_STEPS.CREATE_THERIFY_USER_ENTRY]: createTherifyUserEntity,

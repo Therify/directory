@@ -13,6 +13,7 @@ import { AccountOwnerRegistrationFlow } from '@/lib/modules/registration/compone
 export default function AccountOwnerRegistrationPage() {
     const router = useRouter();
     const [registrationError, setRegistrationError] = useState<string>();
+    const [isRegistrationComplete, setIsRegistrationComplete] = useState(false);
     const { clearRegistrationStorage } = useRegistrationStorage();
     const handleError = (errorMessage: string) => {
         setRegistrationError(errorMessage);
@@ -22,6 +23,7 @@ export default function AccountOwnerRegistrationPage() {
         onSuccess(response, { emailAddress }) {
             if (response.wasSuccessful) {
                 clearRegistrationStorage();
+                setIsRegistrationComplete(true);
                 router.push(
                     `${
                         URL_PATHS.MEMBERS.REGISTER_SUCCESS
@@ -32,10 +34,12 @@ export default function AccountOwnerRegistrationPage() {
 
                 return;
             }
+            setIsRegistrationComplete(false);
             const [error] = response.errors ?? [];
             handleError(error ?? 'Could not create user.');
         },
         onError(error) {
+            setIsRegistrationComplete(false);
             setRegistrationError(error.message);
         },
     });
@@ -59,7 +63,7 @@ export default function AccountOwnerRegistrationPage() {
                     errorMessage={registrationError}
                     clearErrorMessage={() => setRegistrationError(undefined)}
                     isRegisteringAccountOwner={mutation.isLoading}
-                    isRegistrationComplete={mutation.isSuccess}
+                    isRegistrationComplete={isRegistrationComplete}
                     role={ROLES.ACCOUNT_OWNER}
                 />
             </InnerContent>
