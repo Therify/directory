@@ -102,6 +102,7 @@ export function generateTransaction<
                         );
                     }
                 }
+                throw error;
             }
         }
         return results;
