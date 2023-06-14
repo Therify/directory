@@ -140,7 +140,6 @@ export default function AccountOnboardingPage() {
                                 name: defaultIndividualAccountName,
                             }}
                             control={accountDetailsForm.control}
-                            sessionPrice={100}
                             seatCount={accountDetailsForm.watch('seatCount')}
                             coveredSessions={accountDetailsForm.watch(
                                 'coveredSessions'

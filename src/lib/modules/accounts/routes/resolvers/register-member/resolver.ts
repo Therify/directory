@@ -26,9 +26,14 @@ export const resolve: ProcedureResolver<
             errors: [],
         };
     } catch (error) {
+        let errorMessage = 'Failed to register with an unknown error.';
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        }
+
         return {
             wasSuccessful: false,
-            errors: [],
+            errors: [errorMessage],
         };
     }
 };

@@ -9,6 +9,7 @@ export const schema = baseFormSubmission.extend({
         year: z.string(),
     }),
     clientemail: z.string(),
+    clientemployer: z.string(),
     providername: z.object({ first: z.string(), last: z.string() }),
     provideremail: z.string(),
     practice: z.string(),

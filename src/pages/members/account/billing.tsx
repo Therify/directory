@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { differenceInCalendarMonths } from 'date-fns';
 import { RBAC, formatMembershipPlanChangeRequestUrl } from '@/lib/shared/utils';
@@ -21,7 +21,6 @@ import {
     CenteredContainer,
     Badge,
     Divider,
-    Caption,
     H5,
 } from '@/lib/shared/components/ui';
 import { PlanStatus } from '@prisma/client';
@@ -31,6 +30,8 @@ import { membersService } from '@/lib/modules/members/service';
 import { MemberBillingPageProps } from '@/lib/modules/members/service/get-billing-page-props/getBillingPageProps';
 import { styled } from '@mui/material/styles';
 import { PageHeader } from '@/lib/shared/components/ui/PageHeader/PageHeader';
+import { trpc } from '@/lib/shared/utils/trpc';
+import { Alerts } from '@/lib/modules/alerts/context';
 
 export const getServerSideProps = RBAC.requireMemberAuth(
     withPageAuthRequired({
@@ -53,6 +54,43 @@ export default function BillingPage({
         (user?.plan?.status === PlanStatus.active ||
             user?.plan?.status === PlanStatus.trialing);
     const theme = useTheme();
+    const { createAlert } = useContext(Alerts.Context);
+    const {
+        mutate: createBillingPortalSession,
+        isLoading: isBillingPortalSessionLoading,
+    } = trpc.useMutation(
+        'accounts.billing.create-stripe-billing-portal-session',
+        {
+            onSuccess: ({ billingPortalUrl, errors }) => {
+                if (typeof window !== 'undefined') {
+                    if (billingPortalUrl) {
+                        window.open(billingPortalUrl, '_blank');
+                    } else if (stripeCustomerPortalUrl) {
+                        window.open(stripeCustomerPortalUrl, '_blank');
+                    } else {
+                        const [error] = errors;
+                        throw new Error(
+                            error ?? 'No billing portal url was provided.'
+                        );
+                    }
+                }
+            },
+            onError: (error) => {
+                console.error(error);
+                if (stripeCustomerPortalUrl) {
+                    if (typeof window !== 'undefined') {
+                        window.open(stripeCustomerPortalUrl, '_blank');
+                    }
+                } else {
+                    createAlert({
+                        type: 'error',
+                        title: 'Stripe customer portal could not be configured. Please reach out to Therify support.',
+                    });
+                }
+            },
+        }
+    );
+
     return (
         <MemberNavigationPage
             currentPath={URL_PATHS.MEMBERS.ACCOUNT.BILLING_AND_PAYMENTS}
@@ -121,52 +159,6 @@ export default function BillingPage({
                             </>
                         )}
 
-                    {!user?.isAccountAdmin && (
-                        <>
-                            <Divider />
-                            <H3>Billing and Payments</H3>
-                            <Paragraph>
-                                We partner with{' '}
-                                <Link
-                                    href="https://stripe.com/"
-                                    target="_blank"
-                                    style={{
-                                        color: theme.palette.text.primary,
-                                    }}
-                                >
-                                    Stripe
-                                </Link>{' '}
-                                for simplified billing. You can edit billing
-                                settings and pay invoices in Stripe&apos;s
-                                customer portal.
-                            </Paragraph>
-
-                            {stripeCustomerPortalUrl ? (
-                                <Link
-                                    href={stripeCustomerPortalUrl}
-                                    target="_blank"
-                                    style={{ textDecoration: 'none' }}
-                                >
-                                    <Button endIcon={<ArrowIcon />}>
-                                        Launch Stripe Customer Portal
-                                    </Button>
-                                </Link>
-                            ) : (
-                                <Alert
-                                    icon={
-                                        <CenteredContainer>
-                                            <WarningRounded />
-                                        </CenteredContainer>
-                                    }
-                                    title="Stripe Billing Issue"
-                                    type="error"
-                                    message="Stripe customer portal URL is not configured. Please reach
-                    out to Therify support."
-                                />
-                            )}
-                        </>
-                    )}
-
                     {user?.plan && (
                         <>
                             <Divider />
@@ -188,66 +180,111 @@ export default function BillingPage({
                                         {getPlanStatusText(user.plan.status)}
                                     </Badge>
                                 </Box>
-                                <Paragraph>
-                                    Period start:{' '}
-                                    {format(
-                                        new Date(user.plan.startDate),
-                                        'MMMM do, yyyy'
-                                    )}
-                                </Paragraph>
-                                <Paragraph>
-                                    Period end:{' '}
-                                    {format(
-                                        new Date(user.plan.endDate),
-                                        'MMMM do, yyyy'
-                                    )}
-                                </Paragraph>
-                                {accountDetails && (
+                                {user.plan.status !== PlanStatus.canceled && (
                                     <>
-                                        {accountDetails.totalSeats > 1 && (
-                                            <Paragraph>
-                                                Usage:{' '}
-                                                {`${
-                                                    accountDetails.claimedSeats
-                                                } ${
-                                                    accountDetails.claimedSeats ===
-                                                    1
-                                                        ? 'seat'
-                                                        : 'seats'
-                                                } claimed of ${
-                                                    accountDetails.totalSeats
-                                                } total ${
-                                                    accountDetails.totalSeats ===
-                                                    1
-                                                        ? 'seat'
-                                                        : 'seats'
-                                                }`}
-                                            </Paragraph>
-                                        )}
-
                                         <Paragraph>
-                                            Covered Sessions{' '}
-                                            {accountDetails.totalSeats > 1 &&
-                                                'per seat '}
-                                            {getBillingCycleDisplayText(
-                                                user.plan.startDate,
-                                                user.plan.endDate
+                                            Period start:{' '}
+                                            {format(
+                                                new Date(user.plan.startDate),
+                                                'MMMM do, yyyy'
                                             )}
-                                            : {accountDetails.coveredSessions}
                                         </Paragraph>
+                                        <Paragraph>
+                                            Period end:{' '}
+                                            {format(
+                                                new Date(user.plan.endDate),
+                                                'MMMM do, yyyy'
+                                            )}
+                                        </Paragraph>
+                                        {accountDetails && (
+                                            <>
+                                                {accountDetails.totalSeats >
+                                                    1 && (
+                                                    <Paragraph>
+                                                        Usage:{' '}
+                                                        {`${
+                                                            accountDetails.claimedSeats
+                                                        } ${
+                                                            accountDetails.claimedSeats ===
+                                                            1
+                                                                ? 'seat'
+                                                                : 'seats'
+                                                        } claimed of ${
+                                                            accountDetails.totalSeats
+                                                        } total ${
+                                                            accountDetails.totalSeats ===
+                                                            1
+                                                                ? 'seat'
+                                                                : 'seats'
+                                                        }`}
+                                                    </Paragraph>
+                                                )}
+
+                                                <Paragraph>
+                                                    Covered Sessions{' '}
+                                                    {accountDetails.totalSeats >
+                                                        1 && 'per seat '}
+                                                    {getBillingCycleDisplayText(
+                                                        user.plan.startDate,
+                                                        user.plan.endDate
+                                                    )}
+                                                    :{' '}
+                                                    {
+                                                        accountDetails.coveredSessions
+                                                    }
+                                                </Paragraph>
+                                            </>
+                                        )}
                                     </>
                                 )}
                             </Box>
                         </>
                     )}
+
+                    <Divider />
+                    <H3>
+                        {user?.isAccountAdmin
+                            ? 'Invoices, Billing Methods, and Plan Cancelation'
+                            : 'Billing & Payments'}
+                    </H3>
+                    <Paragraph>
+                        We partner with{' '}
+                        <Link
+                            href="https://stripe.com/"
+                            target="_blank"
+                            style={{
+                                color: theme.palette.text.primary,
+                            }}
+                        >
+                            Stripe
+                        </Link>{' '}
+                        for simplified billing.{' '}
+                        {user?.isAccountAdmin
+                            ? "You can edit billing settings, cancel/renew your subscription, and pay invoices in Stripe's customer portal."
+                            : "You can edit billing settings and pay invoices in Stripe's customer portal."}
+                    </Paragraph>
+
+                    <Button
+                        disabled={isBillingPortalSessionLoading}
+                        isLoading={isBillingPortalSessionLoading}
+                        onClick={() =>
+                            createBillingPortalSession({
+                                userId: user.userId,
+                                returnUrl: window?.location.href,
+                            })
+                        }
+                        endIcon={<ArrowIcon />}
+                    >
+                        Launch Stripe Customer Portal
+                    </Button>
+
                     {user?.isAccountAdmin && user.plan && (
                         <Box width="100%" marginTop={4}>
                             <Divider />
                             <H4>Request to change your plan</H4>
                             <Paragraph>
-                                You may submit a request to update or cancel
-                                your plan by launching and submitting a plan
-                                change request. Plan changes are usually
+                                Need more seats or sessions? Submit a request to
+                                update your plan. Plan changes are usually
                                 processed within 2-3 business days (excluding
                                 holidays).
                             </Paragraph>
@@ -283,7 +320,7 @@ export default function BillingPage({
                                         );
                                 }}
                             >
-                                Launch Plan Change Form
+                                Request a Plan Change
                             </Button>
                         </Box>
                     )}

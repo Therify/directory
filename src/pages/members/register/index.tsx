@@ -26,6 +26,7 @@ export default function MemberRegistrationPage(props: Props) {
     const { registrationCode, account, hasSeatsAvailable = false } = props;
     const router = useRouter();
     const [registrationError, setRegistrationError] = useState<string>();
+    const [isRegistrationComplete, setIsRegistrationComplete] = useState(false);
     const { clearRegistrationStorage } = useRegistrationStorage();
     const handleError = (errorMessage: string) => {
         setRegistrationError(errorMessage);
@@ -35,6 +36,7 @@ export default function MemberRegistrationPage(props: Props) {
         onSuccess(response, { emailAddress }) {
             if (response.wasSuccessful) {
                 clearRegistrationStorage();
+                setIsRegistrationComplete(true);
                 router.push(
                     `${
                         URL_PATHS.MEMBERS.REGISTER_SUCCESS
@@ -45,10 +47,12 @@ export default function MemberRegistrationPage(props: Props) {
 
                 return;
             }
+            setIsRegistrationComplete(false);
             const [error] = response.errors ?? [];
             handleError(error ?? 'Could not create user.');
         },
         onError(error) {
+            setIsRegistrationComplete(false);
             setRegistrationError(error.message);
         },
     });
@@ -71,7 +75,7 @@ export default function MemberRegistrationPage(props: Props) {
                     errorMessage={registrationError}
                     clearErrorMessage={() => setRegistrationError(undefined)}
                     isRegisteringMember={mutation.isLoading}
-                    isRegistrationComplete={mutation.isSuccess}
+                    isRegistrationComplete={isRegistrationComplete}
                     role={ROLES.MEMBER}
                     account={account}
                     hasSeatsAvailable={hasSeatsAvailable}

@@ -154,10 +154,114 @@ describe('GenerateTransaction', function () {
                 },
             },
         });
-        await failingCreateUserTransaction({
-            name: 'John Doe',
-        });
+        try {
+            await failingCreateUserTransaction({
+                name: 'John Doe',
+            });
+        } catch (_) {}
         const users = failingContext.userService.listUsers();
         expect(users).toHaveLength(0);
+    });
+    test('if a step fails, it stops executing future steps', async function () {
+        class FailingStripeService extends StripeService {
+            // @ts-ignore
+            async createCustomerId() {
+                throw new Error('Failed');
+            }
+        }
+        const mockFn = jest.fn();
+        const failingStripeService = new FailingStripeService();
+        const failingContext = {
+            userService: new UserService(),
+            stripeService: failingStripeService,
+        };
+        const failingCreateUserTransaction = generateTransaction({
+            inputSchema,
+            outputsSchema,
+            context: failingContext,
+            transactions: {
+                createUser: {
+                    async commit() {
+                        throw new Error('Error!');
+                    },
+                    async rollback(_, context, { createUser: { id: userId } }) {
+                        console.debug('ROLLING BACK', userId);
+                        context.userService.deleteUser(userId);
+                    },
+                },
+                createStripeUser: {
+                    async commit(_, {}) {
+                        mockFn();
+                        return {
+                            stripeUserId: '',
+                        };
+                    },
+                    async rollback(
+                        _,
+                        { stripeService },
+                        { createUser: { id: userId } }
+                    ) {
+                        await stripeService.deleteCustomer(userId);
+                    },
+                },
+            },
+        });
+        try {
+            await failingCreateUserTransaction({
+                name: 'John Doe',
+            });
+        } catch (_) {}
+        expect(mockFn).not.toHaveBeenCalled();
+    });
+    test('if a step fails, it throws error', async function () {
+        class FailingStripeService extends StripeService {
+            // @ts-ignore
+            async createCustomerId() {
+                throw new Error('Failed');
+            }
+        }
+        const mockFn = jest.fn();
+        const failingStripeService = new FailingStripeService();
+        const failingContext = {
+            userService: new UserService(),
+            stripeService: failingStripeService,
+        };
+        class TestError extends Error {}
+        const failingCreateUserTransaction = generateTransaction({
+            inputSchema,
+            outputsSchema,
+            context: failingContext,
+            transactions: {
+                createUser: {
+                    async commit() {
+                        throw new TestError('Error!');
+                    },
+                    async rollback(_, context, { createUser: { id: userId } }) {
+                        console.debug('ROLLING BACK', userId);
+                        context.userService.deleteUser(userId);
+                    },
+                },
+                createStripeUser: {
+                    async commit(_, {}) {
+                        mockFn();
+                        return {
+                            stripeUserId: '',
+                        };
+                    },
+                    async rollback(
+                        _,
+                        { stripeService },
+                        { createUser: { id: userId } }
+                    ) {
+                        await stripeService.deleteCustomer(userId);
+                    },
+                },
+            },
+        });
+        expect(
+            failingCreateUserTransaction({
+                name: 'John Doe',
+            })
+        ).rejects.toThrowError(TestError);
     });
 });
