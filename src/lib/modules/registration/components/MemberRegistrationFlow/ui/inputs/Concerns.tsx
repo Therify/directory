@@ -27,7 +27,8 @@ export const ConcernsInput = ({ control, disabled }: ConcernsInputProps) => (
                     fullWidth
                     required
                     label="Your Concerns"
-                    sx={{
+                    style={{
+                        marginRight: '0 !important',
                         marginLeft: '0 !important',
                     }}
                     errorMessage={

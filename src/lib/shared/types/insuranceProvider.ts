@@ -68,6 +68,7 @@ export const MAP = {
     OSCAR: 'Oscar',
     TRICARE: 'TRICARE',
     UNITEDHEALTHCARE: 'UnitedHealthcare',
+    I_DONT_HAVE_INSURANCE: "I don't have insurance",
 } as const;
 
 export const schema = z.enum(ENTRIES);

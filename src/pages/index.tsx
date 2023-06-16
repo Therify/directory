@@ -49,8 +49,9 @@ function handleMemberRouting(user: TherifyUser.TherifyUser): string {
 
     if (isDtcMemberInOnboarding) return URL_PATHS.MEMBERS.ONBOARDING.BILLING;
 
-    if (user.isAccountAdmin)
+    if (user.isAccountAdmin && !user.roles.includes(Role.member_dtc)) {
         return URL_PATHS.MEMBERS.ACCOUNT.BILLING_AND_PAYMENTS;
+    }
     return URL_PATHS.MEMBERS.CARE;
 }
 

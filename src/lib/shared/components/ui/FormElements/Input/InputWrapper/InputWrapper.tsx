@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { CSSProperties, ReactNode } from 'react';
 import {
     FormControl,
     InputLabel as MuiInputLabel,
@@ -17,6 +17,7 @@ export interface InputWrapperProps {
     fullWidth?: boolean;
     required?: boolean;
     sx?: SxProps<Theme>;
+    style?: CSSProperties;
     children: ReactNode;
     variant?: 'default' | 'white';
 }
@@ -35,6 +36,7 @@ export const InputWrapper = ({
     fullWidth,
     required,
     sx,
+    style,
     id,
     variant = 'default',
     children,
@@ -49,6 +51,7 @@ export const InputWrapper = ({
             variant="standard"
             fullWidth={fullWidth}
             sx={{ marginBottom: theme.spacing(4), ...sx }}
+            style={style}
         >
             {label && (
                 <InputLabel
