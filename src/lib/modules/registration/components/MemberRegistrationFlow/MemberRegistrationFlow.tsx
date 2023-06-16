@@ -38,6 +38,7 @@ interface MemberRegistrationFlowProps {
     role: typeof ROLES.MEMBER;
     account?: Account;
     hasSeatsAvailable?: boolean;
+    registrationSteps?: string[];
 }
 
 export const MemberRegistrationFlow = ({
@@ -50,6 +51,7 @@ export const MemberRegistrationFlow = ({
     role,
     account,
     hasSeatsAvailable = false,
+    registrationSteps = REGISTRATION_STEPS as unknown as string[],
 }: MemberRegistrationFlowProps) => {
     const [emailsCheckedForUniqueness, setEmailsCheckedForUniqueness] =
         useState<Record<string, boolean>>({});
@@ -132,10 +134,7 @@ export const MemberRegistrationFlow = ({
             <HeaderContainer>
                 <Logo />
                 <StepperContainer>
-                    <Stepper
-                        activeStepIndex={0}
-                        steps={REGISTRATION_STEPS as unknown as string[]}
-                    />
+                    <Stepper activeStepIndex={0} steps={registrationSteps} />
                 </StepperContainer>
             </HeaderContainer>
             <FormContainer isError={Boolean(errorMessage)}>

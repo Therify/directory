@@ -117,6 +117,7 @@ export default function DTCAccountOnboardingPage() {
         submitAccount({
             ...accountDetailsForm.getValues(),
             ...individualAccountDetails,
+            isDtcAccount: true,
         });
     };
 

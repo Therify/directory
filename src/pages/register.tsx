@@ -65,6 +65,11 @@ export default function MemberRegistrationPage() {
                     isRegistrationComplete={isRegistrationComplete}
                     role={ROLES.MEMBER}
                     hasSeatsAvailable
+                    registrationSteps={[
+                        'Registration',
+                        'Payment',
+                        'Onboarding',
+                    ]}
                 />
             </InnerContent>
         </PageContainer>
