@@ -15,6 +15,7 @@ export const schema = z
             planType: z.literal('individual'),
             billingCycle: z.enum(['month', 'biannual', 'annual']),
             seatCount: z.literal(1),
+            isDtcAccount: z.boolean().optional(),
         }),
         accountSchema.extend({
             planType: z.literal('team'),
