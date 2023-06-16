@@ -38,6 +38,7 @@ export interface MemberRegistrationFormProps {
     role: typeof ROLES.MEMBER;
     account?: Account;
     country: Country.Country;
+    showInsurances?: boolean;
 }
 
 export const MemberRegistrationForm = ({
@@ -49,6 +50,7 @@ export const MemberRegistrationForm = ({
     emailHelperText,
     account,
     country,
+    showInsurances = true,
 }: MemberRegistrationFormProps) => {
     if (!control) throw new Error('control is required');
     return (
@@ -95,7 +97,7 @@ export const MemberRegistrationForm = ({
                     <StateInput control={control} country={country} />
                     <CountryInput control={control} />
                 </LocationWrapper>
-                <InsuranceInput control={control} />
+                {showInsurances && <InsuranceInput control={control} />}
                 <GoalsInput control={control} />
                 <ConcernsInput control={control} />
                 <TermsAndConditionsInput control={control} />
