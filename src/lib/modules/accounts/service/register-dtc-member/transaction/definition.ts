@@ -4,7 +4,6 @@ import { prisma } from '@/lib/prisma';
 import { TransactionV2 } from '@/lib/shared/utils';
 import { vendorAuth0 } from '@/lib/shared/vendors/auth0';
 import { vendorStripe } from '@/lib/shared/vendors/stripe';
-import { vendorLaunchDarkly } from '@/lib/shared/vendors/launchdarkly';
 
 export const TRANSACTION_STEPS = {
     CHECK_REGISTRATION_OPEN: 'CHECK_REGISTRATION_OPEN',
@@ -36,7 +35,6 @@ export const CONTEXT = {
     orm: prisma,
     auth0: vendorAuth0,
     stripe: vendorStripe,
-    launchDarkly: vendorLaunchDarkly,
 } as const;
 
 export type RegisterDTCMemberTransaction = TransactionV2.TransactionDefinition<

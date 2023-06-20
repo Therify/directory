@@ -1,10 +1,11 @@
 import { FeatureFlags } from '@/lib/shared/types';
+import { vendorLaunchDarkly } from '@/lib/shared/vendors/launchdarkly';
 import { RegisterDTCMemberTransaction } from './definition';
 
 export const checkRegistrationOpen: RegisterDTCMemberTransaction['CHECK_REGISTRATION_OPEN'] =
     {
-        async commit({}, { launchDarkly }, {}) {
-            const isOpen = await launchDarkly.getFlagForContext(
+        async commit() {
+            const isOpen = await vendorLaunchDarkly.getFlagForContext(
                 FeatureFlags.SERVER_FLAGS.IS_DTC_REGISTRATION_OPEN,
                 {
                     key: 'DTC_MEMBER_REGISTRATION_OPEN_EVALUATION',
