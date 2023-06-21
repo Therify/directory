@@ -62,7 +62,7 @@ export const handleInvoicePaidFactory =
                 // and can be ignored.
                 //TODO: Remove this once we're no longer using the Stripe dashboard
                 // to generate coaching invoices
-                return true;
+                return { success: true };
             }
             result = await handleOneTimePayment({
                 accounts,
