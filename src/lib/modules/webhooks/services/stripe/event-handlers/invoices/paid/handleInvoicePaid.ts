@@ -56,6 +56,14 @@ export const handleInvoicePaidFactory =
 
         let result: HandlerResult | undefined = undefined;
         if (!subscriptionId) {
+            if (!invoice.metadata.dateOfSession) {
+                // App generated coaching invoices will have a dateOfSession metadata field
+                // If it's not present, we can assume it's an invoice generated from the dashboard
+                // and can be ignored.
+                //TODO: Remove this once we're no longer using the Stripe dashboard
+                // to generate coaching invoices
+                return { success: true };
+            }
             result = await handleOneTimePayment({
                 accounts,
                 customerId,
