@@ -14,6 +14,14 @@ export const handleInvoiceUpdatedFactory =
             throw new Error('No price id found on invoice');
         }
         if (invoice.billing_reason === 'manual') {
+            if (!invoice.metadata.dateOfSession) {
+                // App generated coaching invoices will have a dateOfSession metadata field
+                // If it's not present, we can assume it's an invoice generated from the dashboard
+                // and can be ignored.
+                //TODO: Remove this once we're no longer using the Stripe dashboard
+                // to generate coaching invoices
+                return { success: true };
+            }
             // this is a coaching session invoice
             const { sessionInvoiceId } =
                 await accounts.billing.handleCoachingSessionInvoiceUpdated({

@@ -13,6 +13,14 @@ export const handleInvoiceSentFactory =
         if (!priceId) {
             throw new Error('No price id found on invoice');
         }
+        if (!invoice.metadata.dateOfSession) {
+            // App generated coaching invoices will have a dateOfSession metadata field
+            // If it's not present, we can assume it's an invoice generated from the dashboard
+            // and can be ignored.
+            //TODO: Remove this once we're no longer using the Stripe dashboard
+            // to generate coaching invoices
+            return { success: true };
+        }
         const { sentMessage } = await accounts.billing.handleInvoiceSent({
             customerId: invoice.customer,
             priceId,
