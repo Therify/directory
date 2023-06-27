@@ -30,6 +30,7 @@ export interface SideNavigationPageProps {
     user?: TherifyUser.TherifyUser;
     actionLink?: NavigationLink;
     isLoadingUser?: boolean;
+    chatNotifications?: { [pathToChat: string]: number };
     children?: React.ReactNode;
 }
 /**
@@ -44,6 +45,7 @@ export const SideNavigationPage = ({
     user,
     actionLink,
     isLoadingUser = false,
+    chatNotifications,
     children,
 }: SideNavigationPageProps) => {
     const { hasAccess } = usePlanMonitoring(user);
@@ -58,6 +60,9 @@ export const SideNavigationPage = ({
         handleAction,
         getNotificationsMapForMenu,
     } = useInAppNotificationDrawer();
+    const notificationsMap = getNotificationsMapForMenu(
+        hasAccess ? primaryMenu : []
+    );
     return (
         <SideNavigationLayout
             bannerSlot={
@@ -92,9 +97,10 @@ export const SideNavigationPage = ({
                     navigationMenu={hasAccess ? primaryMenu : []}
                     onNavigate={onNavigate}
                     actionLink={actionLink}
-                    notificationMap={getNotificationsMapForMenu(
-                        hasAccess ? primaryMenu : []
-                    )}
+                    notificationMap={{
+                        ...notificationsMap,
+                        ...(chatNotifications ?? {}),
+                    }}
                 />
             }
         >

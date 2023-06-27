@@ -26,6 +26,7 @@ export interface TopNavigationPageProps {
     onNavigate: (path: string) => void;
     user: TherifyUser.TherifyUser | null;
     isLoadingUser: boolean;
+    chatNotifications?: { [pathToChat: string]: number };
     children?: React.ReactNode;
 }
 /**
@@ -39,6 +40,7 @@ export const TopNavigationPage = ({
     onNavigate,
     user,
     isLoadingUser,
+    chatNotifications,
     children,
 }: TopNavigationPageProps) => {
     const { hasAccess } = usePlanMonitoring(user);
@@ -54,6 +56,10 @@ export const TopNavigationPage = ({
         getNotificationsMapForMenu,
     } = useInAppNotificationDrawer();
 
+    const notificationsMap = {
+        ...getNotificationsMapForMenu(hasAccess ? mobileMenu : secondaryMenu),
+        ...chatNotifications,
+    };
     return (
         <TopNavigationLayout
             bannerSlot={
@@ -80,6 +86,7 @@ export const TopNavigationPage = ({
                         toggleMobileMenu={() =>
                             setIsMobileMenuOpen(!isMobileMenuOpen)
                         }
+                        notificationsMap={notificationsMap}
                         user={user}
                         isLoadingUser={isLoadingUser}
                     />
@@ -94,9 +101,7 @@ export const TopNavigationPage = ({
                     isOpen={isMobileMenuOpen}
                     onClose={() => setIsMobileMenuOpen(false)}
                     navigationMenu={hasAccess ? mobileMenu : secondaryMenu}
-                    notificationsMap={getNotificationsMapForMenu(
-                        hasAccess ? mobileMenu : secondaryMenu
-                    )}
+                    notificationsMap={notificationsMap}
                     onNavigate={(path) => {
                         onNavigate(path);
                         setIsMobileMenuOpen(false);
@@ -154,10 +159,6 @@ export const TopNavigationPage = ({
                         clearActionlessNotifications();
                     }}
                     onNotificationClicked={handleAction}
-                    onClearNotifications={() => {
-                        //TODO: clear notifications
-                        console.log('clearing notifications');
-                    }}
                 />
             )}
         </TopNavigationLayout>
