@@ -20,10 +20,18 @@ export const useChatClient = (user?: TherifyUser.TherifyUser) => {
             const accessToken = user.chatAccessToken!;
             chatClient
                 .connectUser(
-                    { id: userIdentifier, name: displayName || userIdentifier },
+                    {
+                        id: userIdentifier,
+                        name: displayName || userIdentifier,
+                    },
                     accessToken
                 )
-                .then(() => {
+                .then((registerResult) => {
+                    if (registerResult) {
+                        setChatUnreadMessagesCount(
+                            registerResult.me?.total_unread_count ?? 0
+                        );
+                    }
                     setIsChatConnected(true);
                 })
                 .catch((e) => {
@@ -38,7 +46,7 @@ export const useChatClient = (user?: TherifyUser.TherifyUser) => {
         user?.hasChatEnabled,
         user?.userId,
     ]);
-    //TODO: fetch initial unread count on load
+
     useEffect(() => {
         if (user?.hasChatEnabled && user?.userId && isChatConnected) {
             const { unsubscribe } = chatClient.on((event) => {
@@ -46,9 +54,6 @@ export const useChatClient = (user?: TherifyUser.TherifyUser) => {
                     event.total_unread_count !== undefined &&
                     !isNaN(parseInt(event.total_unread_count?.toString() ?? ''))
                 ) {
-                    console.log(
-                        `unread messages count is now: ${event.total_unread_count}`
-                    );
                     setChatUnreadMessagesCount(event.total_unread_count);
                 }
             });
