@@ -55,13 +55,21 @@ export const SideNavigationPage = ({
     const {
         drawer: notificationDrawer,
         notifications,
-        unreadCount,
+        unreadCount: unreadNotificationsCount,
         clearActionlessNotifications,
         handleAction,
         getNotificationsMapForMenu,
     } = useInAppNotificationDrawer();
-    const notificationsMap = getNotificationsMapForMenu(
+    const inAppNotificationsMap = getNotificationsMapForMenu(
         hasAccess ? primaryMenu : []
+    );
+    const notificationMap = {
+        ...inAppNotificationsMap,
+        ...(chatNotifications ?? {}),
+    };
+    const unreadMessagesCount = Object.values(chatNotifications ?? {}).reduce(
+        (acc, count) => acc + count,
+        0
     );
     return (
         <SideNavigationLayout
@@ -82,7 +90,8 @@ export const SideNavigationPage = ({
                     menu={secondaryMenu}
                     currentPath={currentPath}
                     onNavigate={onNavigate}
-                    notificationCount={unreadCount}
+                    unreadMessagesCount={unreadMessagesCount}
+                    notificationCount={unreadNotificationsCount}
                     onShowNotifications={notificationDrawer.open}
                     user={user}
                     isLoadingUser={isLoadingUser}
@@ -97,10 +106,7 @@ export const SideNavigationPage = ({
                     navigationMenu={hasAccess ? primaryMenu : []}
                     onNavigate={onNavigate}
                     actionLink={actionLink}
-                    notificationMap={{
-                        ...notificationsMap,
-                        ...(chatNotifications ?? {}),
-                    }}
+                    notificationMap={notificationMap}
                 />
             }
         >
@@ -111,9 +117,7 @@ export const SideNavigationPage = ({
                 isOpen={isMobileMenuOpen}
                 onClose={() => setIsMobileMenuOpen(false)}
                 navigationMenu={hasAccess ? mobileMenu : secondaryMenu}
-                notificationsMap={getNotificationsMapForMenu(
-                    hasAccess ? mobileMenu : secondaryMenu
-                )}
+                notificationsMap={notificationMap}
                 onNavigate={(path) => {
                     onNavigate(path);
                     setIsMobileMenuOpen(false);

@@ -1,0 +1,1 @@
+export { IconButtonWithBadge } from './IconButtonWithBadge';

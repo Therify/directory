@@ -60,6 +60,10 @@ export const TopNavigationPage = ({
         ...getNotificationsMapForMenu(hasAccess ? mobileMenu : secondaryMenu),
         ...chatNotifications,
     };
+    const unreadMessagesCount = Object.values(chatNotifications ?? {}).reduce(
+        (acc, count) => acc + count,
+        0
+    );
     return (
         <TopNavigationLayout
             bannerSlot={
@@ -83,6 +87,7 @@ export const TopNavigationPage = ({
                         onNavigate={onNavigate}
                         onShowNotifications={notificationDrawer.open}
                         notificationCount={unreadCount}
+                        unreadMessagesCount={unreadMessagesCount}
                         toggleMobileMenu={() =>
                             setIsMobileMenuOpen(!isMobileMenuOpen)
                         }

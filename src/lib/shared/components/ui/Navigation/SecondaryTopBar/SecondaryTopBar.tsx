@@ -12,6 +12,7 @@ export const SecondaryTopBar = ({
     onNavigate,
     onShowNotifications,
     notificationCount,
+    unreadMessagesCount,
     toggleMobileMenu,
     isLoadingUser,
 }: {
@@ -19,6 +20,7 @@ export const SecondaryTopBar = ({
     currentPath: string;
     menu: NavigationLink[];
     notificationCount?: number;
+    unreadMessagesCount?: number;
     toggleMobileMenu: () => void;
     onNavigate: (path: string) => void;
     onShowNotifications?: () => void;
@@ -33,6 +35,7 @@ export const SecondaryTopBar = ({
                     <SecondaryNavigationControls
                         onShowNotifications={onShowNotifications}
                         notificationCount={notificationCount}
+                        unreadMessagesCount={unreadMessagesCount}
                         isMobileWidth={isMobileWidth}
                         toggleMobileMenu={toggleMobileMenu}
                         currentPath={currentPath}

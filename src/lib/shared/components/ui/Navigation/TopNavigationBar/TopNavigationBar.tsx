@@ -19,6 +19,7 @@ export interface TopNavigationBarProps {
     isLoadingUser: boolean;
     withTherifyWebsiteLink?: boolean;
     notificationsMap?: Record<string, number>;
+    unreadMessagesCount?: number;
 }
 export const TEST_IDS = {
     DESKTOP_MENU: 'desktop-menu',
@@ -31,6 +32,7 @@ export const TopNavigationBar = ({
     secondaryMenu,
     onShowNotifications,
     notificationCount,
+    unreadMessagesCount,
     toggleMobileMenu,
     onNavigate,
     user,
@@ -82,6 +84,7 @@ export const TopNavigationBar = ({
                 <SecondaryNavigationControls
                     onShowNotifications={onShowNotifications}
                     notificationCount={notificationCount}
+                    unreadMessagesCount={unreadMessagesCount}
                     isMobileWidth={isMobileWidth}
                     toggleMobileMenu={toggleMobileMenu}
                     currentPath={currentPath}
