@@ -3,6 +3,7 @@ import { Mocks } from '@/lib/shared/types';
 import { useInAppNotificationDrawer } from '@/lib/modules/notifications/components/hooks';
 import { MemberExpiredPlanPage } from './MemberExpiredPlanPage';
 import { format } from 'date-fns';
+import { ReactNode } from 'react';
 
 jest.mock('@/lib/modules/notifications/components/hooks', () => {
     return {
@@ -13,6 +14,17 @@ jest.mock('@/lib/modules/notifications/components/hooks', () => {
 jest.mock('next/router', () => {
     return {
         useRouter: () => ({ pathname: '/test', push: jest.fn() }),
+    };
+});
+
+jest.mock('@/lib/modules/messaging/hooks', () => {
+    return {
+        useChatClient: () => ({
+            ChatProvider: ({ children }: { children?: ReactNode }) => (
+                <>{children}</>
+            ),
+            unreadChatMessagesCount: 0,
+        }),
     };
 });
 
