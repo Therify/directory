@@ -19,7 +19,7 @@ export type { BannerProps } from './Banner';
 export { BlockQuote, BLOCK_QUOTE_SIZE } from './BlockQuote';
 export { CallToActionCard } from './CallToActionCard';
 export { Carousel } from './Carousel';
-export { IconWithBadge } from './IconWithBadge';
+export { IconButtonWithBadge } from './IconButtonWithBadge';
 export { Button, BUTTON_SIZE, BUTTON_TYPE, IconButton } from './Button';
 export type { ButtonProps } from './Button';
 export { Card, TEST_IDS as CARD_TEST_IDS } from './Card';

@@ -1,6 +1,6 @@
 import { TherifyUser } from '@/lib/shared/types/therify-user';
 import { NavigationLink } from '@/lib/sitemap';
-import { useMediaQuery } from '@mui/material';
+import { Avatar, useMediaQuery } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import Link from 'next/link';
 import { TopBar } from '../../TopBar';
@@ -18,6 +18,8 @@ export interface TopNavigationBarProps {
     user?: TherifyUser.TherifyUser;
     isLoadingUser: boolean;
     withTherifyWebsiteLink?: boolean;
+    notificationsMap?: Record<string, number>;
+    unreadMessagesCount?: number;
 }
 export const TEST_IDS = {
     DESKTOP_MENU: 'desktop-menu',
@@ -30,10 +32,12 @@ export const TopNavigationBar = ({
     secondaryMenu,
     onShowNotifications,
     notificationCount,
+    unreadMessagesCount,
     toggleMobileMenu,
     onNavigate,
     user,
     isLoadingUser,
+    notificationsMap,
     withTherifyWebsiteLink,
 }: TopNavigationBarProps) => {
     const theme = useTheme();
@@ -64,6 +68,12 @@ export const TopNavigationBar = ({
                                             data-testid={TEST_IDS.ACTIVE_TAB}
                                         />
                                     )}
+                                    {(notificationsMap?.[link.path] ?? 0) >
+                                        0 && (
+                                        <NotificationCount>
+                                            {notificationsMap?.[link.path]}
+                                        </NotificationCount>
+                                    )}
                                 </Link>
                             </LinkItem>
                         );
@@ -74,6 +84,7 @@ export const TopNavigationBar = ({
                 <SecondaryNavigationControls
                     onShowNotifications={onShowNotifications}
                     notificationCount={notificationCount}
+                    unreadMessagesCount={unreadMessagesCount}
                     isMobileWidth={isMobileWidth}
                     toggleMobileMenu={toggleMobileMenu}
                     currentPath={currentPath}
@@ -102,6 +113,8 @@ const LinkItem = styled('li')(({ theme }) => ({
     '& a': {
         position: 'relative',
         ...theme.typography.body1,
+        display: 'flex',
+        alignItems: 'center',
         fontWeight: 500,
         margin: 0,
         padding: theme.spacing(4, 5),
@@ -116,6 +129,15 @@ const LinkItem = styled('li')(({ theme }) => ({
             },
         },
     },
+}));
+
+const NotificationCount = styled(Avatar)(({ theme }) => ({
+    backgroundColor: theme.palette.error.main,
+    color: theme.palette.error.contrastText,
+    fontSize: '.75rem',
+    height: theme.spacing(6),
+    width: theme.spacing(6),
+    marginLeft: theme.spacing(2),
 }));
 
 const ActiveTab = styled('span')(({ theme }) => ({

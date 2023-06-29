@@ -1,12 +1,9 @@
 import '@stream-io/stream-chat-css/dist/css/index.css';
 import './style.module.css';
-
-import { StreamChat } from 'stream-chat';
 import {
     Channel,
     ChannelList,
     ChannelHeader,
-    Chat,
     MessageInput,
     MessageList,
     Thread,
@@ -25,8 +22,6 @@ interface ChatComponentProps {
     allowSessionInvoicing?: boolean;
 }
 
-const chatClient = StreamChat.getInstance('7ryxym6g8a33');
-
 export function ChatComponent({
     userIdentifier,
     accessToken,
@@ -37,46 +32,38 @@ export function ChatComponent({
     const isSmallScreen = useMediaQuery((theme: Theme) =>
         theme.breakpoints.down('md')
     );
-    if (typeof window !== 'undefined') {
-        chatClient.connectUser(
-            { id: userIdentifier, name: displayName || userIdentifier },
-            accessToken
-        );
-    }
     const shouldDisplayDrawer = isSmallScreen && drawerOpen;
     return (
         <StyledChatContainer drawerOpen={shouldDisplayDrawer}>
-            <Chat client={chatClient} theme="str-chat__theme-square">
-                <ChannelList filters={{ members: { $in: [userIdentifier] } }} />
-                {shouldDisplayDrawer && (
-                    <DrawerBackdrop
-                        drawerOpen={drawerOpen}
-                        onClick={() => setDrawerOpen(false)}
-                    />
-                )}
-                <Channel>
-                    <Window>
-                        <HeaderContainer>
-                            <ChannelHeader
-                                MenuIcon={() => (
-                                    <IconButton
-                                        className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeSmall MuiButton-disableElevation MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeSmall MuiButton-disableElevation css-1q53vy0-MuiButtonBase-root-MuiButton-root"
-                                        onClick={() => setDrawerOpen(true)}
-                                    >
-                                        <ChevronLeft />
-                                    </IconButton>
-                                )}
-                            />
-                            {allowSessionInvoicing && (
-                                <ChatActions userIdentifier={userIdentifier} />
+            <ChannelList filters={{ members: { $in: [userIdentifier] } }} />
+            {shouldDisplayDrawer && (
+                <DrawerBackdrop
+                    drawerOpen={drawerOpen}
+                    onClick={() => setDrawerOpen(false)}
+                />
+            )}
+            <Channel>
+                <Window>
+                    <HeaderContainer>
+                        <ChannelHeader
+                            MenuIcon={() => (
+                                <IconButton
+                                    className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeSmall MuiButton-disableElevation MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeSmall MuiButton-disableElevation css-1q53vy0-MuiButtonBase-root-MuiButton-root"
+                                    onClick={() => setDrawerOpen(true)}
+                                >
+                                    <ChevronLeft />
+                                </IconButton>
                             )}
-                        </HeaderContainer>
-                        <MessageList />
-                        <MessageInput />
-                    </Window>
-                    <Thread />
-                </Channel>
-            </Chat>
+                        />
+                        {allowSessionInvoicing && (
+                            <ChatActions userIdentifier={userIdentifier} />
+                        )}
+                    </HeaderContainer>
+                    <MessageList />
+                    <MessageInput />
+                </Window>
+                <Thread />
+            </Channel>
         </StyledChatContainer>
     );
 }

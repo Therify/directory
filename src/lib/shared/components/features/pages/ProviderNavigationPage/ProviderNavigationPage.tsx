@@ -5,7 +5,7 @@ import {
     COACH_MAIN_MENU,
     COACH_SECONDARY_MENU,
     COACH_MOBILE_MENU,
-    NavigationLink,
+    URL_PATHS,
 } from '@/lib/sitemap';
 import { TherifyUser } from '@/lib/shared/types';
 import { useRouter } from 'next/router';
@@ -16,6 +16,7 @@ import {
 import { Role } from '@prisma/client';
 import { CHAT, PAYMENTS } from '@/lib/sitemap/menus/coach-menu/links';
 import { useFeatureFlags } from '@/lib/shared/hooks';
+import { useChatClient } from '@/lib/modules/messaging/hooks';
 
 interface ProviderNavigationPageProps
     extends Omit<
@@ -31,20 +32,32 @@ interface ProviderNavigationPageProps
 
 export function ProviderNavigationPage(props: ProviderNavigationPageProps) {
     const router = useRouter();
+    const { ChatProvider, unreadChatMessagesCount } = useChatClient(props.user);
     const { flags } = useFeatureFlags(props.user);
     const { primaryMenu, secondaryMenu, mobileMenu } = getMenusByRole({
         roles: props.user?.roles ?? [],
         hasChatEnabled: props.user?.hasChatEnabled ?? false,
         withPaymentsLink: flags.hasStripeConnectAccess,
     });
+
     return (
-        <SideNavigationPage
-            primaryMenu={primaryMenu}
-            secondaryMenu={secondaryMenu}
-            mobileMenu={mobileMenu}
-            onNavigate={router.push}
-            {...props}
-        />
+        <ChatProvider>
+            <SideNavigationPage
+                primaryMenu={primaryMenu}
+                secondaryMenu={secondaryMenu}
+                mobileMenu={mobileMenu}
+                onNavigate={router.push}
+                chatNotifications={
+                    unreadChatMessagesCount > 0
+                        ? {
+                              [URL_PATHS.PROVIDERS.COACH.CHAT]:
+                                  unreadChatMessagesCount,
+                          }
+                        : undefined
+                }
+                {...props}
+            />
+        </ChatProvider>
     );
 }
 

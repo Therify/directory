@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import { ReactNode } from 'react';
 import { IconButton, BUTTON_TYPE } from '../Button';
 
-interface IconWithBadgeProps {
+interface IconButtonWithBadgeProps {
     icon: ReactNode;
     onClick?: () => void;
     badgeCount?: number;
@@ -12,16 +12,15 @@ interface IconWithBadgeProps {
     showZero?: boolean;
 }
 
-export const IconWithBadge = ({
+export const IconButtonWithBadge = ({
     icon,
     onClick,
     badgeCount,
     maxValue,
     showZero,
     ...props
-}: IconWithBadgeProps) => {
+}: IconButtonWithBadgeProps) => {
     return (
-        // TODO: Move button out
         <IconButton
             aria-label={props['aria-label']}
             type={BUTTON_TYPE.TEXT}
