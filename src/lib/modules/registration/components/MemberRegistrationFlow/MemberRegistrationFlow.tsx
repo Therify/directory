@@ -25,6 +25,7 @@ import { useRegistrationStorage } from './hooks';
 import { Account } from '@prisma/client';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
+import { InsuranceProvider } from '@/lib/shared/types';
 
 const REGISTRATION_STEPS = ['Registration', 'Onboarding'] as const;
 
@@ -38,6 +39,8 @@ interface MemberRegistrationFlowProps {
     role: typeof ROLES.MEMBER;
     account?: Account;
     hasSeatsAvailable?: boolean;
+    showInsurances?: boolean;
+    registrationSteps?: string[];
 }
 
 export const MemberRegistrationFlow = ({
@@ -50,6 +53,8 @@ export const MemberRegistrationFlow = ({
     role,
     account,
     hasSeatsAvailable = false,
+    showInsurances = true,
+    registrationSteps = REGISTRATION_STEPS as unknown as string[],
 }: MemberRegistrationFlowProps) => {
     const [emailsCheckedForUniqueness, setEmailsCheckedForUniqueness] =
         useState<Record<string, boolean>>({});
@@ -62,6 +67,9 @@ export const MemberRegistrationFlow = ({
             role,
             concerns: [],
             goals: [],
+            ...(!showInsurances
+                ? { insurance: InsuranceProvider.MAP.I_DONT_HAVE_INSURANCE }
+                : {}),
         },
     });
     const isRegistrationSuccessful = isRegistrationComplete && !errorMessage;
@@ -110,7 +118,7 @@ export const MemberRegistrationFlow = ({
                                 typography={'h3'}
                                 sx={{ fontWeight: 700, display: 'inline' }}
                             >
-                                {account?.name}
+                                {account?.name ?? 'the account provided'}
                             </Typography>{' '}
                             is are currently at capacity.
                         </H3>
@@ -132,10 +140,7 @@ export const MemberRegistrationFlow = ({
             <HeaderContainer>
                 <Logo />
                 <StepperContainer>
-                    <Stepper
-                        activeStepIndex={0}
-                        steps={REGISTRATION_STEPS as unknown as string[]}
-                    />
+                    <Stepper activeStepIndex={0} steps={registrationSteps} />
                 </StepperContainer>
             </HeaderContainer>
             <FormContainer isError={Boolean(errorMessage)}>
@@ -152,6 +157,7 @@ export const MemberRegistrationFlow = ({
                         role={role}
                         account={account}
                         country={country}
+                        showInsurances={showInsurances}
                     />
                 )}
 

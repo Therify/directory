@@ -12,6 +12,8 @@ import { HandleReimbursementSubmission } from './handle-reimbursement-submission
 import { HandleMembershipPlanPayment } from './handle-membership-plan-payment';
 import { GetProviderSessionInvoicesByMemberId } from './get-provider-session-invoices-by-member-id';
 import { VoidCoachingSessionInvoice } from './void-coaching-session-invoice';
+import { HandleRawReimbursementSubmission } from './handle-raw-reimbursement-submission';
+import { CreateStripeBillingPortalSession } from './create-stripe-billing-portal-session';
 
 export const factory = (context: AccountsServiceParams) => ({
     handleCoachingSessionPayment: HandleCoachingSessionPayment.factory(context),
@@ -31,4 +33,8 @@ export const factory = (context: AccountsServiceParams) => ({
         GetProviderSessionInvoicesByMemberId.factory(context),
     handleReimbursementSubmission:
         HandleReimbursementSubmission.factory(context),
+    handleRawReimbursementSubmission:
+        HandleRawReimbursementSubmission.factory(context),
+    createStripeBillingPortalSession:
+        CreateStripeBillingPortalSession.factory(context),
 });

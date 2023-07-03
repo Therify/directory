@@ -27,8 +27,9 @@ export const GoalsInput = ({ control, disabled }: GoalInputProps) => (
                     fullWidth
                     required
                     label="Your Goals"
-                    sx={{
+                    style={{
                         marginRight: '0 !important',
+                        marginLeft: '0 !important',
                     }}
                     errorMessage={
                         error?.type

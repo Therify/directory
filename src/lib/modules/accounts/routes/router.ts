@@ -5,6 +5,7 @@ import {
     SendEmailVerification,
     GetVerificationEmailStatus,
     RegisterMember,
+    RegisterDTCMember,
     RegisterAccountOwner,
 } from '@/lib/modules/registration/features';
 import {
@@ -19,6 +20,7 @@ import {
     registerProviderResolver,
     registerProviderWithInvitationResolver,
     registerMemberResolver,
+    registerDTCMemberResolver,
     sendEmailVerificationResolver,
     getVerificationEmailStatusResolver,
     getUserDetailsByIdResolver,
@@ -31,6 +33,7 @@ import {
     registerAccountOwnerResolver,
     getAccountByOwnerIdResolver,
     voidCoachingSessionInvoiceResolver,
+    createStripeBillingPortalSessionResolver,
 } from './resolvers';
 import { Context } from '../../../server/context';
 import {
@@ -38,6 +41,7 @@ import {
     CreateStripeConnectLoginUrl,
     CreateCoachingSessionInvoice,
     VoidCoachingSessionInvoice,
+    CreateStripeBillingPortalSession,
 } from '../features/billing';
 import { GetAccountByOwnerId } from '../features';
 
@@ -103,6 +107,11 @@ export const router = trpc
         output: RegisterMember.outputSchema,
         resolve: registerMemberResolver,
     })
+    .mutation(RegisterDTCMember.TRPC_ROUTE, {
+        input: RegisterDTCMember.inputSchema,
+        output: RegisterDTCMember.outputSchema,
+        resolve: registerDTCMemberResolver,
+    })
     .mutation(CreateCoachingSessionInvoice.TRPC_ROUTE, {
         input: CreateCoachingSessionInvoice.inputSchema,
         output: CreateCoachingSessionInvoice.outputSchema,
@@ -117,4 +126,9 @@ export const router = trpc
         input: SendEmailVerification.inputSchema,
         output: SendEmailVerification.outputSchema,
         resolve: sendEmailVerificationResolver,
+    })
+    .mutation(CreateStripeBillingPortalSession.TRPC_ROUTE, {
+        input: CreateStripeBillingPortalSession.inputSchema,
+        output: CreateStripeBillingPortalSession.outputSchema,
+        resolve: createStripeBillingPortalSessionResolver,
     });

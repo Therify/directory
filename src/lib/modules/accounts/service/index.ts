@@ -12,6 +12,7 @@ import { GetVerificationEmailStatus } from './get-verification-email-status';
 import { GetPracticeByOwnerId } from './get-practice-by-owner-id';
 import { HandlePracticeOnboarding } from './handle-practice-onboarding';
 import { registerMember } from './register-member';
+import { registerDTCMember } from './register-dtc-member';
 import { registerAccountOwner } from './register-account-owner';
 import { Billing } from './billing';
 import { GetUserDetailsById } from './get-user-details-by-id';
@@ -44,7 +45,8 @@ export const AccountsService = {
     getUserDetailsById: GetUserDetailsById.factory(factoryParams),
     getPracticeByOwnerId: GetPracticeByOwnerId.factory(factoryParams),
     handlePracticeOnboarding: HandlePracticeOnboarding.factory(factoryParams),
-    registerMember: registerMember,
+    registerMember,
+    registerDTCMember,
     registerAccountOwner,
     getAccountByOwnerId: GetAccountByOwnerId.factory(factoryParams),
     getRegistrationCodeByAccountOwnerId:

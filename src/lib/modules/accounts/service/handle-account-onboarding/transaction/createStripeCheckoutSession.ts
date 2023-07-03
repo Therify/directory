@@ -13,15 +13,15 @@ const PRODUCTS = getProductsByEnvironment(
 );
 
 export const factory = ({
-    planType,
     billingCycle,
     seatCount,
     coveredSessions,
+    ...input
 }: HandleAccountOnboarding.Input): HandleAccountOnboardingTransaction['createStripeCheckoutSession'] => ({
     async commit({ stripe }, { getUserDetails: { stripeCustomerId } }) {
         let priceId = getMembershipPriceId({
             seatCount,
-            planType,
+            planType: input.planType,
             billingCycle,
         });
 
@@ -39,6 +39,19 @@ export const factory = ({
             quantity: coveredSessions * seatCount,
         };
 
+        const isDtcRegistration =
+            input.planType === 'individual' && input.isDtcAccount;
+        const cancelUrl = `${process.env.APPLICATION_URL}${
+            isDtcRegistration
+                ? URL_PATHS.MEMBERS.ONBOARDING.BILLING
+                : URL_PATHS.ACCOUNT_OWNER.ONBOARDING.BILLING
+        }`;
+        const successUrl = `${process.env.APPLICATION_URL}${
+            isDtcRegistration
+                ? URL_PATHS.MEMBERS.ONBOARDING.BILLING_SUCCESS
+                : URL_PATHS.ACCOUNT_OWNER.ONBOARDING.BILLING_SUCCESS
+        }`;
+
         const { url: checkoutSessionUrl, id: checkoutSessionId } =
             await stripe.createCheckoutSession({
                 lineItems: [
@@ -47,8 +60,8 @@ export const factory = ({
                 ],
                 customerId: stripeCustomerId,
                 checkoutMode: 'subscription',
-                cancelUrl: `${process.env.APPLICATION_URL}${URL_PATHS.ACCOUNT_OWNER.ONBOARDING.BILLING}`,
-                successUrl: `${process.env.APPLICATION_URL}${URL_PATHS.ACCOUNT_OWNER.ONBOARDING.BILLING_SUCCESS}`,
+                cancelUrl,
+                successUrl,
                 allowPromotionCodes: true,
                 metadata: {
                     priceId,
