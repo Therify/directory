@@ -30,6 +30,7 @@
         "@emotion/styled": "^11.10.5",
         "@fontsource/roboto": "^4.5.8",
         "@hookform/resolvers": "^3.0.0",
+        "@knocklabs/node": "^0.4.22",
         "@mui/icons-material": "^5.11.0",
         "@mui/material": "^5.11.3",
         "@mui/x-date-pickers": "^5.0.13",
