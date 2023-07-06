@@ -1,9 +1,12 @@
 import * as z from 'zod';
-import { KnockRecipient } from '../../../schema';
+import { KnockRecipient, KnockActor } from '../../../schema';
 
 export const schema = z.object({
     recipients: KnockRecipient.schema.array(),
-    data: z.object({}),
+    data: z.object({
+        messageUrl: z.string().url(),
+    }),
+    actor: KnockActor.schema,
 });
 
 export type Input = z.infer<typeof schema>;
