@@ -1,10 +1,13 @@
 import * as z from 'zod';
-import { KnockRecipient, KnockActor } from '../../../schema';
+import { KnockRecipient } from '@/lib/shared/vendors/knock';
 
 export const schema = z.object({
-    recipients: KnockRecipient.schema.array(),
     messageUrl: z.string().url(),
-    actor: KnockActor.schema,
+    sender: z.object({
+        name: z.string(),
+        id: z.string(),
+    }),
+    recipients: KnockRecipient.schema.array(),
 });
 
 export type Input = z.infer<typeof schema>;
