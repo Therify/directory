@@ -8,4 +8,5 @@ process.env = Object.assign(process.env, {
     FIREBASE_ADMIN_CLIENT_EMAIL: 'firebase-email@therify.co',
     FIREBASE_ADMIN_PROJECT_ID: 'firebase-project-id',
     FIREBASE_ADMIN_PRIVATE_KEY: 'firebase-private-key',
+    KNOCK_API_KEY: 'knock-api-key',
 });
