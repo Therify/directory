@@ -8,7 +8,7 @@ export const sendNewMessageEmailFactory =
         sender,
         messageUrl,
     }: SendNewMessageEmail.Input): Promise<SendNewMessageEmail.Output> => {
-        const { workflowRunId } = await knock.sendUnreadChatMessagesEmail({
+        const { workflowRunId } = await knock.sendNewMessageEmail({
             recipients,
             actor: sender,
             messageUrl,

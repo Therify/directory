@@ -1,1 +1,1 @@
-export * from './send-unread-chat-messages-email';
+export * from './send-new-message-email';

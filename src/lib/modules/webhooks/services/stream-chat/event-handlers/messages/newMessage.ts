@@ -57,7 +57,7 @@ export const handleNewMessageFactory =
         const offlineUsers = recipientsWithPresence.filter(
             (user) => !user.isOnline
         );
-        console.log('offlineUsers', offlineUsers);
+
         if (offlineUsers.length > 0) {
             const { members, coaches } = offlineUsers.reduce(
                 (acc, user) => {
