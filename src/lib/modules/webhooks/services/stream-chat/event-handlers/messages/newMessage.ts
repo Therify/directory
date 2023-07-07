@@ -57,7 +57,7 @@ export const handleNewMessageFactory =
         const offlineUsers = recipientsWithPresence.filter(
             (user) => !user.isOnline
         );
-
+        console.log('offlineUsers', offlineUsers);
         if (offlineUsers.length > 0) {
             const { members, coaches } = offlineUsers.reduce(
                 (acc, user) => {
@@ -83,17 +83,10 @@ export const handleNewMessageFactory =
 
             if (coaches.length > 0) {
                 await notifications.email.sendNewMessageEmail({
-                    sender: {
-                        id: sender.id,
-                        name: `${sender.givenName ?? ''} ${
-                            sender.surname ?? ''
-                        }`.trim(),
-                    },
                     recipients: coaches.map(
-                        ({ givenName, id, surname, emailAddress: email }) => ({
+                        ({ givenName, id, emailAddress: email }) => ({
                             id,
                             givenName,
-                            surname,
                             email,
                         })
                     ),

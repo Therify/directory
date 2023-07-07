@@ -3,10 +3,12 @@ import { KnockRecipient } from '@/lib/shared/vendors/knock';
 
 export const schema = z.object({
     messageUrl: z.string().url(),
-    sender: z.object({
-        name: z.string(),
-        id: z.string(),
-    }),
+    sender: z
+        .object({
+            name: z.string(),
+            id: z.string(),
+        })
+        .optional(),
     recipients: KnockRecipient.schema.array(),
 });
 

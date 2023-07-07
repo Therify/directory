@@ -4,7 +4,7 @@ import { KnockRecipient, KnockActor } from '../../../schema';
 export const schema = z.object({
     recipients: KnockRecipient.schema.array(),
     messageUrl: z.string().url(),
-    actor: KnockActor.schema,
+    actor: KnockActor.schema.optional(),
 });
 
 export type Input = z.infer<typeof schema>;

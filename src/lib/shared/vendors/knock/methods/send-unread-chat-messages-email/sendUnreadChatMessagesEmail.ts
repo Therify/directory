@@ -1,4 +1,4 @@
-import { Knock, Recipient } from '@knocklabs/node';
+import { Knock } from '@knocklabs/node';
 import { Input, Output } from './schema';
 const CHAT_NOTIFICATION_EMAIL_WORKFLOW_ID = 'chat-notifications' as const;
 
