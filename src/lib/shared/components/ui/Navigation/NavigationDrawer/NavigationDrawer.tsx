@@ -36,7 +36,6 @@ export const NavigationDrawer = ({
     onNavigate,
     children,
 }: NavigationDrawerProps) => {
-    const theme = useTheme();
     return (
         <Drawer anchor="right" open={isOpen} onClose={onClose}>
             <MenuHeader>
