@@ -7,9 +7,12 @@ const APPLICATION_URL = process.env.APPLICATION_URL ?? 'https://app.therify.co';
 export const handleNewMessageFactory =
     ({ prisma, notifications }: StreamChatWebhookParams) =>
     async (newMessageEvent: NewMessageEvent.Type) => {
-        const senderId = adaptUserIdentifier.fromStreamChat(
-            newMessageEvent.message.user.id
-        );
+        const senderId =
+            newMessageEvent.message.user.id === 'therify'
+                ? 'therify'
+                : adaptUserIdentifier.fromStreamChat(
+                      newMessageEvent.message.user.id
+                  );
         const userIds = newMessageEvent.members.map((member) => {
             return adaptUserIdentifier.fromStreamChat(member.user_id);
         });
@@ -27,7 +30,16 @@ export const handleNewMessageFactory =
                 roles: true,
             },
         });
-        const sender = users.find((user) => user.id === senderId);
+        const sender =
+            senderId === 'therify'
+                ? {
+                      id: 'therify',
+                      givenName: 'Therify',
+                      surname: 'System',
+                      roles: [],
+                      emailAddress: 'help@therify.co',
+                  }
+                : users.find((user) => user.id === senderId);
         const recipients = users.filter((user) => {
             return user.id !== senderId;
         });
