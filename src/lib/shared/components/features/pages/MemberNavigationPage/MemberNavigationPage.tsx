@@ -3,6 +3,8 @@ import {
     getMemberMobileMenu,
     getMemberMenu,
 } from '@/lib/sitemap/menus/member-menu';
+import { useChatClient } from '@/lib/modules/messaging/hooks';
+import { URL_PATHS } from '@/lib/sitemap';
 import { TherifyUser } from '@/lib/shared/types';
 import { useRouter } from 'next/router';
 import {
@@ -26,15 +28,25 @@ export function MemberNavigationPage(props: MemberNavigationPageProps) {
     const router = useRouter();
     const mainMenu = getMemberMenu(props.user?.hasChatEnabled ?? false);
     const mobileMenu = getMemberMobileMenu(props.user?.hasChatEnabled ?? false);
+    const { ChatProvider, unreadChatMessagesCount } = useChatClient(props.user);
 
     return (
-        <TopNavigationPage
-            {...props}
-            onNavigate={router.push}
-            primaryMenu={mainMenu}
-            secondaryMenu={[...MEMBER_SECONDARY_MENU]}
-            mobileMenu={mobileMenu}
-            isLoadingUser={false}
-        />
+        <ChatProvider>
+            <TopNavigationPage
+                {...props}
+                onNavigate={router.push}
+                primaryMenu={mainMenu}
+                secondaryMenu={[...MEMBER_SECONDARY_MENU]}
+                mobileMenu={mobileMenu}
+                isLoadingUser={false}
+                chatNotifications={
+                    unreadChatMessagesCount > 0
+                        ? {
+                              [URL_PATHS.MEMBERS.CHAT]: unreadChatMessagesCount,
+                          }
+                        : undefined
+                }
+            />
+        </ChatProvider>
     );
 }

@@ -5,6 +5,7 @@ import { CreateToken } from './create-token';
 import { DeleteUser } from './delete-user';
 import { SendSystemMessageToChannel } from './send-system-message-to-channel';
 import { UpsertUser } from './upsert-user';
+import { VerifyWebhookSignature } from './verify-webhook-signature';
 
 export const vendorStreamChat = withStreamChatConfiguration((CONFIG) => {
     const streamChat = new StreamChat(
@@ -25,6 +26,9 @@ export const vendorStreamChat = withStreamChatConfiguration((CONFIG) => {
             streamChat,
         }),
         sendSystemMessageToChannel: SendSystemMessageToChannel.factory({
+            streamChat,
+        }),
+        verifyWebhookSignature: VerifyWebhookSignature.factory({
             streamChat,
         }),
     };

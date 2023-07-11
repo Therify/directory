@@ -4,8 +4,8 @@ import {
 } from '@mui/icons-material';
 import { Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { IconWithBadge } from '../../IconWithBadge';
-import { BUTTON_TYPE, IconButton, Button } from '../../Button';
+import { IconButtonWithBadge } from '../../IconButtonWithBadge';
+import { BUTTON_TYPE, Button } from '../../Button';
 import { FloatingMenu } from '../FloatingMenu';
 import { Avatar } from '../../Avatar';
 import { NavigationLink, URL_PATHS } from '@/lib/sitemap';
@@ -14,6 +14,7 @@ import { TherifyUser } from '@/lib/shared/types/therify-user';
 interface SecondaryNavigationControlsProps {
     onShowNotifications?: () => void;
     notificationCount?: number;
+    unreadMessagesCount?: number;
     isMobileWidth: boolean;
     toggleMobileMenu: () => void;
     currentPath: string;
@@ -33,6 +34,7 @@ export const TEST_IDS = {
 export const SecondaryNavigationControls = ({
     onShowNotifications,
     notificationCount,
+    unreadMessagesCount,
     isMobileWidth,
     toggleMobileMenu,
     currentPath,
@@ -61,7 +63,7 @@ export const SecondaryNavigationControls = ({
             )}
 
             {user && (
-                <IconWithBadge
+                <IconButtonWithBadge
                     data-testid={TEST_IDS.NOTIFICATIONS_ICON}
                     onClick={onShowNotifications}
                     aria-label={`${notificationCount ?? 0} Notifications`}
@@ -72,17 +74,12 @@ export const SecondaryNavigationControls = ({
 
             <Box paddingLeft={2}>
                 {isMobileWidth ? (
-                    <IconButton
+                    <IconButtonWithBadge
                         data-testid={TEST_IDS.MENU_ICON}
-                        color="info"
-                        type={BUTTON_TYPE.TEXT}
                         onClick={toggleMobileMenu}
-                        style={{
-                            color: theme.palette.text.primary,
-                        }}
-                    >
-                        <MenuIcon fontSize="large" />
-                    </IconButton>
+                        badgeCount={unreadMessagesCount}
+                        icon={<MenuIcon fontSize="large" />}
+                    />
                 ) : (
                     <DesktopControls
                         user={user}

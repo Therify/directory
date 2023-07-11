@@ -13,7 +13,7 @@ const isProd = process.env.NODE_ENV === 'production';
 export const vendorLaunchDarkly = withLaunchDarklyConfiguration((CONFIG) => {
     const ldOptions = isProd
         ? {
-              logger: basicLogger({ level: 'warn' }),
+              logger: basicLogger({ level: 'error' }),
           }
         : undefined;
     if (!globalLaunchDarklyClient.launchdarklyClient) {
