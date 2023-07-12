@@ -12,30 +12,44 @@ import { Globals } from '@/lib/shared/components/styles';
 import { Alerts } from '@/lib/modules/alerts/context';
 import { ErrorBoundary } from '@/lib/shared/components/features/error-boundary';
 import { withLDProvider } from 'launchdarkly-react-client-sdk';
+import { CacheProvider, EmotionCache } from '@emotion/react';
+import createEmotionCache from '@/lib/shared/utils/emotion-cache/emotionCache';
 
 const LAUNCHDARKLY_CLIENT_SIDE_ID =
     process.env.NEXT_PUBLIC_LAUNCHDARKLY_CLIENT_SIDE_ID;
 
-const App: AppType = ({ Component, pageProps }: AppProps) => {
+export interface MyAppProps extends AppProps {
+    emotionCache?: EmotionCache;
+}
+
+const clientSideEmotionCache = createEmotionCache();
+
+const App: AppType = ({
+    Component,
+    pageProps,
+    emotionCache = clientSideEmotionCache,
+}: MyAppProps) => {
     return (
-        <ThemeProvider theme={therifyDesignSystem}>
-            <Globals />
-            <ApplicationContainer>
-                <ErrorBoundary>
-                    <Auth0UserProvider>
-                        <TherifyUser.Provider>
-                            <FirebaseClient.Provider>
-                                <InAppNotificationsContext.Provider>
-                                    <Alerts.Provider>
-                                        <Component {...pageProps} />
-                                    </Alerts.Provider>
-                                </InAppNotificationsContext.Provider>
-                            </FirebaseClient.Provider>
-                        </TherifyUser.Provider>
-                    </Auth0UserProvider>
-                </ErrorBoundary>
-            </ApplicationContainer>
-        </ThemeProvider>
+        <CacheProvider value={emotionCache}>
+            <ThemeProvider theme={therifyDesignSystem}>
+                <Globals />
+                <ApplicationContainer>
+                    <ErrorBoundary>
+                        <Auth0UserProvider>
+                            <TherifyUser.Provider>
+                                <FirebaseClient.Provider>
+                                    <InAppNotificationsContext.Provider>
+                                        <Alerts.Provider>
+                                            <Component {...pageProps} />
+                                        </Alerts.Provider>
+                                    </InAppNotificationsContext.Provider>
+                                </FirebaseClient.Provider>
+                            </TherifyUser.Provider>
+                        </Auth0UserProvider>
+                    </ErrorBoundary>
+                </ApplicationContainer>
+            </ThemeProvider>
+        </CacheProvider>
     );
 };
 
