@@ -13,18 +13,31 @@ import { Alerts } from '@/lib/modules/alerts/context';
 import { ErrorBoundary } from '@/lib/shared/components/features/error-boundary';
 import { withLDProvider } from 'launchdarkly-react-client-sdk';
 import { NylasProvider } from '@nylas/nylas-react';
+import { CacheProvider, EmotionCache } from '@emotion/react';
+import createEmotionCache from '@/lib/shared/utils/emotion-cache/emotionCache';
 
 const LAUNCHDARKLY_CLIENT_SIDE_ID =
     process.env.NEXT_PUBLIC_LAUNCHDARKLY_CLIENT_SIDE_ID;
 const APPLICATION_URL = process.env.NEXT_PUBLIC_APPLICATION_URL;
 
-const App: AppType = ({ Component, pageProps }: AppProps) => {
+export interface MyAppProps extends AppProps {
+    emotionCache?: EmotionCache;
+}
+
+const clientSideEmotionCache = createEmotionCache();
+
+const App: AppType = ({
+    Component,
+    pageProps,
+    emotionCache = clientSideEmotionCache,
+}: MyAppProps) => {
     return (
-        <ThemeProvider theme={therifyDesignSystem}>
-            <Globals />
-            <ApplicationContainer>
-                <ErrorBoundary>
-                    <Auth0UserProvider>
+        <CacheProvider value={emotionCache}>
+            <ThemeProvider theme={therifyDesignSystem}>
+                <Globals />
+                <ApplicationContainer>
+                    <ErrorBoundary>
+                        <Auth0UserProvider>
                         <NylasProvider serverBaseUrl={APPLICATION_URL!}>
                             <TherifyUser.Provider>
                                 <FirebaseClient.Provider>
@@ -36,10 +49,11 @@ const App: AppType = ({ Component, pageProps }: AppProps) => {
                                 </FirebaseClient.Provider>
                             </TherifyUser.Provider>
                         </NylasProvider>
-                    </Auth0UserProvider>
-                </ErrorBoundary>
-            </ApplicationContainer>
-        </ThemeProvider>
+                        </Auth0UserProvider>
+                    </ErrorBoundary>
+                </ApplicationContainer>
+            </ThemeProvider>
+        </CacheProvider>
     );
 };
 
