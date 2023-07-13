@@ -12,9 +12,11 @@ import { Globals } from '@/lib/shared/components/styles';
 import { Alerts } from '@/lib/modules/alerts/context';
 import { ErrorBoundary } from '@/lib/shared/components/features/error-boundary';
 import { withLDProvider } from 'launchdarkly-react-client-sdk';
+import { NylasProvider } from '@nylas/nylas-react';
 
 const LAUNCHDARKLY_CLIENT_SIDE_ID =
     process.env.NEXT_PUBLIC_LAUNCHDARKLY_CLIENT_SIDE_ID;
+const APPLICATION_URL = process.env.NEXT_PUBLIC_APPLICATION_URL;
 
 const App: AppType = ({ Component, pageProps }: AppProps) => {
     return (
@@ -23,15 +25,17 @@ const App: AppType = ({ Component, pageProps }: AppProps) => {
             <ApplicationContainer>
                 <ErrorBoundary>
                     <Auth0UserProvider>
-                        <TherifyUser.Provider>
-                            <FirebaseClient.Provider>
-                                <InAppNotificationsContext.Provider>
-                                    <Alerts.Provider>
-                                        <Component {...pageProps} />
-                                    </Alerts.Provider>
-                                </InAppNotificationsContext.Provider>
-                            </FirebaseClient.Provider>
-                        </TherifyUser.Provider>
+                        <NylasProvider serverBaseUrl={APPLICATION_URL!}>
+                            <TherifyUser.Provider>
+                                <FirebaseClient.Provider>
+                                    <InAppNotificationsContext.Provider>
+                                        <Alerts.Provider>
+                                            <Component {...pageProps} />
+                                        </Alerts.Provider>
+                                    </InAppNotificationsContext.Provider>
+                                </FirebaseClient.Provider>
+                            </TherifyUser.Provider>
+                        </NylasProvider>
                     </Auth0UserProvider>
                 </ErrorBoundary>
             </ApplicationContainer>
