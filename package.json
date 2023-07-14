@@ -37,7 +37,6 @@
         "@mui/material": "^5.11.3",
         "@mui/x-date-pickers": "^5.0.13",
         "@next/font": "13.1.1",
-        "@nylas/nylas-react": "^0.1.0",
         "@prisma/client": "^5.0.0",
         "@testing-library/jest-dom": "^5.16.5",
         "@testing-library/react": "^13.4.0",

@@ -3038,18 +3038,6 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@nylas/nylas-js@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@nylas/nylas-js/-/nylas-js-0.2.0.tgz#85c682ec4d23be45e9815ffceb09794753c25bdc"
-  integrity sha512-zPtWKUv8gQhF/lQEJ/o3X9NoItpqg6u62k5IKh44o7XNzZqpYqWuUtgouG+mlvWXYQZpdYzn80ZNp0OySC56dQ==
-
-"@nylas/nylas-react@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@nylas/nylas-react/-/nylas-react-0.1.0.tgz#dcc26e35646fab1da3473b75526191058890dc38"
-  integrity sha512-l18zESvi+c2QdVg5dxl6ak1n0F+yNtS4vOcnmfOT3HgkKfKI9ERERZCMDuU0YZO8NKwzt6KA8c10gzWKrT5row==
-  dependencies:
-    "@nylas/nylas-js" "^0.2.0"
-
 "@panva/hkdf@^1.0.2":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@panva/hkdf/-/hkdf-1.1.1.tgz#ab9cd8755d1976e72fc77a00f7655a64efe6cd5d"

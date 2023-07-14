@@ -12,13 +12,12 @@ import { Globals } from '@/lib/shared/components/styles';
 import { Alerts } from '@/lib/modules/alerts/context';
 import { ErrorBoundary } from '@/lib/shared/components/features/error-boundary';
 import { withLDProvider } from 'launchdarkly-react-client-sdk';
-import { NylasProvider } from '@nylas/nylas-react';
 import { CacheProvider, EmotionCache } from '@emotion/react';
 import createEmotionCache from '@/lib/shared/utils/emotion-cache/emotionCache';
 
 const LAUNCHDARKLY_CLIENT_SIDE_ID =
     process.env.NEXT_PUBLIC_LAUNCHDARKLY_CLIENT_SIDE_ID;
-const APPLICATION_URL = process.env.NEXT_PUBLIC_APPLICATION_URL;
+const APPLICATION_URL = process.env.NEXT_PUBLIC_APPLICATION_URL + '/api';
 
 export interface MyAppProps extends AppProps {
     emotionCache?: EmotionCache;
@@ -38,7 +37,6 @@ const App: AppType = ({
                 <ApplicationContainer>
                     <ErrorBoundary>
                         <Auth0UserProvider>
-                        <NylasProvider serverBaseUrl={APPLICATION_URL!}>
                             <TherifyUser.Provider>
                                 <FirebaseClient.Provider>
                                     <InAppNotificationsContext.Provider>
@@ -48,7 +46,6 @@ const App: AppType = ({
                                     </InAppNotificationsContext.Provider>
                                 </FirebaseClient.Provider>
                             </TherifyUser.Provider>
-                        </NylasProvider>
                         </Auth0UserProvider>
                     </ErrorBoundary>
                 </ApplicationContainer>

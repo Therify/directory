@@ -1,3 +1,5 @@
+import { SCHEDULING } from './scheduling';
+
 export const COACH_PATHS = {
     REGISTER: '/providers/coach/register',
     REGISTER_SUCCESS: '/providers/coach/register/success',
@@ -7,4 +9,5 @@ export const COACH_PATHS = {
     PROFILE_EDITOR: '/providers/coach/profile/editor',
     PROFILES: '/providers/coach/profiles',
     CHAT: '/providers/coach/chat',
+    SCHEDULING,
 } as const;

@@ -1,12 +1,24 @@
+import { useState, useEffect, useContext } from 'react';
+import { Box, CircularProgress } from '@mui/material';
+import { Controller, useForm } from 'react-hook-form';
+import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { ProvidersService } from '@/lib/modules/providers/service';
-import { useNylas } from '@nylas/nylas-react';
 import { ProviderNavigationPage } from '@/lib/shared/components/features/pages/ProviderNavigationPage';
 import { RBAC } from '@/lib/shared/utils/rbac';
-import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { useFeatureFlags } from '@/lib/shared/hooks';
-import { TherifyUser } from '@/lib/shared/types';
-import { useState, useEffect } from 'react';
-import { addDays, getDate } from 'date-fns';
+import { trpc } from '@/lib/shared/utils/trpc';
+import { URL_PATHS } from '@/lib/sitemap';
+import { ProviderTherifyUserPageProps } from '@/lib/modules/providers/service/page-props/get-therify-user-props';
+import {
+    Button,
+    Input,
+    Modal,
+    FormValidation,
+    CenteredContainer,
+    Paragraph,
+    H3,
+} from '@/lib/shared/components/ui';
+import { Alerts } from '@/lib/modules/alerts/context';
 
 export const getServerSideProps = RBAC.requireCoachAuth(
     withPageAuthRequired({
@@ -14,231 +26,200 @@ export const getServerSideProps = RBAC.requireCoachAuth(
     })
 );
 
-export default function SchedulingPage({
-    user,
-}: {
-    user: TherifyUser.TherifyUser;
-}) {
+export default function SchedulingPage({ user }: ProviderTherifyUserPageProps) {
     const { flags } = useFeatureFlags(user);
-    // const nylas = useNylas();
-    const [primaryCalendar, setPrimaryCalendar] = useState<string | null>(null);
-    const [userId, setUserId] = useState('');
-    const [userEmail, setUserEmail] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const [events, setEvents] = useState([]);
-    const serverBaseUrl = 'http://localhost:3000';
+    const { createAlert } = useContext(Alerts.Context);
+    const [showCalendarEmailModal, setShowCalendarEmailModal] = useState(false);
 
-    // useEffect(() => {
-    //     if (!nylas) {
-    //         return;
-    //     }
-
-    //     // Handle the code that is passed in the query params from Nylas after a successful login
-    //     const params = new URLSearchParams(window.location.search);
-    //     if (params.has('code')) {
-    //         nylas
-    //             .exchangeCodeFromUrlForToken()
-    //             .then((user) => {
-    //                 const { id } = JSON.parse(user);
-    //                 setUserId(id);
-    //                 sessionStorage.setItem('userId', id);
-    //             })
-    //             .catch((error) => {
-    //                 console.error(
-    //                     'An error occurred parsing the response:',
-    //                     error
-    //                 );
-    //             });
-    //     }
-    // }, [nylas]);
-
-    useEffect(() => {
-        const userIdString = sessionStorage.getItem('userId');
-        const userEmail = sessionStorage.getItem('userEmail');
-        if (userIdString) {
-            setUserId(userIdString);
-        }
-        if (userEmail) {
-            setUserEmail(userEmail);
-        }
-        if (userIdString) {
-            setUserId(userIdString);
-        }
-    }, []);
-
-    useEffect(() => {
-        if (userId?.length) {
-            window.history.replaceState({}, '', `/?userId=${userId}`);
-            getPrimaryCalendarEvents();
-        } else {
-            window.history.replaceState({}, '', '/');
-        }
-    }, [userId]);
-
-    if (!user) {
-        return <div>Chat is not available</div>;
-    }
-    const getPrimaryCalendar = async () => {
-        try {
-            const url = serverBaseUrl + '/nylas/read-calendars';
-
-            const res = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    Authorization: userId,
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (!res.ok) {
-                throw new Error(res.statusText);
-            }
-
-            const data = await res.json();
-
-            let [calendar] = data.filter(
-                (calendar: any) => calendar.is_primary
-            );
-            // if no primary calendar, use the first one
-            if (!calendar && data.length) {
-                calendar = data[0];
-            }
-
-            setPrimaryCalendar(calendar);
-            return calendar;
-        } catch (err) {
-            console.warn(`Error reading calendars:`, err);
-        }
-    };
-
-    const getCalendarEvents = async (calendarId: string) => {
-        if (calendarId) {
-            try {
-                const startsAfter = getDate(new Date()); // today
-                const endsBefore = addDays(startsAfter, 7); // 7 days from today
-
-                const queryParams = new URLSearchParams({
-                    limit: '50',
-                    startsAfter: new Date(startsAfter).toISOString(),
-                    endsBefore: new Date(endsBefore).toISOString(),
-                    calendarId,
-                });
-
-                const url = `${serverBaseUrl}/nylas/read-events?${queryParams.toString()}`;
-
-                const res = await fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        Authorization: userId,
-                        'Content-Type': 'application/json',
-                    },
-                    // params: {
-                    //     calendarId,
-                    // },
-                });
-
-                if (!res.ok) {
-                    throw new Error(res.statusText);
+    const { mutate: generateAuthUrl, isLoading: isGeneratingAuthUrl } =
+        trpc.useMutation('scheduling.generate-calendar-auth-url', {
+            onSuccess: ({ authUrl, errors }) => {
+                console.log({ authUrl, errors });
+                if (authUrl) {
+                    createAlert({
+                        type: 'success',
+                        title: 'Redirecting to authorization',
+                    });
+                    window.location.href = authUrl;
+                    return;
                 }
+                const [error] = errors;
+                if (error) {
+                    console.error(error);
+                    createAlert({
+                        type: 'error',
+                        title: error,
+                    });
+                }
+            },
+            onError: (error) => {
+                console.error(error);
+                if (error instanceof Error) {
+                    return createAlert({
+                        type: 'error',
+                        title: error.message,
+                    });
+                }
+                createAlert({
+                    type: 'error',
+                    title: 'There was an getting an authorization link.',
+                });
+            },
+        });
 
-                const data = (await res.json()).filter(
-                    (event: any) => event.status !== 'cancelled'
-                );
-
-                setEvents(data);
-                setIsLoading(false);
-            } catch (err) {
-                console.warn(`Error reading calendar events:`, err);
+    const { data: connectedEmailsData, isLoading: isFetchingConnectedEmails } =
+        trpc.useQuery(
+            [
+                'scheduling.get-connected-calendar-emails',
+                {
+                    userId: user.userId,
+                },
+            ],
+            {
+                refetchOnWindowFocus: false,
+                enabled: Boolean(user.userId),
             }
-        }
+        );
+    const connectedEmails = connectedEmailsData?.calendarEmails ?? [];
+    const createAuthUrl = (emailAddress: string) => {
+        generateAuthUrl({
+            emailAddress,
+            successUrl:
+                window.location.origin +
+                URL_PATHS.PROVIDERS.COACH.SCHEDULING.AUTH_SUCCESS,
+        });
     };
-
-    const getPrimaryCalendarEvents = async () => {
-        setIsLoading(true);
-        const primaryCalendar = await getPrimaryCalendar();
-        await getCalendarEvents(primaryCalendar?.id);
-        setIsLoading(false);
-    };
-
-    const disconnectUser = () => {
-        sessionStorage.removeItem('userId');
-        sessionStorage.removeItem('userEmail');
-        setUserId('');
-        setUserEmail('');
-    };
-
-    const refresh = () => {
-        getPrimaryCalendarEvents();
-    };
-
+    if (!user) {
+        return <div>Scheduling is not available</div>;
+    }
     return (
         <ProviderNavigationPage
             currentPath="/providers/coach/scheduling"
             user={user}
         >
-            {/* <Layout
-            showMenu={!!userId}
-            disconnectUser={disconnectUser}
-            isLoading={isLoading}
-            refresh={refresh}
-        > */}
-            {!userId ? (
-                <NylasLogin email={userEmail} setEmail={setUserEmail} />
-            ) : (
-                <div className="app-card">
-                    {/* <CalendarApp
-                        userId={userId}
-                        calendarId={primaryCalendar?.id}
-                        serverBaseUrl={serverBaseUrl}
-                        isLoading={isLoading}
-                        setIsLoading={setIsLoading}
-                        events={events}
-                        refresh={refresh}
-                    /> */}
-                </div>
-            )}
-            {/* </Layout> */}
+            <Box>
+                {!isFetchingConnectedEmails && (
+                    <Button onClick={() => setShowCalendarEmailModal(true)}>
+                        Connect Calendar
+                    </Button>
+                )}
+                <H3>Your connected calendars emails</H3>
+                {isFetchingConnectedEmails && (
+                    <CenteredContainer padding={2} width="100%">
+                        <CircularProgress />
+                    </CenteredContainer>
+                )}
+                {connectedEmails?.map(({ emailAddress }) => (
+                    <Paragraph key={emailAddress}>{emailAddress}</Paragraph>
+                ))}
+                {showCalendarEmailModal && !isFetchingConnectedEmails && (
+                    <AddCalendarModal
+                        connectedEmails={['jessie@therify.co']}
+                        onClose={() => {
+                            setShowCalendarEmailModal(false);
+                        }}
+                        isLoading={isGeneratingAuthUrl}
+                        createAuthUrl={createAuthUrl}
+                    />
+                )}
+            </Box>
         </ProviderNavigationPage>
     );
 }
 
-const NylasLogin = ({
-    email,
-    setEmail,
+const AddCalendarModal = ({
+    onClose,
+    isLoading,
+    createAuthUrl,
+    connectedEmails = [],
 }: {
-    email: string;
-    setEmail: (email: string) => void;
+    connectedEmails: string[];
+    onClose: () => void;
+    isLoading: boolean;
+    createAuthUrl: (email: string) => void;
 }) => {
-    // const nylas = useNylas();
-
-    const [isLoading, setIsLoading] = useState(false);
-
-    const loginUser = (e: any) => {
-        e.preventDefault();
-        setIsLoading(true);
-
-        sessionStorage.setItem('userEmail', email);
-
-        // nylas.authWithRedirect({
-        //     emailAddress: email,
-        //     successRedirectUrl: '',
-        // });
-    };
+    const {
+        getValues,
+        setValue,
+        watch,
+        formState: { errors, isValid: isEmailValid },
+        control,
+    } = useForm<{ emailAddress: string }>({
+        mode: 'onChange',
+    });
+    const email = watch('emailAddress');
 
     return (
-        <section className="login">
-            <form onSubmit={loginUser}>
-                <input
-                    required
-                    type="email"
-                    placeholder="Email Address"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-                <button type="submit" disabled={isLoading}>
-                    {isLoading ? 'Connecting...' : 'Connect email'}
-                </button>
-            </form>
-        </section>
+        <Modal
+            showCloseButton={false}
+            isOpen
+            onClose={onClose}
+            title="Connect a Calendar"
+            message="To connect a calendar, enter the email address associated with your calendar. You will be redireced to grant Therify to access your calendar."
+            postBodySlot={
+                isLoading ? (
+                    <CenteredContainer padding={2} width="100%">
+                        <CircularProgress />
+                    </CenteredContainer>
+                ) : (
+                    <Controller
+                        control={control}
+                        name="emailAddress"
+                        rules={{
+                            required: {
+                                value: true,
+                                message: 'Email is required.',
+                            },
+                            validate: {
+                                emailNotAlreadyConnected: (email) =>
+                                    connectedEmails.includes(
+                                        email.trim().toLowerCase()
+                                    )
+                                        ? 'Email is already connected.'
+                                        : true,
+                                [FormValidation.EmailValidationType.IsValid]: (
+                                    email
+                                ) =>
+                                    FormValidation.isValidEmail(email)
+                                        ? true
+                                        : 'Email is invalid.',
+                            },
+                        }}
+                        render={({
+                            field: { onChange, onBlur, value, name },
+                            fieldState: { error, isTouched },
+                        }) => (
+                            <Input
+                                fullWidth
+                                required
+                                id="emailAddress"
+                                label="Email"
+                                errorMessage={
+                                    isTouched ? error?.message : undefined
+                                }
+                                autoComplete="email"
+                                type="email"
+                                disabled={isLoading}
+                                {...{
+                                    onChange,
+                                    onBlur,
+                                    value,
+                                    name,
+                                }}
+                            />
+                        )}
+                    />
+                )
+            }
+            fullWidthButtons
+            primaryButtonDisabled={!isEmailValid}
+            primaryButtonText="Connect Calendar"
+            primaryButtonOnClick={() =>
+                createAuthUrl(getValues('emailAddress'))
+            }
+            secondaryButtonText="Cancel"
+            secondaryButtonDisabled={isLoading}
+            secondaryButtonOnClick={onClose}
+        />
     );
 };
