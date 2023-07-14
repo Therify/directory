@@ -7,6 +7,8 @@ import {
     LoadingContainer,
     H1,
     Caption,
+    CenteredContainer,
+    Button,
 } from '@/lib/shared/components/ui';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { useRouter } from 'next/router';
@@ -26,6 +28,7 @@ export default function CalendarAuthSuccessPage({
     user,
 }: ProviderTherifyUserPageProps) {
     const router = useRouter();
+    const [hasSentCode, setHasSentCode] = useState(false);
     const { code: rawCode } = router.query;
     const code: string | undefined = Array.isArray(rawCode)
         ? rawCode.join('')
@@ -58,8 +61,12 @@ export default function CalendarAuthSuccessPage({
     useEffect(() => {
         if (code) {
             handleCalendarAuthCode({ code, userId: user.userId });
+            setHasSentCode(true);
         }
     }, [code, handleCalendarAuthCode, user.userId]);
+    if (!user) {
+        return null;
+    }
 
     return (
         <PageContainer>
@@ -67,15 +74,33 @@ export default function CalendarAuthSuccessPage({
                 <StepperContainer currentStepIndex={2} steps={[]}>
                     <FormContainer errorMessage={errorMessage}>
                         <LoadingContainer
-                            isLoading={!isLoading}
+                            isLoading={
+                                isLoading || (!hasSentCode && !errorMessage)
+                            }
                             loadingTopSlot={
                                 <Header>Connecting your calendar...</Header>
                             }
                         >
                             {errorMessage ? (
-                                <Header>There seems to be an issue...</Header>
+                                <CenteredContainer sx={{ mb: 4 }}>
+                                    <Header>
+                                        There seems to be an issue...
+                                    </Header>
+                                    <Button
+                                        onClick={() =>
+                                            router.push(
+                                                URL_PATHS.PROVIDERS.COACH
+                                                    .SCHEDULING.ROOT
+                                            )
+                                        }
+                                    >
+                                        Go back and try again
+                                    </Button>
+                                </CenteredContainer>
                             ) : (
-                                <Header>Calendar connected!</Header>
+                                hasSentCode && (
+                                    <Header>Calendar connected!</Header>
+                                )
                             )}
                         </LoadingContainer>
                     </FormContainer>

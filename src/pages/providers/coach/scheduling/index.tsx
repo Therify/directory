@@ -97,24 +97,32 @@ export default function SchedulingPage({ user }: ProviderTherifyUserPageProps) {
             currentPath="/providers/coach/scheduling"
             user={user}
         >
-            <Box>
+            <Box p={4}>
+                <H3>Your connected calendars emails</H3>
                 {!isFetchingConnectedEmails && (
                     <Button onClick={() => setShowCalendarEmailModal(true)}>
                         Connect Calendar
                     </Button>
                 )}
-                <H3>Your connected calendars emails</H3>
                 {isFetchingConnectedEmails && (
                     <CenteredContainer padding={2} width="100%">
                         <CircularProgress />
                     </CenteredContainer>
                 )}
-                {connectedEmails?.map(({ emailAddress }) => (
-                    <Paragraph key={emailAddress}>{emailAddress}</Paragraph>
-                ))}
+                <Box py={2}>
+                    {connectedEmails.map(({ emailAddress }) => (
+                        <Paragraph key={emailAddress}>{emailAddress}</Paragraph>
+                    ))}
+                    {connectedEmails.length === 0 &&
+                        !isFetchingConnectedEmails && (
+                            <Paragraph>No connected calendars.</Paragraph>
+                        )}
+                </Box>
                 {showCalendarEmailModal && !isFetchingConnectedEmails && (
                     <AddCalendarModal
-                        connectedEmails={['jessie@therify.co']}
+                        connectedEmails={connectedEmails.map(
+                            ({ emailAddress }) => emailAddress
+                        )}
                         onClose={() => {
                             setShowCalendarEmailModal(false);
                         }}
@@ -140,7 +148,6 @@ const AddCalendarModal = ({
 }) => {
     const {
         getValues,
-        setValue,
         watch,
         formState: { errors, isValid: isEmailValid },
         control,
