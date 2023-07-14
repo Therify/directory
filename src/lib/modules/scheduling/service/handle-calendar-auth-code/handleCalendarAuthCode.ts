@@ -9,10 +9,11 @@ export const factory =
     }: HandleCalendarAuthCode.Input): Promise<{
         success: HandleCalendarAuthCode.Output['success'];
     }> => {
-        const { accessToken, emailAddress } =
+        const { accessToken, emailAddress: rawEmailAddress } =
             await nylas.exchangeCodeForAccessToken({
                 code,
             });
+        const emailAddress = rawEmailAddress.toLowerCase().trim();
         const calendar = await prisma.calendarAccess.findFirst({
             where: {
                 emailAddress,

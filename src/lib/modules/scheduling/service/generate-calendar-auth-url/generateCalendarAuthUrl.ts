@@ -10,7 +10,7 @@ export const factory =
         authUrl: GenerateCalendarAuthUrl.Output['authUrl'];
     }> => {
         const { authUrl } = await nylas.generateAuthUrl({
-            emailAddress,
+            emailAddress: emailAddress.toLowerCase().trim(),
             successUrl,
         });
         return {
