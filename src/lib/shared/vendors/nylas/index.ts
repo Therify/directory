@@ -5,37 +5,35 @@ import {
     GetCalendars,
     CreateEvent,
     FactoryParams,
-    GetAccessToken,
+    ExchangeCodeForAccessToken,
+    GenerateAuthUrl,
 } from './methods';
+import { URL_PATHS } from '@/lib/sitemap';
 
-let hasBeenInitialized = false;
-
-async function withNylas<Result>(factoryFn: (params: FactoryParams) => Result) {
-    if (!hasBeenInitialized) {
-        console.log('Initializing Nylas');
-        const details = await withNylasConfiguration((CONFIG) => {
-            Nylas.config({
-                clientId: CONFIG.NYLAS_CLIENT_ID,
-                clientSecret: CONFIG.NYLAS_CLIENT_SECRET,
-                apiServer: CONFIG.NYLAS_API_SERVER,
-            });
-            return Nylas.application({
-                redirectUris: [CONFIG.APPLICATION_URL],
-            });
-        });
-        hasBeenInitialized = true;
-        console.log(details);
-    } else {
-        console.log('Nylas already initialized');
-    }
-    return factoryFn({ nylas: Nylas });
-}
+withNylasConfiguration((CONFIG) => {
+    const AUTH_SUCCESS_CALLBACK_URL =
+        CONFIG.APPLICATION_URL +
+        URL_PATHS.PROVIDERS.COACH.SCHEDULING.AUTH_SUCCESS;
+    console.log({ AUTH_SUCCESS_CALLBACK_URL });
+    Nylas.config({
+        clientId: CONFIG.NYLAS_CLIENT_ID,
+        clientSecret: CONFIG.NYLAS_CLIENT_SECRET,
+        apiServer: CONFIG.NYLAS_API_SERVER,
+    });
+    return Nylas.application({
+        redirectUris: [AUTH_SUCCESS_CALLBACK_URL],
+    });
+});
+const params: FactoryParams = {
+    nylas: Nylas,
+};
 
 export const vendorNylas = {
-    getAccessToken: withNylas(GetAccessToken.factory),
-    createEvent: withNylas(CreateEvent.factory),
-    getEventsByCalendar: withNylas(GetEventsByCalendar.factory),
-    getCalendars: withNylas(GetCalendars.factory),
+    exchangeCodeForAccessToken: ExchangeCodeForAccessToken.factory(params),
+    generateAuthUrl: GenerateAuthUrl.factory(params),
+    createEvent: CreateEvent.factory(params),
+    getEventsByCalendar: GetEventsByCalendar.factory(params),
+    getCalendars: GetCalendars.factory(params),
 };
 
 export type VendorNylas = typeof vendorNylas;

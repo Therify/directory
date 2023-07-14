@@ -52,6 +52,7 @@ model User {
   memberSessionInvoice   SessionInvoice[]    @relation("member")
   providerSessionInvoice SessionInvoice[]    @relation("provider")
   redeemedSessions       RedeemedSession[]
+  calendars              CalendarAccess[]
 
   @@map("users")
 }
@@ -432,4 +433,14 @@ model Channel {
   createdAt DateTime @default(now()) @map("created_at")
 
   @@map("channels")
+}
+
+model CalendarAccess {
+  userId       String @map("user_id")
+  user         User   @relation(fields: [userId], references: [id])
+  accessToken  String @map("access_token")
+  emailAddress String @unique @map("email_address")
+
+  @@id([userId, emailAddress])
+  @@map("calendar_access")
 }

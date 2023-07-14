@@ -1,7 +1,8 @@
 import * as z from 'zod';
 
 export const schema = z.object({
-    token: z.string(),
+    code: z.string(),
+    userId: z.string(),
 });
 
 export type Input = z.infer<typeof schema>;
