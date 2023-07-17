@@ -27,6 +27,7 @@ export const factory =
                 },
                 data: {
                     accessToken,
+                    isValid: true,
                 },
             });
         } else {
@@ -35,6 +36,7 @@ export const factory =
                     userId,
                     emailAddress,
                     accessToken,
+                    isValid: true,
                 },
             });
         }

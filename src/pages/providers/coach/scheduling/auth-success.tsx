@@ -59,7 +59,7 @@ export default function CalendarAuthSuccessPage({
         }
     );
     useEffect(() => {
-        if (code) {
+        if (code && user?.userId) {
             handleCalendarAuthCode({ code, userId: user.userId });
             setHasSentCode(true);
         }

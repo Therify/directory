@@ -436,10 +436,13 @@ model Channel {
 }
 
 model CalendarAccess {
-  userId       String @map("user_id")
-  user         User   @relation(fields: [userId], references: [id])
-  accessToken  String @map("access_token")
-  emailAddress String @unique @map("email_address")
+  userId       String   @map("user_id")
+  user         User     @relation(fields: [userId], references: [id])
+  accessToken  String   @map("access_token")
+  emailAddress String   @unique @map("email_address")
+  isValid      Boolean  @default(true) @map("is_valid")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
   @@id([userId, emailAddress])
   @@map("calendar_access")
