@@ -2,7 +2,7 @@ import { GetConnectedCalendarEmails } from '@/lib/modules/scheduling/features';
 import { SchedulingServiceParams } from '../params';
 
 export const factory =
-    ({ nylas, prisma }: SchedulingServiceParams) =>
+    ({ prisma }: SchedulingServiceParams) =>
     async ({
         userId,
     }: GetConnectedCalendarEmails.Input): Promise<{
@@ -11,6 +11,13 @@ export const factory =
         const calendarEmails = await prisma.calendarAccess.findMany({
             where: {
                 userId,
+            },
+            select: {
+                userId: true,
+                emailAddress: true,
+                isValid: true,
+                createdAt: true,
+                updatedAt: true,
             },
         });
 

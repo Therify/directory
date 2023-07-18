@@ -1,11 +1,14 @@
+import { CalendarAccessSchema } from '@/lib/shared/schema';
 import * as z from 'zod';
 
 export const schema = z.object({
-    calendarEmails: z.array(
-        z.object({
-            emailAddress: z.string(),
-        })
-    ),
+    calendarEmails: CalendarAccessSchema.pick({
+        userId: true,
+        emailAddress: true,
+        isValid: true,
+        createdAt: true,
+        updatedAt: true,
+    }).array(),
     errors: z.array(z.string()),
 });
 

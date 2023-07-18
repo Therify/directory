@@ -119,9 +119,9 @@ export default function SchedulingPage({ user }: ProviderTherifyUserPageProps) {
                 </Box>
                 {showCalendarEmailModal && !isFetchingConnectedEmails && (
                     <AddCalendarModal
-                        connectedEmails={connectedEmails.map(
-                            ({ emailAddress }) => emailAddress
-                        )}
+                        connectedEmails={connectedEmails
+                            .filter((e) => e.isValid)
+                            .map(({ emailAddress }) => emailAddress)}
                         onClose={() => {
                             setShowCalendarEmailModal(false);
                         }}
