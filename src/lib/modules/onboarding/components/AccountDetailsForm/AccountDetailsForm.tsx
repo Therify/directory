@@ -257,7 +257,7 @@ export const AccountDetailsForm = ({
                                     seatCountField.onChange(1);
                                     planType.onChange('individual');
                                     accountNameField.onChange(
-                                        defaultValues?.name
+                                        defaultValues?.name ?? ''
                                     );
                                 }
                             }}
