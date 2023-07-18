@@ -8,12 +8,11 @@ export const schema = UserSchema.omit({
     .extend({
         password: z.string().min(8),
         confirmPassword: z.string().min(8),
-        acceptTermsAndConditions: z.boolean(),
     })
     .refine((data) => data.password === data.confirmPassword, {
         message: 'Passwords do not match',
     })
-    .refine((data) => data.acceptTermsAndConditions, {
+    .refine((data) => data.hasAcceptedTermsAndConditions, {
         message: 'You must accept the terms and conditions',
     });
 

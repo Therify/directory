@@ -1,10 +1,9 @@
-import { generateMock } from '@anatine/zod-mock';
-import { VendorStripe } from '@/lib/shared/vendors/stripe';
-import { VendorAuth0 } from '@/lib/shared/vendors/auth0';
 import { Role } from '@prisma/client';
 import { prismaMock } from '@/lib/prisma/__mock__';
 import * as CreateUser from './createUser';
-import { inputSchema } from './schema';
+import { Input } from './schema';
+import { faker } from '@faker-js/faker';
+import { AccountsServiceParams } from '../params';
 
 describe('CreateUser', function () {
     it('throws an error if the user already exists', async function () {
@@ -13,15 +12,17 @@ describe('CreateUser', function () {
         );
         const createUser = CreateUser.factory({
             prisma: prismaMock,
-            auth0: {} as VendorAuth0,
-            stripe: {} as VendorStripe,
-        });
-        const input = {
-            ...generateMock(inputSchema),
+        } as unknown as AccountsServiceParams);
+        const input: Input = {
+            givenName: faker.name.firstName(),
+            surname: faker.name.lastName(),
+            dateOfBirth: faker.date.past(18),
+            emailAddress: faker.internet.email(),
             roles: [Role.member],
-            acceptTermsAndConditions: true,
+            hasAcceptedTermsAndConditions: true,
             password: 'password',
             confirmPassword: 'password',
+            id: 'auth0|id',
         };
         await expect(createUser(input)).rejects.toThrow(
             'Unique constraint failed on the fields: (`email`)'
