@@ -9,4 +9,8 @@ process.env = Object.assign(process.env, {
     FIREBASE_ADMIN_PROJECT_ID: 'firebase-project-id',
     FIREBASE_ADMIN_PRIVATE_KEY: 'firebase-private-key',
     KNOCK_API_KEY: 'knock-api-key',
+    NYLAS_CLIENT_ID: 'nylas-client-id',
+    NYLAS_CLIENT_SECRET: 'nylas-client-secret',
+    NYLAS_API_SERVER: 'nylas-api-server',
+    APPLICATION_URL: 'therify-application-url',
 });

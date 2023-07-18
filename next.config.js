@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    transpilePackages: ['@nylas/nylas-js'],
     images: {
         domains: ['res.cloudinary.com'],
     },
