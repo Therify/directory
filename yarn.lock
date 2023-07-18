@@ -25,7 +25,7 @@
     "@jridgewell/gen-mapping" "^0.3.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@anatine/zod-mock@^3.10.0":
+"@anatine/zod-mock@^3.8.3":
   version "3.13.1"
   resolved "https://registry.yarnpkg.com/@anatine/zod-mock/-/zod-mock-3.13.1.tgz#d1bc6a3bd659f4f0c77ddee99a957f35991d1d05"
   integrity sha512-wm0Bf+hWqoG9m4289CHv7bq+IV87voAb5FUy90DE99CPDGRFmICImaJcau8KHTwn5o7/YBnZYV6c36Vbx/2u0w==
