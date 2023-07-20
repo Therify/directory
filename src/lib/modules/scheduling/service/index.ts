@@ -4,6 +4,7 @@ import { vendorNylas } from '@/lib/shared/vendors/nylas';
 import { HandleCalendarAuthCode } from './handle-calendar-auth-code';
 import { GenerateCalendarAuthUrl } from './generate-calendar-auth-url';
 import { GetConnectedCalendarEmails } from './get-connected-calendar-emails';
+import { RemoveCalendarAccess } from './remove-calendar-access';
 
 const factoryParams: SchedulingServiceParams = {
     prisma,
@@ -14,6 +15,7 @@ export const SchedulingService = {
     handleCalendarAuthCode: HandleCalendarAuthCode.factory(factoryParams),
     getConnectedCalendarEmails:
         GetConnectedCalendarEmails.factory(factoryParams),
+    removeCalendarAccess: RemoveCalendarAccess.factory(factoryParams),
 };
 
 export type SchedulingService = typeof SchedulingService;
