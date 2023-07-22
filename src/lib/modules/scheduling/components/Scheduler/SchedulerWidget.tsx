@@ -1,4 +1,5 @@
-import { Paper, styled, SxProps, Theme } from '@mui/material';
+import { Paper } from '@mui/material';
+import { styled, SxProps, Theme } from '@mui/material/styles';
 import {
     H3,
     Paragraph,

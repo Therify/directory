@@ -15,10 +15,10 @@ export const factory =
             calendar_id: calendarId,
             starts_after: startsAfter
                 ? new Date(startsAfter).getTime() / 1000
-                : undefined,
-            ends_before: endsBefore
-                ? new Date(endsBefore).getTime() / 1000
-                : undefined,
+                : new Date().getTime() / 1000,
+            ...(endsBefore && {
+                ends_before: new Date(endsBefore).getTime() / 1000,
+            }),
             limit,
         });
         return { events: Event.schema.array().parse(events) };

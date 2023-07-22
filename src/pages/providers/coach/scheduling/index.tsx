@@ -23,6 +23,8 @@ import {
     FloatingList,
 } from '@/lib/shared/components/ui';
 import { Alerts } from '@/lib/modules/alerts/context';
+import { SchedulerDrawer } from '@/lib/modules/scheduling/components';
+import { intervalToDuration } from 'date-fns';
 
 export const getServerSideProps = RBAC.requireCoachAuth(
     withPageAuthRequired({
@@ -34,6 +36,7 @@ export default function SchedulingPage({ user }: ProviderTherifyUserPageProps) {
     const { flags } = useFeatureFlags(user);
     const { createAlert } = useContext(Alerts.Context);
     const [showCalendarEmailModal, setShowCalendarEmailModal] = useState(false);
+    const [showAvailability, setShowAvailability] = useState(false);
     const [removeCalendarEmail, setRemoveCalendarEmail] = useState<string>();
     const [isRedirectingToCalendarAuth, setIsRedirectingToCalendarAuth] =
         useState(false);
@@ -128,6 +131,22 @@ export default function SchedulingPage({ user }: ProviderTherifyUserPageProps) {
             enabled: Boolean(user?.userId),
         }
     );
+    const {
+        data: availableTimeSlots,
+        isLoading: isGettingAvailableTimeSlots,
+        refetch: getAvilableTimeSlots,
+    } = trpc.useQuery(
+        [
+            'scheduling.get-available-time-slots',
+            {
+                userId: user?.userId ?? '',
+            },
+        ],
+        {
+            refetchOnWindowFocus: false,
+            enabled: false,
+        }
+    );
     const connectedEmails = connectedEmailsData?.calendarEmails ?? [];
     const createAuthUrl = (emailAddress: string) => {
         generateAuthUrl({
@@ -150,6 +169,21 @@ export default function SchedulingPage({ user }: ProviderTherifyUserPageProps) {
                 {!isFetchingConnectedEmails && (
                     <Button onClick={() => setShowCalendarEmailModal(true)}>
                         Connect Calendar
+                    </Button>
+                )}
+                {!isFetchingConnectedEmails && (
+                    <Button
+                        type="outlined"
+                        disabled={isGettingAvailableTimeSlots}
+                        onClick={() => {
+                            setShowAvailability(true);
+                            if (!availableTimeSlots) {
+                                getAvilableTimeSlots();
+                            }
+                        }}
+                        sx={{ marginLeft: 2 }}
+                    >
+                        See Availability
                     </Button>
                 )}
                 {isFetchingConnectedEmails && (
@@ -218,6 +252,22 @@ export default function SchedulingPage({ user }: ProviderTherifyUserPageProps) {
                         }
                     />
                 )}
+
+                <SchedulerDrawer
+                    isOpen={showAvailability}
+                    title="Availability"
+                    onClose={() => setShowAvailability(false)}
+                    onSchedule={(slot) =>
+                        alert('scheduled slot: ' + slot.start)
+                    }
+                    timeSlots={
+                        availableTimeSlots?.availability?.map((slot) => ({
+                            start: new Date(slot.start),
+                            duration: intervalToDuration(slot).minutes ?? 0,
+                        })) ?? []
+                    }
+                    isLoading={isGettingAvailableTimeSlots}
+                />
             </Box>
         </ProviderNavigationPage>
     );

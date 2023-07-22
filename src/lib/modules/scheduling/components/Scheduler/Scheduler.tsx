@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Box, useTheme, styled } from '@mui/material';
+import { Box } from '@mui/material';
+import { useTheme, styled } from '@mui/material/styles';
 import {
     ErrorOutline as ErrorIcon,
     ChevronLeftRounded as LeftIcon,

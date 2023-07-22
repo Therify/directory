@@ -1,10 +1,5 @@
-import {
-    Drawer as MuiDrawer,
-    Box,
-    styled,
-    SxProps,
-    Theme,
-} from '@mui/material';
+import { Drawer as MuiDrawer, Box } from '@mui/material';
+import { SxProps, Theme, styled } from '@mui/material/styles';
 import { ChevronLeftRounded as CloseIcon } from '@mui/icons-material';
 import {
     CenteredContainer,
