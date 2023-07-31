@@ -70,7 +70,8 @@ export const getAvailabilityTimeSlotsDate = ({
                     ).getTime(),
                 };
                 return generateTimeSlots({
-                    timeIntervalMinutes: 15,
+                    slotStartIntervalMinutes: 5,
+                    slotLengthMinutes: 15,
                     timeWindow,
                     events: events.filter((event) =>
                         doesTimeSlotOverlapWindow(event, timeWindow)

@@ -4,28 +4,33 @@ import { TimeSlot } from '../types';
 interface GenerateSlotParams {
     timeWindow: TimeSlot;
     events: TimeSlot[]; // Events must be sorted by start time!
-    timeIntervalMinutes?: number;
+    slotStartIntervalMinutes?: number;
+    slotLengthMinutes: number;
 }
 
 export const generateTimeSlots = ({
     timeWindow,
     events,
-    timeIntervalMinutes = 15,
+    slotStartIntervalMinutes = 15,
+    slotLengthMinutes,
 }: GenerateSlotParams): TimeSlot[] => {
     const slots: TimeSlot[] = [];
     let eventIndex = 0;
     let currentSlot: TimeSlot = {
-        start: getSlotStart(timeWindow.start, timeIntervalMinutes),
-        end: getSlotEnd(timeWindow.start, timeIntervalMinutes),
+        start: getSlotStart(timeWindow.start, slotStartIntervalMinutes),
+        end: getSlotEnd(timeWindow.start, slotLengthMinutes),
     };
 
     while (isSlotInWindow(currentSlot, timeWindow)) {
         const event = events[eventIndex];
         if (event && isOverlap(currentSlot, event)) {
-            const nextSlotStart = getSlotStart(event.end, timeIntervalMinutes);
+            const nextSlotStart = getSlotStart(
+                event.end,
+                slotStartIntervalMinutes
+            );
             currentSlot = {
                 start: nextSlotStart,
-                end: getSlotEnd(nextSlotStart, timeIntervalMinutes),
+                end: getSlotEnd(nextSlotStart, slotLengthMinutes),
             };
             // Find next event that starts after current event ends
             const nextEventIndex = events
@@ -40,31 +45,38 @@ export const generateTimeSlots = ({
             continue;
         }
         slots.push(currentSlot);
+        const nextSlotStart = getSlotStart(
+            addMinutes(currentSlot.start, slotStartIntervalMinutes).getTime(),
+            slotStartIntervalMinutes
+        );
         currentSlot = {
-            start: currentSlot.end,
-            end: getSlotEnd(currentSlot.end, timeIntervalMinutes),
+            start: nextSlotStart,
+            end: getSlotEnd(nextSlotStart, slotLengthMinutes),
         };
     }
     return slots;
 };
 
-const roundToNearestMinutes = (time: number, timeIntervalMinutes: number) => {
+const roundToNextNearestMinutes = (
+    time: number,
+    slotStartIntervalMinutes: number
+) => {
     var timeToReturn = new Date(time);
 
     timeToReturn.setMilliseconds(0);
     timeToReturn.setSeconds(0);
     timeToReturn.setMinutes(
-        Math.ceil(timeToReturn.getMinutes() / timeIntervalMinutes) *
-            timeIntervalMinutes
+        Math.ceil(timeToReturn.getMinutes() / slotStartIntervalMinutes) *
+            slotStartIntervalMinutes
     );
     return timeToReturn;
 };
 
-const getSlotStart = (start: number, timeIntervalMinutes: number) =>
-    roundToNearestMinutes(start, timeIntervalMinutes).getTime();
+const getSlotStart = (start: number, slotStartIntervalMinutes: number) =>
+    roundToNextNearestMinutes(start, slotStartIntervalMinutes).getTime();
 
-const getSlotEnd = (start: number, timeIntervalMinutes: number) =>
-    addMinutes(start, timeIntervalMinutes).getTime();
+const getSlotEnd = (start: number, slotLengthMinutes: number) =>
+    addMinutes(start, slotLengthMinutes).getTime();
 
 const isSlotInWindow = (slot: TimeSlot, window: TimeSlot) => {
     const isStartInWindow =
