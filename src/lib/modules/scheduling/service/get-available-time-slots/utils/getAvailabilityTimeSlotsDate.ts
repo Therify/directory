@@ -1,7 +1,7 @@
 import { utcToZonedTime, formatInTimeZone } from 'date-fns-tz';
 import { TimeSlot, AvailabilityWindow } from '../types';
-import { isAfter, isBefore, isSameMinute } from 'date-fns';
 import { generateTimeSlots } from './generateTimeSlots';
+import { doesTimeSlotOverlapWindow } from './doesTimeSlotOverlapWindow';
 
 interface GetEventsByAvailabilityWindowsParams {
     events: TimeSlot[];
@@ -16,7 +16,9 @@ export const getAvailabilityTimeSlotsDate = ({
     const supportedDaysOfWeek = Array.from(
         new Set(availabilityWindows.map((window) => window.dayOfWeek))
     );
-    const windowsByDayOfWeek = supportedDaysOfWeek.reduce((acc, dayOfWeek) => {
+    const windowsByDayOfWeek = supportedDaysOfWeek.reduce<{
+        [dayOfWeek: string]: AvailabilityWindow[];
+    }>((acc, dayOfWeek) => {
         const windows = availabilityWindows.filter(
             (window) => window.dayOfWeek === dayOfWeek
         );
@@ -24,23 +26,26 @@ export const getAvailabilityTimeSlotsDate = ({
             ...acc,
             [dayOfWeek]: windows,
         };
-    }, {} as Record<string, AvailabilityWindow[]>);
-    // Sort events by day of week
-    const eventsByDate = events.reduce((acc, event) => {
-        // const dayOfWeek = format(utcToZonedTime(event.start, timeZone), 'EEEE')
-        const date = formatInTimeZone(event.start, timeZone, 'yyyy-MM-dd');
-        if (acc[date] === undefined) {
+    }, {});
+    console.log({ events });
+    // Sort events by date accounting for timezone
+    const eventsByDate = events.reduce<{ [timeZoneDate: string]: TimeSlot[] }>(
+        (acc, event) => {
+            const date = formatInTimeZone(event.start, timeZone, 'yyyy-MM-dd');
+            if (acc[date] === undefined) {
+                return {
+                    ...acc,
+                    [date]: [event],
+                };
+            }
+
             return {
                 ...acc,
-                [date]: [event],
+                [date]: [...acc[date], event],
             };
-        }
-
-        return {
-            ...acc,
-            [date]: [...acc[date], event],
-        };
-    }, {} as Record<string, TimeSlot[]>);
+        },
+        {}
+    );
 
     const availableTimeSlotsByDate = Object.entries(eventsByDate).reduce(
         (acc, [date, events]) => {
@@ -67,12 +72,8 @@ export const getAvailabilityTimeSlotsDate = ({
                 return generateTimeSlots({
                     timeIntervalMinutes: 15,
                     timeWindow,
-                    events: events.filter(
-                        (event) =>
-                            isAfter(event.start, timeWindow.start) ||
-                            isBefore(event.end, timeWindow.end) ||
-                            isSameMinute(event.start, timeWindow.start) ||
-                            isSameMinute(event.end, timeWindow.end)
+                    events: events.filter((event) =>
+                        doesTimeSlotOverlapWindow(event, timeWindow)
                     ),
                 });
             });
@@ -81,11 +82,5 @@ export const getAvailabilityTimeSlotsDate = ({
         },
         [] as TimeSlot[]
     );
-    console.log({
-        supportedDaysOfWeek,
-        windowsByDayOfWeek,
-        eventsByDate,
-        availableTimeSlotsByDate,
-    });
     return availableTimeSlotsByDate;
 };

@@ -2,6 +2,7 @@ import { GetAvailableTimeSlots } from '@/lib/modules/scheduling/features';
 import { SchedulingServiceParams } from '../params';
 import { getAvailabilityTimeSlotsDate } from './utils/getAvailabilityTimeSlotsDate';
 import { AvailabilityWindow } from './types';
+import { collapseOverlapingEventWindows } from './utils/collapseOverlapingEventWindows';
 
 // TODO: These will be provider preferences
 const availabilityWindows: AvailabilityWindow[] = [
@@ -38,11 +39,9 @@ export const factory =
     async ({
         userId,
         emailAddress,
-    }: GetAvailableTimeSlots.Input): Promise<
-        {
-            availability: GetAvailableTimeSlots.Output['availability'];
-        } & any
-    > => {
+    }: GetAvailableTimeSlots.Input): Promise<{
+        availability: GetAvailableTimeSlots.Output['availability'];
+    }> => {
         const calendarAccess = await prisma.calendarAccess.findMany({
             where: {
                 userId,
@@ -52,8 +51,8 @@ export const factory =
 
         const eventsByCalendar = await Promise.all(
             calendarAccess.map(async ({ accessToken, emailAddress: email }) => {
+                // TODO: store calendar ids on calendar access
                 const { calendars } = await nylas.getCalendars({ accessToken });
-                console.log(calendars);
                 const emailCalendar = calendars.find(
                     (calendar) => calendar.name === email
                 );
@@ -64,7 +63,7 @@ export const factory =
                     accessToken,
                     calendarId: emailCalendar.id as string,
                 });
-                return events;
+                return events ?? [];
             })
         );
         const sortedEvents = eventsByCalendar
@@ -75,13 +74,10 @@ export const factory =
                 }));
             })
             .sort((a, b) => a.start - b.start);
-        // Calculate 15 minute intervals between 8am-5pm monday through friday
-        // using a schedule interval algorithm
-        // https://stackoverflow.com/questions/4678168/efficient-algorithm-for-a-calendar
 
         return {
             availability: getAvailabilityTimeSlotsDate({
-                events: sortedEvents,
+                events: collapseOverlapingEventWindows(sortedEvents),
                 availabilityWindows,
                 timeZone,
             }),
