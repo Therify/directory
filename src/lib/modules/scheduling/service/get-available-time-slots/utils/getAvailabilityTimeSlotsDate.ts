@@ -27,7 +27,6 @@ export const getAvailabilityTimeSlotsDate = ({
             [dayOfWeek]: windows,
         };
     }, {});
-    console.log({ events });
     // Sort events by date accounting for timezone
     const eventsByDate = events.reduce<{ [timeZoneDate: string]: TimeSlot[] }>(
         (acc, event) => {
