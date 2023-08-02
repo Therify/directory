@@ -4,6 +4,7 @@ import {
     handleCalendarAuthCodeResolver,
     getConnectedCalendarEmailsResolver,
     removeCalendarAccessResolver,
+    getAvailableTimeSlotsResolver,
 } from './resolvers';
 import { Context } from '../../../server/context';
 import {
@@ -11,6 +12,7 @@ import {
     GetConnectedCalendarEmails,
     HandleCalendarAuthCode,
     RemoveCalendarAccess,
+    GetAvailableTimeSlots,
 } from '@/lib/modules/scheduling/features';
 
 export const router = trpc
@@ -19,6 +21,11 @@ export const router = trpc
         input: GetConnectedCalendarEmails.inputSchema,
         output: GetConnectedCalendarEmails.outputSchema,
         resolve: getConnectedCalendarEmailsResolver,
+    })
+    .query(GetAvailableTimeSlots.TRPC_ROUTE, {
+        input: GetAvailableTimeSlots.inputSchema,
+        output: GetAvailableTimeSlots.outputSchema,
+        resolve: getAvailableTimeSlotsResolver,
     })
     .mutation(GenerateCalendarAuthUrl.TRPC_ROUTE, {
         input: GenerateCalendarAuthUrl.inputSchema,

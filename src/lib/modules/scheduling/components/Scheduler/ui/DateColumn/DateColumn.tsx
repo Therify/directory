@@ -1,5 +1,6 @@
 import { format } from 'date-fns';
-import { Skeleton, styled, Box } from '@mui/material';
+import { Skeleton, Box } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import {
     VideoCameraFrontOutlined as VideoIcon,
     VideoCameraFrontRounded as VideoIconFilled,

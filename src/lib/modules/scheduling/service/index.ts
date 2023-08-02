@@ -5,6 +5,7 @@ import { HandleCalendarAuthCode } from './handle-calendar-auth-code';
 import { GenerateCalendarAuthUrl } from './generate-calendar-auth-url';
 import { GetConnectedCalendarEmails } from './get-connected-calendar-emails';
 import { RemoveCalendarAccess } from './remove-calendar-access';
+import { GetAvailableTimeSlots } from './get-available-time-slots';
 
 const factoryParams: SchedulingServiceParams = {
     prisma,
@@ -16,6 +17,7 @@ export const SchedulingService = {
     getConnectedCalendarEmails:
         GetConnectedCalendarEmails.factory(factoryParams),
     removeCalendarAccess: RemoveCalendarAccess.factory(factoryParams),
+    getAvailableTimeSlots: GetAvailableTimeSlots.factory(factoryParams),
 };
 
 export type SchedulingService = typeof SchedulingService;
