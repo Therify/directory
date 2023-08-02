@@ -3,14 +3,14 @@ import { TimeSlot } from '../types';
 
 interface GenerateSlotParams {
     timeWindow: TimeSlot;
-    events: TimeSlot[]; // Events must be sorted by start time!
+    events?: TimeSlot[]; // Events must be sorted by start time!
     slotStartIntervalMinutes?: number;
     slotLengthMinutes: number;
 }
 
 export const generateTimeSlots = ({
     timeWindow,
-    events,
+    events = [],
     slotStartIntervalMinutes = 15,
     slotLengthMinutes,
 }: GenerateSlotParams): TimeSlot[] => {
@@ -20,7 +20,6 @@ export const generateTimeSlots = ({
         start: getSlotStart(timeWindow.start, slotStartIntervalMinutes),
         end: getSlotEnd(timeWindow.start, slotLengthMinutes),
     };
-
     while (isSlotInWindow(currentSlot, timeWindow)) {
         const event = events[eventIndex];
         if (event && isOverlap(currentSlot, event)) {

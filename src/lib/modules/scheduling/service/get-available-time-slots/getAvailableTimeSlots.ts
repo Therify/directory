@@ -1,11 +1,13 @@
 import { GetAvailableTimeSlots } from '@/lib/modules/scheduling/features';
 import { SchedulingServiceParams } from '../params';
-import { getAvailabilityTimeSlotsDate } from './utils/getAvailabilityTimeSlotsDate';
+import { getAvailability } from './utils/getAvailability';
 import { AvailabilityWindow } from './types';
 import { collapseOverlapingEventWindows } from './utils/collapseOverlapingEventWindows';
-
+import { endOfDay, startOfDay } from 'date-fns';
+import { getAvailabilityWindowsForTimeOfDay } from './utils/getAvailabilityWindowsForTimeOfDay';
+// TODO: cap maximum future booking window (ex. 2 months in advance)
 // TODO: These will be provider preferences
-const availabilityWindows: AvailabilityWindow[] = [
+const providerAvailabilityWindows: AvailabilityWindow[] = [
     {
         dayOfWeek: 'Monday',
         startTime: '08:00:00',
@@ -33,19 +35,34 @@ const availabilityWindows: AvailabilityWindow[] = [
     },
 ];
 const timeZone = 'America/Chicago';
+const timeOfDayWindows = {
+    morning: {
+        startTime: '04:00:00',
+        endTime: '12:00:00',
+    },
+    afternoon: {
+        startTime: '12:00:00',
+        endTime: '17:00:00',
+    },
+    evening: {
+        startTime: '17:00:00',
+        endTime: '21:00:00',
+    },
+};
 
 export const factory =
     ({ prisma, nylas }: SchedulingServiceParams) =>
     async ({
         userId,
-        emailAddress,
+        startDate,
+        endDate,
+        timeOfDay,
     }: GetAvailableTimeSlots.Input): Promise<{
         availability: GetAvailableTimeSlots.Output['availability'];
     }> => {
         const calendarAccess = await prisma.calendarAccess.findMany({
             where: {
                 userId,
-                emailAddress,
             },
         });
 
@@ -54,7 +71,7 @@ export const factory =
                 // TODO: store calendar ids on calendar access
                 const { calendars } = await nylas.getCalendars({ accessToken });
                 const emailCalendar = calendars.find(
-                    (calendar) => calendar.name === email
+                    (calendar) => calendar.isPrimary
                 );
                 if (!emailCalendar) {
                     throw new Error('Calendar not found for email ' + email);
@@ -62,6 +79,8 @@ export const factory =
                 const { events } = await nylas.getEventsByCalendar({
                     accessToken,
                     calendarId: emailCalendar.id as string,
+                    startsAfter: startOfDay(new Date(startDate)).toISOString(),
+                    endsBefore: endOfDay(new Date(endDate)).toISOString(),
                 });
                 return events ?? [];
             })
@@ -74,12 +93,20 @@ export const factory =
                 }));
             })
             .sort((a, b) => a.start - b.start);
-
+        const availabilityWindows =
+            timeOfDay && timeOfDayWindows[timeOfDay]
+                ? getAvailabilityWindowsForTimeOfDay(
+                      timeOfDayWindows[timeOfDay],
+                      providerAvailabilityWindows
+                  )
+                : providerAvailabilityWindows;
         return {
-            availability: getAvailabilityTimeSlotsDate({
+            availability: getAvailability({
                 events: collapseOverlapingEventWindows(sortedEvents),
                 availabilityWindows,
                 timeZone,
+                startDate: new Date(startDate),
+                endDate: new Date(endDate),
             }),
         };
     };

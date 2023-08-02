@@ -16,6 +16,7 @@ export const resolve: ProcedureResolver<
             errors: [],
         };
     } catch (error) {
+        console.log(error);
         let errorMessage =
             'Failed to get avalability. Experienced an unknown error.';
         if (error instanceof Error) {

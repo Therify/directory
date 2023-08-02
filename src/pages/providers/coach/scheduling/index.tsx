@@ -1,3 +1,4 @@
+import { addDays, endOfDay, intervalToDuration, startOfDay } from 'date-fns';
 import { useState, useContext } from 'react';
 import { Box, CircularProgress } from '@mui/material';
 import { CalendarMonthOutlined, Delete } from '@mui/icons-material';
@@ -24,7 +25,6 @@ import {
 } from '@/lib/shared/components/ui';
 import { Alerts } from '@/lib/modules/alerts/context';
 import { SchedulerDrawer } from '@/lib/modules/scheduling/components';
-import { intervalToDuration } from 'date-fns';
 
 export const getServerSideProps = RBAC.requireCoachAuth(
     withPageAuthRequired({
@@ -140,6 +140,8 @@ export default function SchedulingPage({ user }: ProviderTherifyUserPageProps) {
             'scheduling.get-available-time-slots',
             {
                 userId: user?.userId ?? '',
+                startDate: startOfDay(addDays(new Date(), 1)).toISOString(),
+                endDate: endOfDay(addDays(new Date(), 30)).toISOString(),
             },
         ],
         {

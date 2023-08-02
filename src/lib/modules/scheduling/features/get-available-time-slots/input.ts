@@ -2,9 +2,9 @@ import * as z from 'zod';
 
 export const schema = z.object({
     userId: z.string(),
-    emailAddress: z.string().optional(),
-    startDate: z.string().optional(),
-    endDate: z.string().optional(),
+    startDate: z.string(),
+    endDate: z.string(),
+    timeOfDay: z.enum(['morning', 'afternoon', 'evening']).optional(),
 });
 
 export type Input = z.infer<typeof schema>;
