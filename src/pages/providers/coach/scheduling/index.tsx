@@ -128,7 +128,7 @@ export default function SchedulingPage({ user }: ProviderTherifyUserPageProps) {
         ],
         {
             refetchOnWindowFocus: false,
-            enabled: Boolean(user?.userId),
+            enabled: Boolean(user?.userId) && flags.isCoachSchedulingEnabled,
         }
     );
     const {
@@ -158,8 +158,10 @@ export default function SchedulingPage({ user }: ProviderTherifyUserPageProps) {
                 URL_PATHS.PROVIDERS.COACH.SCHEDULING.AUTH_SUCCESS,
         });
     };
-    if (!user) {
-        return <div>Scheduling is not available</div>;
+    if (!user || !flags.isCoachSchedulingEnabled) {
+        return (
+            <CenteredContainer>Scheduling is not available</CenteredContainer>
+        );
     }
     return (
         <ProviderNavigationPage
