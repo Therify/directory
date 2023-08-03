@@ -7,6 +7,7 @@ export const SERVER_FLAGS = {
     CAN_ACCESS_CLIENT_DETAILS_PAGE: 'can-access-client-details-page',
     BANNER_CONTENT: 'banner-content',
     IS_DTC_REGISTRATION_OPEN: 'is-dtc-registration-open',
+    IS_COACH_SCHEDULING_ENABLED: 'is-coach-scheduling-enabled',
 } as const;
 
 export const CLIENT_FLAGS = {
@@ -16,6 +17,7 @@ export const CLIENT_FLAGS = {
     CAN_ACCESS_CLIENT_DETAILS_PAGE: 'canAccessClientDetailsPage',
     BANNER_CONTENT: 'bannerContent',
     IS_DTC_REGISTRATION_OPEN: 'isDtcRegistrationOpen',
+    IS_COACH_SCHEDULING_ENABLED: 'isCoachSchedulingEnabled',
 } as const;
 
 export const schema = z.object({
@@ -30,6 +32,7 @@ export const schema = z.object({
         linkText: z.string().optional(),
     }),
     [CLIENT_FLAGS.IS_DTC_REGISTRATION_OPEN]: z.boolean(),
+    [CLIENT_FLAGS.IS_COACH_SCHEDULING_ENABLED]: z.boolean(),
 });
 
 export type Type = z.infer<typeof schema>;
@@ -44,6 +47,7 @@ export const defaultFlags: FeatureFlags = {
     [CLIENT_FLAGS.CAN_ACCESS_CLIENT_DETAILS_PAGE]: false,
     [CLIENT_FLAGS.BANNER_CONTENT]: {},
     [CLIENT_FLAGS.IS_DTC_REGISTRATION_OPEN]: false,
+    [CLIENT_FLAGS.IS_COACH_SCHEDULING_ENABLED]: false,
 };
 
 export const isValid = (flags: unknown): boolean => {
