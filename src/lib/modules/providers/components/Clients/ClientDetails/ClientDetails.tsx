@@ -128,9 +128,7 @@ export const ClientDetails = ({
                 <ButtonsContainer>
                     {onCreateInvoice && provider.stripeConnectAccountId && (
                         <Button
-                            onClick={() => {
-                                onCreateInvoice();
-                            }}
+                            onClick={onCreateInvoice}
                             endIcon={<PaymentOutlined />}
                         >
                             Send Session Invoice
