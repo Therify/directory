@@ -7,12 +7,19 @@ import { ChatPageProps } from '@/lib/modules/providers/service/page-props/get-ch
 import { MemberNavigationPage } from '@/lib/shared/components/features/pages/MemberNavigationPage';
 import { RBAC } from '@/lib/shared/utils/rbac';
 import { adaptUserIdentifier } from '@/lib/shared/vendors/stream-chat/adapt-user-identifier';
+import { URL_PATHS } from '@/lib/sitemap';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 
 export const getServerSideProps = RBAC.requireMemberAuth(
     withPageAuthRequired({
         getServerSideProps: membersService.getChatPageProps,
-    })
+    }),
+    {
+        redirect: {
+            destination: URL_PATHS.AUTH.LOGIN,
+            permanent: false,
+        },
+    }
 );
 
 export default function ChatPage({ user }: ChatPageProps) {

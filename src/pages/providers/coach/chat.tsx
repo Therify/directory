@@ -9,11 +9,18 @@ import { RBAC } from '@/lib/shared/utils/rbac';
 import { adaptUserIdentifier } from '@/lib/shared/vendors/stream-chat/adapt-user-identifier';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { useFeatureFlags } from '@/lib/shared/hooks';
+import { URL_PATHS } from '@/lib/sitemap';
 
 export const getServerSideProps = RBAC.requireCoachAuth(
     withPageAuthRequired({
         getServerSideProps: ProvidersService.pageProps.getChatPageProps,
-    })
+    }),
+    {
+        redirect: {
+            destination: URL_PATHS.AUTH.LOGIN,
+            permanent: false,
+        },
+    }
 );
 
 export default function ChatPage({ user }: ChatPageProps) {
