@@ -126,16 +126,14 @@ export const ClientDetails = ({
                     </Box>
                 </Box>
                 <ButtonsContainer>
-                    {!hasSessionsRemaining &&
-                        onCreateInvoice &&
-                        provider.stripeConnectAccountId && (
-                            <Button
-                                onClick={onCreateInvoice}
-                                endIcon={<PaymentOutlined />}
-                            >
-                                Send Session Invoice
-                            </Button>
-                        )}
+                    {onCreateInvoice && provider.stripeConnectAccountId && (
+                        <Button
+                            onClick={onCreateInvoice}
+                            endIcon={<PaymentOutlined />}
+                        >
+                            Send Session Invoice
+                        </Button>
+                    )}
                     {hasSessionsRemaining && (
                         <Button
                             endIcon={<RequestQuoteOutlined />}
@@ -149,6 +147,8 @@ export const ClientDetails = ({
             <Container>
                 <ProfileDetails
                     {...connectionRequest.member}
+                    providerEmail={provider.emailAddress}
+                    providerId={provider.userId}
                     isLoading={isLoading}
                 />
             </Container>
@@ -183,7 +183,7 @@ export const ClientDetails = ({
                     )}
                     {provider.stripeConnectAccountId &&
                         invoices.length === 0 && (
-                            <Paragraph marginTop={4}>
+                            <Paragraph marginTop={4} marginLeft={4}>
                                 No invoices have been created for this client.
                             </Paragraph>
                         )}
@@ -280,7 +280,7 @@ const getBadge = (status: SessionInvoiceStatus) => {
     );
 };
 
-const PageContainer = styled(Box)(({ theme }) => ({
+const PageContainer = styled(Box)(() => ({
     width: '100%',
 }));
 

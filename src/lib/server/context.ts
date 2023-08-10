@@ -4,12 +4,13 @@ import {
     directoryService,
     DirectoryService,
 } from '@/lib/modules/directory/service';
-import { membersService, MembersService } from '../modules/members/service';
+import { membersService, MembersService } from '@/lib/modules/members/service';
 import {
     notificationsService,
     NotificationsService,
-} from '../modules/notifications/service';
-import { ProvidersService } from '../modules/providers/service';
+} from '@/lib/modules/notifications/service';
+import { ProvidersService } from '@/lib/modules/providers/service';
+import { SchedulingService } from '@/lib/modules/scheduling/service';
 
 // The app's context - is generated for each incoming request
 export interface Context {
@@ -18,6 +19,7 @@ export interface Context {
     notifications: NotificationsService;
     providers: ProvidersService;
     directory: DirectoryService;
+    scheduling: SchedulingService;
 }
 export async function createContext(
     opts?: trpcNext.CreateNextContextOptions
@@ -42,5 +44,6 @@ export async function createContext(
         members: membersService,
         providers: ProvidersService,
         directory: directoryService,
+        scheduling: SchedulingService,
     };
 }
