@@ -2,16 +2,19 @@ import { OnProgressProps } from 'react-player/base';
 import { useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player/file';
 import screenfull from 'screenfull';
-import { PlayArrowRounded } from '@mui/icons-material';
-import { Box } from '@mui/material';
+import Box from '@mui/material/Box';
+import PlayArrowRounded from '@mui/icons-material/PlayArrowRounded';
 import { SxProps, Theme, styled } from '@mui/material/styles';
 import { IconButton, CenteredContainer } from '@/lib/shared/components/ui';
 import { useIsMobileDevice } from '@/lib/shared/hooks/use-is-mobile-device';
-import { PlayerControls } from './ui/PlayerControls';
+import {
+    PlayerControls,
+    TEST_IDS as PLAYER_CONTROLS_TEST_IDS,
+} from './ui/PlayerControls';
 import { ErrorMessage } from './ui/ErrorMessage';
 
-const LOCAL_STORAGE_VOLUME_KEY = 'therify-media-volume' as const;
-const LOCAL_STORAGE_MUTE_KEY = 'therify-media-mute' as const;
+export const LOCAL_STORAGE_VOLUME_KEY = 'therify-media-volume' as const;
+export const LOCAL_STORAGE_MUTE_KEY = 'therify-media-mute' as const;
 const PLAYER_ID = 'therify-media-player' as const;
 
 interface VideoPlayerProps {
@@ -19,6 +22,10 @@ interface VideoPlayerProps {
     id?: string;
     sx?: SxProps<Theme>;
 }
+export const TEST_IDS = {
+    ...PLAYER_CONTROLS_TEST_IDS,
+    START_BUTTON: 'start-button',
+};
 
 export const VideoPlayer = ({ url, id, sx }: VideoPlayerProps) => {
     const playerId = id ?? PLAYER_ID;
@@ -167,7 +174,7 @@ export const VideoPlayer = ({ url, id, sx }: VideoPlayerProps) => {
                     zIndex={2}
                     onClick={() => setIsPlaying(true)}
                 >
-                    <StartButton>
+                    <StartButton data-testid={TEST_IDS.START_BUTTON}>
                         <PlayArrowRounded />
                     </StartButton>
                 </CenteredContainer>

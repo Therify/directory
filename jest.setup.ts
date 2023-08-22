@@ -1,3 +1,4 @@
+import { localStorageMock } from '@/lib/shared/utils/test-utils/localStorageMock';
 import '@testing-library/jest-dom';
 
 process.env = Object.assign(process.env, {
@@ -14,3 +15,5 @@ process.env = Object.assign(process.env, {
     NYLAS_API_SERVER: 'nylas-api-server',
     APPLICATION_URL: 'therify-application-url',
 });
+
+Object.defineProperty(window, 'localStorage', { value: localStorageMock });

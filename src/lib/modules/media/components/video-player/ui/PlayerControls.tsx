@@ -1,12 +1,12 @@
+import PlayArrowRounded from '@mui/icons-material/PlayArrowRounded';
+import PauseRounded from '@mui/icons-material/PauseRounded';
+import FullscreenRounded from '@mui/icons-material/FullscreenRounded';
+import FullscreenExitRounded from '@mui/icons-material/FullscreenExitRounded';
+import Slider from '@mui/material/Slider';
+import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
 import { IconButton, Paragraph } from '@/lib/shared/components/ui';
-import {
-    PlayArrowRounded,
-    PauseRounded,
-    FullscreenRounded,
-    FullscreenExitRounded,
-} from '@mui/icons-material';
-import { Box, styled, Slider } from '@mui/material';
-import { VolumeControl } from './VolumeControl';
+import { VolumeControl, TEST_IDS as VOLUME_TEST_IDS } from './VolumeControl';
 
 interface ControlsProps {
     isPlaying: boolean;
@@ -23,6 +23,10 @@ interface ControlsProps {
     onSeekStart: () => void;
     onSeekEnd: () => void;
 }
+export const TEST_IDS = {
+    PLAYER_CONTROLS: 'player-controls',
+    MUTE_BUTTON: VOLUME_TEST_IDS.MUTE_BUTTON,
+} as const;
 
 export const PlayerControls = ({
     isPlaying,
@@ -40,7 +44,10 @@ export const PlayerControls = ({
     onSeekEnd,
 }: ControlsProps) => {
     return (
-        <Container className="player-controls">
+        <Container
+            data-testid={TEST_IDS.PLAYER_CONTROLS}
+            className="player-controls"
+        >
             <ButtonsContainer>
                 <Box
                     display="flex"

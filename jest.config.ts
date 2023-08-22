@@ -6,7 +6,7 @@ import { compilerOptions } from './tsconfig.json';
 const createJestConfig = nextJest({
     dir: './',
 });
-const esModules = ['firebase', '@firebase'].join('|');
+const esModules = ['firebase', '@firebase', 'screenfull'].join('|');
 
 const CONFIG: Config = {
     moduleDirectories: ['node_modules', '<rootDir>/src'],
@@ -17,6 +17,8 @@ const CONFIG: Config = {
             prefix: '<rootDir>/src',
         }),
         firebase: '<rootDir>/src/lib/shared/utils/test-utils/firebaseMock.ts',
+        screenfull:
+            '<rootDir>/src/lib/shared/utils/test-utils/screenfullMock.ts',
     },
     testPathIgnorePatterns: [
         '<rootDir>/.next/',

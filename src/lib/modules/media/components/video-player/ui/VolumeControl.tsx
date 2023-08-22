@@ -1,7 +1,9 @@
+import Box from '@mui/material/Box';
+import Slider from '@mui/material/Slider';
+import { useTheme, styled } from '@mui/material/styles';
+import VolumeUpRounded from '@mui/icons-material/VolumeUpRounded';
+import VolumeOffRounded from '@mui/icons-material/VolumeOffRounded';
 import { IconButton } from '@/lib/shared/components/ui';
-import { Box, Slider } from '@mui/material';
-import { styled, useTheme } from '@mui/material/styles';
-import { VolumeUpRounded, VolumeOffRounded } from '@mui/icons-material';
 
 interface VolumeControlProps {
     isMuted: boolean;
@@ -11,6 +13,9 @@ interface VolumeControlProps {
 }
 const VOLUME_SLIDER_CLASS_NAME = 'volume-slider' as const;
 
+export const TEST_IDS = {
+    MUTE_BUTTON: 'mute-button',
+} as const;
 export const VolumeControl = ({
     isMuted,
     volume,
@@ -26,10 +31,11 @@ export const VolumeControl = ({
                 />
             </TrackContainer>
             <IconButton
+                data-testid={TEST_IDS.MUTE_BUTTON}
                 type="text"
                 color="info"
                 size="small"
-                onClick={() => toggleMute()}
+                onClick={toggleMute}
                 sx={{ color: 'white' }}
             >
                 {isMuted || volume === 0 ? (
