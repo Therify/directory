@@ -15,7 +15,7 @@ process.env = Object.assign(process.env, {
     NYLAS_API_SERVER: 'nylas-api-server',
     APPLICATION_URL: 'therify-application-url',
 });
-global.window = global?.window ?? {};
+global.window = global.window ?? {};
 Object.defineProperty(global.window, 'localStorage', {
     value: localStorageMock,
 });
