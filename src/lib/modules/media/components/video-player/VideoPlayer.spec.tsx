@@ -43,6 +43,7 @@ describe('VideoPlayer', () => {
         isMobileDevice = false;
         onPlay.mockReset();
         onPause.mockReset();
+        localStorage.clear();
     });
     it('shows error message', () => {
         isError = true;
