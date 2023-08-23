@@ -118,13 +118,13 @@ describe('VideoPlayer', () => {
         expect(localStorage.getItem(LOCAL_STORAGE_MUTE_KEY)).toBe('false');
     });
 
-    it('handles onDuration ', () => {
+    it('handles onDuration and formats time', () => {
         const { getByText } = render(<VideoPlayer src="" />);
         const duration = getByText('0:00/2:00');
         expect(duration).toBeVisible();
     });
 
-    it('handles onProgress', () => {
+    it('handles onProgress and formats time', () => {
         progressSeconds = 65;
         const { getByText } = render(<VideoPlayer src="" />);
         const duration = getByText('1:05/2:00');
