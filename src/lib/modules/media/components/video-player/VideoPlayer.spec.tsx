@@ -5,21 +5,32 @@ jest.mock('@/lib/shared/hooks/use-is-mobile-device', () => ({
 
 import { fireEvent, render } from '@testing-library/react';
 import { useEffect } from 'react';
+import { OnProgressProps } from 'react-player/base';
 import { LOCAL_STORAGE_MUTE_KEY, TEST_IDS, VideoPlayer } from './VideoPlayer';
 
 interface MockReactPlayerProps {
     playing?: boolean;
-    onError?: (error: Error) => void;
+    onError: (error: Error) => void;
+    onDuration: (duration: number) => void;
+    onProgress: (progress: OnProgressProps) => void;
 }
 
 let isError = false;
 let isMobileDevice = false;
+let durationSeconds = 120;
+let progressSeconds = 0;
 const errorMesage = 'We tested an error message';
 const onPlay = jest.fn();
 const onPause = jest.fn();
-function MockReactPlayer({ onError, playing }: MockReactPlayerProps) {
+function MockReactPlayer({
+    onError,
+    playing,
+    onDuration,
+    onProgress,
+}: MockReactPlayerProps) {
+    const isProgress = progressSeconds > 0;
     useEffect(() => {
-        if (isError && onError) {
+        if (isError) {
             onError(new Error(errorMesage));
         }
     }, [onError]);
@@ -35,12 +46,24 @@ function MockReactPlayer({ onError, playing }: MockReactPlayerProps) {
         }
     }, [playing]);
 
+    useEffect(() => {
+        onDuration(durationSeconds);
+    }, [onDuration]);
+
+    useEffect(() => {
+        if (isProgress) {
+            onProgress({ playedSeconds: progressSeconds } as OnProgressProps);
+        }
+    }, [onProgress, isProgress]);
+
     return <div />;
 }
 describe('VideoPlayer', () => {
     beforeEach(() => {
         isError = false;
         isMobileDevice = false;
+        durationSeconds = 120;
+        progressSeconds = 0;
         onPlay.mockReset();
         onPause.mockReset();
         localStorage.clear();
@@ -85,5 +108,18 @@ describe('VideoPlayer', () => {
         expect(localStorage.getItem(LOCAL_STORAGE_MUTE_KEY)).toBe('true');
         fireEvent.click(button);
         expect(localStorage.getItem(LOCAL_STORAGE_MUTE_KEY)).toBe('false');
+    });
+
+    it('formats duration', () => {
+        const { getByText } = render(<VideoPlayer url="" />);
+        const duration = getByText('0:00/2:00');
+        expect(duration).toBeVisible();
+    });
+
+    it('formats progress', () => {
+        progressSeconds = 65;
+        const { getByText } = render(<VideoPlayer url="" />);
+        const duration = getByText('1:05/2:00');
+        expect(duration).toBeVisible();
     });
 });
