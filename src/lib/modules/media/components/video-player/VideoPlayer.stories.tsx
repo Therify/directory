@@ -12,5 +12,5 @@ const VIDEO_URL =
     'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
 
 export const Player: StoryFn<typeof Component> = (args) => {
-    return <Component url={VIDEO_URL} />;
+    return <Component src={VIDEO_URL} />;
 };

@@ -18,7 +18,7 @@ export const LOCAL_STORAGE_MUTE_KEY = 'therify-media-mute' as const;
 const PLAYER_ID = 'therify-media-player' as const;
 
 interface VideoPlayerProps {
-    url: string;
+    src: string;
     id?: string;
     sx?: SxProps<Theme>;
 }
@@ -27,7 +27,7 @@ export const TEST_IDS = {
     START_BUTTON: 'start-button',
 };
 
-export const VideoPlayer = ({ url, id, sx }: VideoPlayerProps) => {
+export const VideoPlayer = ({ src, id, sx }: VideoPlayerProps) => {
     const playerId = id ?? PLAYER_ID;
     const playerRef = useRef<ReactPlayer>(null);
     const volumeDebounceRef = useRef<number>();
@@ -130,7 +130,7 @@ export const VideoPlayer = ({ url, id, sx }: VideoPlayerProps) => {
             {errorMesage && <ErrorMessage message={errorMesage} />}
             <ReactPlayer
                 ref={playerRef}
-                url={url}
+                url={src}
                 playing={isPlaying && !isSeeking}
                 controls={isMobileDevice}
                 loop={false}

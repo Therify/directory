@@ -9,6 +9,7 @@ import { OnProgressProps } from 'react-player/base';
 import { LOCAL_STORAGE_MUTE_KEY, TEST_IDS, VideoPlayer } from './VideoPlayer';
 
 interface MockReactPlayerProps {
+    url: string;
     playing?: boolean;
     onError: (error: Error) => void;
     onDuration: (duration: number) => void;
@@ -19,10 +20,13 @@ let isError = false;
 let isMobileDevice = false;
 let durationSeconds = 120;
 let progressSeconds = 0;
+let videoSrc = '';
 const errorMesage = 'We tested an error message';
 const onPlay = jest.fn();
 const onPause = jest.fn();
+
 function MockReactPlayer({
+    url,
     onError,
     playing,
     onDuration,
@@ -56,12 +60,16 @@ function MockReactPlayer({
         }
     }, [onProgress, isProgress]);
 
+    useEffect(() => {
+        videoSrc = url;
+    }, [url]);
     return <div />;
 }
 describe('VideoPlayer', () => {
     beforeEach(() => {
         isError = false;
         isMobileDevice = false;
+        videoSrc = '';
         durationSeconds = 120;
         progressSeconds = 0;
         onPlay.mockReset();
@@ -70,31 +78,31 @@ describe('VideoPlayer', () => {
     });
     it('shows error message', () => {
         isError = true;
-        const { getByText } = render(<VideoPlayer url="" />);
+        const { getByText } = render(<VideoPlayer src="" />);
         expect(getByText(errorMesage)).toBeVisible();
     });
 
     it('does not render controls when on mobile device', () => {
         isMobileDevice = true;
-        const { queryByTestId } = render(<VideoPlayer url="" />);
+        const { queryByTestId } = render(<VideoPlayer src="" />);
         expect(queryByTestId(TEST_IDS.PLAYER_CONTROLS)).toBeNull();
     });
 
     it('renders controls when not on mobile device', () => {
         isMobileDevice = false;
-        const { getByTestId } = render(<VideoPlayer url="" />);
+        const { getByTestId } = render(<VideoPlayer src="" />);
         expect(getByTestId(TEST_IDS.PLAYER_CONTROLS)).toBeInTheDocument();
     });
 
     it('calls onPlay when video plays', () => {
-        const { getByTestId } = render(<VideoPlayer url="" />);
+        const { getByTestId } = render(<VideoPlayer src="" />);
         const button = getByTestId(TEST_IDS.START_BUTTON);
         fireEvent.click(button);
         expect(onPlay).toHaveBeenCalledTimes(1);
     });
 
     it('calls onPause when video stops', () => {
-        const { getByTestId } = render(<VideoPlayer url="" />);
+        const { getByTestId } = render(<VideoPlayer src="" />);
         const button = getByTestId(TEST_IDS.START_BUTTON);
         fireEvent.click(button);
         fireEvent.click(button);
@@ -102,7 +110,7 @@ describe('VideoPlayer', () => {
     });
 
     it('stores mute value in localstorage', () => {
-        const { getByTestId } = render(<VideoPlayer url="" />);
+        const { getByTestId } = render(<VideoPlayer src="" />);
         const button = getByTestId(TEST_IDS.MUTE_BUTTON);
         fireEvent.click(button);
         expect(localStorage.getItem(LOCAL_STORAGE_MUTE_KEY)).toBe('true');
@@ -110,16 +118,23 @@ describe('VideoPlayer', () => {
         expect(localStorage.getItem(LOCAL_STORAGE_MUTE_KEY)).toBe('false');
     });
 
-    it('formats duration', () => {
-        const { getByText } = render(<VideoPlayer url="" />);
+    it('handles onDuration ', () => {
+        const { getByText } = render(<VideoPlayer src="" />);
         const duration = getByText('0:00/2:00');
         expect(duration).toBeVisible();
     });
 
-    it('formats progress', () => {
+    it('handles onProgress', () => {
         progressSeconds = 65;
-        const { getByText } = render(<VideoPlayer url="" />);
+        const { getByText } = render(<VideoPlayer src="" />);
         const duration = getByText('1:05/2:00');
         expect(duration).toBeVisible();
+    });
+
+    it('passes video src to react-player', () => {
+        const src = 'https://therify.co';
+        expect(videoSrc).toBe('');
+        render(<VideoPlayer src={src} />);
+        expect(videoSrc).toBe(src);
     });
 });
