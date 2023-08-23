@@ -16,4 +16,6 @@ process.env = Object.assign(process.env, {
     APPLICATION_URL: 'therify-application-url',
 });
 global.window = global?.window ?? {};
-Object.defineProperty(window, 'localStorage', { value: localStorageMock });
+Object.defineProperty(global.window, 'localStorage', {
+    value: localStorageMock,
+});
