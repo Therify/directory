@@ -11,11 +11,13 @@ const TABS: ChannelType[] = ['Active', 'Resolved', 'All'];
 interface ChannelListProps {
     currentChannelId?: string;
     channels: IChannel[];
+    onChannelSelect: (channelId: string) => void;
 }
 
 export const ChannelList = ({
     channels,
     currentChannelId,
+    onChannelSelect,
 }: ChannelListProps) => {
     const [selectedTab, setSelectedTab] = useState<ChannelType>('All');
     const [filteredChannels, setFilteredChannels] =
@@ -38,17 +40,28 @@ export const ChannelList = ({
 
     return (
         <ChannelContainer>
-            <ChannelTabs
-                tabs={TABS}
-                activeTab={selectedTab}
-                handleTabSelect={(tab) => setSelectedTab(tab as ChannelType)}
-            />
+            <Box
+                sx={(theme) => ({
+                    padding: theme.spacing(0, 6),
+                })}
+            >
+                <ChannelTabs
+                    tabs={TABS}
+                    activeTab={selectedTab}
+                    handleTabSelect={(tab) =>
+                        setSelectedTab(tab as ChannelType)
+                    }
+                />
+            </Box>
             <List>
                 {filteredChannels.map((channel) => (
-                    <ListItem key={channel.id}>
+                    <ListItem
+                        key={channel.id}
+                        onClick={() => onChannelSelect(channel.id)}
+                    >
                         <Channel
                             isSelected={channel.id === currentChannelId}
-                            isOnline={channel.isOnline}
+                            authorStatus={channel.authorStatus}
                             caseStatus={channel.caseStatus}
                             title={channel.title}
                             lastMessage={channel.lastMessage}
@@ -65,18 +78,22 @@ export const ChannelList = ({
 };
 
 const ChannelContainer = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(6),
     height: '100%',
     width: '100%',
     maxWidth: '355px',
+    display: 'flex',
+    flexDirection: 'column',
+    padding: theme.spacing(8, 0, 0),
 }));
 
 const List = styled('ul')(({ theme }) => ({
     listStyle: 'none',
     width: '100%',
-    padding: 0,
+    padding: theme.spacing(0, 6),
     margin: 0,
     marginTop: theme.spacing(6),
+    overflowY: 'auto',
+    flex: 1,
 }));
 
 const ListItem = styled('li')(({ theme }) => ({

@@ -10,7 +10,13 @@ export default {
 } as Meta;
 
 export const ChannelList: StoryFn = () => {
-    return <ChannelListUi channels={channels} currentChannelId="1" />;
+    return (
+        <ChannelListUi
+            channels={channels}
+            currentChannelId="1"
+            onChannelSelect={console.log}
+        />
+    );
 };
 const channels: IChannel[] = [
     {
@@ -22,7 +28,7 @@ const channels: IChannel[] = [
         lastMessageTimestamp: subMinutes(new Date(), 5).toISOString(),
         authorAvatarUrl: 'https://i.pravatar.cc/300',
         authorName: 'John Doe',
-        isOnline: true,
+        authorStatus: 'online',
         unreadMessages: 2,
     },
     {
@@ -33,7 +39,7 @@ const channels: IChannel[] = [
         lastMessageTimestamp: subMinutes(new Date(), 25).toISOString(),
         authorAvatarUrl: 'https://i.pravatar.cc/300',
         authorName: 'John Doe',
-        isOnline: false,
+        authorStatus: 'offline',
         unreadMessages: 0,
     },
 ];

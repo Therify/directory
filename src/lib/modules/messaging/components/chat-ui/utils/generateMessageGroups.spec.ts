@@ -1,12 +1,14 @@
 import { faker } from '@faker-js/faker';
 import { subSeconds } from 'date-fns';
-import { generateMessageGroups, Message } from './generateMessageGroups';
+import { Message } from '../types';
+import { generateMessageGroups } from './generateMessageGroups';
 
-const getMockMessage = (authorId: string, secondsAgo?: number) => {
+const getMockMessage = (authorId: string, secondsAgo?: number): Message => {
     return {
         id: faker.datatype.uuid(),
         authorId,
-        createdAt: subSeconds(new Date(), secondsAgo ?? 0).toISOString(),
+        timestamp: subSeconds(new Date(), secondsAgo ?? 0).getTime(),
+        content: 'Hello world!',
     };
 };
 

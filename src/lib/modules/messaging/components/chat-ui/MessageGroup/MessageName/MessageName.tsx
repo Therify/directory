@@ -11,7 +11,7 @@ import {
 
 interface MessageNameProps {
     name: string;
-    timestamp?: Date;
+    timestamp?: number;
     isMine?: boolean;
 }
 
@@ -39,7 +39,7 @@ export const MessageName = ({ name, timestamp, isMine }: MessageNameProps) => {
             )}
             {timestamp && (
                 <Caption secondary size="small" style={{ margin: 0 }}>
-                    {formatTimestamp(timestamp)}
+                    {formatTimestamp(new Date(timestamp))}
                 </Caption>
             )}
         </Box>

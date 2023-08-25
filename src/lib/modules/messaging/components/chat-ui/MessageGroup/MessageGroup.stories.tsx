@@ -24,22 +24,25 @@ const props: MessageGroupProps = {
         {
             id: '1',
             content: 'Hello!',
-            timestamp: new Date(),
+            timestamp: new Date().getTime(),
+            authorId: '1',
         },
         {
             id: '2',
             content:
                 'lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.',
-            timestamp: subMinutes(new Date(), 3),
+            timestamp: subMinutes(new Date(), 3).getTime(),
+            authorId: '1',
         },
         {
             id: '3',
             content: 'Hello World!',
-            timestamp: subMinutes(new Date(), 5),
+            timestamp: subMinutes(new Date(), 5).getTime(),
+            authorId: '1',
         },
     ],
     name: 'John Doe',
     avatar: 'https://i.pravatar.cc/300',
-    isOnline: true,
+    status: 'online',
     isMine: false,
 };

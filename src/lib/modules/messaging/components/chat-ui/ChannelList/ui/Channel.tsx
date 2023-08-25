@@ -9,10 +9,11 @@ import ChevronRightRounded from '@mui/icons-material/ChevronRightRounded';
 import Box from '@mui/material/Box';
 import { styled, useTheme } from '@mui/material/styles';
 import { format } from 'date-fns';
+import { ChatUser } from '../../types';
 
 interface ChannelProps {
     isSelected: boolean;
-    isOnline: boolean;
+    authorStatus: ChatUser['status'];
     caseStatus: 'active' | 'resolved';
     title: string;
     lastMessage: string;
@@ -24,7 +25,7 @@ interface ChannelProps {
 
 export const Channel = ({
     isSelected,
-    isOnline,
+    authorStatus,
     caseStatus,
     title,
     lastMessage,
@@ -39,7 +40,7 @@ export const Channel = ({
             <Avatar
                 alt={`${authorName} avatar`}
                 src={authorAvatarUrl}
-                onlineStatus={isOnline ? 'online' : 'offline'}
+                onlineStatus={authorStatus}
             />
             <Box flex={1} maxWidth="70%" paddingLeft={theme.spacing(4)}>
                 <Box

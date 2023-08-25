@@ -5,7 +5,22 @@ export interface IChannel {
     lastMessage: string;
     lastMessageTimestamp: string;
     authorAvatarUrl: string;
-    isOnline: boolean;
+    authorStatus: ChatUser['status'];
     authorName: string;
     unreadMessages: number;
+}
+
+export interface Message {
+    id: string;
+    content: string;
+    timestamp: number;
+    authorId: string;
+}
+
+export interface ChatUser {
+    userId: string;
+    givenName: string;
+    surname: string;
+    avatarUrl?: string;
+    status: 'online' | 'away' | 'offline';
 }
