@@ -37,27 +37,3 @@ const channels: IChannel[] = [
         unreadMessages: 0,
     },
 ];
-// const props: MessageGroupProps = {
-//     messages: [
-//         {
-//             id: '1',
-//             content: 'Hello!',
-//             timestamp: new Date(),
-//         },
-//         {
-//             id: '2',
-//             content:
-//                 'lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.',
-//             timestamp: subMinutes(new Date(), 3),
-//         },
-//         {
-//             id: '3',
-//             content: 'Hello World!',
-//             timestamp: subMinutes(new Date(), 5),
-//         },
-//     ],
-//     name: 'John Doe',
-//     avatar: 'https://i.pravatar.cc/300',
-//     isOnline: true,
-//     isMine: false,
-// };
