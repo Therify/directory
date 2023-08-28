@@ -80,7 +80,6 @@ export const ChannelList = ({
 const ChannelContainer = styled(Box)(({ theme }) => ({
     height: '100%',
     width: '100%',
-    maxWidth: '355px',
     display: 'flex',
     flexDirection: 'column',
     padding: theme.spacing(8, 0, 0),

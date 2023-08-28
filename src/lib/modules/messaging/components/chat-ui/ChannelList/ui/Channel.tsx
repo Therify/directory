@@ -111,7 +111,6 @@ const ChannelContainer = styled(Box, {
     cursor: 'pointer',
     padding: theme.spacing(4, 6),
     width: '100%',
-    maxWidth: '355px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',

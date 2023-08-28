@@ -2,6 +2,7 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import { H5, IconButton, Paragraph } from '@/lib/shared/components/ui';
 import ModeEditOutlineOutlined from '@mui/icons-material/ModeEditOutlineOutlined';
+import ArrowBack from '@mui/icons-material/ArrowBack';
 import { ChannelList } from '../ChannelList';
 import { IChannel, Message, ChatUser } from '../types';
 import { MessageInput } from '../MessageInput';
@@ -26,6 +27,7 @@ export const ChatWindow = ({
     userId,
     onChannelSelect,
 }: ChatWindowProps) => {
+    const [isInChannelListView, setIsChannelListInView] = useState(false);
     const [message, setMessage] = useState('');
     const messageGroups = useMemo(() => {
         return generateMessageGroups(messages);
@@ -47,7 +49,7 @@ export const ChatWindow = ({
 
     return (
         <Container>
-            <ChannelContainer>
+            <ChannelContainer isInView={isInChannelListView}>
                 <Box
                     display="flex"
                     alignItems="center"
@@ -57,19 +59,33 @@ export const ChatWindow = ({
                     })}
                 >
                     <H5 margin={0}>Messages</H5>
-                    <IconButton size="small" type="text" color="info">
+                    <IconButton type="text" color="info">
                         <ModeEditOutlineOutlined />
                     </IconButton>
                 </Box>
                 <ChannelList
                     channels={channels}
                     currentChannelId={currentChannelId}
-                    onChannelSelect={onChannelSelect}
+                    onChannelSelect={(channelId) => {
+                        onChannelSelect(channelId);
+                        setIsChannelListInView(false);
+                    }}
                 />
             </ChannelContainer>
             <ChatContainer>
                 <ChannelTitle>
-                    <Paragraph margin={0} size="small">
+                    <ChannelLauncherContainer>
+                        <IconButton
+                            type="text"
+                            size="small"
+                            onClick={() =>
+                                setIsChannelListInView(!isInChannelListView)
+                            }
+                        >
+                            <ArrowBack />
+                        </IconButton>
+                    </ChannelLauncherContainer>
+                    <Paragraph margin={0} size="small" color="info">
                         {currentChannel?.title ?? 'Choose a messaging channel'}
                     </Paragraph>
                 </ChannelTitle>
@@ -116,14 +132,28 @@ const Container = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
 }));
 
-const ChannelContainer = styled(Box)(({ theme }) => ({
+const ChannelContainer = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'isInView',
+})<{ isInView: boolean }>(({ theme, isInView }) => ({
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-    width: '355px',
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(8, 0, 0),
     overflow: 'hidden',
+    width: '100%',
+    position: 'absolute',
+    zIndex: 1,
+    left: '-100%',
+    transition: 'left 0.2s ease-in-out',
+    ...(isInView && {
+        left: 0,
+    }),
+    [theme.breakpoints.up('md')]: {
+        left: 0,
+        position: 'relative',
+        width: '355px',
+    },
 }));
 
 const ChatContainer = styled(Box)(({ theme }) => ({
@@ -135,6 +165,7 @@ const ChatContainer = styled(Box)(({ theme }) => ({
 }));
 
 const ChannelTitle = styled(Box)(({ theme }) => ({
+    position: 'relative',
     background: theme.palette.common.black,
     color: theme.palette.common.white,
     textAlign: 'center',
@@ -166,5 +197,22 @@ const Messages = styled(Box)(({ theme }) => ({
     },
     '&::-webkit-scrollbar-thumb': {
         background: theme.palette.grey[300],
+    },
+}));
+
+const ChannelLauncherContainer = styled(Box)(({ theme }) => ({
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+    paddingLeft: theme.spacing(2),
+    '& button': {
+        color: theme.palette.common.white,
+    },
+    [theme.breakpoints.up('md')]: {
+        display: 'none',
     },
 }));

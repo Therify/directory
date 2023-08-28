@@ -29,7 +29,6 @@ export const ChatWindow: StoryFn = () => {
                 userId={users[1].userId}
                 onChannelSelect={setSelectedChannelId}
             />
-            ;
         </div>
     );
 };
