@@ -1,20 +1,15 @@
 import { Box } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
-import { Avatar } from './Avatar';
 import { MessageName } from './MessageName';
 import { MessageBubble } from '../MessageBubble';
-
-interface Message {
-    id: string;
-    content: string;
-    timestamp: Date;
-}
+import { Message, ChatUser } from '../types';
+import { Avatar } from '@/lib/shared/components/ui';
 
 export interface MessageGroupProps {
     messages: Message[];
     name: string;
-    avatar: string;
-    isOnline: boolean;
+    avatar?: string;
+    status: ChatUser['status'];
     isMine: boolean;
 }
 
@@ -22,7 +17,7 @@ export const MessageGroup = ({
     messages,
     name,
     avatar,
-    isOnline,
+    status,
     isMine,
 }: MessageGroupProps) => {
     const theme = useTheme();
@@ -34,7 +29,11 @@ export const MessageGroup = ({
         >
             <MessagesContainer isMine={isMine}>
                 {!isMine && (
-                    <Avatar name={name} src={avatar} isOnline={isOnline} />
+                    <Avatar
+                        alt={`${name}'s Avatar`}
+                        src={avatar}
+                        onlineStatus={status}
+                    />
                 )}
                 <Box
                     style={{

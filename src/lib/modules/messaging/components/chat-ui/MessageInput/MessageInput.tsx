@@ -7,17 +7,20 @@ interface MessageInputProps {
     value: string;
     onChange: (message: string) => void;
     onSend: () => void;
+    isDisabled?: boolean;
 }
 
 export const MessageInput = ({
     onChange,
     value,
     onSend,
+    isDisabled,
 }: MessageInputProps) => {
     const theme = useTheme();
     return (
         <InputContainer>
             <Input
+                disabled={isDisabled}
                 placeholder="Send a message"
                 maxRows={6}
                 value={value}
@@ -25,6 +28,7 @@ export const MessageInput = ({
             />
             <ButtonContainer>
                 <IconButton
+                    disabled={isDisabled}
                     type="text"
                     color="info"
                     size="small"
@@ -35,6 +39,7 @@ export const MessageInput = ({
                     <MoodRounded />
                 </IconButton>
                 <IconButton
+                    disabled={isDisabled}
                     type="text"
                     color="info"
                     size="small"
@@ -46,7 +51,7 @@ export const MessageInput = ({
                 </IconButton>
                 <Button
                     size="small"
-                    disabled={value.trim() === ''}
+                    disabled={isDisabled || value.trim() === ''}
                     onClick={onSend}
                 >
                     Send
@@ -76,6 +81,9 @@ const Input = styled(TextareaAutosize)(({ theme }) => ({
         background: 'transparent',
         border: 'none',
         outline: 0,
+    },
+    '&:disabled': {
+        opacity: 0.3,
     },
 }));
 

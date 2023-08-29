@@ -1,6 +1,6 @@
 import { PersonRounded as PersonIcon } from '@mui/icons-material';
-import { Avatar as MuiAvatar } from '@mui/material';
-import { useTheme, SxProps, Theme } from '@mui/material/styles';
+import { Avatar as MuiAvatar, Box } from '@mui/material';
+import { useTheme, SxProps, Theme, styled } from '@mui/material/styles';
 import { colors } from '../../themes/therify-design-system';
 
 export const AVATAR_SIZE = {
@@ -35,6 +35,7 @@ interface AvatarProps {
     color?: AvatarColor;
     sx?: SxProps<Theme>;
     hideIcon?: boolean;
+    onlineStatus?: 'online' | 'away' | 'offline';
 }
 
 export const TEST_IDS = {
@@ -48,33 +49,37 @@ export const Avatar = ({
     size = AVATAR_SIZE.MEDIUM,
     color = AVATAR_COLOR.PRIMARY,
     hideIcon,
+    onlineStatus,
     sx,
 }: AvatarProps) => {
     const theme = useTheme();
     const palette = getColorPalette(color);
     return (
-        <MuiAvatar
-            data-testid={TEST_IDS.AVATAR}
-            src={src}
-            alt={alt ?? 'user avatar'}
-            sx={{
-                width: theme.spacing(size),
-                height: theme.spacing(size),
-                backgroundColor: palette[50],
-                ...sx,
-            }}
-        >
-            {!src && !hideIcon && (
-                <PersonIcon
-                    data-testid={TEST_IDS.ICON}
-                    sx={{
-                        fill: palette[600],
-                        width: '70%',
-                        height: '70%',
-                    }}
-                />
-            )}
-        </MuiAvatar>
+        <Box position="relative">
+            <MuiAvatar
+                data-testid={TEST_IDS.AVATAR}
+                src={src}
+                alt={alt ?? 'user avatar'}
+                sx={{
+                    width: theme.spacing(size),
+                    height: theme.spacing(size),
+                    backgroundColor: palette[50],
+                    ...sx,
+                }}
+            >
+                {!src && !hideIcon && (
+                    <PersonIcon
+                        data-testid={TEST_IDS.ICON}
+                        sx={{
+                            fill: palette[600],
+                            width: '70%',
+                            height: '70%',
+                        }}
+                    />
+                )}
+            </MuiAvatar>
+            {onlineStatus && <StatusIndicator status={onlineStatus} />}
+        </Box>
     );
 };
 
@@ -90,3 +95,23 @@ export const AVATAR_COLOR_MAP = {
 const getColorPalette = (color: AvatarColor) => {
     return AVATAR_COLOR_MAP[color];
 };
+
+const StatusIndicator = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'status',
+})<{
+    status: Exclude<AvatarProps['onlineStatus'], undefined>;
+}>(({ theme, status }) => ({
+    position: 'absolute',
+    height: '12px',
+    width: '12px',
+    borderRadius: '50%',
+    backgroundColor:
+        status === 'online'
+            ? theme.palette.success.main
+            : status === 'away'
+            ? theme.palette.warning.main
+            : theme.palette.error.main,
+    bottom: 0,
+    right: 0,
+    border: `2px solid ${theme.palette.background.paper}`,
+}));
