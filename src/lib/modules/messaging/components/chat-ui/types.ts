@@ -1,4 +1,4 @@
-export interface IChannel {
+export interface Channel {
     id: string;
     caseStatus: 'active' | 'resolved';
     title: string;

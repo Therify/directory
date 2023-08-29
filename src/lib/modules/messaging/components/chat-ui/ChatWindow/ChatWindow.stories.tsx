@@ -1,6 +1,6 @@
 import { Meta, StoryFn } from '@storybook/react';
 import { ChatWindow as ChatWindowUi } from './ChatWindow';
-import { ChatUser, IChannel, Message } from '../types';
+import { ChatUser, Channel, Message } from '../types';
 import { subMinutes } from 'date-fns';
 import { useState } from 'react';
 
@@ -79,7 +79,7 @@ const messages: Message[] = [
     },
 ];
 
-const channels: IChannel[] = [
+const channels: Channel[] = [
     {
         id: '1',
         title: 'Onboarding',

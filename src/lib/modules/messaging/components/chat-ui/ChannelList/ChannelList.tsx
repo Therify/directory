@@ -2,15 +2,15 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import { ChannelTabs } from './ui/ChannelTabs';
 import { useEffect, useState } from 'react';
-import { IChannel } from '../types';
-import { Channel } from './ui/Channel';
+import { Channel } from '../types';
+import { Channel as ChannelUi } from './ui/Channel';
 
 type ChannelType = 'Active' | 'Resolved' | 'All';
 const TABS: ChannelType[] = ['Active', 'Resolved', 'All'];
 
 interface ChannelListProps {
     currentChannelId?: string;
-    channels: IChannel[];
+    channels: Channel[];
     onChannelSelect: (channelId: string) => void;
 }
 
@@ -21,7 +21,7 @@ export const ChannelList = ({
 }: ChannelListProps) => {
     const [selectedTab, setSelectedTab] = useState<ChannelType>('All');
     const [filteredChannels, setFilteredChannels] =
-        useState<IChannel[]>(channels);
+        useState<Channel[]>(channels);
 
     useEffect(() => {
         if (selectedTab === 'All') {
@@ -59,7 +59,7 @@ export const ChannelList = ({
                         key={channel.id}
                         onClick={() => onChannelSelect(channel.id)}
                     >
-                        <Channel
+                        <ChannelUi
                             isSelected={channel.id === currentChannelId}
                             authorStatus={channel.authorStatus}
                             caseStatus={channel.caseStatus}

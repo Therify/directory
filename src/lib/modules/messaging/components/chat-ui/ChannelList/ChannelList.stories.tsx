@@ -1,6 +1,6 @@
 import { Meta, StoryFn } from '@storybook/react';
 import { subMinutes } from 'date-fns';
-import { IChannel } from '../types';
+import { Channel } from '../types';
 import { ChannelList as ChannelListUi } from './ChannelList';
 
 export default {
@@ -18,7 +18,7 @@ export const ChannelList: StoryFn = () => {
         />
     );
 };
-const channels: IChannel[] = [
+const channels: Channel[] = [
     {
         id: '1',
         title: 'Onboarding',

@@ -4,7 +4,7 @@ import { H5, IconButton, Paragraph } from '@/lib/shared/components/ui';
 import ModeEditOutlineOutlined from '@mui/icons-material/ModeEditOutlineOutlined';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import { ChannelList } from '../ChannelList';
-import { IChannel, Message, ChatUser } from '../types';
+import { Channel, Message, ChatUser } from '../types';
 import { MessageInput } from '../MessageInput';
 import { useMemo, useState } from 'react';
 import { MessageGroup } from '../MessageGroup';
@@ -12,7 +12,7 @@ import { generateMessageGroups } from '../utils/generateMessageGroups';
 
 interface ChatWindowProps {
     currentChannelId?: string;
-    channels: IChannel[];
+    channels: Channel[];
     messages: Message[];
     channelMembers: ChatUser[];
     userId: string;
