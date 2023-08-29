@@ -28,6 +28,9 @@ export const ChatWindow: StoryFn = () => {
                 channelMembers={users}
                 userId={users[1].userId}
                 onChannelSelect={setSelectedChannelId}
+                onMessageSend={async (message) => {
+                    console.log(message);
+                }}
             />
         </div>
     );

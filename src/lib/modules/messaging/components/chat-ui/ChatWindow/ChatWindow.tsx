@@ -17,6 +17,7 @@ interface ChatWindowProps {
     channelMembers: ChatUser[];
     userId: string;
     onChannelSelect: (channelId: string) => void;
+    onMessageSend: (message: string) => Promise<void>;
 }
 
 export const ChatWindow = ({
@@ -26,6 +27,7 @@ export const ChatWindow = ({
     channelMembers,
     userId,
     onChannelSelect,
+    onMessageSend,
 }: ChatWindowProps) => {
     const [isInChannelListView, setIsChannelListInView] = useState(false);
     const [message, setMessage] = useState('');
@@ -117,7 +119,9 @@ export const ChatWindow = ({
                         }
                         value={message}
                         onChange={setMessage}
-                        onSend={() => {}}
+                        onSend={() => {
+                            onMessageSend(message).then(() => setMessage(''));
+                        }}
                     />
                 </MessageWindow>
             </ChatContainer>
