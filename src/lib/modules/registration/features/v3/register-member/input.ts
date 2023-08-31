@@ -14,6 +14,12 @@ export const schema = z
             role: z.enum([ROLES.MEMBER]),
         }),
         profile: MemberProfile.schema,
+        emergencyDetails: z.object({
+            contactName: z.string(),
+            memberHomeAddress: z.string(),
+            contactPhoneNumber: z.string(),
+            contactRelationship: z.string(),
+        }),
         hasAcceptedTermsAndConditions: z.boolean().default(false),
         registrationCode: z.string().optional(),
     })
