@@ -1,5 +1,9 @@
-import { Controller, Control, FieldError } from 'react-hook-form';
-import { RegisterMember } from '@/lib/modules/registration/features';
+import {
+    FieldError,
+    UseFormRegister,
+    UseFormGetFieldState,
+} from 'react-hook-form';
+import { RegisterMember } from '@/lib/modules/registration/features/v3';
 import {
     PasswordInput as Input,
     FormValidation,
@@ -8,47 +12,36 @@ import { TEST_IDS } from './testIds';
 import React, { useEffect } from 'react';
 
 interface PasswordConfirmInputProps {
-    control: Control<RegisterMember.Input>;
+    registerInput: UseFormRegister<RegisterMember.Input>;
+    getFieldState: UseFormGetFieldState<RegisterMember.Input>;
     password: string;
 }
 
 export const PasswordConfirmationInput = ({
-    control,
+    registerInput,
+    getFieldState,
     password,
 }: PasswordConfirmInputProps) => {
+    const { isTouched, error } = getFieldState('user.confirmPassword');
     return (
-        <Controller
-            control={control}
-            name="confirmPassword"
-            defaultValue=""
-            rules={{
-                required: true,
-                validate: {
-                    [FormValidation.PasswordValidationType.Confirmation]: (
-                        confirmPassword
-                    ) =>
-                        FormValidation.validatePasswordConfirmation(
-                            password,
+        <InputWithPasswordWatcher
+            {...{
+                isTouched,
+                error,
+                password,
+                ...registerInput('user.confirmPassword', {
+                    required: true,
+                    validate: {
+                        [FormValidation.PasswordValidationType.Confirmation]: (
                             confirmPassword
-                        ),
-                },
+                        ) =>
+                            FormValidation.validatePasswordConfirmation(
+                                password,
+                                confirmPassword
+                            ),
+                    },
+                }),
             }}
-            render={({
-                field: { onChange, onBlur, value, name },
-                fieldState: { error, isTouched },
-            }) => (
-                <InputWithPasswordWatcher
-                    {...{
-                        isTouched,
-                        error,
-                        password,
-                        onChange,
-                        onBlur,
-                        value,
-                        name,
-                    }}
-                />
-            )}
         />
     );
 };
@@ -64,16 +57,15 @@ const InputWithPasswordWatcher = ({
     error?: FieldError;
     blur?: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
     onChange?: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
-    value: unknown;
     name?: string;
 }) => {
-    useEffect(() => {
-        // This is a hack to force the password confirmation input to revalidate
-        if (fieldProps.onChange)
-            fieldProps.onChange({
-                target: { value: fieldProps.value },
-            } as unknown as React.ChangeEvent<HTMLInputElement>);
-    }, [fieldProps, password]);
+    // useEffect(() => {
+    //     // This is a hack to force the password confirmation input to revalidate
+    //     if (fieldProps.onChange)
+    //         fieldProps.onChange({
+    //             target: { value: fieldProps.value },
+    //         } as unknown as React.ChangeEvent<HTMLInputElement>);
+    // }, [fieldProps, password]);
     return (
         <Input
             allowShowPassword

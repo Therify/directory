@@ -1,6 +1,7 @@
 import * as z from 'zod';
 import { ROLES } from '@/lib/shared/types/roles';
-import { MemberProfile } from '@/lib/shared/types/member-profile';
+import { UNITED_STATES } from '@/lib/shared/types/address/united-states';
+import { Ethnicity, Gender, InsuranceProvider } from '@/lib/shared/types';
 
 export const schema = z
     .object({
@@ -12,8 +13,15 @@ export const schema = z
             confirmPassword: z.string(),
             dateOfBirth: z.string(),
             role: z.enum([ROLES.MEMBER]),
+            phoneNumber: z.string(),
         }),
-        profile: MemberProfile.schema,
+        profile: z.object({
+            state: z.enum(UNITED_STATES.STATE.ENTRIES),
+            country: z.enum([UNITED_STATES.COUNTRY.CODE]),
+            insurance: z.enum(InsuranceProvider.ENTRIES),
+            gender: z.enum(Gender.ENTRIES),
+            ethnicity: z.enum(Ethnicity.ENTRIES),
+        }),
         emergencyDetails: z.object({
             contactName: z.string(),
             memberHomeAddress: z.string(),

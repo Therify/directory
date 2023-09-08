@@ -1,22 +1,21 @@
-import { Controller, Control } from 'react-hook-form';
+import { UseFormRegister, UseFormGetFieldState } from 'react-hook-form';
 import { FormValidation } from '@/lib/shared/components/ui';
 import { DatePicker } from '@/lib/shared/components/ui';
-import { RegisterMember } from '@/lib/modules/registration/features';
+import { RegisterMember } from '@/lib/modules/registration/features/v3';
 
 interface DOBInputProps {
-    control: Control<RegisterMember.Input>;
-    defaultValue?: string;
+    registerInput: UseFormRegister<RegisterMember.Input>;
+    getFieldState: UseFormGetFieldState<RegisterMember.Input>;
 }
 
 export const DateOfBirthInput = ({
-    control,
-    defaultValue = '',
-}: DOBInputProps) => (
-    <Controller
-        control={control}
-        name="dateOfBirth"
-        defaultValue={defaultValue}
-        rules={{
+    registerInput,
+    getFieldState,
+}: DOBInputProps) => {
+    const { isTouched, error } = getFieldState('user.confirmPassword');
+    const { onChange, ...registerProps } = registerInput(
+        'user.confirmPassword',
+        {
             required: true,
             validate: {
                 [FormValidation.DateValidationType.IsValid]: (date) =>
@@ -34,37 +33,33 @@ export const DateOfBirthInput = ({
                 [FormValidation.DateValidationType.MinAge]: (date) =>
                     FormValidation.validateMinimumAge(new Date(date), 18),
             },
-        }}
-        render={({
-            field: { onChange, value, onBlur },
-            fieldState: { error, isTouched },
-        }) => (
-            <DatePicker
-                required
-                label="Date of Birth"
-                autoComplete="bday"
-                onChange={(date) => {
-                    if (date === null) return onChange(undefined);
+        }
+    );
+    return (
+        <DatePicker
+            required
+            label="Date of Birth"
+            autoComplete="bday"
+            // onChange={(date) => {
+            //     if (date === null) return onChange(undefined);
 
-                    onChange(
-                        FormValidation.validateDateIsValid(date)
-                            ? date?.toISOString()
-                            : date?.toDateString()
-                    );
-                }}
-                errorMessage={
-                    isTouched
-                        ? FormValidation.getDateValidationErrorMessage(
-                              error?.type as FormValidation.DateValidationType,
-                              {
-                                  minimumAge: 18,
-                              }
-                          )
-                        : undefined
-                }
-                onBlur={onBlur}
-                value={new Date(value)}
-            />
-        )}
-    />
-);
+            //     onChange(
+            //         FormValidation.validateDateIsValid(date)
+            //             ? date?.toISOString()
+            //             : date?.toDateString()
+            //     );
+            // }}
+            errorMessage={
+                isTouched
+                    ? FormValidation.getDateValidationErrorMessage(
+                          error?.type as FormValidation.DateValidationType,
+                          {
+                              minimumAge: 18,
+                          }
+                      )
+                    : undefined
+            }
+            {...{ onChange, ...registerProps }}
+        />
+    );
+};

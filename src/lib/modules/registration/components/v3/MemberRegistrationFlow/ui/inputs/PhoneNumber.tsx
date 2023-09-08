@@ -1,35 +1,35 @@
 import { UseFormGetFieldState, UseFormRegister } from 'react-hook-form';
 import { Input, FormValidation } from '@/lib/shared/components/ui';
-
-import { TEST_IDS } from './testIds';
 import { RegisterMember } from '@/lib/modules/registration/features/v3';
+import { TEST_IDS } from './testIds';
 
-interface SurnameInputProps {
+interface PhoneNumberInputProps {
     registerInput: UseFormRegister<RegisterMember.Input>;
     getFieldState: UseFormGetFieldState<RegisterMember.Input>;
 }
 
-export const SurnameInput = ({
+export const PhoneNumberInput = ({
     registerInput,
     getFieldState,
-}: SurnameInputProps) => {
-    const { isTouched, error } = getFieldState('user.surname');
+}: PhoneNumberInputProps) => {
+    const { isTouched, error } = getFieldState('user.phoneNumber');
     return (
         <Input
             required
-            id="surname"
-            label="Last Name"
+            id="phoneNumber"
+            label="Phone Number"
             errorMessage={
                 isTouched
-                    ? FormValidation.getNameValidationErrorMessage(
+                    ? // TODO: Add validation for phone number
+                      FormValidation.getNameValidationErrorMessage(
                           error?.type as FormValidation.NameValidationType,
-                          'Last Name'
+                          'Phone Number'
                       )
                     : undefined
             }
-            autoComplete="last-name"
-            data-testid={TEST_IDS.LAST_NAME}
-            {...registerInput('user.surname', {
+            autoComplete="phone"
+            data-testid={TEST_IDS.PHONE_NUMBER}
+            {...registerInput('user.phoneNumber', {
                 required: true,
             })}
         />

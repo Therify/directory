@@ -1,9 +1,4 @@
-import {
-    Control,
-    Controller,
-    UseFormGetFieldState,
-    UseFormRegister,
-} from 'react-hook-form';
+import { UseFormGetFieldState, UseFormRegister } from 'react-hook-form';
 import { Input, FormValidation } from '@/lib/shared/components/ui';
 import { RegisterMember } from '@/lib/modules/registration/features/v3';
 import { TEST_IDS } from './testIds';
@@ -11,7 +6,6 @@ import { TEST_IDS } from './testIds';
 interface GivenNameInputProps {
     registerInput: UseFormRegister<RegisterMember.Input>;
     getFieldState: UseFormGetFieldState<RegisterMember.Input>;
-    defaultValue?: string;
 }
 
 export const GivenNameInput = ({

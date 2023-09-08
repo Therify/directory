@@ -20,6 +20,9 @@ import {
     ConcernsInput,
     GoalsInput,
     CountryInput,
+    PhoneNumberInput,
+    GenderInput,
+    EthnicityInput,
 } from './inputs';
 import { ROLES } from '@/lib/shared/types/roles';
 import { InsuranceInput } from './inputs/Insurance';
@@ -76,36 +79,66 @@ export const MemberRegistrationForm = ({
                 data-testid={TEST_IDS.FORM}
                 onSubmit={(e) => e.preventDefault()}
             >
-                <GivenNameInput
-                    registerInput={registerInput}
-                    getFieldState={getFieldState}
-                />
-                <SurnameInput
-                    registerInput={registerInput}
-                    getFieldState={getFieldState}
-                />
+                <Paragraph bold>Account Details</Paragraph>
+                <section>
+                    <GivenNameInput
+                        registerInput={registerInput}
+                        getFieldState={getFieldState}
+                    />
+                    <SurnameInput
+                        registerInput={registerInput}
+                        getFieldState={getFieldState}
+                    />
+                    <EmailAddressInput
+                        registerInput={registerInput}
+                        getFieldState={getFieldState}
+                        isEmailUnique={isEmailUnique}
+                        disabled={isEmailDisabled}
+                        helperText={emailHelperText}
+                    />
+                    <PhoneNumberInput
+                        registerInput={registerInput}
+                        getFieldState={getFieldState}
+                    />
+                    <PasswordInput
+                        registerInput={registerInput}
+                        getFieldState={getFieldState}
+                    />
+                    <PasswordConfirmationInput
+                        registerInput={registerInput}
+                        getFieldState={getFieldState}
+                        password={password}
+                    />
+                    {/* <DateOfBirthInput
+                        registerInput={registerInput}
+                        getFieldState={getFieldState}
+                    /> */}
+                </section>
+                <Paragraph bold>Personal Details</Paragraph>
+                <section>
+                    <StateInput
+                        registerInput={registerInput}
+                        getFieldState={getFieldState}
+                    />
+                    {showInsurances && (
+                        <InsuranceInput
+                            registerInput={registerInput}
+                            getFieldState={getFieldState}
+                        />
+                    )}
+                    <GenderInput
+                        registerInput={registerInput}
+                        getFieldState={getFieldState}
+                    />
+                    <EthnicityInput
+                        registerInput={registerInput}
+                        getFieldState={getFieldState}
+                    />
+                </section>
                 {/* 
-                <EmailAddressInput
-                    control={control}
-                    defaultValue={defaultValues?.emailAddress}
-                    isEmailUnique={isEmailUnique}
-                    disabled={isEmailDisabled}
-                    helperText={emailHelperText}
-                />
-                <DateOfBirthInput
-                    control={control}
-                    defaultValue={defaultValues?.dateOfBirth}
-                />
-                <PasswordInput control={control} />
-                <PasswordConfirmationInput
-                    control={control}
-                    password={password}
-                />
                 <LocationWrapper>
-                    <StateInput control={control} country={country} />
                     <CountryInput control={control} />
                 </LocationWrapper>
-                {showInsurances && <InsuranceInput control={control} />}
                 <GoalsInput control={control} />
                 <ConcernsInput control={control} />
                 <TermsAndConditionsInput control={control} /> */}
@@ -122,18 +155,21 @@ const Form = styled('form')(({ theme }) => ({
         flexDirection: 'row',
         flexWrap: 'wrap',
     },
-    '& > *': {
+    '& section': {
         width: '100%',
-        [theme.breakpoints.up('md')]: {
-            width: `calc(50% - ${theme.spacing(4)})`,
-            '&:nth-of-type(odd)': {
-                marginRight: theme.spacing(2),
-            },
-            '&:nth-of-type(even)': {
-                marginLeft: theme.spacing(2),
-            },
-            '&:last-child': {
-                width: '100%',
+        '& > *': {
+            width: '100%',
+            [theme.breakpoints.up('md')]: {
+                width: `calc(50% - ${theme.spacing(4)})`,
+                '&:nth-of-type(odd)': {
+                    marginRight: theme.spacing(2),
+                },
+                '&:nth-of-type(even)': {
+                    marginLeft: theme.spacing(2),
+                },
+                // '&:last-child': {
+                //     width: '100%',
+                // },
             },
         },
     },

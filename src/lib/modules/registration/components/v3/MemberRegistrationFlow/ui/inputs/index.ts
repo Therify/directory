@@ -10,3 +10,6 @@ export * from './State';
 export * from './Country';
 export * from './Goals';
 export * from './Concerns';
+export * from './PhoneNumber';
+export * from './Gender';
+export * from './Ethnicity';
