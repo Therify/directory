@@ -10,9 +10,15 @@ export default {
     argTypes: {},
 } as Meta;
 const schema = z.object({
-    firstName: z.string(),
-    lastName: z.string(),
-    age: z.number(),
+    firstName: z.string().nonempty({
+        message: 'First name is required.',
+    }),
+    lastName: z.string().nonempty({
+        message: 'Last name is required.',
+    }),
+    age: z.number().min(18, {
+        message: 'Must be at least 18 years old.',
+    }),
     password: z.string(),
     confirmPassword: z.string(),
     state: z.string(),
@@ -28,12 +34,12 @@ export const ConfigDrivenForm: StoryFn = () => {
             subTitle="This is a subtitle"
             config={config}
             validationMode={'onChange'}
-            onSubmit={console.log}
+            onSubmit={(values) => console.log('submit', values)}
         />
     );
 };
 
-const config: FormConfig<StoryBookForm> = {
+const config: FormConfig = {
     sections: [
         {
             title: 'Section 1',
@@ -44,13 +50,6 @@ const config: FormConfig<StoryBookForm> = {
                     helperText: 'Enter your first name',
                     statePath: 'firstName',
                     required: true,
-                    validation: {
-                        required: 'Field is required',
-                        minLength: {
-                            value: 3,
-                            message: 'Must be at least 3 characters',
-                        },
-                    },
                 },
                 {
                     field: 'input',
@@ -71,24 +70,13 @@ const config: FormConfig<StoryBookForm> = {
                     fullWidth: false,
                     statePath: 'password',
                     required: true,
-                    validation: {
-                        required: 'Field is required',
-                        minLength: {
-                            value: 8,
-                            message: 'Must be at least 8 characters',
-                        },
-                    },
                 },
                 {
                     field: 'password',
                     label: 'Confirm Password',
                     fullWidth: false,
                     statePath: 'confirmPassword',
-                    confirmationStatePath: 'password',
                     required: true,
-                    validation: {
-                        required: 'Field is required',
-                    },
                 },
                 {
                     field: 'textarea',

@@ -3,14 +3,14 @@ import { Path, PathValue, UseFormReturn } from 'react-hook-form';
 import { Select, SelectOption } from '@/lib/shared/components/ui';
 import { SelectInput } from '../types';
 
-export function SelectField<FormSchema extends z.ZodType>({
+export function SelectField<FormSchema extends z.ZodTypeAny>({
     register,
     getFieldState,
     watch,
     setValue,
     field,
 }: {
-    field: SelectInput<FormSchema>;
+    field: SelectInput;
 } & UseFormReturn<FormSchema, any>) {
     const options: SelectOption[] = field.options.map((option) => {
         if (typeof option === 'string') {
@@ -21,15 +21,10 @@ export function SelectField<FormSchema extends z.ZodType>({
         }
         return option;
     });
-    const statePath = field.statePath;
+    const statePath = field.statePath as Path<FormSchema>;
     const value = watch(statePath);
     const { error } = getFieldState(statePath);
-    const { ref, onChange, ...registerProps } = register(statePath, {
-        ...field.validation,
-        required:
-            (field.required && field.validation?.required) ??
-            'Field is required.',
-    });
+    const { ref, onChange, ...registerProps } = register(statePath);
     console.log({ value });
     return (
         <Select

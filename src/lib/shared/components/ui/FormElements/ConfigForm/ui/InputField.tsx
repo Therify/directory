@@ -1,22 +1,18 @@
 import { z } from 'zod';
-import { UseFormReturn } from 'react-hook-form';
+import { Path, UseFormReturn } from 'react-hook-form';
 import { Input } from '@/lib/shared/components/ui';
 import { Input as InputType } from '../types';
 
-export function InputField<FormSchema extends z.ZodType, T>({
+export function InputField<FormSchema extends z.ZodTypeAny>({
     register,
     getFieldState,
     field,
 }: {
-    field: InputType<T>;
+    field: InputType;
 } & UseFormReturn<FormSchema, any>) {
-    const statePath = field.statePath;
+    const statePath = field.statePath as Path<FormSchema>;
     const { error } = getFieldState(statePath);
     const { ref, ...registerProps } = register(statePath, {
-        ...field.validation,
-        required:
-            (field.required && field.validation?.required) ??
-            'Field is required.',
         ...(field.type === 'number' && { valueAsNumber: true }),
     });
 

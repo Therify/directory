@@ -1,78 +1,46 @@
-import { Path, PathValue, Validate } from 'react-hook-form';
 import { SelectOption } from '../Select';
 
-export type FormConfig<T> = {
-    sections: FormSection<T>[];
+export type FormConfig = {
+    sections: FormSection[];
 };
 
-export type FormSection<T> = {
+export type FormSection = {
     title?: string;
-    fields: FormField<T>[];
+    fields: FormField[];
 };
 
-export type FormField<T> =
-    | Input<T>
-    | PasswordInput<T>
-    | TextAreaInput<T>
-    | SelectInput<T>;
+export type FormField = Input | PasswordInput | TextAreaInput | SelectInput;
 
-interface FormFieldBase<T> {
+interface FormFieldBase {
     id?: string;
     label: string;
     helperText?: string;
     fullWidth?: boolean;
-    statePath: Path<T>;
-    validation?: FormFieldValidation<T>;
+    statePath: string;
     required?: boolean;
 }
-export type Input<T> = {
+export type Input = {
     field: 'input';
     type?: 'text' | 'email' | 'number';
     placeholder?: string;
     autoComplete?: string;
-} & FormFieldBase<T>;
+} & FormFieldBase;
 
-export type PasswordInput<T> = {
+export type PasswordInput = {
     field: 'password';
     placeholder?: string;
     allowShowPassword?: boolean;
-    confirmationStatePath?: Path<T>;
-} & FormFieldBase<T>;
+} & FormFieldBase;
 
-export type TextAreaInput<T> = {
+export type TextAreaInput = {
     field: 'textarea';
     placeholder?: string;
-} & FormFieldBase<T>;
+} & FormFieldBase;
 
-export type SelectInput<T> = {
+export type SelectInput = {
     field: 'select';
     id: string;
     default?: string;
     options: string[] | SelectOption[];
     fullWidth?: boolean;
-} & FormFieldBase<T>;
-
-export type FormFieldValidation<T> = {
-    required?: boolean | string;
-    maxLength?: {
-        value: number;
-        message: string;
-    };
-    minLength?: {
-        value: number;
-        message: string;
-    };
-    max?: {
-        value: number;
-        message: string;
-    };
-    min?: {
-        value: number;
-        message: string;
-    };
-    // pattern?: {
-    //     value: RegExp;
-    //     message: string;
-    // };
-    validate?: Record<string, Validate<PathValue<T, Path<T>>, T>>;
-};
+} & FormFieldBase;

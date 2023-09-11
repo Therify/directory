@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
 import { SxProps, Theme, styled } from '@mui/material/styles';
 import { ReactNode } from 'react';
@@ -8,7 +9,7 @@ import { H1, H2 } from '../../Typography/Headers';
 import { getFormInput } from './getFormInput';
 import { FormConfig } from './types';
 
-export function ConfigForm<FormSchema extends z.ZodType, T>({
+export function ConfigForm<FormSchema extends z.ZodTypeAny>({
     config,
     defaultValues,
     validationMode = 'onChange',
@@ -21,20 +22,21 @@ export function ConfigForm<FormSchema extends z.ZodType, T>({
     title: ReactNode;
     subTitle?: ReactNode;
     formSchema: FormSchema;
-    config: FormConfig<T>;
+    config: FormConfig;
     defaultValues?: DeepPartial<FormSchema>;
     validationMode?: 'onBlur' | 'onChange' | 'onSubmit' | 'onTouched' | 'all';
     onSubmit: (data: FormSchema) => void;
     sx?: SxProps<Theme>;
 }) {
-    const form = useForm<FormSchema>({
+    const form = useForm<z.infer<FormSchema>>({
         mode: 'onChange' ?? validationMode,
         ...(defaultValues && { defaultValues }),
+        resolver: zodResolver(formSchema),
     });
     const {
         watch,
-        getValues,
-        formState: { isValid, errors },
+        formState: { isValid },
+        handleSubmit,
     } = form;
     console.log(watch());
     return (
@@ -73,7 +75,7 @@ export function ConfigForm<FormSchema extends z.ZodType, T>({
             ))}
             <Button
                 disabled={!isValid}
-                onClick={() => onSubmit(formSchema.parse(getValues()))}
+                onClick={handleSubmit((values) => onSubmit(values))}
             >
                 Submit
             </Button>
