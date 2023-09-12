@@ -24,8 +24,10 @@ export function SelectField<FormSchema extends z.ZodTypeAny>({
     const statePath = field.statePath as Path<FormSchema>;
     const value = watch(statePath);
     const { error } = getFieldState(statePath);
-    const { ref, onChange, ...registerProps } = register(statePath);
-    console.log({ value });
+    const { ref, onChange, ...registerProps } = register(statePath, {
+        ...(field.required && { required: 'Field is required' }),
+    });
+
     return (
         <Select
             required={field.required}
@@ -37,6 +39,7 @@ export function SelectField<FormSchema extends z.ZodTypeAny>({
             options={options}
             value={value}
             fullWidth
+            placeholder={field.placeholder}
             onChange={(value) => {
                 setValue(
                     statePath,

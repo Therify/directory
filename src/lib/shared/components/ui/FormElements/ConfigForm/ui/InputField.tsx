@@ -22,6 +22,7 @@ export function InputField<FormSchema extends z.ZodTypeAny>({
             type={field.type ?? 'text'}
             id={field.id}
             label={field.label}
+            placeholder={field.placeholder}
             helperText={field.helperText}
             errorMessage={error?.message}
             autoComplete={field.autoComplete}

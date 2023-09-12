@@ -19,6 +19,7 @@ export function PasswordField<FormSchema extends z.ZodTypeAny>({
         <PasswordInput
             allowShowPassword={field.allowShowPassword ?? true}
             required={field.required}
+            placeholder={field.placeholder}
             id={field.id}
             label={field.label}
             helperText={field.helperText}

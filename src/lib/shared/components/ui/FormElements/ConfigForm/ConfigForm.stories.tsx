@@ -9,6 +9,7 @@ export default {
     component: Ui,
     argTypes: {},
 } as Meta;
+const states = ['California', 'New York', 'Tennessee'] as const;
 const schema = z.object({
     firstName: z.string().nonempty({
         message: 'First name is required.',
@@ -21,10 +22,9 @@ const schema = z.object({
     }),
     password: z.string(),
     confirmPassword: z.string(),
-    state: z.string(),
+    state: z.enum(states).optional(),
     description: z.string(),
 });
-type StoryBookForm = z.infer<typeof schema>;
 
 export const ConfigDrivenForm: StoryFn = () => {
     return (
@@ -48,6 +48,7 @@ const config: FormConfig = {
                     field: 'input',
                     label: 'First Name',
                     helperText: 'Enter your first name',
+                    placeholder: 'John',
                     statePath: 'firstName',
                     required: true,
                 },
@@ -87,12 +88,14 @@ const config: FormConfig = {
                 },
                 {
                     id: 'state',
+                    required: false,
                     field: 'select',
                     label: 'Select a state',
                     helperText: 'Select an option',
                     fullWidth: true,
                     statePath: 'state',
-                    options: ['California', 'New York', 'Tennessee'],
+                    placeholder: 'select a state',
+                    options: states as unknown as string[],
                 },
             ],
         },

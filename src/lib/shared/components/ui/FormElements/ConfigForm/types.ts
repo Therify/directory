@@ -40,6 +40,7 @@ export type TextAreaInput = {
 export type SelectInput = {
     field: 'select';
     id: string;
+    placeholder?: string;
     default?: string;
     options: string[] | SelectOption[];
     fullWidth?: boolean;

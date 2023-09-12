@@ -15,6 +15,7 @@ export function ConfigForm<FormSchema extends z.ZodTypeAny>({
     validationMode = 'onChange',
     title,
     subTitle,
+    submitButtonText = 'Submit',
     onSubmit,
     formSchema,
     sx,
@@ -24,6 +25,7 @@ export function ConfigForm<FormSchema extends z.ZodTypeAny>({
     formSchema: FormSchema;
     config: FormConfig;
     defaultValues?: DeepPartial<FormSchema>;
+    submitButtonText?: string;
     validationMode?: 'onBlur' | 'onChange' | 'onSubmit' | 'onTouched' | 'all';
     onSubmit: (data: FormSchema) => void;
     sx?: SxProps<Theme>;
@@ -33,12 +35,14 @@ export function ConfigForm<FormSchema extends z.ZodTypeAny>({
         ...(defaultValues && { defaultValues }),
         resolver: zodResolver(formSchema),
     });
+
     const {
         watch,
         formState: { isValid },
         handleSubmit,
     } = form;
-    console.log(watch());
+    // There is a problem with validation where this watch is needed to trigger validation
+    watch();
     return (
         <Form sx={sx}>
             <Header>{title}</Header>
@@ -77,7 +81,7 @@ export function ConfigForm<FormSchema extends z.ZodTypeAny>({
                 disabled={!isValid}
                 onClick={handleSubmit((values) => onSubmit(values))}
             >
-                Submit
+                {submitButtonText}
             </Button>
         </Form>
     );

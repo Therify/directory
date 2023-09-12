@@ -20,6 +20,7 @@ export function TextAreaField<FormSchema extends z.ZodTypeAny>({
             id={field.id}
             label={field.label}
             helperText={field.helperText}
+            placeholder={field.placeholder}
             errorMessage={error?.message}
             inputRef={ref}
             {...registerProps}
