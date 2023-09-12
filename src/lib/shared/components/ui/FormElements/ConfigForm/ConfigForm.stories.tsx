@@ -197,7 +197,7 @@ const config: FormConfig = {
                     fullWidth: true,
                     statePath: 'state',
                     placeholder: 'select a state',
-                    options: states as unknown as string[],
+                    options: [...states],
                 },
             ],
         },
