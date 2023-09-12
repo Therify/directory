@@ -28,14 +28,42 @@ const schema = z.object({
 
 export const ConfigDrivenForm: StoryFn = () => {
     return (
-        <Ui
-            formSchema={schema}
-            title="Config Driven Form"
-            subTitle="This is a subtitle"
-            config={config}
-            validationMode={'onChange'}
-            onSubmit={(values) => console.log('submit', values)}
-        />
+        <div
+            style={{
+                width: '100%',
+                background: '#f5f5f5',
+            }}
+        >
+            <Ui
+                formSchema={schema}
+                title="Config Driven Form"
+                subTitle="This is a subtitle"
+                config={config}
+                validationMode={'onChange'}
+                onSubmit={(values) => console.log('submit', values)}
+            />
+        </div>
+    );
+};
+
+export const ErrorMessage: StoryFn = () => {
+    return (
+        <div
+            style={{
+                width: '100%',
+                background: '#f5f5f5',
+            }}
+        >
+            <Ui
+                formSchema={schema}
+                title="Config Driven Form"
+                subTitle="This is a subtitle"
+                config={config}
+                validationMode={'onChange'}
+                errorMessage="An error has occurred"
+                onSubmit={(values) => console.log('submit', values)}
+            />
+        </div>
     );
 };
 

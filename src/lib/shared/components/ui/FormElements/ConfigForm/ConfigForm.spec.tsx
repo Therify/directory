@@ -29,59 +29,78 @@ const getMockInputConfig = (fields: FormField | FormField[]): FormConfig => ({
 
 describe('ConfigForm', () => {
     const user = userEvent.setup();
-    const mockConfig: FormConfig = {
-        sections: [],
-    };
-    it('renders form title', () => {
-        const title = 'Config Driven Form';
-        const { getByText } = renderWithTheme(
-            <ConfigForm
-                formSchema={z.object({})}
-                title={title}
-                config={mockConfig}
-                validationMode={'onChange'}
-                onSubmit={(values) => console.log('submit', values)}
-            />
-        );
+    describe('form', () => {
+        const mockConfig: FormConfig = {
+            sections: [],
+        };
+        it('renders form title', () => {
+            const title = 'Config Driven Form';
+            const { getByText } = renderWithTheme(
+                <ConfigForm
+                    formSchema={z.object({})}
+                    title={title}
+                    config={mockConfig}
+                    validationMode={'onChange'}
+                    onSubmit={(values) => console.log('submit', values)}
+                />
+            );
 
-        expect(getByText(title)).toBeVisible();
-    });
+            expect(getByText(title)).toBeVisible();
+        });
 
-    it('renders subtitle', () => {
-        const subtitle = 'subtitle';
-        const { getByText } = renderWithTheme(
-            <ConfigForm
-                formSchema={z.object({})}
-                title="title"
-                subTitle={subtitle}
-                config={mockConfig}
-                validationMode={'onChange'}
-                onSubmit={(values) => console.log('submit', values)}
-            />
-        );
+        it('renders subtitle', () => {
+            const subtitle = 'subtitle';
+            const { getByText } = renderWithTheme(
+                <ConfigForm
+                    formSchema={z.object({})}
+                    title="title"
+                    subTitle={subtitle}
+                    config={mockConfig}
+                    validationMode={'onChange'}
+                    onSubmit={(values) => console.log('submit', values)}
+                />
+            );
 
-        expect(getByText(subtitle)).toBeVisible();
-    });
+            expect(getByText(subtitle)).toBeVisible();
+        });
 
-    it('renders section title', () => {
-        const { getByText } = renderWithTheme(
-            <ConfigForm
-                formSchema={z.object({})}
-                title="title"
-                config={{
-                    sections: [
-                        {
-                            title: 'Section 1',
-                            fields: [],
-                        },
-                    ],
-                }}
-                validationMode={'onChange'}
-                onSubmit={(values) => console.log('submit', values)}
-            />
-        );
+        it('renders section title', () => {
+            const { getByText } = renderWithTheme(
+                <ConfigForm
+                    formSchema={z.object({})}
+                    title="title"
+                    config={{
+                        sections: [
+                            {
+                                title: 'Section 1',
+                                fields: [],
+                            },
+                        ],
+                    }}
+                    validationMode={'onChange'}
+                    onSubmit={(values) => console.log('submit', values)}
+                />
+            );
 
-        expect(getByText('Section 1')).toBeVisible();
+            expect(getByText('Section 1')).toBeVisible();
+        });
+
+        it('displays error message', async () => {
+            const errorMessage = 'This is an error message';
+            const { getByText } = renderWithTheme(
+                <ConfigForm
+                    formSchema={z.object({})}
+                    title="title"
+                    config={mockConfig}
+                    validationMode={'onChange'}
+                    onSubmit={console.log}
+                    errorMessage={errorMessage}
+                />
+            );
+            // Allow transition to complete
+            await new Promise((r) => setTimeout(r, 400));
+            expect(getByText(errorMessage)).toBeVisible();
+        });
     });
 
     describe('input field', () => {
@@ -196,7 +215,9 @@ describe('ConfigForm', () => {
             await user.type(input, emailAddress);
             expect(input).toHaveValue(emailAddress);
             await user.click(submitButton);
-            expect(mockSubmit).toHaveBeenCalledWith({ email: emailAddress });
+            expect(mockSubmit).toHaveBeenCalledWith({
+                email: emailAddress,
+            });
         });
 
         it('validates input', async () => {
@@ -375,7 +396,6 @@ describe('ConfigForm', () => {
     });
 
     describe('select field', () => {
-        const errorMessage = 'Selection is required.';
         const mockSchema = z.object({
             yesOrNo: z.enum(['Yes', 'No']),
         });

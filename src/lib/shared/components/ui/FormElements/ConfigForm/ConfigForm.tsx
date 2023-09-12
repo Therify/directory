@@ -1,10 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { ReportProblemRounded } from '@mui/icons-material';
 import Box from '@mui/material/Box';
 import { SxProps, Theme, styled } from '@mui/material/styles';
+import { motion } from 'framer-motion';
 import { ReactNode } from 'react';
 import { DeepPartial, useForm } from 'react-hook-form';
 import z from 'zod';
+import { ALERT_TYPE, Alert } from '../../Alert';
 import { Button } from '../../Button';
+import { CenteredContainer } from '../../Containers';
 import { H1, H2 } from '../../Typography/Headers';
 import { getFormInput } from './getFormInput';
 import { FormConfig } from './types';
@@ -18,6 +22,8 @@ export function ConfigForm<FormSchema extends z.ZodTypeAny>({
     submitButtonText = 'Submit',
     onSubmit,
     formSchema,
+    errorMessage,
+    clearErrorMessage,
     sx,
 }: {
     title: ReactNode;
@@ -26,6 +32,8 @@ export function ConfigForm<FormSchema extends z.ZodTypeAny>({
     config: FormConfig;
     defaultValues?: DeepPartial<FormSchema>;
     submitButtonText?: string;
+    errorMessage?: string;
+    clearErrorMessage?: () => void;
     validationMode?: 'onBlur' | 'onChange' | 'onSubmit' | 'onTouched' | 'all';
     onSubmit: (data: FormSchema) => void;
     sx?: SxProps<Theme>;
@@ -77,6 +85,24 @@ export function ConfigForm<FormSchema extends z.ZodTypeAny>({
                     })}
                 </FormSection>
             ))}
+            {errorMessage && (
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.7 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3 }}
+                >
+                    <Alert
+                        icon={
+                            <CenteredContainer>
+                                <ReportProblemRounded />
+                            </CenteredContainer>
+                        }
+                        type={ALERT_TYPE.ERROR}
+                        title={errorMessage}
+                        onClose={clearErrorMessage}
+                    />
+                </motion.div>
+            )}
             <Button
                 disabled={!isValid}
                 onClick={handleSubmit((values) => onSubmit(values))}
