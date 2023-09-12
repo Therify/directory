@@ -1,10 +1,11 @@
+import { sleep } from '@/lib/shared/utils';
 import { fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { use } from 'react';
 import { z } from 'zod';
 import { renderWithTheme } from '../../../fixtures';
 import { TEST_IDS as SELECT_TEST_IDS } from '../Select';
-import { ConfigForm } from './ConfigForm';
+import { ConfigForm, TEST_IDS } from './ConfigForm';
 import {
     FormConfig,
     FormField,
@@ -29,10 +30,10 @@ const getMockInputConfig = (fields: FormField | FormField[]): FormConfig => ({
 
 describe('ConfigForm', () => {
     const user = userEvent.setup();
+    const mockConfig: FormConfig = {
+        sections: [],
+    };
     describe('form', () => {
-        const mockConfig: FormConfig = {
-            sections: [],
-        };
         it('renders form title', () => {
             const title = 'Config Driven Form';
             const { getByText } = renderWithTheme(
@@ -97,9 +98,156 @@ describe('ConfigForm', () => {
                     errorMessage={errorMessage}
                 />
             );
-            // Allow transition to complete
-            await new Promise((r) => setTimeout(r, 400));
+            // Allow entrance transition to complete
+            await sleep(400);
             expect(getByText(errorMessage)).toBeVisible();
+        });
+
+        it('prefills form with default values', async () => {
+            const { getByDisplayValue } = renderWithTheme(
+                <ConfigForm
+                    formSchema={z.object({
+                        firstName: z.string(),
+                    })}
+                    title="title"
+                    config={getMockInputConfig({
+                        field: 'input',
+                        label: 'First Name',
+                        placeholder: 'First Name',
+                        statePath: 'firstName',
+                        type: 'text',
+                    })}
+                    defaultValues={{
+                        firstName: 'John',
+                    }}
+                    validationMode={'onChange'}
+                    onSubmit={jest.fn()}
+                />
+            );
+
+            expect(getByDisplayValue('John')).toBeVisible();
+        });
+    });
+
+    describe('buttons', () => {
+        it('renders submit button text', () => {
+            const { getByText } = renderWithTheme(
+                <ConfigForm
+                    formSchema={z.object({})}
+                    title="title"
+                    config={mockConfig}
+                    validationMode={'onChange'}
+                    onSubmit={console.log}
+                    submitButtonText="Next"
+                />
+            );
+            expect(getByText('Next')).toBeVisible();
+        });
+
+        it('renders back button when click handler provided', () => {
+            const { getByText } = renderWithTheme(
+                <ConfigForm
+                    formSchema={z.object({})}
+                    title="title"
+                    config={mockConfig}
+                    validationMode={'onChange'}
+                    onSubmit={console.log}
+                    onBack={console.log}
+                />
+            );
+            expect(getByText('Back')).toBeVisible();
+        });
+
+        it('renders back button text', () => {
+            const { getByText } = renderWithTheme(
+                <ConfigForm
+                    formSchema={z.object({})}
+                    title="title"
+                    config={mockConfig}
+                    validationMode={'onChange'}
+                    onSubmit={console.log}
+                    backButtonText="Back"
+                    onBack={console.log}
+                />
+            );
+            expect(getByText('Back')).toBeVisible();
+        });
+
+        it('calls onBack when back button is clicked', async () => {
+            const onBack = jest.fn();
+            const { getByText } = renderWithTheme(
+                <ConfigForm
+                    formSchema={z.object({})}
+                    title="title"
+                    config={mockConfig}
+                    validationMode={'onChange'}
+                    onSubmit={console.log}
+                    backButtonText="Back"
+                    onBack={onBack}
+                />
+            );
+            const backButton = getByText('Back');
+            await user.click(backButton);
+
+            expect(onBack).toHaveBeenCalled();
+        });
+
+        it('calls onSubmit when submit button is clicked', async () => {
+            const onSubmit = jest.fn();
+            const { getByText, getByPlaceholderText } = renderWithTheme(
+                <ConfigForm
+                    formSchema={z.object({
+                        firstName: z.string(),
+                    })}
+                    title="title"
+                    config={getMockInputConfig({
+                        field: 'input',
+                        label: 'First Name',
+                        placeholder: 'First Name',
+                        statePath: 'firstName',
+                        type: 'text',
+                    })}
+                    defaultValues={{
+                        firstName: 'John',
+                    }}
+                    validationMode={'onChange'}
+                    onSubmit={onSubmit}
+                />
+            );
+            // Allow prefill validation to complete and re-render
+            await sleep(0);
+            const button = getByText('Submit');
+            await user.click(button);
+
+            expect(onSubmit).toHaveBeenCalled();
+        });
+
+        it('disables submit button when submitting', async () => {
+            const onSubmit = jest.fn();
+            const { getByTestId } = renderWithTheme(
+                <ConfigForm
+                    formSchema={z.object({
+                        firstName: z.string(),
+                    })}
+                    title="title"
+                    config={getMockInputConfig({
+                        field: 'input',
+                        label: 'First Name',
+                        placeholder: 'First Name',
+                        statePath: 'firstName',
+                        type: 'text',
+                    })}
+                    defaultValues={{
+                        firstName: 'John',
+                    }}
+                    validationMode={'onChange'}
+                    onSubmit={onSubmit}
+                    isSubmitting
+                />
+            );
+            const button = getByTestId(TEST_IDS.SUBMIT_BUTTON);
+
+            expect(button).toBeDisabled();
         });
     });
 

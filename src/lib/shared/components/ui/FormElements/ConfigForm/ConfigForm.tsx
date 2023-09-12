@@ -1,17 +1,21 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import z from 'zod';
 import { ReportProblemRounded } from '@mui/icons-material';
 import Box from '@mui/material/Box';
 import { SxProps, Theme, styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
 import { ReactNode } from 'react';
 import { DeepPartial, useForm } from 'react-hook-form';
-import z from 'zod';
 import { ALERT_TYPE, Alert } from '../../Alert';
 import { Button } from '../../Button';
 import { CenteredContainer } from '../../Containers';
 import { H1, H2 } from '../../Typography/Headers';
 import { getFormInput } from './getFormInput';
 import { FormConfig } from './types';
+
+export const TEST_IDS = {
+    SUBMIT_BUTTON: 'submit-button',
+} as const;
 
 export function ConfigForm<FormSchema extends z.ZodTypeAny>({
     config,
@@ -20,21 +24,29 @@ export function ConfigForm<FormSchema extends z.ZodTypeAny>({
     title,
     subTitle,
     submitButtonText = 'Submit',
+    backButtonText = 'Back',
     onSubmit,
     formSchema,
     errorMessage,
     clearErrorMessage,
+    onBack,
+    isSubmitting,
+    isBackButtonDisabled,
     sx,
 }: {
     title: ReactNode;
     subTitle?: ReactNode;
     formSchema: FormSchema;
     config: FormConfig;
-    defaultValues?: DeepPartial<FormSchema>;
+    defaultValues?: DeepPartial<z.infer<FormSchema>>;
     submitButtonText?: string;
+    backButtonText?: string;
+    isBackButtonDisabled?: boolean;
+    isSubmitting?: boolean;
     errorMessage?: string;
     clearErrorMessage?: () => void;
     validationMode?: 'onBlur' | 'onChange' | 'onSubmit' | 'onTouched' | 'all';
+    onBack?: () => void;
     onSubmit: (data: FormSchema) => void;
     sx?: SxProps<Theme>;
 }) {
@@ -53,68 +65,129 @@ export function ConfigForm<FormSchema extends z.ZodTypeAny>({
     watch();
     return (
         <Form sx={sx}>
-            <Header>{title}</Header>
-            {subTitle && <p>{subTitle}</p>}
+            <FormContent isError={!!errorMessage}>
+                <Header>{title}</Header>
+                {subTitle && <p>{subTitle}</p>}
 
-            {config.sections.map((formSection, i) => (
-                <FormSection key={`section-${i}`}>
-                    {formSection.title && (
-                        <Box width="100%">
-                            {typeof formSection.title === 'string' ? (
-                                <SectionTitle>{formSection.title}</SectionTitle>
-                            ) : (
-                                formSection.title
-                            )}
-                        </Box>
-                    )}
-                    {formSection.fields.map((field, i) => {
-                        return (
-                            <FieldContainer
-                                className={
-                                    field.fullWidth ? undefined : 'collapsed'
-                                }
-                                fullWidth={field.fullWidth}
-                                key={`field-${i}`}
-                            >
-                                {getFormInput({
-                                    field,
-                                    useFormProps: form,
-                                })}
-                            </FieldContainer>
-                        );
-                    })}
-                </FormSection>
-            ))}
-            {errorMessage && (
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.7 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3 }}
+                {config.sections.map((formSection, i) => (
+                    <FormSection key={`section-${i}`}>
+                        {formSection.title && (
+                            <Box width="100%">
+                                {typeof formSection.title === 'string' ? (
+                                    <SectionTitle>
+                                        {formSection.title}
+                                    </SectionTitle>
+                                ) : (
+                                    formSection.title
+                                )}
+                            </Box>
+                        )}
+                        {formSection.fields.map((field, i) => {
+                            return (
+                                <FieldContainer
+                                    className={
+                                        field.fullWidth
+                                            ? undefined
+                                            : 'collapsed'
+                                    }
+                                    fullWidth={field.fullWidth}
+                                    key={`field-${i}`}
+                                >
+                                    {getFormInput({
+                                        field,
+                                        useFormProps: form,
+                                    })}
+                                </FieldContainer>
+                            );
+                        })}
+                    </FormSection>
+                ))}
+                {errorMessage && (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.7 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        <Alert
+                            icon={
+                                <CenteredContainer>
+                                    <ReportProblemRounded />
+                                </CenteredContainer>
+                            }
+                            type={ALERT_TYPE.ERROR}
+                            title={errorMessage}
+                            onClose={clearErrorMessage}
+                        />
+                    </motion.div>
+                )}
+            </FormContent>
+            <ButtonContainer>
+                {onBack && (
+                    <Button
+                        type="outlined"
+                        disabled={isBackButtonDisabled || isSubmitting}
+                        onClick={onBack}
+                    >
+                        {backButtonText}
+                    </Button>
+                )}
+                <Button
+                    data-testid={TEST_IDS.SUBMIT_BUTTON}
+                    disabled={!isValid || isSubmitting}
+                    isLoading={isSubmitting}
+                    onClick={handleSubmit((values) => onSubmit(values))}
                 >
-                    <Alert
-                        icon={
-                            <CenteredContainer>
-                                <ReportProblemRounded />
-                            </CenteredContainer>
-                        }
-                        type={ALERT_TYPE.ERROR}
-                        title={errorMessage}
-                        onClose={clearErrorMessage}
-                    />
-                </motion.div>
-            )}
-            <Button
-                disabled={!isValid}
-                onClick={handleSubmit((values) => onSubmit(values))}
-            >
-                {submitButtonText}
-            </Button>
+                    {submitButtonText}
+                </Button>
+            </ButtonContainer>
         </Form>
     );
 }
 
 const Form = styled('form')(({ theme }) => ({
     width: '100%',
+}));
+
+const FormContent = styled('div', {
+    shouldForwardProp: (prop) => 'isError' !== prop,
+})<{ isError: boolean }>(({ theme, isError }) => ({
+    width: '100%',
+    background: theme.palette.background.paper,
+    borderRadius: theme.shape.borderRadius,
+    padding: theme.spacing(6.5, 8),
+    ...(isError && {
+        paddingBottom: theme.spacing(4),
+        border: `2px solid ${theme.palette.error.main}`,
+    }),
+    [theme.breakpoints.up('md')]: {
+        padding: theme.spacing(30),
+        backgroundColor: theme.palette.background.paper,
+        marginTop: theme.spacing(10),
+        ...(isError && {
+            paddingBottom: theme.spacing(15),
+        }),
+    },
+}));
+
+const ButtonContainer = styled('div')(({ theme }) => ({
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: theme.spacing(8, 0),
+
+    '& button': {
+        width: `calc(50% - ${theme.spacing(4)})`,
+        '&:first-of-type': {
+            marginRight: theme.spacing(4),
+            marginLeft: '0 !important',
+        },
+        '&:last-of-type': {
+            marginLeft: theme.spacing(4),
+            display: 'flex',
+            justifySelf: 'flex-end',
+        },
+    },
 }));
 
 const Header = styled(H1)(({ theme }) => ({
@@ -130,7 +203,7 @@ const FormSection = styled('section')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
-    marginBottom: theme.spacing(4),
+    marginTop: theme.spacing(15),
     '& > *': {
         marginBottom: theme.spacing(2),
     },
