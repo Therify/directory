@@ -61,8 +61,8 @@ export function ConfigForm<FormSchema extends z.ZodTypeAny>({
         formState: { isValid },
         handleSubmit,
     } = form;
-    // There is a problem with validation where this watch is needed to trigger validation
-    // watch();
+    // There is a problem where this watch call is needed to trigger validation
+    watch();
     return (
         <Form sx={sx}>
             <FormContent isError={!!errorMessage}>
