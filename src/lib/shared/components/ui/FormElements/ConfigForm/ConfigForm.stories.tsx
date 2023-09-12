@@ -23,7 +23,7 @@ const schema = z.object({
     }),
     password: z.string(),
     confirmPassword: z.string(),
-    state: z.enum(states).optional(),
+    state: z.enum(states),
     description: z.string(),
 });
 
@@ -161,12 +161,6 @@ const config: FormConfig = {
                     statePath: 'lastName',
                 },
                 {
-                    field: 'input',
-                    label: 'Age',
-                    statePath: 'age',
-                    type: 'number',
-                },
-                {
                     field: 'password',
                     label: 'Password',
                     helperText: 'Password must be 8 characters',
@@ -180,6 +174,12 @@ const config: FormConfig = {
                     fullWidth: false,
                     statePath: 'confirmPassword',
                     required: true,
+                },
+                {
+                    field: 'input',
+                    label: 'Age',
+                    statePath: 'age',
+                    type: 'number',
                 },
                 {
                     field: 'textarea',

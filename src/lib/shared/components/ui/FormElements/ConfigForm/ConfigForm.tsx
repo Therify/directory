@@ -62,7 +62,7 @@ export function ConfigForm<FormSchema extends z.ZodTypeAny>({
         handleSubmit,
     } = form;
     // There is a problem with validation where this watch is needed to trigger validation
-    watch();
+    // watch();
     return (
         <Form sx={sx}>
             <FormContent isError={!!errorMessage}>
@@ -183,6 +183,7 @@ const ButtonContainer = styled('div')(({ theme }) => ({
             marginLeft: '0 !important',
         },
         '&:last-of-type': {
+            marginRight: '0 !important',
             marginLeft: theme.spacing(4),
             display: 'flex',
             justifySelf: 'flex-end',
