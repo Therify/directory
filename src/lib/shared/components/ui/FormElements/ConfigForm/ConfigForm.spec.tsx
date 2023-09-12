@@ -428,5 +428,20 @@ describe('ConfigForm', () => {
             await user.click(submitButton);
             expect(mockSubmit).toHaveBeenCalledWith({ yesOrNo: 'Yes' });
         });
+
+        it('requires selection to submit', async () => {
+            const mockSubmit = jest.fn();
+            const { getByText } = renderWithTheme(
+                <ConfigForm
+                    formSchema={mockSchema}
+                    title="title"
+                    config={mockSelectConfig}
+                    validationMode={'onChange'}
+                    onSubmit={mockSubmit}
+                />
+            );
+            const submitButton = getByText('Submit');
+            expect(submitButton).toBeDisabled();
+        });
     });
 });
