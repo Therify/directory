@@ -12,6 +12,7 @@ import { CenteredContainer } from '../../Containers';
 import { H1, H2 } from '../../Typography/Headers';
 import { getFormInput } from './getFormInput';
 import { FormConfig } from './types';
+import { Paragraph } from '../../Typography';
 
 export const TEST_IDS = {
     SUBMIT_BUTTON: 'submit-button',
@@ -63,7 +64,9 @@ export function FormRenderer<ValidationSchema extends z.ZodTypeAny>({
         <Form sx={sx}>
             <FormContent isError={!!errorMessage}>
                 <Header>{config.title}</Header>
-                {config.subtitle && <p>{config.subtitle}</p>}
+                {config.subtitle && (
+                    <Paragraph noMargin>{config.subtitle}</Paragraph>
+                )}
 
                 {config.sections.map((formSection, i) => (
                     <FormSection key={`section-${i}`}>
