@@ -13,3 +13,5 @@ export {
 export * from './formTypography';
 export type { ToggleProps, ToggleType } from './Toggle';
 export * as FormValidation from './form-validation';
+export { FormRenderer } from './FormRenderer';
+export type { FormRendererTypes } from './FormRenderer';

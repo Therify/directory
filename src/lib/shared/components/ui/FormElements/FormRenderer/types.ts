@@ -2,6 +2,8 @@ import { FieldValues, Path } from 'react-hook-form';
 import { SelectOption } from '../Select';
 
 export type FormConfig<T extends FieldValues> = {
+    title: string;
+    subtitle?: string;
     sections: FormSection<T>[];
 };
 
