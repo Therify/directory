@@ -1,11 +1,9 @@
 import { sleep } from '@/lib/shared/utils';
 import { fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { use } from 'react';
+import { FieldValues } from 'react-hook-form';
 import { z } from 'zod';
-import { renderWithTheme } from '../../../fixtures';
-import { TEST_IDS as SELECT_TEST_IDS } from '../Select';
-import { ConfigForm, TEST_IDS } from './ConfigForm';
+import { FormRenderer, TEST_IDS } from './FormRenderer';
 import {
     FormConfig,
     FormField,
@@ -13,32 +11,34 @@ import {
     SelectInput,
     TextAreaInput,
 } from './types';
+import { TEST_IDS as SELECT_TEST_IDS } from '../Select';
+import { renderWithTheme } from '../../../fixtures';
 
-// const useForm = jest.fn();
-// jest.mock('react-hook-form', () => ({
-//     useForm,
-// }));
+function getMockInputConfig<T extends FieldValues>(
+    field: FormField<T>
+): FormConfig<T> {
+    return {
+        sections: [
+            {
+                title: 'Section 1',
+                fields: [field],
+            },
+        ],
+    };
+}
 
-const getMockInputConfig = (fields: FormField | FormField[]): FormConfig => ({
-    sections: [
-        {
-            title: 'Section 1',
-            fields: Array.isArray(fields) ? fields : [fields],
-        },
-    ],
-});
-
-describe('ConfigForm', () => {
+describe('FormRenderer', () => {
     const user = userEvent.setup();
-    const mockConfig: FormConfig = {
+    const mockSchema = z.object({});
+    const mockConfig: FormConfig<z.infer<typeof mockSchema>> = {
         sections: [],
     };
     describe('form', () => {
         it('renders form title', () => {
             const title = 'Config Driven Form';
             const { getByText } = renderWithTheme(
-                <ConfigForm
-                    formSchema={z.object({})}
+                <FormRenderer
+                    validationSchema={z.object({})}
                     title={title}
                     config={mockConfig}
                     validationMode={'onChange'}
@@ -52,8 +52,8 @@ describe('ConfigForm', () => {
         it('renders subtitle', () => {
             const subtitle = 'subtitle';
             const { getByText } = renderWithTheme(
-                <ConfigForm
-                    formSchema={z.object({})}
+                <FormRenderer
+                    validationSchema={z.object({})}
                     title="title"
                     subTitle={subtitle}
                     config={mockConfig}
@@ -67,8 +67,8 @@ describe('ConfigForm', () => {
 
         it('renders section title', () => {
             const { getByText } = renderWithTheme(
-                <ConfigForm
-                    formSchema={z.object({})}
+                <FormRenderer
+                    validationSchema={z.object({})}
                     title="title"
                     config={{
                         sections: [
@@ -89,8 +89,8 @@ describe('ConfigForm', () => {
         it('displays error message', async () => {
             const errorMessage = 'This is an error message';
             const { getByText } = renderWithTheme(
-                <ConfigForm
-                    formSchema={z.object({})}
+                <FormRenderer
+                    validationSchema={z.object({})}
                     title="title"
                     config={mockConfig}
                     validationMode={'onChange'}
@@ -105,8 +105,8 @@ describe('ConfigForm', () => {
 
         it('prefills form with default values', async () => {
             const { getByDisplayValue } = renderWithTheme(
-                <ConfigForm
-                    formSchema={z.object({
+                <FormRenderer
+                    validationSchema={z.object({
                         firstName: z.string(),
                     })}
                     title="title"
@@ -132,8 +132,8 @@ describe('ConfigForm', () => {
     describe('buttons', () => {
         it('renders submit button text', () => {
             const { getByText } = renderWithTheme(
-                <ConfigForm
-                    formSchema={z.object({})}
+                <FormRenderer
+                    validationSchema={z.object({})}
                     title="title"
                     config={mockConfig}
                     validationMode={'onChange'}
@@ -146,8 +146,8 @@ describe('ConfigForm', () => {
 
         it('renders back button when click handler provided', () => {
             const { getByText } = renderWithTheme(
-                <ConfigForm
-                    formSchema={z.object({})}
+                <FormRenderer
+                    validationSchema={z.object({})}
                     title="title"
                     config={mockConfig}
                     validationMode={'onChange'}
@@ -160,8 +160,8 @@ describe('ConfigForm', () => {
 
         it('renders back button text', () => {
             const { getByText } = renderWithTheme(
-                <ConfigForm
-                    formSchema={z.object({})}
+                <FormRenderer
+                    validationSchema={z.object({})}
                     title="title"
                     config={mockConfig}
                     validationMode={'onChange'}
@@ -176,8 +176,8 @@ describe('ConfigForm', () => {
         it('calls onBack when back button is clicked', async () => {
             const onBack = jest.fn();
             const { getByText } = renderWithTheme(
-                <ConfigForm
-                    formSchema={z.object({})}
+                <FormRenderer
+                    validationSchema={z.object({})}
                     title="title"
                     config={mockConfig}
                     validationMode={'onChange'}
@@ -195,8 +195,8 @@ describe('ConfigForm', () => {
         it('calls onSubmit when submit button is clicked', async () => {
             const onSubmit = jest.fn();
             const { getByText, getByPlaceholderText } = renderWithTheme(
-                <ConfigForm
-                    formSchema={z.object({
+                <FormRenderer
+                    validationSchema={z.object({
                         firstName: z.string(),
                     })}
                     title="title"
@@ -225,8 +225,8 @@ describe('ConfigForm', () => {
         it('disables submit button when submitting', async () => {
             const onSubmit = jest.fn();
             const { getByTestId } = renderWithTheme(
-                <ConfigForm
-                    formSchema={z.object({
+                <FormRenderer
+                    validationSchema={z.object({
                         firstName: z.string(),
                     })}
                     title="title"
@@ -265,8 +265,8 @@ describe('ConfigForm', () => {
                 statePath: 'firstName',
             });
             const { getByText } = renderWithTheme(
-                <ConfigForm
-                    formSchema={mockSchema}
+                <FormRenderer
+                    validationSchema={mockSchema}
                     title="title"
                     config={mockInputConfig}
                     validationMode={'onChange'}
@@ -288,8 +288,8 @@ describe('ConfigForm', () => {
                 type: 'text',
             });
             const { getByPlaceholderText, getByText } = renderWithTheme(
-                <ConfigForm
-                    formSchema={z.object({
+                <FormRenderer
+                    validationSchema={z.object({
                         firstName: z.string().nonempty({
                             message: 'First name is required.',
                         }),
@@ -318,8 +318,8 @@ describe('ConfigForm', () => {
                 type: 'number',
             });
             const { getByPlaceholderText, getByText } = renderWithTheme(
-                <ConfigForm
-                    formSchema={z.object({
+                <FormRenderer
+                    validationSchema={z.object({
                         age: z.number(),
                     })}
                     title="title"
@@ -346,8 +346,8 @@ describe('ConfigForm', () => {
                 type: 'email',
             });
             const { getByPlaceholderText, getByText } = renderWithTheme(
-                <ConfigForm
-                    formSchema={z.object({
+                <FormRenderer
+                    validationSchema={z.object({
                         email: z.string(),
                     })}
                     title="title"
@@ -379,8 +379,8 @@ describe('ConfigForm', () => {
             });
             const errorMessage = 'Age must be greater than 18';
             const { getByPlaceholderText, getByText } = renderWithTheme(
-                <ConfigForm
-                    formSchema={z.object({
+                <FormRenderer
+                    validationSchema={z.object({
                         age: z.number().min(18, {
                             message: errorMessage,
                         }),
@@ -415,11 +415,11 @@ describe('ConfigForm', () => {
             statePath: 'password',
         });
         const inputDetails = mockPasswordConfig.sections[0]
-            .fields[0] as PasswordInput;
+            .fields[0] as PasswordInput<z.infer<typeof mockSchema>>;
         it('renders password input', () => {
             const { getByText } = renderWithTheme(
-                <ConfigForm
-                    formSchema={mockSchema}
+                <FormRenderer
+                    validationSchema={mockSchema}
                     title="title"
                     config={mockPasswordConfig}
                     validationMode={'onChange'}
@@ -433,8 +433,8 @@ describe('ConfigForm', () => {
         it('captures password input', async () => {
             const mockSubmit = jest.fn();
             const { getByPlaceholderText, getByText } = renderWithTheme(
-                <ConfigForm
-                    formSchema={mockSchema}
+                <FormRenderer
+                    validationSchema={mockSchema}
                     title="title"
                     config={mockPasswordConfig}
                     validationMode={'onChange'}
@@ -453,8 +453,8 @@ describe('ConfigForm', () => {
         it('validates password input', async () => {
             const mockSubmit = jest.fn();
             const { getByPlaceholderText, getByText } = renderWithTheme(
-                <ConfigForm
-                    formSchema={mockSchema}
+                <FormRenderer
+                    validationSchema={mockSchema}
                     title="title"
                     config={mockPasswordConfig}
                     validationMode={'onChange'}
@@ -487,11 +487,11 @@ describe('ConfigForm', () => {
         });
 
         const textAreaDetails = mockTextareaConfig.sections[0]
-            .fields[0] as TextAreaInput;
+            .fields[0] as TextAreaInput<z.infer<typeof mockSchema>>;
         it('renders textarea', () => {
             const { getByText } = renderWithTheme(
-                <ConfigForm
-                    formSchema={mockSchema}
+                <FormRenderer
+                    validationSchema={mockSchema}
                     title="title"
                     config={mockTextareaConfig}
                     validationMode={'onChange'}
@@ -505,8 +505,8 @@ describe('ConfigForm', () => {
         it('captures textarea input', async () => {
             const mockSubmit = jest.fn();
             const { getByPlaceholderText, getByText } = renderWithTheme(
-                <ConfigForm
-                    formSchema={mockSchema}
+                <FormRenderer
+                    validationSchema={mockSchema}
                     title="title"
                     config={mockTextareaConfig}
                     validationMode={'onChange'}
@@ -525,8 +525,8 @@ describe('ConfigForm', () => {
         it('validates textarea', async () => {
             const mockSubmit = jest.fn();
             const { getByPlaceholderText, getByText } = renderWithTheme(
-                <ConfigForm
-                    formSchema={mockSchema}
+                <FormRenderer
+                    validationSchema={mockSchema}
                     title="title"
                     config={mockTextareaConfig}
                     validationMode={'onChange'}
@@ -547,7 +547,7 @@ describe('ConfigForm', () => {
         const mockSchema = z.object({
             yesOrNo: z.enum(['Yes', 'No']),
         });
-        const selectConfig: SelectInput = {
+        const selectConfig: SelectInput<z.infer<typeof mockSchema>> = {
             id: 'yesOrNo',
             field: 'select',
             label: 'Select yes or no',
@@ -557,12 +557,12 @@ describe('ConfigForm', () => {
         };
         const mockSelectConfig = getMockInputConfig(selectConfig);
         const selectDetails = mockSelectConfig.sections[0]
-            .fields[0] as SelectInput;
+            .fields[0] as SelectInput<z.infer<typeof mockSchema>>;
 
         it('renders select', () => {
             const { getByText } = renderWithTheme(
-                <ConfigForm
-                    formSchema={mockSchema}
+                <FormRenderer
+                    validationSchema={mockSchema}
                     title="title"
                     config={mockSelectConfig}
                     validationMode={'onChange'}
@@ -576,8 +576,8 @@ describe('ConfigForm', () => {
         it('captures select', async () => {
             const mockSubmit = jest.fn();
             const { getByTestId, getByText } = renderWithTheme(
-                <ConfigForm
-                    formSchema={mockSchema}
+                <FormRenderer
+                    validationSchema={mockSchema}
                     title="title"
                     config={mockSelectConfig}
                     validationMode={'onChange'}
@@ -600,8 +600,8 @@ describe('ConfigForm', () => {
         it('requires selection to submit', async () => {
             const mockSubmit = jest.fn();
             const { getByText } = renderWithTheme(
-                <ConfigForm
-                    formSchema={mockSchema}
+                <FormRenderer
+                    validationSchema={mockSchema}
                     title="title"
                     config={mockSelectConfig}
                     validationMode={'onChange'}

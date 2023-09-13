@@ -1,18 +1,16 @@
-import { z } from 'zod';
-import { Path, UseFormReturn } from 'react-hook-form';
+import { FieldValues, UseFormReturn } from 'react-hook-form';
 import { Input } from '@/lib/shared/components/ui';
 import { Input as InputType } from '../types';
 
-export function InputField<FormSchema extends z.ZodTypeAny>({
+export function InputField<T extends FieldValues>({
     register,
     getFieldState,
     field,
 }: {
-    field: InputType;
-} & UseFormReturn<FormSchema, any>) {
-    const statePath = field.statePath as Path<FormSchema>;
-    const { error } = getFieldState(statePath);
-    const { ref, ...registerProps } = register(statePath, {
+    field: InputType<T>;
+} & UseFormReturn<T, any>) {
+    const { error } = getFieldState(field.statePath);
+    const { ref, ...registerProps } = register(field.statePath, {
         ...(field.type === 'number' && { valueAsNumber: true }),
     });
 

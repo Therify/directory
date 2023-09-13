@@ -17,7 +17,7 @@ export const TEST_IDS = {
     SUBMIT_BUTTON: 'submit-button',
 } as const;
 
-export function ConfigForm<FormSchema extends z.ZodTypeAny>({
+export function FormRenderer<ValidationSchema extends z.ZodTypeAny>({
     config,
     defaultValues,
     validationMode = 'onChange',
@@ -26,7 +26,7 @@ export function ConfigForm<FormSchema extends z.ZodTypeAny>({
     submitButtonText = 'Submit',
     backButtonText = 'Back',
     onSubmit,
-    formSchema,
+    validationSchema,
     errorMessage,
     clearErrorMessage,
     onBack,
@@ -36,9 +36,9 @@ export function ConfigForm<FormSchema extends z.ZodTypeAny>({
 }: {
     title: ReactNode;
     subTitle?: ReactNode;
-    formSchema: FormSchema;
-    config: FormConfig;
-    defaultValues?: DeepPartial<z.infer<FormSchema>>;
+    validationSchema: ValidationSchema;
+    config: FormConfig<z.infer<ValidationSchema>>;
+    defaultValues?: DeepPartial<z.infer<ValidationSchema>>;
     submitButtonText?: string;
     backButtonText?: string;
     isBackButtonDisabled?: boolean;
@@ -47,13 +47,13 @@ export function ConfigForm<FormSchema extends z.ZodTypeAny>({
     clearErrorMessage?: () => void;
     validationMode?: 'onBlur' | 'onChange' | 'onSubmit' | 'onTouched' | 'all';
     onBack?: () => void;
-    onSubmit: (data: FormSchema) => void;
+    onSubmit: (data: ValidationSchema) => void;
     sx?: SxProps<Theme>;
 }) {
-    const form = useForm<z.infer<FormSchema>>({
+    const form = useForm<z.infer<ValidationSchema>>({
         mode: 'onChange' ?? validationMode,
         ...(defaultValues && { defaultValues }),
-        resolver: zodResolver(formSchema),
+        resolver: zodResolver(validationSchema),
     });
 
     const {

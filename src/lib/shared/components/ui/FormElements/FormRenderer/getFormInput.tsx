@@ -1,18 +1,18 @@
 import { ReactNode } from 'react';
-import { UseFormReturn } from 'react-hook-form';
+import { UseFormReturn, FieldValues } from 'react-hook-form';
 import { z } from 'zod';
 import { FormField } from './types';
 import { InputField, PasswordField, TextAreaField, SelectField } from './ui';
 
-interface GetFormInputProps<FormSchema extends z.ZodTypeAny> {
-    field: FormField;
-    useFormProps: UseFormReturn<FormSchema, any>;
+interface GetFormInputProps<T extends FieldValues> {
+    field: FormField<T>;
+    useFormProps: UseFormReturn<T, any>;
 }
 
-export function getFormInput<FormSchema extends z.ZodType, T>({
+export function getFormInput<T extends FieldValues>({
     field,
     useFormProps,
-}: GetFormInputProps<FormSchema>): ReactNode {
+}: GetFormInputProps<T>): ReactNode {
     switch (field.field) {
         case 'input':
             return <InputField field={field} {...useFormProps} />;

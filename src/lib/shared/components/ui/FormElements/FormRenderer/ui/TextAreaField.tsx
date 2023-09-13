@@ -1,18 +1,16 @@
-import { z } from 'zod';
-import { Path, UseFormReturn } from 'react-hook-form';
+import { UseFormReturn, FieldValues } from 'react-hook-form';
 import { Textarea } from '@/lib/shared/components/ui';
 import { TextAreaInput } from '../types';
 
-export function TextAreaField<FormSchema extends z.ZodTypeAny>({
+export function TextAreaField<T extends FieldValues>({
     register,
     getFieldState,
     field,
 }: {
-    field: TextAreaInput;
-} & UseFormReturn<FormSchema, any>) {
-    const statePath = field.statePath as Path<FormSchema>;
-    const { error } = getFieldState(statePath);
-    const { ref, ...registerProps } = register(statePath, {});
+    field: TextAreaInput<T>;
+} & UseFormReturn<T, any>) {
+    const { error } = getFieldState(field.statePath);
+    const { ref, ...registerProps } = register(field.statePath, {});
 
     return (
         <Textarea

@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import { Meta, StoryFn } from '@storybook/react';
-import { ConfigForm as Ui } from './ConfigForm';
+import { FormRenderer as Ui } from './FormRenderer';
 import { z } from 'zod';
 
 import { FormConfig } from './types';
 
 export default {
-    title: 'Ui/FormElements/ConfigDrivenForm',
+    title: 'Ui/FormElements/FormRenderer',
     component: Ui,
     argTypes: {},
 } as Meta;
+
 const states = ['California', 'New York', 'Tennessee'] as const;
 const schema = z.object({
     firstName: z.string().nonempty({
@@ -25,6 +26,9 @@ const schema = z.object({
     confirmPassword: z.string(),
     state: z.enum(states),
     description: z.string(),
+    user: z.object({
+        name: z.string(),
+    }),
 });
 
 const containerStyle = {
@@ -35,6 +39,7 @@ const containerStyle = {
 const title = 'Config Driven Form';
 const subTitle =
     'This form takes a configuration describing form fields and validation rules and scaffolds the config into a form ui.';
+
 export const ConfigDrivenForm: StoryFn = () => {
     const [isLoading, setIsLoading] = useState(false);
     const submit = (values: any) => {
@@ -47,7 +52,7 @@ export const ConfigDrivenForm: StoryFn = () => {
     return (
         <div style={containerStyle}>
             <Ui
-                formSchema={schema}
+                validationSchema={schema}
                 title={title}
                 subTitle={subTitle}
                 config={config}
@@ -71,7 +76,7 @@ export const ErrorMessage: StoryFn = () => {
     return (
         <div style={containerStyle}>
             <Ui
-                formSchema={schema}
+                validationSchema={schema}
                 title={title}
                 subTitle={subTitle}
                 config={config}
@@ -95,7 +100,7 @@ export const WithBackButton: StoryFn = () => {
     return (
         <div style={containerStyle}>
             <Ui
-                formSchema={schema}
+                validationSchema={schema}
                 title={title}
                 subTitle={subTitle}
                 config={config}
@@ -120,7 +125,7 @@ export const PrefilledForm: StoryFn = () => {
     return (
         <div style={containerStyle}>
             <Ui
-                formSchema={schema}
+                validationSchema={schema}
                 title={title}
                 subTitle={subTitle}
                 config={config}
@@ -141,7 +146,7 @@ export const PrefilledForm: StoryFn = () => {
     );
 };
 
-const config: FormConfig = {
+const config: FormConfig<z.infer<typeof schema>> = {
     sections: [
         {
             title: 'Section 1',

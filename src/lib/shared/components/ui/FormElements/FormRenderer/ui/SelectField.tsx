@@ -1,17 +1,16 @@
-import { z } from 'zod';
-import { Path, PathValue, UseFormReturn } from 'react-hook-form';
+import { Path, PathValue, UseFormReturn, FieldValues } from 'react-hook-form';
 import { Select, SelectOption } from '@/lib/shared/components/ui';
 import { SelectInput } from '../types';
 
-export function SelectField<FormSchema extends z.ZodTypeAny>({
+export function SelectField<T extends FieldValues>({
     register,
     getFieldState,
     watch,
     setValue,
     field,
 }: {
-    field: SelectInput;
-} & UseFormReturn<FormSchema, any>) {
+    field: SelectInput<T>;
+} & UseFormReturn<T, any>) {
     const options: SelectOption[] = field.options.map((option) => {
         if (typeof option === 'string') {
             return {
@@ -21,10 +20,9 @@ export function SelectField<FormSchema extends z.ZodTypeAny>({
         }
         return option;
     });
-    const statePath = field.statePath as Path<FormSchema>;
-    const value = watch(statePath);
-    const { error } = getFieldState(statePath);
-    const { ref, onChange, ...registerProps } = register(statePath, {
+    const value = watch(field.statePath);
+    const { error } = getFieldState(field.statePath);
+    const { ref, onChange, ...registerProps } = register(field.statePath, {
         ...(field.required && { required: 'Field is required' }),
     });
 
@@ -41,10 +39,7 @@ export function SelectField<FormSchema extends z.ZodTypeAny>({
             fullWidth
             placeholder={field.placeholder}
             onChange={(value) => {
-                setValue(
-                    statePath,
-                    value as PathValue<FormSchema, Path<FormSchema>>
-                );
+                setValue(field.statePath, value as PathValue<T, Path<T>>);
             }}
             {...registerProps}
             wrapperSx={{
