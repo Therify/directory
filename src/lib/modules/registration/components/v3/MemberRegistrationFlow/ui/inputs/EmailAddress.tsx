@@ -21,12 +21,12 @@ export const EmailAddressInput = ({
 }: EmailInputProps) => {
     const { isTouched, error } = getFieldState('user.emailAddress');
     const shouldShowErrorMessage = isTouched || isEmailUnique === false;
-    const uniqunessError =
+    const uniquenessError =
         isEmailUnique === false
             ? FormValidation.EmailValidationType.IsUnique
             : undefined;
     const errorType =
-        (error?.type as FormValidation.EmailValidationType) ?? uniqunessError;
+        (error?.type as FormValidation.EmailValidationType) ?? uniquenessError;
 
     const errorMessage =
         FormValidation.getEmailValidationErrorMessage(errorType);

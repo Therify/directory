@@ -74,3 +74,37 @@ export const getDateValidationErrorMessage = (
     if (!error) return undefined;
     return createDateValidationErrorMessages(errorOptions ?? {})[error];
 };
+
+export const refineIsValidDateOfBirth = (
+    input: Date | string,
+    path?: string
+) => {
+    const date = typeof input === 'string' ? new Date(input) : input;
+    if (!validateDateIsValid(date)) {
+        return {
+            message: getDateValidationErrorMessage(DateValidationType.IsValid),
+            path,
+        };
+    }
+    validateMinimumAge;
+    if (!validateMinimumDate(date, new Date(1900, 0, 1))) {
+        return {
+            message: getDateValidationErrorMessage(DateValidationType.MinDate),
+            path,
+        };
+    }
+
+    if (!validateIsPastDate(date)) {
+        return {
+            message: getDateValidationErrorMessage(DateValidationType.IsPast),
+            path,
+        };
+    }
+
+    if (!validateMinimumAge(date, 18)) {
+        return {
+            message: getDateValidationErrorMessage(DateValidationType.MinAge),
+            path,
+        };
+    }
+};

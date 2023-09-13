@@ -55,3 +55,50 @@ export const getPasswordValidationErrorMessage = (
     if (!error) return undefined;
     return passwordValidationErrorMessages[error];
 };
+
+export const refineIsValidPassword = (password: string, path?: string) => {
+    if (!validatePasswordLength(password)) {
+        return {
+            message:
+                passwordValidationErrorMessages[
+                    PasswordValidationType.MinLength
+                ],
+            path,
+        };
+    }
+    if (!validatePasswordHasNumber(password)) {
+        return {
+            message:
+                passwordValidationErrorMessages[PasswordValidationType.Number],
+            path,
+        };
+    }
+    if (!validatePasswordHasSpecialCharacter(password)) {
+        return {
+            message:
+                passwordValidationErrorMessages[
+                    PasswordValidationType.SpecialCharacters
+                ],
+            path,
+        };
+    }
+
+    if (!validatePasswordHasLowercase(password)) {
+        return {
+            message:
+                passwordValidationErrorMessages[
+                    PasswordValidationType.LowerCase
+                ],
+            path,
+        };
+    }
+    if (!validatePasswordHasUppercase(password)) {
+        return {
+            message:
+                passwordValidationErrorMessages[
+                    PasswordValidationType.UpperCase
+                ],
+            path,
+        };
+    }
+};
