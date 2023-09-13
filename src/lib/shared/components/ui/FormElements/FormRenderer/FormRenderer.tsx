@@ -21,8 +21,6 @@ export function FormRenderer<ValidationSchema extends z.ZodTypeAny>({
     config,
     defaultValues,
     validationMode = 'onChange',
-    title,
-    subTitle,
     submitButtonText = 'Submit',
     backButtonText = 'Back',
     onSubmit,
@@ -34,8 +32,6 @@ export function FormRenderer<ValidationSchema extends z.ZodTypeAny>({
     isBackButtonDisabled,
     sx,
 }: {
-    title: ReactNode;
-    subTitle?: ReactNode;
     validationSchema: ValidationSchema;
     config: FormConfig<z.infer<ValidationSchema>>;
     defaultValues?: DeepPartial<z.infer<ValidationSchema>>;
@@ -66,8 +62,8 @@ export function FormRenderer<ValidationSchema extends z.ZodTypeAny>({
     return (
         <Form sx={sx}>
             <FormContent isError={!!errorMessage}>
-                <Header>{title}</Header>
-                {subTitle && <p>{subTitle}</p>}
+                <Header>{config.title}</Header>
+                {config.subtitle && <p>{config.subtitle}</p>}
 
                 {config.sections.map((formSection, i) => (
                     <FormSection key={`section-${i}`}>
