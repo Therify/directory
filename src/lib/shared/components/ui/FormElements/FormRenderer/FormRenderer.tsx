@@ -4,12 +4,11 @@ import { ReportProblemRounded } from '@mui/icons-material';
 import Box from '@mui/material/Box';
 import { SxProps, Theme, styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
-import { ReactNode } from 'react';
 import { DeepPartial, useForm } from 'react-hook-form';
 import { ALERT_TYPE, Alert } from '../../Alert';
 import { Button } from '../../Button';
 import { CenteredContainer } from '../../Containers';
-import { H1, H2 } from '../../Typography/Headers';
+import { H1, H2, Paragraph } from '../../Typography';
 import { getFormInput } from './getFormInput';
 import { FormConfig } from './types';
 
@@ -21,8 +20,6 @@ export function FormRenderer<ValidationSchema extends z.ZodTypeAny>({
     config,
     defaultValues,
     validationMode = 'onChange',
-    title,
-    subTitle,
     submitButtonText = 'Submit',
     backButtonText = 'Back',
     onSubmit,
@@ -34,8 +31,6 @@ export function FormRenderer<ValidationSchema extends z.ZodTypeAny>({
     isBackButtonDisabled,
     sx,
 }: {
-    title: ReactNode;
-    subTitle?: ReactNode;
     validationSchema: ValidationSchema;
     config: FormConfig<z.infer<ValidationSchema>>;
     defaultValues?: DeepPartial<z.infer<ValidationSchema>>;
@@ -66,8 +61,10 @@ export function FormRenderer<ValidationSchema extends z.ZodTypeAny>({
     return (
         <Form sx={sx}>
             <FormContent isError={!!errorMessage}>
-                <Header>{title}</Header>
-                {subTitle && <p>{subTitle}</p>}
+                <Header>{config.title}</Header>
+                {config.subtitle && (
+                    <Paragraph noMargin>{config.subtitle}</Paragraph>
+                )}
 
                 {config.sections.map((formSection, i) => (
                     <FormSection key={`section-${i}`}>

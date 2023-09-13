@@ -18,6 +18,7 @@ function getMockInputConfig<T extends FieldValues>(
     field: FormField<T>
 ): FormConfig<T> {
     return {
+        title: 'title',
         sections: [
             {
                 title: 'Section 1',
@@ -31,6 +32,7 @@ describe('FormRenderer', () => {
     const user = userEvent.setup();
     const mockSchema = z.object({});
     const mockConfig: FormConfig<z.infer<typeof mockSchema>> = {
+        title: 'Title',
         sections: [],
     };
     describe('form', () => {
@@ -39,8 +41,7 @@ describe('FormRenderer', () => {
             const { getByText } = renderWithTheme(
                 <FormRenderer
                     validationSchema={z.object({})}
-                    title={title}
-                    config={mockConfig}
+                    config={{ title, sections: [] }}
                     validationMode={'onChange'}
                     onSubmit={(values) => console.log('submit', values)}
                 />
@@ -50,13 +51,12 @@ describe('FormRenderer', () => {
         });
 
         it('renders subtitle', () => {
+            const title = 'Config Driven Form';
             const subtitle = 'subtitle';
             const { getByText } = renderWithTheme(
                 <FormRenderer
                     validationSchema={z.object({})}
-                    title="title"
-                    subTitle={subtitle}
-                    config={mockConfig}
+                    config={{ title, subtitle, sections: [] }}
                     validationMode={'onChange'}
                     onSubmit={(values) => console.log('submit', values)}
                 />
@@ -69,8 +69,8 @@ describe('FormRenderer', () => {
             const { getByText } = renderWithTheme(
                 <FormRenderer
                     validationSchema={z.object({})}
-                    title="title"
                     config={{
+                        title: 'Title',
                         sections: [
                             {
                                 title: 'Section 1',
@@ -91,7 +91,6 @@ describe('FormRenderer', () => {
             const { getByText } = renderWithTheme(
                 <FormRenderer
                     validationSchema={z.object({})}
-                    title="title"
                     config={mockConfig}
                     validationMode={'onChange'}
                     onSubmit={console.log}
@@ -109,7 +108,6 @@ describe('FormRenderer', () => {
                     validationSchema={z.object({
                         firstName: z.string(),
                     })}
-                    title="title"
                     config={getMockInputConfig({
                         id: 'test',
                         type: 'input',
@@ -135,7 +133,6 @@ describe('FormRenderer', () => {
             const { getByText } = renderWithTheme(
                 <FormRenderer
                     validationSchema={z.object({})}
-                    title="title"
                     config={mockConfig}
                     validationMode={'onChange'}
                     onSubmit={console.log}
@@ -149,7 +146,6 @@ describe('FormRenderer', () => {
             const { getByText } = renderWithTheme(
                 <FormRenderer
                     validationSchema={z.object({})}
-                    title="title"
                     config={mockConfig}
                     validationMode={'onChange'}
                     onSubmit={console.log}
@@ -163,7 +159,6 @@ describe('FormRenderer', () => {
             const { getByText } = renderWithTheme(
                 <FormRenderer
                     validationSchema={z.object({})}
-                    title="title"
                     config={mockConfig}
                     validationMode={'onChange'}
                     onSubmit={console.log}
@@ -179,7 +174,6 @@ describe('FormRenderer', () => {
             const { getByText } = renderWithTheme(
                 <FormRenderer
                     validationSchema={z.object({})}
-                    title="title"
                     config={mockConfig}
                     validationMode={'onChange'}
                     onSubmit={console.log}
@@ -195,12 +189,11 @@ describe('FormRenderer', () => {
 
         it('calls onSubmit when submit button is clicked', async () => {
             const onSubmit = jest.fn();
-            const { getByText, getByPlaceholderText } = renderWithTheme(
+            const { getByText } = renderWithTheme(
                 <FormRenderer
                     validationSchema={z.object({
                         firstName: z.string(),
                     })}
-                    title="title"
                     config={getMockInputConfig({
                         id: 'test',
                         type: 'input',
@@ -231,7 +224,6 @@ describe('FormRenderer', () => {
                     validationSchema={z.object({
                         firstName: z.string(),
                     })}
-                    title="title"
                     config={getMockInputConfig({
                         id: 'test',
                         type: 'input',
@@ -271,7 +263,6 @@ describe('FormRenderer', () => {
             const { getByText } = renderWithTheme(
                 <FormRenderer
                     validationSchema={mockSchema}
-                    title="title"
                     config={mockInputConfig}
                     validationMode={'onChange'}
                     onSubmit={(values) => console.log('submit', values)}
@@ -299,7 +290,6 @@ describe('FormRenderer', () => {
                             message: 'First name is required.',
                         }),
                     })}
-                    title="title"
                     config={mockInputConfig}
                     validationMode={'onChange'}
                     onSubmit={mockSubmit}
@@ -328,7 +318,6 @@ describe('FormRenderer', () => {
                     validationSchema={z.object({
                         age: z.number(),
                     })}
-                    title="title"
                     config={mockInputConfig}
                     validationMode={'onChange'}
                     onSubmit={mockSubmit}
@@ -357,7 +346,6 @@ describe('FormRenderer', () => {
                     validationSchema={z.object({
                         email: z.string(),
                     })}
-                    title="title"
                     config={mockInputConfig}
                     validationMode={'onChange'}
                     onSubmit={mockSubmit}
@@ -393,7 +381,6 @@ describe('FormRenderer', () => {
                             message: errorMessage,
                         }),
                     })}
-                    title="title"
                     config={mockInputConfig}
                     validationMode={'onChange'}
                     onSubmit={mockSubmit}
@@ -425,7 +412,6 @@ describe('FormRenderer', () => {
                             message: errorMessage,
                         }),
                     })}
-                    title="title"
                     config={mockInputConfig}
                     validationMode={'onChange'}
                     onSubmit={mockSubmit}
@@ -461,7 +447,6 @@ describe('FormRenderer', () => {
             const { getByText } = renderWithTheme(
                 <FormRenderer
                     validationSchema={mockSchema}
-                    title="title"
                     config={mockPasswordConfig}
                     validationMode={'onChange'}
                     onSubmit={console.log}
@@ -476,7 +461,6 @@ describe('FormRenderer', () => {
             const { getByPlaceholderText, getByText } = renderWithTheme(
                 <FormRenderer
                     validationSchema={mockSchema}
-                    title="title"
                     config={mockPasswordConfig}
                     validationMode={'onChange'}
                     onSubmit={mockSubmit}
@@ -496,7 +480,6 @@ describe('FormRenderer', () => {
             const { getByPlaceholderText, getByText } = renderWithTheme(
                 <FormRenderer
                     validationSchema={mockSchema}
-                    title="title"
                     config={mockPasswordConfig}
                     validationMode={'onChange'}
                     onSubmit={mockSubmit}
@@ -534,7 +517,6 @@ describe('FormRenderer', () => {
             const { getByText } = renderWithTheme(
                 <FormRenderer
                     validationSchema={mockSchema}
-                    title="title"
                     config={mockTextareaConfig}
                     validationMode={'onChange'}
                     onSubmit={(values) => console.log('submit', values)}
@@ -549,7 +531,6 @@ describe('FormRenderer', () => {
             const { getByPlaceholderText, getByText } = renderWithTheme(
                 <FormRenderer
                     validationSchema={mockSchema}
-                    title="title"
                     config={mockTextareaConfig}
                     validationMode={'onChange'}
                     onSubmit={mockSubmit}
@@ -569,7 +550,6 @@ describe('FormRenderer', () => {
             const { getByPlaceholderText, getByText } = renderWithTheme(
                 <FormRenderer
                     validationSchema={mockSchema}
-                    title="title"
                     config={mockTextareaConfig}
                     validationMode={'onChange'}
                     onSubmit={mockSubmit}
@@ -605,7 +585,6 @@ describe('FormRenderer', () => {
             const { getByText } = renderWithTheme(
                 <FormRenderer
                     validationSchema={mockSchema}
-                    title="title"
                     config={mockSelectConfig}
                     validationMode={'onChange'}
                     onSubmit={console.log}
@@ -620,7 +599,6 @@ describe('FormRenderer', () => {
             const { getByTestId, getByText } = renderWithTheme(
                 <FormRenderer
                     validationSchema={mockSchema}
-                    title="title"
                     config={mockSelectConfig}
                     validationMode={'onChange'}
                     onSubmit={mockSubmit}
@@ -644,7 +622,6 @@ describe('FormRenderer', () => {
             const { getByText } = renderWithTheme(
                 <FormRenderer
                     validationSchema={mockSchema}
-                    title="title"
                     config={mockSelectConfig}
                     validationMode={'onChange'}
                     onSubmit={mockSubmit}

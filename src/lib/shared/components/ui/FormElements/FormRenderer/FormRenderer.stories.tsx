@@ -37,7 +37,7 @@ const containerStyle = {
     padding: '16px',
 };
 const title = 'Config Driven Form';
-const subTitle =
+const subtitle =
     'This form takes a configuration describing form fields and validation rules and scaffolds the config into a form ui.';
 
 export const ConfigDrivenForm: StoryFn = () => {
@@ -53,8 +53,6 @@ export const ConfigDrivenForm: StoryFn = () => {
         <div style={containerStyle}>
             <Ui
                 validationSchema={schema}
-                title={title}
-                subTitle={subTitle}
                 config={config}
                 isSubmitting={isLoading}
                 validationMode={'onChange'}
@@ -77,8 +75,6 @@ export const ErrorMessage: StoryFn = () => {
         <div style={containerStyle}>
             <Ui
                 validationSchema={schema}
-                title={title}
-                subTitle={subTitle}
                 config={config}
                 validationMode={'onChange'}
                 isSubmitting={isLoading}
@@ -101,8 +97,6 @@ export const WithBackButton: StoryFn = () => {
         <div style={containerStyle}>
             <Ui
                 validationSchema={schema}
-                title={title}
-                subTitle={subTitle}
                 config={config}
                 validationMode={'onChange'}
                 isSubmitting={isLoading}
@@ -126,8 +120,6 @@ export const PrefilledForm: StoryFn = () => {
         <div style={containerStyle}>
             <Ui
                 validationSchema={schema}
-                title={title}
-                subTitle={subTitle}
                 config={config}
                 defaultValues={{
                     firstName: 'John',
@@ -147,6 +139,8 @@ export const PrefilledForm: StoryFn = () => {
 };
 
 const config: FormConfig<z.infer<typeof schema>> = {
+    title,
+    subtitle,
     sections: [
         {
             title: 'Section 1',
