@@ -63,7 +63,7 @@ export const Input = ({
                 id={id}
                 data-testid={TEST_IDS.INPUT}
                 color="info"
-                name={id}
+                name={inputProps.name ?? id}
                 isError={!!errorMessage}
                 isSuccess={!!successMessage}
                 disableUnderline
@@ -122,7 +122,7 @@ export const InputLabel = ({
     );
 };
 
-const StyledInput = styled(MuiInput, {
+export const StyledInput = styled(MuiInput, {
     shouldForwardProp: (prop) =>
         'isSuccess' !== prop && 'isError' !== prop && 'whiteBg' !== prop,
 })<{ isSuccess: boolean; isError: boolean; whiteBg: boolean }>(
