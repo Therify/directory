@@ -375,7 +375,39 @@ describe('FormRenderer', () => {
             });
         });
 
-        it('validates input', async () => {
+        it('validates string input', async () => {
+            const mockSubmit = jest.fn();
+            const mockInputConfig = getMockInputConfig({
+                type: 'input',
+                id: 'test',
+                label: 'Name',
+                placeholder: 'Name',
+                statePath: 'name',
+                inputType: 'text',
+            });
+            const errorMessage = 'Cannot be empty';
+            const { getByPlaceholderText, getByText } = renderWithTheme(
+                <FormRenderer
+                    validationSchema={z.object({
+                        name: z.string().nonempty({
+                            message: errorMessage,
+                        }),
+                    })}
+                    title="title"
+                    config={mockInputConfig}
+                    validationMode={'onChange'}
+                    onSubmit={mockSubmit}
+                />
+            );
+            const input = getByPlaceholderText('Name');
+            const submitButton = getByText('Submit');
+            await user.type(input, 'T');
+            await user.type(input, '{backspace}');
+            fireEvent.blur(input);
+            expect(getByText(errorMessage)).toBeVisible();
+            expect(submitButton).toBeDisabled();
+        });
+        it('validates number input', async () => {
             const mockSubmit = jest.fn();
             const mockInputConfig = getMockInputConfig({
                 type: 'input',

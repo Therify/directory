@@ -17,7 +17,7 @@ export function InputField<T extends FieldValues>({
     return (
         <Input
             required={field.required}
-            type={field.type ?? 'text'}
+            type={field.inputType ?? 'text'}
             id={field.id}
             label={field.label}
             placeholder={field.placeholder}
