@@ -17,7 +17,7 @@ export type FormField<T extends FieldValues> =
     | SelectInput<T>;
 
 interface FormFieldBase<T extends FieldValues> {
-    id?: string;
+    id: string;
     label: string;
     helperText?: string;
     fullWidth?: boolean;
@@ -25,26 +25,25 @@ interface FormFieldBase<T extends FieldValues> {
     required?: boolean;
 }
 export type Input<T extends FieldValues> = {
-    field: 'input';
-    type?: 'text' | 'email' | 'number';
+    type: 'input';
+    inputType?: 'text' | 'email' | 'number';
     placeholder?: string;
     autoComplete?: string;
 } & FormFieldBase<T>;
 
 export type PasswordInput<T extends FieldValues> = {
-    field: 'password';
+    type: 'password';
     placeholder?: string;
     allowShowPassword?: boolean;
 } & FormFieldBase<T>;
 
 export type TextAreaInput<T extends FieldValues> = {
-    field: 'textarea';
+    type: 'textarea';
     placeholder?: string;
 } & FormFieldBase<T>;
 
 export type SelectInput<T extends FieldValues> = {
-    field: 'select';
-    id: string;
+    type: 'select';
     placeholder?: string;
     default?: string;
     options: string[] | SelectOption[];

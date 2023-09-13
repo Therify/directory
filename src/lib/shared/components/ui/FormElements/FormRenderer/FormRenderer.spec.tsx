@@ -111,11 +111,12 @@ describe('FormRenderer', () => {
                     })}
                     title="title"
                     config={getMockInputConfig({
-                        field: 'input',
+                        id: 'test',
+                        type: 'input',
                         label: 'First Name',
                         placeholder: 'First Name',
                         statePath: 'firstName',
-                        type: 'text',
+                        inputType: 'text',
                     })}
                     defaultValues={{
                         firstName: 'John',
@@ -201,11 +202,12 @@ describe('FormRenderer', () => {
                     })}
                     title="title"
                     config={getMockInputConfig({
-                        field: 'input',
+                        id: 'test',
+                        type: 'input',
                         label: 'First Name',
                         placeholder: 'First Name',
                         statePath: 'firstName',
-                        type: 'text',
+                        inputType: 'text',
                     })}
                     defaultValues={{
                         firstName: 'John',
@@ -231,11 +233,12 @@ describe('FormRenderer', () => {
                     })}
                     title="title"
                     config={getMockInputConfig({
-                        field: 'input',
+                        id: 'test',
+                        type: 'input',
                         label: 'First Name',
                         placeholder: 'First Name',
                         statePath: 'firstName',
-                        type: 'text',
+                        inputType: 'text',
                     })}
                     defaultValues={{
                         firstName: 'John',
@@ -259,7 +262,8 @@ describe('FormRenderer', () => {
         });
         it('renders input', () => {
             const mockInputConfig = getMockInputConfig({
-                field: 'input',
+                id: 'test',
+                type: 'input',
                 label: 'First Name',
                 helperText: 'Enter your first name',
                 statePath: 'firstName',
@@ -280,12 +284,13 @@ describe('FormRenderer', () => {
         it('captures text input', async () => {
             const mockSubmit = jest.fn();
             const mockInputConfig = getMockInputConfig({
-                field: 'input',
+                id: 'test',
+                type: 'input',
                 label: 'First Name',
                 placeholder: 'First Name',
                 helperText: 'Enter your first name',
                 statePath: 'firstName',
-                type: 'text',
+                inputType: 'text',
             });
             const { getByPlaceholderText, getByText } = renderWithTheme(
                 <FormRenderer
@@ -311,11 +316,12 @@ describe('FormRenderer', () => {
         it('captures number input', async () => {
             const mockSubmit = jest.fn();
             const mockInputConfig = getMockInputConfig({
-                field: 'input',
+                id: 'test',
+                type: 'input',
                 label: 'Age',
                 placeholder: 'Age',
                 statePath: 'age',
-                type: 'number',
+                inputType: 'number',
             });
             const { getByPlaceholderText, getByText } = renderWithTheme(
                 <FormRenderer
@@ -339,11 +345,12 @@ describe('FormRenderer', () => {
         it('captures email input', async () => {
             const mockSubmit = jest.fn();
             const mockInputConfig = getMockInputConfig({
-                field: 'input',
+                id: 'test',
+                type: 'input',
                 label: 'Email',
                 placeholder: 'Email',
                 statePath: 'email',
-                type: 'email',
+                inputType: 'email',
             });
             const { getByPlaceholderText, getByText } = renderWithTheme(
                 <FormRenderer
@@ -371,11 +378,12 @@ describe('FormRenderer', () => {
         it('validates input', async () => {
             const mockSubmit = jest.fn();
             const mockInputConfig = getMockInputConfig({
-                field: 'input',
+                type: 'input',
+                id: 'test',
                 label: 'Age',
                 placeholder: 'Age',
                 statePath: 'age',
-                type: 'number',
+                inputType: 'number',
             });
             const errorMessage = 'Age must be greater than 18';
             const { getByPlaceholderText, getByText } = renderWithTheme(
@@ -408,7 +416,8 @@ describe('FormRenderer', () => {
             }),
         });
         const mockPasswordConfig = getMockInputConfig({
-            field: 'password',
+            id: 'test',
+            type: 'password',
             label: 'Password',
             placeholder: 'Password',
             helperText: 'Enter your password',
@@ -479,7 +488,8 @@ describe('FormRenderer', () => {
             }),
         });
         const mockTextareaConfig = getMockInputConfig({
-            field: 'textarea',
+            id: 'test',
+            type: 'textarea',
             label: 'Tell us more',
             placeholder: 'placeholder',
             helperText: 'Helper text',
@@ -549,7 +559,7 @@ describe('FormRenderer', () => {
         });
         const selectConfig: SelectInput<z.infer<typeof mockSchema>> = {
             id: 'yesOrNo',
-            field: 'select',
+            type: 'select',
             label: 'Select yes or no',
             helperText: 'Helper text',
             statePath: 'yesOrNo',

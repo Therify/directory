@@ -11,7 +11,7 @@ export function InputField<T extends FieldValues>({
 } & UseFormReturn<T, any>) {
     const { error } = getFieldState(field.statePath);
     const { ref, ...registerProps } = register(field.statePath, {
-        ...(field.type === 'number' && { valueAsNumber: true }),
+        ...(field.inputType === 'number' && { valueAsNumber: true }),
     });
 
     return (

@@ -13,7 +13,7 @@ export function getFormInput<T extends FieldValues>({
     field,
     useFormProps,
 }: GetFormInputProps<T>): ReactNode {
-    switch (field.field) {
+    switch (field.type) {
         case 'input':
             return <InputField field={field} {...useFormProps} />;
         case 'password':
