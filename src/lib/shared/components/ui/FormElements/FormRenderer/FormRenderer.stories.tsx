@@ -22,7 +22,9 @@ const schema = z.object({
     age: z.number().min(18, {
         message: 'Must be at least 18 years old.',
     }),
-    password: z.string(),
+    password: z.string().min(8, {
+        message: 'Password must be at least 8 characters.',
+    }),
     confirmPassword: z.string(),
     state: z.enum(states),
     description: z.string(),
@@ -133,6 +135,28 @@ export const PrefilledForm: StoryFn = () => {
                 validationMode={'onChange'}
                 isSubmitting={isLoading}
                 onSubmit={submit}
+            />
+        </div>
+    );
+};
+export const SubmittingForm: StoryFn = () => {
+    return (
+        <div style={containerStyle}>
+            <Ui
+                validationSchema={schema}
+                config={config}
+                defaultValues={{
+                    firstName: 'John',
+                    lastName: 'Doe',
+                    age: 25,
+                    password: 'password',
+                    confirmPassword: 'password',
+                    description: 'I am a not a robot',
+                    state: 'California',
+                }}
+                validationMode={'onChange'}
+                isSubmitting
+                onSubmit={console.log}
             />
         </div>
     );
