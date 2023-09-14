@@ -424,6 +424,30 @@ describe('FormRenderer', () => {
             expect(getByText(errorMessage)).toBeVisible();
             expect(submitButton).toBeDisabled();
         });
+
+        it('disables field when form is submitting', () => {
+            const mockInputConfig = getMockInputConfig({
+                id: 'test',
+                type: 'input',
+                label: 'First Name',
+                helperText: 'Enter your first name',
+                placeholder: 'John',
+                statePath: 'firstName',
+            });
+            const { getByPlaceholderText } = renderWithTheme(
+                <FormRenderer
+                    isSubmitting
+                    validationSchema={mockSchema}
+                    config={mockInputConfig}
+                    validationMode={'onChange'}
+                    onSubmit={(values) => console.log('submit', values)}
+                />
+            );
+            const inputDetails = mockInputConfig.sections[0].fields[0];
+            expect(
+                getByPlaceholderText(inputDetails.placeholder!)
+            ).toBeDisabled();
+        });
     });
 
     describe('password field', () => {
@@ -492,6 +516,21 @@ describe('FormRenderer', () => {
             expect(input).toHaveValue(password);
             expect(getByText(errorMessage)).toBeVisible();
             expect(submitButton).toBeDisabled();
+        });
+
+        it('disables field when form is submitting', () => {
+            const { getByPlaceholderText } = renderWithTheme(
+                <FormRenderer
+                    validationSchema={mockSchema}
+                    config={mockPasswordConfig}
+                    validationMode={'onChange'}
+                    onSubmit={jest.fn()}
+                    isSubmitting
+                />
+            );
+            const password = '12345678';
+            const input = getByPlaceholderText(inputDetails.placeholder!);
+            expect(input).toBeDisabled();
         });
     });
 
@@ -563,6 +602,21 @@ describe('FormRenderer', () => {
             expect(getByText(errorMessage)).toBeVisible();
             expect(submitButton).toBeDisabled();
         });
+
+        it('disables field when form is submitting', () => {
+            const mockSubmit = jest.fn();
+            const { getByPlaceholderText } = renderWithTheme(
+                <FormRenderer
+                    validationSchema={mockSchema}
+                    config={mockTextareaConfig}
+                    validationMode={'onChange'}
+                    onSubmit={mockSubmit}
+                    isSubmitting
+                />
+            );
+            const input = getByPlaceholderText(textAreaDetails.placeholder!);
+            expect(input).toBeDisabled();
+        });
     });
 
     describe('select field', () => {
@@ -629,6 +683,24 @@ describe('FormRenderer', () => {
             );
             const submitButton = getByText('Submit');
             expect(submitButton).toBeDisabled();
+        });
+
+        it('disables field when form is submitting', () => {
+            const mockSubmit = jest.fn();
+            const { getByTestId } = renderWithTheme(
+                <FormRenderer
+                    validationSchema={mockSchema}
+                    config={mockSelectConfig}
+                    validationMode={'onChange'}
+                    onSubmit={mockSubmit}
+                    isSubmitting
+                />
+            );
+            const select = getByTestId(
+                SELECT_TEST_IDS.SELECT
+            ).firstElementChild;
+
+            expect(select?.getAttribute('aria-disabled')).toBe('true');
         });
     });
 });
