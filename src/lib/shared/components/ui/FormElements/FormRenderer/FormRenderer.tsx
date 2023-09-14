@@ -52,12 +52,10 @@ export function FormRenderer<ValidationSchema extends z.ZodTypeAny>({
     });
 
     const {
-        watch,
         formState: { isValid },
         handleSubmit,
     } = form;
-    // There is a problem where this watch call is needed to trigger validation
-    watch();
+
     return (
         <Form sx={sx}>
             <FormContent isError={!!errorMessage}>
@@ -91,6 +89,7 @@ export function FormRenderer<ValidationSchema extends z.ZodTypeAny>({
                                     key={`field-${i}`}
                                 >
                                     {getFormInput({
+                                        isLoading: !!isSubmitting,
                                         field,
                                         useFormProps: form,
                                     })}

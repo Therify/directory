@@ -1,30 +1,41 @@
-import { UseFormReturn, FieldValues } from 'react-hook-form';
+import { UseFormReturn, FieldValues, Controller } from 'react-hook-form';
 import { Textarea } from '@/lib/shared/components/ui';
 import { TextAreaInput } from '../types';
 
 export function TextAreaField<T extends FieldValues>({
-    register,
-    getFieldState,
+    control,
     field,
+    isLoading,
 }: {
+    isLoading: boolean;
     field: TextAreaInput<T>;
 } & UseFormReturn<T, any>) {
-    const { error } = getFieldState(field.statePath);
-    const { ref, ...registerProps } = register(field.statePath, {});
-
     return (
-        <Textarea
-            required={field.required}
-            id={field.id}
-            label={field.label}
-            helperText={field.helperText}
-            placeholder={field.placeholder}
-            errorMessage={error?.message}
-            inputRef={ref}
-            {...registerProps}
-            wrapperSx={{
-                width: '100%',
-            }}
+        <Controller
+            control={control}
+            name={field.statePath}
+            render={({
+                field: { onChange, onBlur, value, name },
+                fieldState: { error },
+            }) => (
+                <Textarea
+                    id={field.id}
+                    defaultValue=""
+                    fullWidth
+                    disabled={isLoading}
+                    required={field.required}
+                    label={field.label}
+                    placeholder={field.placeholder}
+                    helperText={field.helperText}
+                    errorMessage={error?.message}
+                    {...{
+                        onChange,
+                        onBlur,
+                        value,
+                        name,
+                    }}
+                />
+            )}
         />
     );
 }
