@@ -47,13 +47,13 @@ export const schema = z
             insurance: z.enum(InsuranceProvider.ENTRIES),
             gender: z.enum(Gender.ENTRIES),
             ethnicity: z.enum(Ethnicity.ENTRIES),
+            homeAddress: z.string().nonempty({
+                message: 'Your home address is required',
+            }),
         }),
         emergencyDetails: z.object({
             contactName: z.string().nonempty({
                 message: 'Contact name is required',
-            }),
-            memberHomeAddress: z.string().nonempty({
-                message: "Member's home address is required",
             }),
             contactPhoneNumber: z
                 .string()

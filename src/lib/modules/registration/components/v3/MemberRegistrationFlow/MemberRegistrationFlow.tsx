@@ -16,6 +16,7 @@ import {
     FormValidation,
     Button,
     Paragraph,
+    FormRenderer,
 } from '@/lib/shared/components/ui';
 import { ALERT_TYPE } from '@/lib/shared/components/ui/Alert';
 import { ROLES } from '@/lib/shared/types/roles';
@@ -26,6 +27,7 @@ import Typography from '@mui/material/Typography';
 import Link from 'next/link';
 import { InsuranceProvider } from '@/lib/shared/types';
 import { RegisterMember } from '../../../features/v3';
+import { memberRegistrationFormConfig } from './registrationFormConfig';
 
 const REGISTRATION_STEPS = ['Registration', 'Onboarding'] as const;
 
@@ -68,14 +70,14 @@ export const MemberRegistrationFlow = ({
                 ...storedDefaults?.user,
                 role,
             },
-            profile: {
-                ...storedDefaults?.profile,
-                concerns: [],
-                goals: [],
-                ...(!showInsurances
-                    ? { insurance: InsuranceProvider.MAP.I_DONT_HAVE_INSURANCE }
-                    : {}),
-            },
+            // profile: {
+            //     ...storedDefaults?.profile,
+            //     // concerns: [],
+            //     goals: [],
+            //     ...(!showInsurances
+            //         ? { insurance: InsuranceProvider.MAP.I_DONT_HAVE_INSURANCE }
+            //         : {}),
+            // },
         },
     });
     const isRegistrationSuccessful = isRegistrationComplete && !errorMessage;
@@ -149,43 +151,23 @@ export const MemberRegistrationFlow = ({
                     <Stepper activeStepIndex={0} steps={registrationSteps} />
                 </StepperContainer>
             </HeaderContainer>
-            <FormContainer isError={Boolean(errorMessage)}>
-                {isRegistering ? (
+            {isRegistering ? (
+                <FormContainer isError={Boolean(errorMessage)}>
                     <CenteredContainer>
                         <H3>Creating your account...</H3>
                         <CircularProgress />
                     </CenteredContainer>
-                ) : (
-                    <MemberRegistrationForm
-                        registerInput={memberDetailsForm.register}
-                        getFieldState={memberDetailsForm.getFieldState}
-                        isEmailUnique={emailsCheckedForUniqueness[emailAddress]}
-                        control={memberDetailsForm.control}
-                        password={memberDetailsForm.watch('user.password')}
-                        role={role}
-                        account={account}
-                        country={country}
-                        showInsurances={showInsurances}
+                </FormContainer>
+            ) : (
+                <Box width="100%">
+                    <FormRenderer
+                        errorMessage={errorMessage}
+                        validationSchema={RegisterMember.inputSchema}
+                        config={memberRegistrationFormConfig}
+                        onSubmit={console.log}
                     />
-                )}
-
-                {errorMessage && (
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.7 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.3 }}
-                    >
-                        <Alert
-                            icon={<ErrorIcon />}
-                            type={ALERT_TYPE.ERROR}
-                            title={errorMessage ?? ''}
-                            onClose={() => {
-                                clearErrorMessage();
-                            }}
-                        />
-                    </motion.div>
-                )}
-            </FormContainer>
+                </Box>
+            )}
 
             <ButtonContainer>
                 {!isRegistering && (
