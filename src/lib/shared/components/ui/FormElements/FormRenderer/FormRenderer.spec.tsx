@@ -259,6 +259,7 @@ describe('FormRenderer', () => {
                 label: 'First Name',
                 helperText: 'Enter your first name',
                 statePath: 'firstName',
+                inputType: 'text',
             });
             const { getByText } = renderWithTheme(
                 <FormRenderer
@@ -362,6 +363,69 @@ describe('FormRenderer', () => {
                 email: emailAddress,
             });
         });
+        it('captures telephone input', async () => {
+            const mockSubmit = jest.fn();
+            const mockInputConfig = getMockInputConfig({
+                id: 'test',
+                type: 'input',
+                label: 'Phone Number',
+                placeholder: 'Phone',
+                statePath: 'phone',
+                inputType: 'tel',
+            });
+            const { getByPlaceholderText, getByText } = renderWithTheme(
+                <FormRenderer
+                    validationSchema={z.object({
+                        phone: z.string(),
+                    })}
+                    config={mockInputConfig}
+                    validationMode={'onChange'}
+                    onSubmit={mockSubmit}
+                />
+            );
+            const phone = '1231231234';
+            const input = getByPlaceholderText('Phone');
+            const submitButton = getByText('Submit');
+            expect(input).toHaveProperty('type', 'tel');
+            await user.type(input, phone);
+            expect(input).toHaveValue(phone);
+            await user.click(submitButton);
+            expect(mockSubmit).toHaveBeenCalledWith({
+                phone,
+            });
+        });
+
+        it('cleans non-numeric values from telephone input', async () => {
+            const mockSubmit = jest.fn();
+            const mockInputConfig = getMockInputConfig({
+                id: 'test',
+                type: 'input',
+                label: 'Phone Number',
+                placeholder: 'Phone',
+                statePath: 'phone',
+                inputType: 'tel',
+            });
+            const { getByPlaceholderText, getByText } = renderWithTheme(
+                <FormRenderer
+                    validationSchema={z.object({
+                        phone: z.string(),
+                    })}
+                    config={mockInputConfig}
+                    validationMode={'onChange'}
+                    onSubmit={mockSubmit}
+                />
+            );
+            const phone = '1a2b3c1d2e3f1g2h3i4j';
+            const expectedPhone = '1231231234';
+            const input = getByPlaceholderText('Phone');
+            const submitButton = getByText('Submit');
+            await user.type(input, phone);
+            expect(input).toHaveValue(expectedPhone);
+            await user.click(submitButton);
+            expect(mockSubmit).toHaveBeenCalledWith({
+                phone: expectedPhone,
+            });
+        });
 
         it('validates string input', async () => {
             const mockSubmit = jest.fn();
@@ -429,6 +493,7 @@ describe('FormRenderer', () => {
             const mockInputConfig = getMockInputConfig({
                 id: 'test',
                 type: 'input',
+                inputType: 'text',
                 label: 'First Name',
                 helperText: 'Enter your first name',
                 placeholder: 'John',

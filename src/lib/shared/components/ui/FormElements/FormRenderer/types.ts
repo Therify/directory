@@ -1,4 +1,5 @@
 import { FieldValues, Path } from 'react-hook-form';
+import { PhoneNumberFormat } from '../form-validation/phone';
 import { SelectOption } from '../Select';
 
 export type FormConfig<T extends FieldValues> = {
@@ -26,12 +27,35 @@ interface FormFieldBase<T extends FieldValues> {
     statePath: Path<T>;
     required?: boolean;
 }
-export type Input<T extends FieldValues> = {
+
+interface BaseInput {
     type: 'input';
-    inputType?: 'text' | 'email' | 'number';
     placeholder?: string;
     autoComplete?: string;
-} & FormFieldBase<T>;
+}
+interface TelephoneInput {
+    inputType: 'tel';
+    phoneNumberFormat?: PhoneNumberFormat;
+}
+interface NumberInput {
+    inputType: 'number';
+}
+interface EmailInput {
+    inputType: 'email';
+}
+interface TextInput {
+    inputType: 'text';
+}
+
+export type Input<T extends FieldValues> = (
+    | TelephoneInput
+    | NumberInput
+    | EmailInput
+    | TextInput
+    | TelephoneInput
+) &
+    BaseInput &
+    FormFieldBase<T>;
 
 export type PasswordInput<T extends FieldValues> = {
     type: 'password';

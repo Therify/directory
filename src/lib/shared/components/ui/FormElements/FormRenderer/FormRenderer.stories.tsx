@@ -27,6 +27,17 @@ const schema = z.object({
     }),
     confirmPassword: z.string(),
     state: z.enum(states),
+    phoneNumber: z
+        .string()
+        .nonempty({
+            message: 'Phone number is required.',
+        })
+        .min(10, {
+            message: 'Phone number must be 10 digits.',
+        })
+        .max(10, {
+            message: 'Phone number must be 10 digits.',
+        }),
     description: z.string(),
     user: z.object({
         name: z.string(),
@@ -172,6 +183,7 @@ const config: FormConfig<z.infer<typeof schema>> = {
                 {
                     type: 'input',
                     id: 'firstName',
+                    inputType: 'text',
                     label: 'First Name',
                     helperText: 'Enter your first name',
                     placeholder: 'John',
@@ -180,6 +192,7 @@ const config: FormConfig<z.infer<typeof schema>> = {
                 },
                 {
                     type: 'input',
+                    inputType: 'text',
                     id: 'lastName',
                     label: 'Last Name',
                     helperText: 'Enter your last name',
@@ -208,6 +221,14 @@ const config: FormConfig<z.infer<typeof schema>> = {
                     label: 'Age',
                     statePath: 'age',
                     inputType: 'number',
+                },
+                {
+                    id: 'phone',
+                    type: 'input',
+                    label: 'Phone Number',
+                    statePath: 'phoneNumber',
+                    inputType: 'tel',
+                    phoneNumberFormat: 'US',
                 },
                 {
                     id: 'description',
