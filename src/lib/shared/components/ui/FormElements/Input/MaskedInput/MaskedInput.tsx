@@ -1,6 +1,9 @@
 import InputMask, { Props } from 'react-input-mask';
 import { InputProps, StyledInput } from '../Input';
-import { InputWrapper } from '../InputWrapper';
+import {
+    InputWrapper,
+    TEST_IDS as INPUT_WRAPPER_TEST_IDS,
+} from '../InputWrapper';
 
 interface MaskedInputProps extends InputProps {
     mask: Props['mask'];
@@ -19,6 +22,7 @@ export const MaskedInput = ({
     fullWidth,
     variant = 'default',
     placeholder,
+    value,
     onChange,
     onInput,
     onBlur,
@@ -26,6 +30,7 @@ export const MaskedInput = ({
     autoComplete,
     ...inputProps
 }: MaskedInputProps) => {
+    const strValue = String(value);
     return (
         <InputWrapper
             {...{
@@ -41,9 +46,17 @@ export const MaskedInput = ({
                 maskPlaceholder={maskPlaceholderCharacter ?? null}
                 alwaysShowMask={alwaysShowMask}
                 beforeMaskedStateChange={beforeMaskedStateChange}
-                {...{ onChange, onInput, onBlur, autoComplete, disabled }}
+                value={strValue}
+                {...{
+                    onChange,
+                    onInput,
+                    onBlur,
+                    autoComplete,
+                    disabled,
+                }}
             >
                 <StyledInput
+                    data-testid={INPUT_WRAPPER_TEST_IDS.INPUT}
                     disabled={disabled}
                     placeholder={placeholder}
                     fullWidth={fullWidth}
