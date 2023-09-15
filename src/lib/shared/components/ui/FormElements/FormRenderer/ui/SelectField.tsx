@@ -23,6 +23,7 @@ export function SelectField<T extends FieldValues>({
         <Controller
             control={control}
             name={field.statePath}
+            defaultValue={field.defaultValue}
             render={({
                 field: { onChange, onBlur, value, name },
                 fieldState: { error },

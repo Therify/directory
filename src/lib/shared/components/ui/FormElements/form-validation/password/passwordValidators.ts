@@ -1,5 +1,8 @@
-export const validatePasswordLength = (password: string): boolean => {
-    return password.length >= 8;
+export const validatePasswordLength = (
+    password: string,
+    length?: number
+): boolean => {
+    return password.length >= (length ?? 8);
 };
 
 export const validatePasswordHasNumber = (password: string): boolean => {
@@ -56,7 +59,7 @@ export const getPasswordValidationErrorMessage = (
     return passwordValidationErrorMessages[error];
 };
 
-export const refineIsValidPassword = (password: string, path?: string) => {
+export const refineIsValidPassword = (password: string, path?: string[]) => {
     if (!validatePasswordLength(password)) {
         return {
             message:

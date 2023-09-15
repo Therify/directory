@@ -87,29 +87,28 @@ export const MemberRegistrationFlow = ({
         storeMemberDetails(memberDetailsForm.getValues());
         return registerMember(memberDetailsForm.getValues());
     };
-    const debounceRef = useRef<number>();
-    const emailAddress = memberDetailsForm.watch('user.emailAddress');
-    const country = memberDetailsForm.watch('profile.country');
+    // const debounceRef = useRef<number>();
+    // const emailAddress = memberDetailsForm.watch('user.emailAddress');
 
-    useEffect(() => {
-        const shouldFetchUniqueness =
-            !!emailAddress &&
-            FormValidation.isValidEmail(emailAddress) &&
-            emailsCheckedForUniqueness[emailAddress] === undefined;
+    // useEffect(() => {
+    //     const shouldFetchUniqueness =
+    //         !!emailAddress &&
+    //         FormValidation.isValidEmail(emailAddress) &&
+    //         emailsCheckedForUniqueness[emailAddress] === undefined;
 
-        if (shouldFetchUniqueness) {
-            window.clearTimeout(debounceRef.current);
-            debounceRef.current = window.setTimeout(async () => {
-                const isEmailUnique = await FormValidation.isUniqueEmailFactory(
-                    emailValidationUrl
-                )(emailAddress.toLowerCase().trim());
-                setEmailsCheckedForUniqueness((prev) => ({
-                    ...prev,
-                    [emailAddress]: isEmailUnique,
-                }));
-            }, 500);
-        }
-    }, [emailAddress, emailValidationUrl, emailsCheckedForUniqueness]);
+    //     if (shouldFetchUniqueness) {
+    //         window.clearTimeout(debounceRef.current);
+    //         debounceRef.current = window.setTimeout(async () => {
+    //             const isEmailUnique = await FormValidation.isUniqueEmailFactory(
+    //                 emailValidationUrl
+    //             )(emailAddress.toLowerCase().trim());
+    //             setEmailsCheckedForUniqueness((prev) => ({
+    //                 ...prev,
+    //                 [emailAddress]: isEmailUnique,
+    //             }));
+    //         }, 500);
+    //     }
+    // }, [emailAddress, emailValidationUrl, emailsCheckedForUniqueness]);
 
     if (!hasSeatsAvailable) {
         return (
@@ -161,6 +160,11 @@ export const MemberRegistrationFlow = ({
             ) : (
                 <Box width="100%">
                     <FormRenderer
+                        defaultValues={{
+                            user: {
+                                role: ROLES.MEMBER,
+                            },
+                        }}
                         errorMessage={errorMessage}
                         validationSchema={RegisterMember.inputSchema}
                         config={memberRegistrationFormConfig}
@@ -184,12 +188,6 @@ export const MemberRegistrationFlow = ({
         </Box>
     );
 };
-
-const ErrorIcon = () => (
-    <CenteredContainer>
-        <ReportProblemRounded />
-    </CenteredContainer>
-);
 
 const HeaderContainer = styled(Box)(({ theme }) => ({
     display: 'flex',

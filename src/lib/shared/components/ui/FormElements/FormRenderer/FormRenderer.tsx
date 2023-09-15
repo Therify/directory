@@ -47,7 +47,7 @@ export function FormRenderer<ValidationSchema extends z.ZodTypeAny>({
 }) {
     const form = useForm<z.infer<ValidationSchema>>({
         mode: 'onChange' ?? validationMode,
-        ...(defaultValues && { defaultValues }),
+        defaultValues,
         resolver: zodResolver(validationSchema),
     });
 

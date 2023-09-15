@@ -57,6 +57,11 @@ export const MemberRegistrationForm = () => {
                 validationSchema={RegisterMember.inputSchema}
                 config={memberRegistrationFormConfig}
                 onSubmit={console.log}
+                defaultValues={{
+                    user: {
+                        role: ROLES.MEMBER,
+                    },
+                }}
             />
         </Box>
     );

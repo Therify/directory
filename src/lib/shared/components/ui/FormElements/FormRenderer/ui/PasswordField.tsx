@@ -26,6 +26,7 @@ export function PasswordField<T extends FieldValues>({
                     label={field.label}
                     placeholder={field.placeholder}
                     helperText={field.helperText}
+                    allowShowPassword={field.allowShowPassword}
                     errorMessage={error?.message}
                     {...{
                         onChange,
