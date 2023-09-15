@@ -1,4 +1,10 @@
-import { UseFormReturn, FieldValues, Controller } from 'react-hook-form';
+import {
+    UseFormReturn,
+    FieldValues,
+    Controller,
+    PathValue,
+    Path,
+} from 'react-hook-form';
 import { Textarea } from '@/lib/shared/components/ui';
 import { TextAreaInput } from '../types';
 

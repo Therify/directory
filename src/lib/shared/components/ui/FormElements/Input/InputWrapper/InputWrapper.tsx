@@ -63,11 +63,7 @@ export const InputWrapper = ({
                     {label}
                 </InputLabel>
             )}
-            <StyledInputWrapper
-                isError={!!errorMessage}
-                isSuccess={!!successMessage}
-                whiteBg={variant === 'white'}
-            >
+            <StyledInputWrapper whiteBg={variant === 'white'}>
                 {children}
             </StyledInputWrapper>
 
@@ -126,43 +122,38 @@ export const InputLabel = ({
 };
 
 const StyledInputWrapper = styled(Box, {
-    shouldForwardProp: (prop) =>
-        'isSuccess' !== prop && 'isError' !== prop && 'whiteBg' !== prop,
-})<{ isSuccess: boolean; isError: boolean; whiteBg: boolean }>(
-    ({ isError, isSuccess, whiteBg, theme }) => {
-        const errorColor = isError ? theme.palette.error.main : undefined;
-        const successColor = isSuccess ? theme.palette.success.main : undefined;
-        return {
-            '& label.MuiFormLabel-root': {
+    shouldForwardProp: (prop) => 'whiteBg' !== prop,
+})<{ whiteBg: boolean }>(({ whiteBg, theme }) => {
+    return {
+        '& label.MuiFormLabel-root': {
+            display: 'none',
+        },
+        '& fieldset': {
+            ...(whiteBg && {
+                display: 'none',
+            }),
+            '& legend': {
                 display: 'none',
             },
-            '& fieldset': {
-                ...(whiteBg && {
-                    display: 'none',
-                }),
-                '& legend': {
-                    display: 'none',
+        },
+
+        width: '100%',
+        ...(whiteBg && {
+            border: 'none',
+            '&:hover, &:focus-within': {
+                border: 'none',
+            },
+            '& .MuiFormControl-root': {
+                border: `1px solid transparent`,
+                background: theme.palette.background.paper,
+                borderRadius: theme.shape.borderRadius,
+                '&:hover': {
+                    border: `1px solid ${theme.palette.grey[200]}`,
+                },
+                '&:focus-within, &:focus': {
+                    border: `1px solid ${theme.palette.primary.main}`,
                 },
             },
-
-            width: '100%',
-            ...(whiteBg && {
-                border: 'none',
-                '&:hover, &:focus-within': {
-                    border: 'none',
-                },
-                '& .MuiFormControl-root': {
-                    border: `1px solid transparent`,
-                    background: theme.palette.background.paper,
-                    borderRadius: theme.shape.borderRadius,
-                    '&:hover': {
-                        border: `1px solid ${theme.palette.grey[200]}`,
-                    },
-                    '&:focus-within, &:focus': {
-                        border: `1px solid ${theme.palette.primary.main}`,
-                    },
-                },
-            }),
-        };
-    }
-);
+        }),
+    };
+});

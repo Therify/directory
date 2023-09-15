@@ -1,6 +1,13 @@
-import { Controller, FieldValues, UseFormReturn } from 'react-hook-form';
+import {
+    Controller,
+    FieldValues,
+    Path,
+    PathValue,
+    UseFormReturn,
+} from 'react-hook-form';
 import { Input } from '@/lib/shared/components/ui';
 import { Input as InputType } from '../types';
+import { cleanPhoneNumber } from '../../form-validation/phone';
 
 export function InputField<T extends FieldValues>({
     control,
@@ -14,6 +21,7 @@ export function InputField<T extends FieldValues>({
         <Controller
             control={control}
             name={field.statePath}
+            defaultValue={'' as PathValue<T, Path<T>>}
             render={({
                 field: { onChange, onBlur, value, name },
                 fieldState: { error },
@@ -30,6 +38,13 @@ export function InputField<T extends FieldValues>({
                     errorMessage={error?.message}
                     autoComplete={field.autoComplete}
                     onChange={(e) => {
+                        if (field.inputType === 'tel') {
+                            return onChange({
+                                target: {
+                                    value: cleanPhoneNumber(e.target.value),
+                                },
+                            });
+                        }
                         if (field.inputType === 'number') {
                             return onChange({
                                 target: { value: parseFloat(e.target.value) },

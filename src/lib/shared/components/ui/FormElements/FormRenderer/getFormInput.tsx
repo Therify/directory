@@ -1,8 +1,13 @@
 import { ReactNode } from 'react';
 import { UseFormReturn, FieldValues } from 'react-hook-form';
-import { z } from 'zod';
 import { FormField } from './types';
-import { InputField, PasswordField, TextAreaField, SelectField } from './ui';
+import {
+    InputField,
+    PasswordField,
+    TextAreaField,
+    SelectField,
+    TelephoneField,
+} from './ui';
 
 interface GetFormInputProps<T extends FieldValues> {
     field: FormField<T>;
@@ -24,6 +29,10 @@ export function getFormInput<T extends FieldValues>({
             return <TextAreaField {...{ field, isLoading, ...useFormProps }} />;
         case 'select':
             return <SelectField {...{ field, isLoading, ...useFormProps }} />;
+        case 'telephone':
+            return (
+                <TelephoneField {...{ field, isLoading, ...useFormProps }} />
+            );
         default:
             return null;
     }
