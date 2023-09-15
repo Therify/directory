@@ -363,7 +363,7 @@ describe('FormRenderer', () => {
                 email: emailAddress,
             });
         });
-        it('captures telephone input', async () => {
+        it('captures tel input', async () => {
             const mockSubmit = jest.fn();
             const mockInputConfig = getMockInputConfig({
                 id: 'test',
@@ -395,7 +395,7 @@ describe('FormRenderer', () => {
             });
         });
 
-        it('cleans non-numeric values from telephone input', async () => {
+        it('cleans non-numeric values from tel input', async () => {
             const mockSubmit = jest.fn();
             const mockInputConfig = getMockInputConfig({
                 id: 'test',
@@ -849,6 +849,29 @@ describe('FormRenderer', () => {
             await user.type(input, userInput);
             expect(getByText(errorMessage)).toBeVisible();
             expect(submitButton).toBeDisabled();
+        });
+
+        it('cleans non-numeric values from telephone input', async () => {
+            const mockSubmit = jest.fn();
+            const { getByPlaceholderText, getByText } = renderWithTheme(
+                <FormRenderer
+                    validationSchema={mockSchema}
+                    config={mockConfig}
+                    validationMode={'onChange'}
+                    onSubmit={mockSubmit}
+                />
+            );
+            const phone = '1a2b3c1d2e3f1g2h3i4j';
+            const expectedPhone = '1231231234';
+            const formattedPhone = '(123) 123-1234';
+            const input = getByPlaceholderText(inputDetails.placeholder!);
+            const submitButton = getByText('Submit');
+            await user.type(input, phone);
+            expect(input).toHaveValue(formattedPhone);
+            await user.click(submitButton);
+            expect(mockSubmit).toHaveBeenCalledWith({
+                phone: expectedPhone,
+            });
         });
 
         it('disables field when form is submitting', () => {
