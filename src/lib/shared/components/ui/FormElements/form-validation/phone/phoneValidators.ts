@@ -43,18 +43,11 @@ export type PhoneNumberFormat =
     (typeof PHONE_NUMBER_FORMAT)[keyof typeof PHONE_NUMBER_FORMAT];
 export const cleanPhoneNumber = (phoneNumber: string) =>
     phoneNumber.replace(/\D/g, '');
-export const formatPhoneNumber = (
-    phoneNumber: string,
-    format?: PhoneNumberFormat
-): string => {
-    const cleaned = cleanPhoneNumber(phoneNumber);
+
+export const getTelephoneMask = (format: PhoneNumberFormat): string => {
     switch (format) {
         case PHONE_NUMBER_FORMAT.US:
         default:
-            const match = cleaned.match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
-            if (match) {
-                return '(' + match[1] + ') ' + match[2] + '-' + match[3];
-            }
+            return '(999) 999-9999';
     }
-    return phoneNumber;
 };

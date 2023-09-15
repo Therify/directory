@@ -12,37 +12,41 @@ export default {
 } as Meta;
 
 const states = ['California', 'New York', 'Tennessee'] as const;
-const schema = z.object({
-    firstName: z.string().nonempty({
-        message: 'First name is required.',
-    }),
-    lastName: z.string().nonempty({
-        message: 'Last name is required.',
-    }),
-    age: z.number().min(18, {
-        message: 'Must be at least 18 years old.',
-    }),
-    password: z.string().min(8, {
-        message: 'Password must be at least 8 characters.',
-    }),
-    confirmPassword: z.string(),
-    state: z.enum(states),
-    phoneNumber: z
-        .string()
-        .nonempty({
-            message: 'Phone number is required.',
-        })
-        .min(10, {
-            message: 'Phone number must be 10 digits.',
-        })
-        .max(10, {
-            message: 'Phone number must be 10 digits.',
+const schema = z
+    .object({
+        firstName: z.string().nonempty({
+            message: 'First name is required.',
         }),
-    description: z.string(),
-    user: z.object({
-        name: z.string(),
-    }),
-});
+        lastName: z.string().nonempty({
+            message: 'Last name is required.',
+        }),
+        age: z.number().min(18, {
+            message: 'Must be at least 18 years old.',
+        }),
+        password: z.string().min(8, {
+            message: 'Password must be at least 8 characters.',
+        }),
+        confirmPassword: z.string().nonempty({
+            message: 'Confirm password is required.',
+        }),
+        state: z.enum(states),
+        phoneNumber: z
+            .string()
+            .nonempty({
+                message: 'Phone number is required.',
+            })
+            .min(10, {
+                message: 'Phone number must be 10 digits.',
+            })
+            .max(10, {
+                message: 'Phone number must be 10 digits.',
+            }),
+        description: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+        message: 'Passwords do not match.',
+        path: ['confirmPassword'],
+    });
 
 const containerStyle = {
     width: '100%',
@@ -224,11 +228,9 @@ const config: FormConfig<z.infer<typeof schema>> = {
                 },
                 {
                     id: 'phone',
-                    type: 'input',
+                    type: 'telephone',
                     label: 'Phone Number',
                     statePath: 'phoneNumber',
-                    inputType: 'tel',
-                    phoneNumberFormat: 'US',
                 },
                 {
                     id: 'description',

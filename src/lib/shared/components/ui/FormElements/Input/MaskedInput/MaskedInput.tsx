@@ -4,14 +4,14 @@ import { InputWrapper } from '../InputWrapper';
 
 interface MaskedInputProps extends InputProps {
     mask: Props['mask'];
-    maskPlaceholder?: Props['maskPlaceholder'];
+    maskPlaceholderCharacter?: Props['maskPlaceholder'];
     alwaysShowMask?: Props['alwaysShowMask'];
     beforeMaskedStateChange?: Props['beforeMaskedStateChange'];
 }
 
 export const MaskedInput = ({
     mask,
-    maskPlaceholder,
+    maskPlaceholderCharacter,
     alwaysShowMask,
     beforeMaskedStateChange,
     errorMessage,
@@ -22,6 +22,8 @@ export const MaskedInput = ({
     onChange,
     onInput,
     onBlur,
+    disabled,
+    autoComplete,
     ...inputProps
 }: MaskedInputProps) => {
     return (
@@ -36,12 +38,13 @@ export const MaskedInput = ({
         >
             <InputMask
                 mask={mask}
-                maskPlaceholder={maskPlaceholder}
+                maskPlaceholder={maskPlaceholderCharacter ?? null}
                 alwaysShowMask={alwaysShowMask}
                 beforeMaskedStateChange={beforeMaskedStateChange}
-                {...{ onChange, onInput, onBlur }}
+                {...{ onChange, onInput, onBlur, autoComplete, disabled }}
             >
                 <StyledInput
+                    disabled={disabled}
                     placeholder={placeholder}
                     fullWidth={fullWidth}
                     isSuccess={!!successMessage}

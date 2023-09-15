@@ -17,7 +17,8 @@ export type FormField<T extends FieldValues> =
     | Input<T>
     | PasswordInput<T>
     | TextAreaInput<T>
-    | SelectInput<T>;
+    | SelectInput<T>
+    | TelephoneInput<T>;
 
 interface FormFieldBase<T extends FieldValues> {
     id: string;
@@ -28,39 +29,25 @@ interface FormFieldBase<T extends FieldValues> {
     required?: boolean;
 }
 
-interface BaseInput {
+export type Input<T extends FieldValues> = {
     type: 'input';
+    inputType: 'text' | 'number' | 'email' | 'tel';
     placeholder?: string;
     autoComplete?: string;
-}
-interface TelephoneInput {
-    inputType: 'tel';
-    phoneNumberFormat?: PhoneNumberFormat;
-}
-interface NumberInput {
-    inputType: 'number';
-}
-interface EmailInput {
-    inputType: 'email';
-}
-interface TextInput {
-    inputType: 'text';
-}
-
-export type Input<T extends FieldValues> = (
-    | TelephoneInput
-    | NumberInput
-    | EmailInput
-    | TextInput
-    | TelephoneInput
-) &
-    BaseInput &
-    FormFieldBase<T>;
+} & FormFieldBase<T>;
 
 export type PasswordInput<T extends FieldValues> = {
     type: 'password';
     placeholder?: string;
     allowShowPassword?: boolean;
+} & FormFieldBase<T>;
+
+export type TelephoneInput<T extends FieldValues> = {
+    type: 'telephone';
+    placeholder?: string;
+    format?: PhoneNumberFormat;
+    autoComplete?: string;
+    maskPlaceholderCharacter?: string;
 } & FormFieldBase<T>;
 
 export type TextAreaInput<T extends FieldValues> = {

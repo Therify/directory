@@ -15,7 +15,6 @@ export const MaskedInput: StoryFn<typeof Component> = (args) => {
     return (
         <Component
             mask={'(999) 999-9999'}
-            maskPlaceholder={null}
             placeholder={'(123) 456-7890'}
             type="tel"
             label={'Phone Number'}
