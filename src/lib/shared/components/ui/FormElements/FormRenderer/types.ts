@@ -18,7 +18,8 @@ export type FormField<T extends FieldValues> =
     | PasswordInput<T>
     | TextAreaInput<T>
     | SelectInput<T>
-    | TelephoneInput<T>;
+    | TelephoneInput<T>
+    | DatePickerInput<T>;
 
 interface FormFieldBase<T extends FieldValues> {
     id: string;
@@ -60,5 +61,9 @@ export type SelectInput<T extends FieldValues> = {
     placeholder?: string;
     default?: string;
     options: string[] | SelectOption[];
-    fullWidth?: boolean;
+} & FormFieldBase<T>;
+
+export type DatePickerInput<T extends FieldValues> = {
+    type: 'date';
+    default?: string;
 } & FormFieldBase<T>;

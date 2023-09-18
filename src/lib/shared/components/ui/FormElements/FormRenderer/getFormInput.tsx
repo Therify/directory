@@ -7,6 +7,7 @@ import {
     TextAreaField,
     SelectField,
     TelephoneField,
+    DatePickerField,
 } from './ui';
 
 interface GetFormInputProps<T extends FieldValues> {
@@ -32,6 +33,10 @@ export function getFormInput<T extends FieldValues>({
         case 'telephone':
             return (
                 <TelephoneField {...{ field, isLoading, ...useFormProps }} />
+            );
+        case 'date':
+            return (
+                <DatePickerField {...{ field, isLoading, ...useFormProps }} />
             );
         default:
             return null;

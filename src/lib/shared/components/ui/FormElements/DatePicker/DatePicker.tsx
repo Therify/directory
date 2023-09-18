@@ -7,9 +7,10 @@ import {
     MobileDatePicker,
     DatePickerProps as MuiDatePickerProps,
 } from '@mui/x-date-pickers';
-import { Caption, CaptionSize, CAPTION_SIZE } from '../../Typography';
+import { Caption, CAPTION_SIZE } from '../../Typography';
 
 interface DatePickerBaseProps {
+    id?: string;
     mobile?: boolean;
     inputFormat?: string;
     onChange: (date: Date | null) => void;
@@ -32,6 +33,7 @@ export const TEST_IDS = {
 } as const;
 
 export const DatePicker = ({
+    id,
     mobile,
     label,
     value,
@@ -80,6 +82,7 @@ export const DatePicker = ({
                     onChange={(date) => handleChange(date)}
                     renderInput={(params) => (
                         <Input
+                            id={id}
                             onBlur={onBlur}
                             autoComplete={autoComplete}
                             isError={Boolean(errorMessage)}
