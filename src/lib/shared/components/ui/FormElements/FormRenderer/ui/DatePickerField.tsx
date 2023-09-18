@@ -1,5 +1,5 @@
 import { UseFormReturn, FieldValues, Controller } from 'react-hook-form';
-import { DatePicker, FormValidation } from '@/lib/shared/components/ui';
+import { DatePicker } from '@/lib/shared/components/ui';
 import { DatePickerInput } from '../types';
 
 export function DatePickerField<T extends FieldValues>({
@@ -27,12 +27,7 @@ export function DatePickerField<T extends FieldValues>({
                     disabled={isLoading}
                     onChange={(date) => {
                         if (date === null) return onChange(undefined);
-
-                        onChange(
-                            FormValidation.validateDateIsValid(date)
-                                ? date?.toISOString()
-                                : date?.toDateString()
-                        );
+                        onChange(date);
                     }}
                     value={new Date(value)}
                     {...{

@@ -11,6 +11,7 @@ import {
     PasswordInput,
     SelectInput,
     TextAreaInput,
+    DatePickerInput,
 } from './types';
 import { TEST_IDS as SELECT_TEST_IDS } from '../Select';
 import { renderWithTheme } from '../../../fixtures';
@@ -44,7 +45,7 @@ describe('FormRenderer', () => {
                     validationSchema={z.object({})}
                     config={{ title, sections: [] }}
                     validationMode={'onChange'}
-                    onSubmit={(values) => console.log('submit', values)}
+                    onSubmit={jest.fn()}
                 />
             );
 
@@ -59,7 +60,7 @@ describe('FormRenderer', () => {
                     validationSchema={z.object({})}
                     config={{ title, subtitle, sections: [] }}
                     validationMode={'onChange'}
-                    onSubmit={(values) => console.log('submit', values)}
+                    onSubmit={jest.fn()}
                 />
             );
 
@@ -80,7 +81,7 @@ describe('FormRenderer', () => {
                         ],
                     }}
                     validationMode={'onChange'}
-                    onSubmit={(values) => console.log('submit', values)}
+                    onSubmit={jest.fn()}
                 />
             );
 
@@ -267,7 +268,7 @@ describe('FormRenderer', () => {
                     validationSchema={mockSchema}
                     config={mockInputConfig}
                     validationMode={'onChange'}
-                    onSubmit={(values) => console.log('submit', values)}
+                    onSubmit={jest.fn()}
                 />
             );
             const inputDetails = mockInputConfig.sections[0].fields[0];
@@ -506,7 +507,7 @@ describe('FormRenderer', () => {
                     validationSchema={mockSchema}
                     config={mockInputConfig}
                     validationMode={'onChange'}
-                    onSubmit={(values) => console.log('submit', values)}
+                    onSubmit={jest.fn()}
                 />
             );
             const inputDetails = mockInputConfig.sections[0].fields[0];
@@ -626,7 +627,7 @@ describe('FormRenderer', () => {
                     validationSchema={mockSchema}
                     config={mockTextareaConfig}
                     validationMode={'onChange'}
-                    onSubmit={(values) => console.log('submit', values)}
+                    onSubmit={jest.fn()}
                 />
             );
             expect(getByText(textAreaDetails.label)).toBeVisible();
@@ -893,88 +894,109 @@ describe('FormRenderer', () => {
         });
     });
 
-    describe.skip('date field', () => {
-        const errorMessage = 'Description is required.';
-        // const mockSchema = z.object({
-        //     description: z.string().nonempty({
-        //         message: errorMessage,
-        //     }),
-        // });
-        // const mockTextareaConfig = getMockInputConfig({
-        //     id: 'test',
-        //     type: 'textarea',
-        //     label: 'Tell us more',
-        //     placeholder: 'placeholder',
-        //     helperText: 'Helper text',
-        //     statePath: 'description',
-        // });
+    describe('date field', () => {
+        const errorMessage = 'Date must be in the past.';
+        const mockSchema = z.object({
+            date: z.date().max(new Date(), {
+                message: errorMessage,
+            }),
+        });
+        const mockConfig = getMockInputConfig({
+            id: 'test',
+            type: 'date',
+            label: 'Date Picker',
+            helperText: 'Enter a date',
+            statePath: 'date',
+        });
 
-        // const textAreaDetails = mockTextareaConfig.sections[0]
-        //     .fields[0] as TextAreaInput<z.infer<typeof mockSchema>>;
-        // it('renders textarea', () => {
-        //     const { getByText } = renderWithTheme(
-        //         <FormRenderer
-        //             validationSchema={mockSchema}
-        //             config={mockTextareaConfig}
-        //             validationMode={'onChange'}
-        //             onSubmit={(values) => console.log('submit', values)}
-        //         />
-        //     );
-        //     expect(getByText(textAreaDetails.label)).toBeVisible();
-        //     expect(getByText(textAreaDetails.helperText!)).toBeVisible();
-        // });
+        const dateDetails = mockConfig.sections[0].fields[0] as DatePickerInput<
+            z.infer<typeof mockSchema>
+        >;
 
-        // it('captures textarea input', async () => {
-        //     const mockSubmit = jest.fn();
-        //     const { getByPlaceholderText, getByText } = renderWithTheme(
-        //         <FormRenderer
-        //             validationSchema={mockSchema}
-        //             config={mockTextareaConfig}
-        //             validationMode={'onChange'}
-        //             onSubmit={mockSubmit}
-        //         />
-        //     );
-        //     const description = 'This is a description';
-        //     const input = getByPlaceholderText(textAreaDetails.placeholder!);
-        //     const submitButton = getByText('Submit');
-        //     await user.type(input, description);
-        //     expect(input).toHaveValue(description);
-        //     await user.click(submitButton);
-        //     expect(mockSubmit).toHaveBeenCalledWith({ description });
-        // });
+        it('renders date picker', () => {
+            const { getByText, getByLabelText } = renderWithTheme(
+                <FormRenderer
+                    validationSchema={mockSchema}
+                    config={mockConfig}
+                    validationMode={'onChange'}
+                    onSubmit={jest.fn()}
+                />
+            );
+            expect(getByLabelText(dateDetails.label)).toBeVisible();
+            expect(getByText(dateDetails.helperText!)).toBeVisible();
+        });
 
-        // it('validates textarea', async () => {
-        //     const mockSubmit = jest.fn();
-        //     const { getByPlaceholderText, getByText } = renderWithTheme(
-        //         <FormRenderer
-        //             validationSchema={mockSchema}
-        //             config={mockTextareaConfig}
-        //             validationMode={'onChange'}
-        //             onSubmit={mockSubmit}
-        //         />
-        //     );
-        //     const input = getByPlaceholderText(textAreaDetails.placeholder!);
-        //     const submitButton = getByText('Submit');
-        //     await user.type(input, '1');
-        //     await user.type(input, '{backspace}');
-        //     fireEvent.blur(input);
-        //     expect(getByText(errorMessage)).toBeVisible();
-        //     expect(submitButton).toBeDisabled();
-        // });
+        it('captures date input', async () => {
+            const mockSubmit = jest.fn();
+            const { getByRole, getByText } = renderWithTheme(
+                <FormRenderer
+                    validationSchema={mockSchema}
+                    config={mockConfig}
+                    validationMode={'onChange'}
+                    onSubmit={mockSubmit}
+                />
+            );
+            const userInput = '10/10/1990';
+            const input = getByRole('textbox');
+            const submitButton = getByText('Submit');
+            await user.type(input, userInput);
+            expect(input).toHaveValue(userInput);
+            await user.click(submitButton);
+            expect(mockSubmit).toHaveBeenCalledWith({
+                date: new Date(userInput),
+            });
+        });
 
-        // it('disables field when form is submitting', () => {
-        //     const mockSubmit = jest.fn();
-        //     const { getByPlaceholderText } = renderWithTheme(
-        //         <FormRenderer
-        //             validationSchema={mockSchema}
-        //             config={mockTextareaConfig}
-        //             validationMode={'onChange'}
-        //             onSubmit={mockSubmit}
-        //             isSubmitting
-        //         />
-        //     );
-        //     const input = getByPlaceholderText(textAreaDetails.placeholder!);
-        //     expect(input).toBeDisabled();
-        // });
+        it('confirms date validity', async () => {
+            const mockSubmit = jest.fn();
+            const { getByRole, getByText } = renderWithTheme(
+                <FormRenderer
+                    validationSchema={mockSchema}
+                    config={mockConfig}
+                    validationMode={'onChange'}
+                    onSubmit={mockSubmit}
+                />
+            );
+            const userInput = '10/10';
+            const input = getByRole('textbox');
+            const submitButton = getByText('Submit');
+            await user.type(input, userInput);
+            expect(getByText('Invalid date')).toBeVisible();
+            expect(submitButton).toBeDisabled();
+        });
+
+        it('validates date with schema', async () => {
+            const mockSubmit = jest.fn();
+            const { getByRole, getByText } = renderWithTheme(
+                <FormRenderer
+                    validationSchema={mockSchema}
+                    config={mockConfig}
+                    validationMode={'onChange'}
+                    onSubmit={mockSubmit}
+                />
+            );
+            const userInput = `10/10/${new Date().getFullYear() + 1}`;
+            const input = getByRole('textbox');
+            const submitButton = getByText('Submit');
+            await user.type(input, userInput);
+            fireEvent.blur(input);
+            expect(getByText(errorMessage)).toBeVisible();
+            expect(submitButton).toBeDisabled();
+        });
+
+        it('disables field when form is submitting', () => {
+            const mockSubmit = jest.fn();
+            const { getByRole } = renderWithTheme(
+                <FormRenderer
+                    validationSchema={mockSchema}
+                    config={mockConfig}
+                    validationMode={'onChange'}
+                    onSubmit={mockSubmit}
+                    isSubmitting
+                />
+            );
+            const input = getByRole('textbox');
+            expect(input).toBeDisabled();
+        });
     });
 });
