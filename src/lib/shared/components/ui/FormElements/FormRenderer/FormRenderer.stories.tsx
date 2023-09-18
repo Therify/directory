@@ -42,6 +42,9 @@ const schema = z
                 message: 'Phone number must be 10 digits.',
             }),
         description: z.string(),
+        dateOfBirth: z.date().max(new Date(), {
+            message: 'Date of birth must be in the past.',
+        }),
     })
     .refine((data) => data.password === data.confirmPassword, {
         message: 'Passwords do not match.',
@@ -225,6 +228,12 @@ const config: FormConfig<z.infer<typeof schema>> = {
                     label: 'Age',
                     statePath: 'age',
                     inputType: 'number',
+                },
+                {
+                    id: 'dateOfBirth',
+                    type: 'date',
+                    label: 'Date of Birth',
+                    statePath: 'dateOfBirth',
                 },
                 {
                     id: 'phone',
