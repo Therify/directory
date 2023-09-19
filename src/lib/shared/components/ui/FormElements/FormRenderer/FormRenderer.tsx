@@ -57,7 +57,7 @@ export function FormRenderer<ValidationSchema extends z.ZodTypeAny>({
     } = form;
 
     return (
-        <Form sx={sx}>
+        <Form sx={sx} onSubmit={(e) => e.preventDefault()}>
             <FormContent isError={!!errorMessage}>
                 <Header>{config.title}</Header>
                 {config.subtitle && (
@@ -140,9 +140,9 @@ export function FormRenderer<ValidationSchema extends z.ZodTypeAny>({
     );
 }
 
-const Form = styled('form')(({ theme }) => ({
+const Form = styled('form')({
     width: '100%',
-}));
+});
 
 const FormContent = styled('div', {
     shouldForwardProp: (prop) => 'isError' !== prop,
