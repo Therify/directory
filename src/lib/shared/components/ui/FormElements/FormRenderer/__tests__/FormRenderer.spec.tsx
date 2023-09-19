@@ -4,7 +4,6 @@ import { FieldValues } from 'react-hook-form';
 import { z } from 'zod';
 import { FormRenderer, TEST_IDS } from '../FormRenderer';
 import { FormConfig, FormField } from '../types';
-
 import { renderWithTheme } from '../../../../fixtures';
 
 function getMockInputConfig<T extends FieldValues>(

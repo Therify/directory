@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { FormRenderer } from '../FormRenderer';
 import { SelectInput } from '../types';
 import { renderWithTheme } from '../../../../fixtures';
-import { getMockInputConfig } from './getMockInputConfig';
+import { getMockInputConfig } from '../__mocks__/getMockInputConfig';
 import { TEST_IDS as SELECT_TEST_IDS } from '../../Select';
 
 describe('Select field', () => {

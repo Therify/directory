@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { FormRenderer } from '../FormRenderer';
 import { Input } from '../types';
 import { renderWithTheme } from '../../../../fixtures';
-import { getMockInputConfig } from './getMockInputConfig';
+import { getMockInputConfig } from '../__mocks__/getMockInputConfig';
 
 describe('Input field', () => {
     const user = userEvent.setup();
