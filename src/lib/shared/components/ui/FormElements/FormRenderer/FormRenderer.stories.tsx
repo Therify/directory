@@ -30,6 +30,7 @@ const schema = z
             message: 'Confirm password is required.',
         }),
         state: z.enum(states),
+        iAgree: z.literal(true),
         phoneNumber: z
             .string()
             .nonempty({
@@ -259,6 +260,14 @@ const config: FormConfig<z.infer<typeof schema>> = {
                     statePath: 'state',
                     placeholder: 'select a state',
                     options: [...states],
+                },
+                {
+                    id: 'iAgree',
+                    type: 'toggle',
+                    toggleType: 'checkbox',
+                    fullWidth: true,
+                    label: 'I agree to the terms and conditions',
+                    statePath: 'iAgree',
                 },
             ],
         },
