@@ -8,6 +8,7 @@ import {
     SelectField,
     TelephoneField,
     DatePickerField,
+    ToggleField,
 } from './ui';
 
 interface GetFormInputProps<T extends FieldValues> {
@@ -38,6 +39,8 @@ export function getFormInput<T extends FieldValues>({
             return (
                 <DatePickerField {...{ field, isLoading, ...useFormProps }} />
             );
+        case 'toggle':
+            return <ToggleField {...{ field, isLoading, ...useFormProps }} />;
         default:
             return null;
     }

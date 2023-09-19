@@ -19,7 +19,8 @@ export type FormField<T extends FieldValues> =
     | TextAreaInput<T>
     | SelectInput<T>
     | TelephoneInput<T>
-    | DatePickerInput<T>;
+    | DatePickerInput<T>
+    | ToggleInput<T>;
 
 interface FormFieldBase<T extends FieldValues> {
     id: string;
@@ -66,4 +67,10 @@ export type SelectInput<T extends FieldValues> = {
 export type DatePickerInput<T extends FieldValues> = {
     type: 'date';
     default?: string;
+} & FormFieldBase<T>;
+
+export type ToggleInput<T extends FieldValues> = {
+    type: 'toggle';
+    default?: boolean;
+    toggleType?: 'checkbox' | 'switch' | 'radio';
 } & FormFieldBase<T>;
