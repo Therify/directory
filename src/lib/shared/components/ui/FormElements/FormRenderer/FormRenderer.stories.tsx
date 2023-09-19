@@ -264,7 +264,7 @@ const config: FormConfig<z.infer<typeof schema>> = {
                 {
                     id: 'iAgree',
                     type: 'toggle',
-                    toggleType: 'switch',
+                    toggleType: 'checkbox',
                     fullWidth: true,
                     label: 'I agree to the terms and conditions',
                     statePath: 'iAgree',
