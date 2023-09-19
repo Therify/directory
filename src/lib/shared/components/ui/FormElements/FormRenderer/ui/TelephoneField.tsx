@@ -5,16 +5,20 @@ import {
     PathValue,
     UseFormReturn,
 } from 'react-hook-form';
-import { PasswordInput } from '@/lib/shared/components/ui';
-import { PasswordInput as PasswordFieldType } from '../types';
+import { MaskedInput } from '@/lib/shared/components/ui';
+import { TelephoneInput } from '../types';
+import {
+    cleanPhoneNumber,
+    getTelephoneMask,
+} from '../../form-validation/phone';
 
-export function PasswordField<T extends FieldValues>({
+export function TelephoneField<T extends FieldValues>({
+    control,
     field,
     isLoading,
-    control,
 }: {
+    field: TelephoneInput<T>;
     isLoading: boolean;
-    field: PasswordFieldType<T>;
 } & UseFormReturn<T, any>) {
     return (
         <Controller
@@ -25,18 +29,27 @@ export function PasswordField<T extends FieldValues>({
                 field: { onChange, onBlur, value, name },
                 fieldState: { error },
             }) => (
-                <PasswordInput
+                <MaskedInput
+                    mask={getTelephoneMask(field.format ?? 'US')}
+                    maskPlaceholderCharacter={field.maskPlaceholderCharacter}
                     fullWidth
                     disabled={isLoading}
                     required={field.required}
+                    type="tel"
                     id={field.id}
                     label={field.label}
                     placeholder={field.placeholder}
                     helperText={field.helperText}
-                    allowShowPassword={field.allowShowPassword}
                     errorMessage={error?.message}
+                    autoComplete={field.autoComplete}
+                    onChange={(e) => {
+                        return onChange({
+                            target: {
+                                value: cleanPhoneNumber(e.target.value),
+                            },
+                        });
+                    }}
                     {...{
-                        onChange,
                         onBlur,
                         value,
                         name,

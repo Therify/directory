@@ -34,3 +34,20 @@ export const getPhoneValidationErrorMessage = (
     if (!error) return undefined;
     return createPhoneValidationErrorMessages(fieldName, length)[error];
 };
+
+export const PHONE_NUMBER_FORMAT = {
+    US: 'US',
+} as const;
+
+export type PhoneNumberFormat =
+    (typeof PHONE_NUMBER_FORMAT)[keyof typeof PHONE_NUMBER_FORMAT];
+export const cleanPhoneNumber = (phoneNumber: string) =>
+    phoneNumber.replace(/\D/g, '');
+
+export const getTelephoneMask = (format: PhoneNumberFormat): string => {
+    switch (format) {
+        case PHONE_NUMBER_FORMAT.US:
+        default:
+            return '(999) 999-9999';
+    }
+};

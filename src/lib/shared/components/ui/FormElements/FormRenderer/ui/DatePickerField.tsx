@@ -1,20 +1,14 @@
-import {
-    UseFormReturn,
-    FieldValues,
-    Controller,
-    PathValue,
-    Path,
-} from 'react-hook-form';
-import { Textarea } from '@/lib/shared/components/ui';
-import { TextAreaInput } from '../types';
+import { UseFormReturn, FieldValues, Controller } from 'react-hook-form';
+import { DatePicker } from '@/lib/shared/components/ui';
+import { DatePickerInput } from '../types';
 
-export function TextAreaField<T extends FieldValues>({
+export function DatePickerField<T extends FieldValues>({
     control,
     field,
     isLoading,
 }: {
     isLoading: boolean;
-    field: TextAreaInput<T>;
+    field: DatePickerInput<T>;
 } & UseFormReturn<T, any>) {
     return (
         <Controller
@@ -24,20 +18,20 @@ export function TextAreaField<T extends FieldValues>({
                 field: { onChange, onBlur, value, name },
                 fieldState: { error },
             }) => (
-                <Textarea
-                    id={field.id}
-                    defaultValue=""
-                    fullWidth
-                    disabled={isLoading}
+                <DatePicker
                     required={field.required}
+                    id={field.id}
                     label={field.label}
-                    placeholder={field.placeholder}
                     helperText={field.helperText}
                     errorMessage={error?.message}
+                    disabled={isLoading}
+                    onChange={(date) => {
+                        if (date === null) return onChange(undefined);
+                        onChange(date);
+                    }}
+                    value={new Date(value)}
                     {...{
-                        onChange,
                         onBlur,
-                        value,
                         name,
                     }}
                 />

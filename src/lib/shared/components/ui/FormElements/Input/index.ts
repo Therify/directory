@@ -6,3 +6,4 @@ export {
 } from './PasswordInput';
 export { Textarea } from './Textarea';
 export { InputWrapper } from './InputWrapper';
+export { MaskedInput } from './MaskedInput';

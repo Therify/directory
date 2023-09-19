@@ -12,26 +12,45 @@ export default {
 } as Meta;
 
 const states = ['California', 'New York', 'Tennessee'] as const;
-const schema = z.object({
-    firstName: z.string().nonempty({
-        message: 'First name is required.',
-    }),
-    lastName: z.string().nonempty({
-        message: 'Last name is required.',
-    }),
-    age: z.number().min(18, {
-        message: 'Must be at least 18 years old.',
-    }),
-    password: z.string().min(8, {
-        message: 'Password must be at least 8 characters.',
-    }),
-    confirmPassword: z.string(),
-    state: z.enum(states),
-    description: z.string(),
-    user: z.object({
-        name: z.string(),
-    }),
-});
+const schema = z
+    .object({
+        firstName: z.string().nonempty({
+            message: 'First name is required.',
+        }),
+        lastName: z.string().nonempty({
+            message: 'Last name is required.',
+        }),
+        age: z.number().min(18, {
+            message: 'Must be at least 18 years old.',
+        }),
+        password: z.string().min(8, {
+            message: 'Password must be at least 8 characters.',
+        }),
+        confirmPassword: z.string().nonempty({
+            message: 'Confirm password is required.',
+        }),
+        state: z.enum(states),
+        iAgree: z.literal(true),
+        phoneNumber: z
+            .string()
+            .nonempty({
+                message: 'Phone number is required.',
+            })
+            .min(10, {
+                message: 'Phone number must be 10 digits.',
+            })
+            .max(10, {
+                message: 'Phone number must be 10 digits.',
+            }),
+        description: z.string(),
+        dateOfBirth: z.date().max(new Date(), {
+            message: 'Date of birth must be in the past.',
+        }),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+        message: 'Passwords do not match.',
+        path: ['confirmPassword'],
+    });
 
 const containerStyle = {
     width: '100%',
@@ -172,6 +191,7 @@ const config: FormConfig<z.infer<typeof schema>> = {
                 {
                     type: 'input',
                     id: 'firstName',
+                    inputType: 'text',
                     label: 'First Name',
                     helperText: 'Enter your first name',
                     placeholder: 'John',
@@ -180,6 +200,7 @@ const config: FormConfig<z.infer<typeof schema>> = {
                 },
                 {
                     type: 'input',
+                    inputType: 'text',
                     id: 'lastName',
                     label: 'Last Name',
                     helperText: 'Enter your last name',
@@ -210,6 +231,18 @@ const config: FormConfig<z.infer<typeof schema>> = {
                     inputType: 'number',
                 },
                 {
+                    id: 'dateOfBirth',
+                    type: 'date',
+                    label: 'Date of Birth',
+                    statePath: 'dateOfBirth',
+                },
+                {
+                    id: 'phone',
+                    type: 'telephone',
+                    label: 'Phone Number',
+                    statePath: 'phoneNumber',
+                },
+                {
                     id: 'description',
                     type: 'textarea',
                     label: "Tell us why you're here",
@@ -227,6 +260,14 @@ const config: FormConfig<z.infer<typeof schema>> = {
                     statePath: 'state',
                     placeholder: 'select a state',
                     options: [...states],
+                },
+                {
+                    id: 'iAgree',
+                    type: 'toggle',
+                    toggleType: 'checkbox',
+                    fullWidth: true,
+                    label: 'I agree to the terms and conditions',
+                    statePath: 'iAgree',
                 },
             ],
         },
