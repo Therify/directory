@@ -52,21 +52,21 @@ export const schema = z
                     message: 'Password must contain an uppercase letter (A-Z)',
                 }),
             confirmPassword: z.string().nonempty(),
-            // dateOfBirth: z
-            //     .date()
-            //     .refine((date) => validateDateIsValid(date), {
-            //         message: 'Date is invalid',
-            //     })
-            //     .refine(
-            //         (date) => validateMinimumDate(date, new Date(1900, 0, 1)),
-            //         { message: 'Date of birth must be after 01/01/1900' }
-            //     )
-            //     .refine((date) => validateIsPastDate(date), {
-            //         message: 'Date must be in the past',
-            //     })
-            //     .refine((date) => validateMinimumAge(date, 18), {
-            //         message: 'Must be at least 18 years old',
-            //     }),
+            dateOfBirth: z
+                .date()
+                .refine((date) => validateDateIsValid(date), {
+                    message: 'Date is invalid',
+                })
+                .refine(
+                    (date) => validateMinimumDate(date, new Date(1900, 0, 1)),
+                    { message: 'Date of birth must be after 01/01/1900' }
+                )
+                .refine((date) => validateIsPastDate(date), {
+                    message: 'Date must be in the past',
+                })
+                .refine((date) => validateMinimumAge(date, 18), {
+                    message: 'Must be at least 18 years old',
+                }),
             role: z.enum([ROLES.MEMBER]),
             phoneNumber: z.string().refine(
                 (value: string) => {
@@ -80,7 +80,6 @@ export const schema = z
         }),
         profile: z.object({
             state: z.enum(UNITED_STATES.STATE.ENTRIES),
-            // country: z.enum([UNITED_STATES.COUNTRY.CODE]),
             insurance: z.enum(InsuranceProvider.ENTRIES),
             gender: z.enum(Gender.ENTRIES),
             ethnicity: z.enum(Ethnicity.ENTRIES),
@@ -110,12 +109,12 @@ export const schema = z
                 message: 'Contact relationship is required',
             }),
         }),
-        // hasAcceptedTermsAndConditions: z
-        //     .boolean()
-        //     .default(false)
-        //     .refine((value) => value === true, {
-        //         message: 'You must accept the terms and conditions',
-        //     }),
+        hasAcceptedTermsAndConditions: z
+            .boolean()
+            .default(false)
+            .refine((value) => value === true, {
+                message: 'You must accept the terms and conditions',
+            }),
         registrationCode: z.string().optional(),
     })
     .refine((data) => data.user.password === data.user.confirmPassword, {

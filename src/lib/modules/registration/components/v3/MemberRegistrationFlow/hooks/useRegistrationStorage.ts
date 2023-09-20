@@ -6,9 +6,12 @@ const MEMBER_DETAILS_STORAGE_KEY =
 type SafeMemberDetails = {
     user: Pick<
         RegisterMember.Input['user'],
-        'givenName' | 'surname' | 'emailAddress' | 'dateOfBirth'
+        'givenName' | 'surname' | 'emailAddress' | 'dateOfBirth' | 'phoneNumber'
     >;
-    profile: Pick<RegisterMember.Input['profile'], 'state' | 'country'>;
+    profile: Pick<
+        RegisterMember.Input['profile'],
+        'state' | 'insurance' | 'gender' | 'ethnicity'
+    >;
 };
 export const useRegistrationStorage = () => {
     const storeMemberDetails = ({ user, profile }: RegisterMember.Input) => {
@@ -21,10 +24,13 @@ export const useRegistrationStorage = () => {
                 surname: user.surname,
                 emailAddress: user.emailAddress,
                 dateOfBirth: user.dateOfBirth,
+                phoneNumber: user.phoneNumber,
             },
             profile: {
                 state: profile.state,
-                country: profile.country,
+                insurance: profile.insurance,
+                gender: profile.gender,
+                ethnicity: profile.ethnicity,
             },
         };
         try {

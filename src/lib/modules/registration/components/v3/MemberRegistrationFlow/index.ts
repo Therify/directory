@@ -1,1 +1,1 @@
-export * from './MemberRegistrationFlow';
+export * from './MemberRegistrationForm';

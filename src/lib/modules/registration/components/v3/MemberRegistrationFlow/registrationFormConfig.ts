@@ -65,15 +65,6 @@ export const memberRegistrationFormConfig: FormRendererTypes.FormConfig<
                     allowShowPassword: true,
                     statePath: 'user.confirmPassword',
                 },
-                {
-                    id: 'role',
-                    required: true,
-                    type: 'select',
-                    label: 'role',
-                    statePath: 'user.role',
-                    defaultValue: 'member',
-                    options: ['member'],
-                },
             ],
         },
         {
@@ -119,15 +110,13 @@ export const memberRegistrationFormConfig: FormRendererTypes.FormConfig<
                     inputType: 'text',
                     statePath: 'profile.homeAddress',
                 },
-                // {
-                //     id: 'dateOfBirth',
-                //     required: true,
-                //     type: 'input',
-                //     label: 'Date of Birth',
-                //     placeholder: 'TODO',
-                //     inputType: 'text',
-                //     statePath: 'user.dateOfBirth',
-                // },
+                {
+                    id: 'dateOfBirth',
+                    required: true,
+                    type: 'date',
+                    label: 'Date of Birth',
+                    statePath: 'user.dateOfBirth',
+                },
             ],
         },
         {
@@ -156,6 +145,19 @@ export const memberRegistrationFormConfig: FormRendererTypes.FormConfig<
                     label: 'Emergency Contact Relation',
                     inputType: 'text',
                     statePath: 'emergencyDetails.contactRelationship',
+                },
+            ],
+        },
+        {
+            fields: [
+                {
+                    id: 'hasAcceptedTermsAndConditions',
+                    required: true,
+                    type: 'toggle',
+                    toggleType: 'checkbox',
+                    // TODO: allow markdown
+                    label: "  I agree to Therify's Terms of Service and Privacy Policy.",
+                    statePath: 'hasAcceptedTermsAndConditions',
                 },
             ],
         },
