@@ -42,12 +42,12 @@ export function FormRenderer<ValidationSchema extends z.ZodTypeAny>({
     clearErrorMessage?: () => void;
     validationMode?: 'onBlur' | 'onChange' | 'onSubmit' | 'onTouched' | 'all';
     onBack?: () => void;
-    onSubmit: (data: ValidationSchema) => void;
+    onSubmit: (data: z.infer<ValidationSchema>) => void;
     sx?: SxProps<Theme>;
 }) {
     const form = useForm<z.infer<ValidationSchema>>({
         mode: 'onChange' ?? validationMode,
-        ...(defaultValues && { defaultValues }),
+        defaultValues,
         resolver: zodResolver(validationSchema),
     });
 

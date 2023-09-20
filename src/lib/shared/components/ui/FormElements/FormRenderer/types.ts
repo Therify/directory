@@ -1,4 +1,4 @@
-import { FieldValues, Path } from 'react-hook-form';
+import { FieldValues, Path, PathValue } from 'react-hook-form';
 import { PhoneNumberFormat } from '../form-validation/phone';
 import { SelectOption } from '../Select';
 
@@ -60,7 +60,7 @@ export type TextAreaInput<T extends FieldValues> = {
 export type SelectInput<T extends FieldValues> = {
     type: 'select';
     placeholder?: string;
-    default?: string;
+    defaultValue?: PathValue<T, Path<T>>;
     options: string[] | SelectOption[];
 } & FormFieldBase<T>;
 

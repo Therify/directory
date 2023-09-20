@@ -1,5 +1,8 @@
-export const validatePasswordLength = (password: string): boolean => {
-    return password.length >= 8;
+export const validatePasswordLength = (
+    password: string,
+    length?: number
+): boolean => {
+    return password.length >= (length ?? 8);
 };
 
 export const validatePasswordHasNumber = (password: string): boolean => {
@@ -54,4 +57,51 @@ export const getPasswordValidationErrorMessage = (
 ): string | undefined => {
     if (!error) return undefined;
     return passwordValidationErrorMessages[error];
+};
+
+export const refineIsValidPassword = (password: string, path?: string[]) => {
+    if (!validatePasswordLength(password)) {
+        return {
+            message:
+                passwordValidationErrorMessages[
+                    PasswordValidationType.MinLength
+                ],
+            path,
+        };
+    }
+    if (!validatePasswordHasNumber(password)) {
+        return {
+            message:
+                passwordValidationErrorMessages[PasswordValidationType.Number],
+            path,
+        };
+    }
+    if (!validatePasswordHasSpecialCharacter(password)) {
+        return {
+            message:
+                passwordValidationErrorMessages[
+                    PasswordValidationType.SpecialCharacters
+                ],
+            path,
+        };
+    }
+
+    if (!validatePasswordHasLowercase(password)) {
+        return {
+            message:
+                passwordValidationErrorMessages[
+                    PasswordValidationType.LowerCase
+                ],
+            path,
+        };
+    }
+    if (!validatePasswordHasUppercase(password)) {
+        return {
+            message:
+                passwordValidationErrorMessages[
+                    PasswordValidationType.UpperCase
+                ],
+            path,
+        };
+    }
 };

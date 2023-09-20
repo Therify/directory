@@ -18,8 +18,8 @@ export const PasswordInput = ({ control }: PasswordInputProps) => (
         rules={{
             required: true,
             validate: {
-                [FormValidation.PasswordValidationType.MinLength]:
-                    FormValidation.validatePasswordLength,
+                [FormValidation.PasswordValidationType.MinLength]: (value) =>
+                    FormValidation.validatePasswordLength(value),
                 [FormValidation.PasswordValidationType.Number]:
                     FormValidation.validatePasswordHasNumber,
                 [FormValidation.PasswordValidationType.SpecialCharacters]:
