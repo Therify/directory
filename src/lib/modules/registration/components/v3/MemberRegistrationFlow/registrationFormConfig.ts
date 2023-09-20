@@ -153,6 +153,7 @@ export const memberRegistrationFormConfig: FormRendererTypes.FormConfig<
                 {
                     id: 'hasAcceptedTermsAndConditions',
                     required: true,
+                    fullWidth: true,
                     type: 'toggle',
                     toggleType: 'checkbox',
                     // TODO: allow markdown
