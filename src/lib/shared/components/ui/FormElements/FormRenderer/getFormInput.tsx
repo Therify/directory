@@ -9,8 +9,8 @@ import {
     TelephoneField,
     DatePickerField,
     ToggleField,
+    RadioSelectField,
 } from './ui';
-import { RadioSelectField } from './ui/RadioSelectField';
 
 interface GetFormInputProps<T extends FieldValues> {
     field: FormField<T>;

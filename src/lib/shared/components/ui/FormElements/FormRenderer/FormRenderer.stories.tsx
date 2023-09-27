@@ -47,7 +47,7 @@ const schema = z
         dateOfBirth: z.date().max(new Date(), {
             message: 'Date of birth must be in the past.',
         }),
-        radio: z.enum(numbers),
+        favoriteNumber: z.enum(numbers),
     })
     .refine((data) => data.password === data.confirmPassword, {
         message: 'Passwords do not match.',
@@ -152,7 +152,7 @@ export const PrefilledForm: StoryFn = () => {
                     confirmPassword: 'password',
                     description: 'I am a not a robot',
                     state: 'California',
-                    radio: 'One',
+                    favoriteNumber: 'One',
                 }}
                 validationMode={'onChange'}
                 isSubmitting={isLoading}
@@ -175,7 +175,7 @@ export const SubmittingForm: StoryFn = () => {
                     confirmPassword: 'password',
                     description: 'I am a not a robot',
                     state: 'California',
-                    radio: 'One',
+                    favoriteNumber: 'One',
                 }}
                 validationMode={'onChange'}
                 isSubmitting
@@ -280,7 +280,7 @@ const config: FormConfig<z.infer<typeof schema>> = {
                     label: 'Which of these numbers is your favorite?',
                     helperText: 'Select an option',
                     fullWidth: true,
-                    statePath: 'radio',
+                    statePath: 'favoriteNumber',
                     options: [...numbers],
                 },
             ],
