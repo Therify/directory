@@ -20,7 +20,8 @@ export type FormField<T extends FieldValues> =
     | SelectInput<T>
     | TelephoneInput<T>
     | DatePickerInput<T>
-    | ToggleInput<T>;
+    | ToggleInput<T>
+    | RadioSelectInput<T>;
 
 interface FormFieldBase<T extends FieldValues> {
     id: string;
@@ -60,6 +61,12 @@ export type TextAreaInput<T extends FieldValues> = {
 export type SelectInput<T extends FieldValues> = {
     type: 'select';
     placeholder?: string;
+    defaultValue?: PathValue<T, Path<T>>;
+    options: string[] | SelectOption[];
+} & FormFieldBase<T>;
+
+export type RadioSelectInput<T extends FieldValues> = {
+    type: 'radio';
     defaultValue?: PathValue<T, Path<T>>;
     options: string[] | SelectOption[];
 } & FormFieldBase<T>;

@@ -12,6 +12,7 @@ export default {
 } as Meta;
 
 const states = ['California', 'New York', 'Tennessee'] as const;
+const numbers = ['One', 'Two', 'Three', 'Four'] as const;
 const schema = z
     .object({
         firstName: z.string().nonempty({
@@ -46,6 +47,7 @@ const schema = z
         dateOfBirth: z.date().max(new Date(), {
             message: 'Date of birth must be in the past.',
         }),
+        radio: z.enum(numbers),
     })
     .refine((data) => data.password === data.confirmPassword, {
         message: 'Passwords do not match.',
@@ -150,6 +152,7 @@ export const PrefilledForm: StoryFn = () => {
                     confirmPassword: 'password',
                     description: 'I am a not a robot',
                     state: 'California',
+                    radio: 'One',
                 }}
                 validationMode={'onChange'}
                 isSubmitting={isLoading}
@@ -172,6 +175,7 @@ export const SubmittingForm: StoryFn = () => {
                     confirmPassword: 'password',
                     description: 'I am a not a robot',
                     state: 'California',
+                    radio: 'One',
                 }}
                 validationMode={'onChange'}
                 isSubmitting
@@ -268,6 +272,16 @@ const config: FormConfig<z.infer<typeof schema>> = {
                     fullWidth: true,
                     label: 'I agree to the terms and conditions',
                     statePath: 'iAgree',
+                },
+                {
+                    id: 'radio',
+                    required: false,
+                    type: 'radio',
+                    label: 'Which of these numbers is your favorite?',
+                    helperText: 'Select an option',
+                    fullWidth: true,
+                    statePath: 'radio',
+                    options: [...numbers],
                 },
             ],
         },
