@@ -66,7 +66,7 @@ export type SelectInput<T extends FieldValues> = {
 } & FormFieldBase<T>;
 
 export type RadioSelectInput<T extends FieldValues> = {
-    type: 'radio';
+    type: 'radio-select';
     defaultValue?: PathValue<T, Path<T>>;
     options: string[] | SelectOption[];
 } & FormFieldBase<T>;

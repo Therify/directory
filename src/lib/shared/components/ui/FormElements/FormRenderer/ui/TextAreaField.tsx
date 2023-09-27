@@ -2,8 +2,6 @@ import {
     UseFormReturn,
     FieldValues,
     Controller,
-    PathValue,
-    Path,
 } from 'react-hook-form';
 import { Textarea } from '@/lib/shared/components/ui';
 import { TextAreaInput } from '../types';

@@ -1,5 +1,5 @@
 import { UseFormReturn, FieldValues, Controller } from 'react-hook-form';
-import { RadioSelect, Select, SelectOption } from '@/lib/shared/components/ui';
+import { RadioSelect, SelectOption } from '@/lib/shared/components/ui';
 import { RadioSelectInput } from '../types';
 
 export function RadioSelectField<T extends FieldValues>({
@@ -26,7 +26,6 @@ export function RadioSelectField<T extends FieldValues>({
             defaultValue={field.defaultValue}
             render={({
                 field: { onChange, onBlur, value, name },
-                fieldState: { error },
             }) => (
                 <RadioSelect
                     required={field.required}

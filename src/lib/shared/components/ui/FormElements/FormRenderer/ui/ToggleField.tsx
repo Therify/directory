@@ -16,7 +16,6 @@ export function ToggleField<T extends FieldValues>({
             name={field.statePath}
             render={({
                 field: { onChange, onBlur, value, name },
-                fieldState: { error },
             }) => (
                 <Toggle
                     type={field.toggleType ?? 'checkbox'}

@@ -42,7 +42,7 @@ export function getFormInput<T extends FieldValues>({
             );
         case 'toggle':
             return <ToggleField {...{ field, isLoading, ...useFormProps }} />;
-        case 'radio':
+        case 'radio-select':
             return <RadioSelectField {...{ field, isLoading, ...useFormProps }} />;
         default:
             return null;

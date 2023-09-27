@@ -276,7 +276,7 @@ const config: FormConfig<z.infer<typeof schema>> = {
                 {
                     id: 'radio',
                     required: false,
-                    type: 'radio',
+                    type: 'radio-select',
                     label: 'Which of these numbers is your favorite?',
                     helperText: 'Select an option',
                     fullWidth: true,
