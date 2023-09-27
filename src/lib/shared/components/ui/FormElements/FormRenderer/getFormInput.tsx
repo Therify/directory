@@ -9,6 +9,7 @@ import {
     TelephoneField,
     DatePickerField,
     ToggleField,
+    RadioSelectField,
 } from './ui';
 
 interface GetFormInputProps<T extends FieldValues> {
@@ -41,6 +42,8 @@ export function getFormInput<T extends FieldValues>({
             );
         case 'toggle':
             return <ToggleField {...{ field, isLoading, ...useFormProps }} />;
+        case 'radio-select':
+            return <RadioSelectField {...{ field, isLoading, ...useFormProps }} />;
         default:
             return null;
     }
