@@ -24,6 +24,6 @@ export const useFeatureFlags = (user: TherifyUser.TherifyUser | undefined) => {
     }, [ldClient, user]);
 
     return {
-        flags: FeatureFlags.validate(flags),
+        flags: FeatureFlags.validateClientFlags(flags),
     };
 };
