@@ -22,7 +22,7 @@ export const CLIENT_FLAGS = {
     IS_V3_DIRECTORY_ENABLED: 'isV3DirectoryEnabled',
 } as const;
 
-export const schema = z.object({
+export const clientFlagsSchema = z.object({
     [CLIENT_FLAGS.DID_FLAGS_LOAD]: z.boolean(),
     [CLIENT_FLAGS.HAS_STRIPE_CONNECT_ACCESS]: z.boolean(),
     [CLIENT_FLAGS.USE_IFRAME_REIMBURSEMENT_REQUEST]: z.boolean(),
@@ -38,10 +38,10 @@ export const schema = z.object({
     [CLIENT_FLAGS.IS_V3_DIRECTORY_ENABLED]: z.boolean(),
 });
 
-export type Type = z.infer<typeof schema>;
-type FeatureFlags = Type;
+export type Type = z.infer<typeof clientFlagsSchema>;
+type ClientFeatureFlags = Type;
 
-export const defaultFlags: FeatureFlags = {
+export const defaultClientFlags: ClientFeatureFlags = {
     // `didFlagsLoad` should always be true from LaunchDarkly,
     // so if we see false in the client, it means we're fully falling back to default flags
     [CLIENT_FLAGS.DID_FLAGS_LOAD]: false,
@@ -54,35 +54,38 @@ export const defaultFlags: FeatureFlags = {
     [CLIENT_FLAGS.IS_V3_DIRECTORY_ENABLED]: false,
 };
 
-export const isValid = (flags: unknown): boolean => {
-    const { success } = schema.safeParse(flags);
+export const isValidClientFlags = (flags: unknown): boolean => {
+    const { success } = clientFlagsSchema.safeParse(flags);
     return success;
 };
 
 const isValidFlag = (key: string, value: unknown): boolean => {
-    if (key in defaultFlags === false) return false;
-    const { success } = schema.safeParse({ ...defaultFlags, [key]: value });
+    if (key in defaultClientFlags === false) return false;
+    const { success } = clientFlagsSchema.safeParse({
+        ...defaultClientFlags,
+        [key]: value,
+    });
     return success;
 };
 
-const buildSafeFeatureFlags = (flags: unknown): FeatureFlags => {
-    if (!flags || typeof flags !== 'object') return defaultFlags;
+const buildSafeClientFeatureFlags = (flags: unknown): ClientFeatureFlags => {
+    if (!flags || typeof flags !== 'object') return defaultClientFlags;
 
-    return Object.entries(flags).reduce<FeatureFlags>(
+    return Object.entries(flags).reduce<ClientFeatureFlags>(
         (safeFlags, [key, value]) => {
             if (isValidFlag(key, value)) {
                 return { ...safeFlags, [key]: value };
             }
             return safeFlags;
         },
-        defaultFlags
+        defaultClientFlags
     );
 };
 
-export const validate = (flags: unknown): FeatureFlags => {
+export const validate = (flags: unknown): ClientFeatureFlags => {
     try {
-        return schema.parse(flags);
+        return clientFlagsSchema.parse(flags);
     } catch (error) {
-        return buildSafeFeatureFlags(flags);
+        return buildSafeClientFeatureFlags(flags);
     }
 };
