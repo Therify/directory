@@ -10,6 +10,8 @@ interface IconButtonWithBadgeProps {
     'aria-label'?: string;
     maxValue?: number;
     showZero?: boolean;
+    hideBadgeCount?: boolean;
+    'data-testid'?: string;
 }
 
 export const IconButtonWithBadge = ({
@@ -18,10 +20,12 @@ export const IconButtonWithBadge = ({
     badgeCount,
     maxValue,
     showZero,
+    hideBadgeCount,
     ...props
 }: IconButtonWithBadgeProps) => {
     return (
         <IconButton
+            data-testid={props['data-testid']}
             aria-label={props['aria-label']}
             type={BUTTON_TYPE.TEXT}
             onClick={onClick}
@@ -29,7 +33,7 @@ export const IconButtonWithBadge = ({
             <Badge
                 showZero={showZero}
                 isSingleDigit={(badgeCount ?? 0) < 10}
-                badgeContent={badgeCount}
+                badgeContent={hideBadgeCount ? undefined : badgeCount}
                 color="error"
                 max={maxValue ?? 9}
             >
@@ -44,7 +48,7 @@ const Badge = styled(MuiBadge, {
 })<BadgeProps & { isSingleDigit: boolean }>(({ theme, isSingleDigit }) => ({
     color: theme.palette.text.primary,
     '& .MuiBadge-badge': {
-        left: 0,
+        // left: 0,
         width: isSingleDigit ? '20px' : undefined,
         minWidth: '20px',
         transform: 'scale(1) translate(-40%, -30%);',

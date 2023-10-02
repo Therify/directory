@@ -6,11 +6,17 @@ interface TopBarProps {
     logoHeight?: string;
     leftSlot?: React.ReactNode;
     rightSlot?: React.ReactNode;
+    className?: string;
 }
 
-export const TopBar = ({ leftSlot, rightSlot, logoHeight }: TopBarProps) => {
+export const TopBar = ({
+    leftSlot,
+    rightSlot,
+    logoHeight,
+    className,
+}: TopBarProps) => {
     return (
-        <TopBarContainer component="header">
+        <TopBarContainer component="header" className={className}>
             <SlotContainer>
                 <TherifyLogo style={{ height: logoHeight ?? '52px' }} />
                 {leftSlot}
