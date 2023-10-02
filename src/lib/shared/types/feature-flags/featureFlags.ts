@@ -59,7 +59,7 @@ export const isValidClientFlags = (flags: unknown): boolean => {
     return success;
 };
 
-const isValidFlag = (key: string, value: unknown): boolean => {
+const isValidClientFlag = (key: string, value: unknown): boolean => {
     if (key in defaultClientFlags === false) return false;
     const { success } = clientFlagsSchema.safeParse({
         ...defaultClientFlags,
@@ -73,7 +73,7 @@ const buildSafeClientFeatureFlags = (flags: unknown): ClientFeatureFlags => {
 
     return Object.entries(flags).reduce<ClientFeatureFlags>(
         (safeFlags, [key, value]) => {
-            if (isValidFlag(key, value)) {
+            if (isValidClientFlag(key, value)) {
                 return { ...safeFlags, [key]: value };
             }
             return safeFlags;
