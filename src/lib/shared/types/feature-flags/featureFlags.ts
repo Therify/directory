@@ -38,8 +38,8 @@ export const clientFlagsSchema = z.object({
     [CLIENT_FLAGS.IS_V3_DIRECTORY_ENABLED]: z.boolean(),
 });
 
-export type Type = z.infer<typeof clientFlagsSchema>;
-type ClientFeatureFlags = Type;
+export type ClientFlagsType = z.infer<typeof clientFlagsSchema>;
+type ClientFeatureFlags = ClientFlagsType;
 
 export const defaultClientFlags: ClientFeatureFlags = {
     // `didFlagsLoad` should always be true from LaunchDarkly,
