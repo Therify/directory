@@ -19,7 +19,7 @@ export const CLIENT_FLAGS = {
     BANNER_CONTENT: 'bannerContent',
     IS_DTC_REGISTRATION_OPEN: 'isDtcRegistrationOpen',
     IS_COACH_SCHEDULING_ENABLED: 'isCoachSchedulingEnabled',
-    IS_V3_DIRECTORY_ENABLED: 'is-v3-directory-enabled',
+    IS_V3_DIRECTORY_ENABLED: 'isV3DirectoryEnabled',
 } as const;
 
 export const schema = z.object({
