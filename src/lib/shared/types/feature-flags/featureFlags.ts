@@ -82,7 +82,7 @@ const buildSafeClientFeatureFlags = (flags: unknown): ClientFeatureFlags => {
     );
 };
 
-export const validate = (flags: unknown): ClientFeatureFlags => {
+export const validateClientFlags = (flags: unknown): ClientFeatureFlags => {
     try {
         return clientFlagsSchema.parse(flags);
     } catch (error) {
