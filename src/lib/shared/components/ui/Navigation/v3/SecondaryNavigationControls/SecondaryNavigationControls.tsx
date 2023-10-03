@@ -4,7 +4,7 @@ import {
     MailOutline as MailIcon,
 } from '@mui/icons-material';
 import { Box, CircularProgress } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { NavigationLink } from '@/lib/sitemap';
 import { TherifyUser } from '@/lib/shared/types/therify-user';
 import { IconButtonWithBadge } from '../../../IconButtonWithBadge';
@@ -46,7 +46,6 @@ export const SecondaryNavigationControls = ({
     user,
     isLoadingUser,
 }: SecondaryNavigationControlsProps) => {
-    const theme = useTheme();
     if (isLoadingUser) {
         return (
             <CircularProgress
@@ -61,7 +60,7 @@ export const SecondaryNavigationControls = ({
         return null;
     }
     return (
-        <Box display="flex">
+        <Container>
             {/* TODO: handle covered sessions count here */}
             {user && !isMobileWidth && (
                 <IconButtonWithBadge
@@ -99,7 +98,7 @@ export const SecondaryNavigationControls = ({
                     />
                 )}
             </Box>
-        </Box>
+        </Container>
     );
 };
 
@@ -140,3 +139,13 @@ const SecondaryMenu = ({
         />
     );
 };
+
+const Container = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    '& > *': {
+        marginLeft: theme.spacing(2),
+        '&:first-of-type': {
+            marginLeft: 0,
+        },
+    },
+}));
