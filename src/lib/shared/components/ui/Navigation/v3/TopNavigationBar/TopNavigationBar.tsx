@@ -23,7 +23,6 @@ export interface TopNavigationBarProps {
 }
 export const TEST_IDS = {
     DESKTOP_MENU: 'desktop-menu',
-    ACTIVE_TAB: 'active-tab',
 };
 
 export const TopNavigationBar = ({
