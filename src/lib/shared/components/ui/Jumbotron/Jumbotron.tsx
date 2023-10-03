@@ -4,6 +4,7 @@ import { Button } from '../Button';
 
 import { styled } from '@mui/material/styles';
 import { H1, Paragraph } from '../Typography/';
+import { CelebrationContainer } from "../Containers";
 
 export const TEST_IDS = {
     CONTAINER: 'container',
@@ -16,17 +17,19 @@ export interface JumbotronProps {
     callToAction?: {
         label: string;
         onClick?: () => void;
-    }
+    };
+    useCelebrationStyling?: boolean;
     sx?: SxProps<Theme>
 }
 
-export function Jumbotron({ sx, headerText, subHeaderText, backgroundImageUrl, callToAction }: JumbotronProps) {
+export function Jumbotron({ sx, headerText, subHeaderText, backgroundImageUrl, callToAction, useCelebrationStyling }: JumbotronProps) {
     return (
         <Container data-testid={TEST_IDS.CONTAINER} backgroundImageUrl={backgroundImageUrl} sx={sx}>
+            {useCelebrationStyling && <CelebrationBackground />}
             <ContentContainer>
                 <Header>{headerText}</Header>
                 {subHeaderText && <SubHeader>{subHeaderText}</SubHeader>}
-                {callToAction && <Button aria-label="button" onClick={callToAction.onClick}>{callToAction.label}</Button>}
+                {callToAction && <CallToActionButton aria-label="button" useCelebrationStyling={useCelebrationStyling} onClick={callToAction.onClick}>{callToAction.label}</CallToActionButton>}
             </ContentContainer>
         </Container>
     );
@@ -40,13 +43,24 @@ const SubHeader = styled(Paragraph)(({ theme }) => ({
     ...theme.typography.body1,
 }));
 
+const CallToActionButton = styled(Button, {
+    shouldForwardProp: (prop) =>
+        !['useCelebrationStyling'].includes(prop.toString()),
+})<{ useCelebrationStyling: boolean | undefined }>(({ theme, useCelebrationStyling }) => ({
+    ...(useCelebrationStyling && {
+        background: 'rgba(204, 204, 204, 0.0)',
+        border: `1px solid ${theme.palette.common.white}`,
+        borderRadius: theme.shape.borderRadius,
+    }),
+}));
+
 const ContentContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     padding: theme.spacing(5),
     position: 'relative',
-    zIndex: 2,
+    zIndex: 3,
 }));
 
 const Container = styled(Box, {
@@ -87,3 +101,12 @@ const Container = styled(Box, {
     },
 }));
 
+const CelebrationBackground = styled(CelebrationContainer)(({ theme }) => ({
+    zIndex: 2,
+    position: 'absolute',
+    content: '""',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+}));

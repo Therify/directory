@@ -31,6 +31,21 @@ const noButtonProps: JumbotronProps = {
     headerText: 'Top text',
     subHeaderText: 'Bottom text',
     backgroundImageUrl: 'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673453029/app.therify.co/login/10_dj9do6.jpg',
+    callToAction: {
+        label: 'Please click me',
+        onClick: () => alert('Thank you'),
+    },
+    useCelebrationStyling: true
+}
+
+const celebrationProps: JumbotronProps = {
+    headerText: 'Top text',
+    callToAction: {
+        label: 'Please click me',
+        onClick: () => alert('Thank you'),
+    },
+    useCelebrationStyling: true,
+    backgroundImageUrl: 'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673453029/app.therify.co/login/10_dj9do6.jpg',
 }
 
 export const Default: StoryFn<typeof JumbotronUi> = () => (
@@ -41,4 +56,6 @@ export const WithSubheader: StoryFn<typeof JumbotronUi> = () => (
 );
 export const NoButton: StoryFn<typeof JumbotronUi> = () => (
     <JumbotronUi {...noButtonProps} />
+);export const CelebrationBackgroun: StoryFn<typeof JumbotronUi> = () => (
+    <JumbotronUi {...celebrationProps} />
 );

@@ -17,7 +17,7 @@ describe('Jumbotron', () => {
         const header = getByText(/other text/i);
         expect(header).toBeVisible();
     });
-    it('should render call callback fn when button is clicked', () => {
+    it('should call callback fn when button is clicked', () => {
         const buttonCallback = jest.fn();
         const { getByText } = renderWithTheme(<Jumbotron headerText='Test text' callToAction={{ label: 'Some button', onClick: buttonCallback }} />);
         const button = getByText(/some button/i);
