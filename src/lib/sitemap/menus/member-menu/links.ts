@@ -10,7 +10,7 @@ export const HOME: NavigationLink = {
 export const CARE: NavigationLink = {
     icon: NAVIGATION_ICON.CARE,
     displayName: 'Care',
-    path: URL_PATHS.MEMBERS.CARE,
+    path: URL_PATHS.MEMBERS.CARE.ROOT,
 };
 
 export const FAVORITES: NavigationLink = {

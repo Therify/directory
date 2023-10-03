@@ -1,6 +1,7 @@
 import { ACCOUNT_PATHS } from './account';
 import { CONTENT_PATHS } from './content';
 import { ONBOARDING_PATHS } from './onboarding';
+import { CARE_PATHS } from './care';
 
 export const MEMBER_PATHS = {
     REGISTER: '/members/register',
@@ -8,8 +9,8 @@ export const MEMBER_PATHS = {
     HOME: './members/home',
     FAVORITES: '/members/favorites',
     DIRECTORY: '/members/directory',
-    CARE: '/members/care',
     CHAT: '/members/chat',
+    CARE: CARE_PATHS,
     CONTENT: CONTENT_PATHS,
     ACCOUNT: ACCOUNT_PATHS,
     ONBOARDING: ONBOARDING_PATHS,
