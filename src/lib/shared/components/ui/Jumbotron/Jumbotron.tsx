@@ -1,9 +1,9 @@
 import { Box } from "@mui/material";
 import { SxProps, Theme } from '@mui/material/styles';
-import { Button, Paragraph } from '@/lib/shared/components/ui';
+import { Button } from '@/lib/shared/components/ui';
 
 import { styled } from '@mui/material/styles';
-import { H1 } from '@/lib/shared/components/ui';
+import { H1, Paragraph } from '../Typography/';
 
 export const TEST_IDS = {
     CONTAINER: 'container',
