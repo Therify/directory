@@ -77,7 +77,7 @@ export const TopNavigationBar = ({
             }
             rightSlot={
                 <SecondaryNavigationControls
-                    onShowNotifications={onShowNotifications}
+                    onNotificationsClick={onShowNotifications}
                     notificationCount={notificationCount}
                     unreadMessagesCount={unreadMessagesCount}
                     isMobileWidth={isMobileWidth}

@@ -21,7 +21,11 @@ export const TopNavigationBarLoadingUser: StoryFn = () => {
 export const WithNotifications: StoryFn = () => {
     return (
         <TopNavigationBarUi
-            {...{ ...mockTopNavigationBarProps, notificationCount: 1 }}
+            {...{
+                ...mockTopNavigationBarProps,
+            }}
+            notificationCount={1}
+            unreadMessagesCount={1}
         />
     );
 };

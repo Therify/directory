@@ -15,11 +15,13 @@ export const FloatingMenu = ({
     currentPath,
     onNavigate,
     menuLauncher,
+    ...props
 }: {
     navigationMenu: NavigationLink[];
     currentPath: string;
     menuLauncher?: React.ReactNode;
     onNavigate: (path: string) => void;
+    'data-testid'?: string;
 }) => {
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 
@@ -29,7 +31,7 @@ export const FloatingMenu = ({
 
     return (
         <Box
-            data-testid={TEST_IDS.FLOATING_MENU}
+            data-testid={props['data-testid'] ?? TEST_IDS.FLOATING_MENU}
             sx={{
                 justifyContent: 'flex-end',
                 flexGrow: 1,

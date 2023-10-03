@@ -16,6 +16,10 @@ import {
     MonetizationOnRounded,
     FavoriteBorderRounded,
     PersonSearchOutlined,
+    SettingsOutlined,
+    InfoOutlined,
+    BookmarkBorderOutlined,
+    LogoutOutlined,
 } from '@mui/icons-material';
 import { TherifyIcon } from '../../Logo';
 
@@ -53,6 +57,14 @@ export const getNavigationIcon = (iconName?: NavigationIcon) => {
             return PersonSearchOutlined;
         case NAVIGATION_ICON.CHAT:
             return QuestionAnswerOutlined;
+        case NAVIGATION_ICON.SETTINGS:
+            return SettingsOutlined;
+        case NAVIGATION_ICON.INFO:
+            return InfoOutlined;
+        case NAVIGATION_ICON.SAVED_CONTENT:
+            return BookmarkBorderOutlined;
+        case NAVIGATION_ICON.LOGOUT:
+            return LogoutOutlined;
         case NAVIGATION_ICON.THERIFY_ICON:
             return TherifyLogoIcon;
 
