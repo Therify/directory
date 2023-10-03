@@ -1,17 +1,41 @@
 import { Meta, StoryFn, } from '@storybook/react';
-import { Jumbotron as JumbotronUi } from './Jumbotron';
+import { Jumbotron as JumbotronUi, JumbotronProps } from './Jumbotron';
 
 const meta: Meta<typeof JumbotronUi> = {
     title: 'UI/Jumbotron',
     component: JumbotronUi,
-    args: {
-        hasRecommendationsForReview: false,
-        hasStartedCare: false,
-    }
 };
 
 export default meta;
 
-export const Default: StoryFn<typeof JumbotronUi> = (args) => (
-    <JumbotronUi {...args} />
+const defaultProps: JumbotronProps = {
+    headerText: 'Build your Care Team...',
+    backgroundImageUrl: 'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673453029/app.therify.co/login/8_jvntyl.jpg',
+    callToAction: {
+        label: 'Get Started',
+        onClick: () => alert('Clicked!'),
+    }
+}
+
+const subheaderProps: JumbotronProps = {
+    headerText: 'Top text',
+    subHeaderText: 'Bottom text',
+    backgroundImageUrl: 'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673453029/app.therify.co/login/10_dj9do6.jpg',
+    callToAction: {
+        label: 'Please click me',
+        onClick: () => alert('Thank you'),
+    }
+}
+
+const noButtonProps: JumbotronProps = {
+    headerText: 'Top text',
+    subHeaderText: 'Bottom text',
+    backgroundImageUrl: 'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673453029/app.therify.co/login/10_dj9do6.jpg',
+}
+
+export const Default: StoryFn<typeof JumbotronUi> = () => (
+    <JumbotronUi {...defaultProps} />
+);
+export const WithSubheader: StoryFn<typeof JumbotronUi> = () => (
+    <JumbotronUi {...subheaderProps} />
 );
