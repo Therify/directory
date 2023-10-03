@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { SxProps, Theme } from '@mui/material/styles';
-import { Button } from '@/lib/shared/components/ui';
+import { Button } from '../Button';
 
 import { styled } from '@mui/material/styles';
 import { H1, Paragraph } from '../Typography/';
