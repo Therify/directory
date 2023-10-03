@@ -1,4 +1,5 @@
-import { Box, BoxProps } from "@mui/material";
+import { Box } from "@mui/material";
+import { SxProps, Theme } from '@mui/material/styles';
 import { Button, Paragraph } from '@/lib/shared/components/ui';
 
 import { styled } from '@mui/material/styles';
@@ -8,7 +9,7 @@ export const TEST_IDS = {
     CONTAINER: 'container',
 } as const;
 
-export interface JumbotronProps extends BoxProps {
+export interface JumbotronProps {
     headerText: string;
     subHeaderText?: string;
     backgroundImageUrl?: string;
@@ -16,15 +17,8 @@ export interface JumbotronProps extends BoxProps {
         label: string;
         onClick?: () => void;
     }
+    sx?: SxProps<Theme>
 }
-
-const Header = styled(H1)(({ theme }) => ({
-    ...theme.typography.h4,
-}));
-
-const SubHeader = styled(Paragraph)(({ theme }) => ({
-    ...theme.typography.body1,
-}));
 
 export function Jumbotron({ sx, headerText, subHeaderText, backgroundImageUrl, callToAction }: JumbotronProps) {
     return (
@@ -37,6 +31,14 @@ export function Jumbotron({ sx, headerText, subHeaderText, backgroundImageUrl, c
         </Container>
     );
 }
+
+const Header = styled(H1)(({ theme }) => ({
+    ...theme.typography.h4,
+}));
+
+const SubHeader = styled(Paragraph)(({ theme }) => ({
+    ...theme.typography.body1,
+}));
 
 const ContentContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
