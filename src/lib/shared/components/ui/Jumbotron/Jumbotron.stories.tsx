@@ -39,3 +39,6 @@ export const Default: StoryFn<typeof JumbotronUi> = () => (
 export const WithSubheader: StoryFn<typeof JumbotronUi> = () => (
     <JumbotronUi {...subheaderProps} />
 );
+export const NoButton: StoryFn<typeof JumbotronUi> = () => (
+    <JumbotronUi {...noButtonProps} />
+);

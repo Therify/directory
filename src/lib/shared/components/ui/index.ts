@@ -30,6 +30,7 @@ export { FloatingList } from './FloatingList';
 export * from './FormElements';
 export * from './Grids';
 export { Iframe } from './Iframe';
+export { Jumbotron } from './Jumbotron';
 export * from './Layout';
 export { TherifyIcon, TherifyLogo } from './Logo';
 export { List, TEST_IDS as LIST_TEST_IDS } from './List';

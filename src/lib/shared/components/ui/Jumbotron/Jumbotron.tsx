@@ -25,7 +25,7 @@ export function Jumbotron({ sx, headerText, subHeaderText, backgroundImageUrl, c
         <Container data-testid={TEST_IDS.CONTAINER} backgroundImageUrl={backgroundImageUrl} sx={sx}>
             <ContentContainer>
                 <Header>{headerText}</Header>
-                {subHeaderText ?? <SubHeader>{subHeaderText}</SubHeader>}
+                {subHeaderText && <SubHeader>{subHeaderText}</SubHeader>}
                 {callToAction && <Button aria-label="button" onClick={callToAction.onClick}>{callToAction.label}</Button>}
             </ContentContainer>
         </Container>
@@ -43,6 +43,7 @@ const SubHeader = styled(Paragraph)(({ theme }) => ({
 const ContentContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
+    alignItems: 'center',
     padding: theme.spacing(5),
     position: 'relative',
     zIndex: 2,
