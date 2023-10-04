@@ -19,7 +19,7 @@ import {
 } from '@/lib/shared/components/ui';
 
 import { NotificationDrawer } from '@/lib/modules/notifications/components/ui';
-import { useInAppNotificationDrawer } from '@/lib/modules/notifications/components/hooks';
+import { useInAppNotifications } from '@/lib/modules/notifications/components/hooks';
 
 export interface SideNavigationPageProps {
     primaryMenu: NavigationLink[];
@@ -53,13 +53,13 @@ export const SideNavigationPage = ({
     const theme = useTheme();
     const { flags } = useFeatureFlags(user);
     const {
-        drawer: notificationDrawer,
+        display: notificationDrawer,
         notifications,
         unreadCount: unreadNotificationsCount,
         clearActionlessNotifications,
         handleAction,
         getNotificationsMapForMenu,
-    } = useInAppNotificationDrawer();
+    } = useInAppNotifications();
     const inAppNotificationsMap = getNotificationsMapForMenu(
         hasAccess ? primaryMenu : []
     );

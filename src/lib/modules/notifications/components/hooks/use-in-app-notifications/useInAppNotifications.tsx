@@ -5,7 +5,7 @@ import { getNotificationCountForPath } from './methods';
 import { handleActionFactory } from './methods/handle-action/handleAction';
 import { NavigationLink } from '@/lib/sitemap';
 
-export const useInAppNotificationDrawer = () => {
+export const useInAppNotifications = () => {
     const {
         notifications,
         clearNotifications,
@@ -13,22 +13,23 @@ export const useInAppNotificationDrawer = () => {
         clearActionlessNotifications,
     } = useContext(InAppNotificationsContext.Context);
     const router = useRouter();
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [isDisplayingNotifications, setIsDisplayingNotifications] =
+        useState(false);
 
     return {
         notifications,
         clearNotifications,
         clearActionlessNotifications,
-        drawer: {
-            isOpen: isDrawerOpen,
-            close: () => setIsDrawerOpen(false),
-            open: () => setIsDrawerOpen(true),
+        display: {
+            isOpen: isDisplayingNotifications,
+            close: () => setIsDisplayingNotifications(false),
+            open: () => setIsDisplayingNotifications(true),
         },
         unreadCount: notifications.filter((n) => !n.isViewed).length,
         handleAction: handleActionFactory({
             navigateTo: router.push,
             callback: ({ id }) => {
-                setIsDrawerOpen(false);
+                setIsDisplayingNotifications(false);
                 markNotificationAsViewed(id);
             },
         }),
