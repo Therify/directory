@@ -6,11 +6,17 @@ interface TopBarProps {
     logoHeight?: string;
     leftSlot?: React.ReactNode;
     rightSlot?: React.ReactNode;
+    v3?: boolean;
 }
 
-export const TopBar = ({ leftSlot, rightSlot, logoHeight }: TopBarProps) => {
+export const TopBar = ({
+    leftSlot,
+    rightSlot,
+    logoHeight,
+    v3,
+}: TopBarProps) => {
     return (
-        <TopBarContainer component="header">
+        <TopBarContainer component="header" v3={v3}>
             <SlotContainer>
                 <TherifyLogo style={{ height: logoHeight ?? '52px' }} />
                 {leftSlot}
@@ -28,12 +34,20 @@ const SlotContainer = styled(Box)(() => ({
     },
 }));
 
-const TopBarContainer = styled(Box)(({ theme }) => ({
+const TopBarContainer = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'v3',
+})<{ v3?: boolean }>(({ theme, v3 }) => ({
     width: '100%',
     height: '100px',
-    borderBottom: `1px solid ${theme.palette.divider}`,
     padding: theme.spacing(6),
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
+    ...(v3
+        ? {
+              boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
+          }
+        : {
+              borderBottom: `1px solid ${theme.palette.divider}`,
+          }),
 }));

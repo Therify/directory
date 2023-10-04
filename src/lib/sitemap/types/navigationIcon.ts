@@ -17,6 +17,10 @@ export const NAVIGATION_ICON = {
     THERAPY: 'therapy',
     THERIFY_ICON: 'therify-icon',
     CARE: 'therapy',
+    SETTINGS: 'settings',
+    INFO: 'care-details',
+    SAVED_CONTENT: 'saved-content',
+    LOGOUT: 'logout',
 } as const;
 
 export type NavigationIcon =
