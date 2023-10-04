@@ -10,8 +10,10 @@ export default meta;
 
 const defaultProps: JumbotronProps = {
     headerText: 'Build your Care Team...',
-    backgroundImageUrl:
-        'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673453029/app.therify.co/login/8_jvntyl.jpg',
+    backgroundProps: {
+        backgroundImageUrl:
+            'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673453029/app.therify.co/login/8_jvntyl.jpg',
+    },
     callToAction: {
         label: 'Get Started',
         onClick: () => alert('Clicked!'),
@@ -21,8 +23,10 @@ const defaultProps: JumbotronProps = {
 const subheaderProps: JumbotronProps = {
     headerText: 'Top text',
     subHeaderText: 'Bottom text',
-    backgroundImageUrl:
-        'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673453029/app.therify.co/login/10_dj9do6.jpg',
+    backgroundProps: {
+        backgroundImageUrl:
+            'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673453029/app.therify.co/login/10_dj9do6.jpg',
+    },
     callToAction: {
         label: 'Please click me',
         onClick: () => alert('Thank you'),
@@ -32,8 +36,10 @@ const subheaderProps: JumbotronProps = {
 const noButtonProps: JumbotronProps = {
     headerText: 'Top text',
     subHeaderText: 'Bottom text',
-    backgroundImageUrl:
-        'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673453029/app.therify.co/login/10_dj9do6.jpg',
+    backgroundProps: {
+        backgroundImageUrl:
+            'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673453029/app.therify.co/login/10_dj9do6.jpg',
+    },
     callToAction: {
         label: 'Please click me',
         onClick: () => alert('Thank you'),
@@ -42,13 +48,13 @@ const noButtonProps: JumbotronProps = {
 
 const celebrationProps: JumbotronProps = {
     headerText: 'Top text',
+    backgroundProps: {
+        useCelebrationStyling: true,
+    },
     callToAction: {
         label: 'Please click me',
         onClick: () => alert('Thank you'),
     },
-    useCelebrationStyling: true,
-    backgroundImageUrl:
-        'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673453029/app.therify.co/login/10_dj9do6.jpg',
 };
 
 export const Default: StoryFn<typeof JumbotronUi> = () => (

@@ -8,17 +8,26 @@ import { CelebrationContainer } from '../Containers';
 
 export const TEST_IDS = {
     CONTAINER: 'container',
+    CELEBRATION: 'celebration',
 } as const;
+
+interface BackgroundImage {
+    backgroundImageUrl: string;
+    useCelebrationStyling?: false;
+}
+interface CelebrationStyling {
+    backgroundImageUrl?: never;
+    useCelebrationStyling: true;
+}
 
 export interface JumbotronProps {
     headerText: string;
     subHeaderText?: string;
-    backgroundImageUrl?: string;
+    backgroundProps: BackgroundImage | CelebrationStyling;
     callToAction?: {
         label: string;
         onClick?: () => void;
     };
-    useCelebrationStyling?: boolean;
     sx?: SxProps<Theme>;
 }
 
@@ -26,24 +35,25 @@ export function Jumbotron({
     sx,
     headerText,
     subHeaderText,
-    backgroundImageUrl,
+    backgroundProps,
     callToAction,
-    useCelebrationStyling,
 }: JumbotronProps) {
     return (
         <Container
             data-testid={TEST_IDS.CONTAINER}
-            backgroundImageUrl={backgroundImageUrl}
+            backgroundImageUrl={backgroundProps.backgroundImageUrl}
             sx={sx}
         >
-            {useCelebrationStyling && <CelebrationBackground />}
+            {backgroundProps.useCelebrationStyling && (
+                <CelebrationBackground data-testid={TEST_IDS.CELEBRATION} />
+            )}
             <ContentContainer>
                 <Header>{headerText}</Header>
                 {subHeaderText && <SubHeader>{subHeaderText}</SubHeader>}
                 {callToAction && (
                     <CallToActionButton
                         aria-label="button"
-                        useCelebrationStyling={useCelebrationStyling}
+                        useCelebrationStyling={backgroundProps.useCelebrationStyling}
                         onClick={callToAction.onClick}
                     >
                         {callToAction.label}
@@ -124,7 +134,7 @@ const Container = styled(Box, {
     })
 );
 
-const CelebrationBackground = styled(CelebrationContainer)(({ theme }) => ({
+const CelebrationBackground = styled(CelebrationContainer)(() => ({
     zIndex: 2,
     position: 'absolute',
     content: '""',
