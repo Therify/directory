@@ -16,7 +16,7 @@ import {
     TopNavigationBar,
 } from '@/lib/shared/components/ui';
 import { NotificationDrawer } from '../../../../../modules/notifications/components/ui';
-import { useInAppNotificationDrawer } from '../../../../../modules/notifications/components/hooks';
+import { useInAppNotifications } from '../../../../../modules/notifications/components/hooks';
 
 export interface TopNavigationPageProps {
     primaryMenu: NavigationLink[];
@@ -48,13 +48,13 @@ export const TopNavigationPage = ({
     const theme = useTheme();
     const { flags } = useFeatureFlags(user ?? undefined);
     const {
-        drawer: notificationDrawer,
+        display: notificationDrawer,
         notifications,
         unreadCount,
         clearActionlessNotifications,
         handleAction,
         getNotificationsMapForMenu,
-    } = useInAppNotificationDrawer();
+    } = useInAppNotifications();
 
     const notificationsMap = {
         ...getNotificationsMapForMenu(hasAccess ? mobileMenu : secondaryMenu),

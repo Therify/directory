@@ -1,13 +1,13 @@
 import { renderWithTheme } from '@/lib/shared/components/fixtures/renderWithTheme';
 import { Mocks } from '@/lib/shared/types';
-import { useInAppNotificationDrawer } from '@/lib/modules/notifications/components/hooks';
+import { useInAppNotifications } from '@/lib/modules/notifications/components/hooks';
 import { MemberExpiredPlanPage } from './MemberExpiredPlanPage';
 import { format } from 'date-fns';
 import { ReactNode } from 'react';
 
 jest.mock('@/lib/modules/notifications/components/hooks', () => {
     return {
-        useInAppNotificationDrawer: jest.fn(),
+        useInAppNotifications: jest.fn(),
     };
 });
 
@@ -30,11 +30,11 @@ jest.mock('@/lib/modules/messaging/hooks', () => {
 
 describe('MemberExpiredPlanPage', () => {
     beforeAll(() => {
-        (useInAppNotificationDrawer as jest.Mock).mockReturnValue({
+        (useInAppNotifications as jest.Mock).mockReturnValue({
             notifications: [],
             clearNotifications: jest.fn(),
             clearActionlessNotifications: jest.fn(),
-            drawer: {
+            display: {
                 isOpen: false,
                 close: jest.fn(),
                 open: jest.fn(),

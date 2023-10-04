@@ -10,6 +10,8 @@ interface IconButtonWithBadgeProps {
     'aria-label'?: string;
     maxValue?: number;
     showZero?: boolean;
+    'data-testid'?: string;
+    v3?: boolean;
 }
 
 export const IconButtonWithBadge = ({
@@ -18,20 +20,32 @@ export const IconButtonWithBadge = ({
     badgeCount,
     maxValue,
     showZero,
+    v3,
     ...props
 }: IconButtonWithBadgeProps) => {
     return (
         <IconButton
+            data-testid={props['data-testid']}
             aria-label={props['aria-label']}
             type={BUTTON_TYPE.TEXT}
             onClick={onClick}
         >
             <Badge
+                v3={!!v3}
                 showZero={showZero}
                 isSingleDigit={(badgeCount ?? 0) < 10}
                 badgeContent={badgeCount}
+                variant={v3 ? 'dot' : undefined}
                 color="error"
                 max={maxValue ?? 9}
+                anchorOrigin={
+                    v3
+                        ? {
+                              vertical: 'top',
+                              horizontal: 'right',
+                          }
+                        : undefined
+                }
             >
                 {icon}
             </Badge>
@@ -40,14 +54,28 @@ export const IconButtonWithBadge = ({
 };
 
 const Badge = styled(MuiBadge, {
-    shouldForwardProp: (prop) => prop !== 'isSingleDigit',
-})<BadgeProps & { isSingleDigit: boolean }>(({ theme, isSingleDigit }) => ({
-    color: theme.palette.text.primary,
-    '& .MuiBadge-badge': {
-        left: 0,
-        width: isSingleDigit ? '20px' : undefined,
-        minWidth: '20px',
-        transform: 'scale(1) translate(-40%, -30%);',
-        transformOrigin: '',
-    },
-}));
+    shouldForwardProp: (prop) =>
+        !['v3', 'isSingleDigit'].includes(prop as string),
+})<BadgeProps & { isSingleDigit: boolean; v3: boolean }>(
+    ({ theme, isSingleDigit, v3 }) => ({
+        color: theme.palette.text.primary,
+        '& .MuiBadge-badge': {
+            transformOrigin: '',
+            ...(v3
+                ? {
+                      border: `2px solid ${theme.palette.background.paper}`,
+                      width: '12px',
+                      height: '12px',
+                      borderRadius: '50%',
+                      right: '3px',
+                      top: '4px',
+                  }
+                : {
+                      transform: 'scale(1) translate(-40%, -30%);',
+                      left: 0,
+                      minWidth: '20px',
+                      width: isSingleDigit ? '20px' : undefined,
+                  }),
+        },
+    })
+);
