@@ -23,7 +23,6 @@ interface SecondaryNavigationControlsProps {
     onNavigate: (path: string) => void;
     user?: TherifyUser.TherifyUser;
     isLoadingUser: boolean;
-    withTherifyWebsiteLink?: boolean;
 }
 export const TEST_IDS = {
     MOBILE_MENU_ICON: 'mobile-menu-icon',
@@ -62,7 +61,7 @@ export const SecondaryNavigationControls = ({
     return (
         <Container>
             {/* TODO: handle covered sessions count here */}
-            {user && !isMobileWidth && (
+            {!isMobileWidth && (
                 <IconButtonWithBadge
                     v3
                     data-testid={TEST_IDS.MESSAGES_ICON}
@@ -72,16 +71,15 @@ export const SecondaryNavigationControls = ({
                     icon={<MailIcon />}
                 />
             )}
-            {user && (
-                <IconButtonWithBadge
-                    v3
-                    data-testid={TEST_IDS.NOTIFICATIONS_ICON}
-                    onClick={onNotificationsClick}
-                    aria-label={`${notificationCount ?? 0} new notifications`}
-                    badgeCount={notificationCount}
-                    icon={<NotificationsIcon />}
-                />
-            )}
+
+            <IconButtonWithBadge
+                v3
+                data-testid={TEST_IDS.NOTIFICATIONS_ICON}
+                onClick={onNotificationsClick}
+                aria-label={`${notificationCount ?? 0} new notifications`}
+                badgeCount={notificationCount}
+                icon={<NotificationsIcon />}
+            />
 
             <Box paddingLeft={2}>
                 {isMobileWidth ? (

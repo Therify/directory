@@ -11,9 +11,7 @@ export default {
 export const TopNavigationBar: StoryFn = () => {
     return <TopNavigationBarUi {...mockTopNavigationBarProps} />;
 };
-export const TopNavigationBarLoggedIn: StoryFn = () => {
-    return <TopNavigationBarUi {...mockTopNavigationBarProps} />;
-};
+
 export const TopNavigationBarLoadingUser: StoryFn = () => {
     return <TopNavigationBarUi {...mockTopNavigationBarProps} isLoadingUser />;
 };

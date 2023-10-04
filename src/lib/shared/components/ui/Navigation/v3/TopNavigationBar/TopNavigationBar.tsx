@@ -1,9 +1,9 @@
 import { TherifyUser } from '@/lib/shared/types/therify-user';
 import { NavigationLink } from '@/lib/sitemap';
-import { Avatar, useMediaQuery } from '@mui/material';
+import { useMediaQuery } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import Link from 'next/link';
-import { TopBar as BaseTopBar } from '../../../TopBar';
+import { TopBar } from '../../../TopBar';
 import { SecondaryNavigationControls } from '../SecondaryNavigationControls';
 import { isActivePath } from '../../utils';
 
@@ -11,15 +11,13 @@ export interface TopNavigationBarProps {
     primaryMenu: NavigationLink[];
     secondaryMenu: NavigationLink[];
     currentPath: string;
-    onShowNotifications?: () => void;
-    notificationCount?: number;
+    onShowNotifications: () => void;
+    notificationCount: number;
     toggleMobileMenu: () => void;
     onNavigate: (path: string) => void;
     user?: TherifyUser.TherifyUser;
     isLoadingUser: boolean;
-    withTherifyWebsiteLink?: boolean;
-    notificationsMap?: Record<string, number>;
-    unreadMessagesCount?: number;
+    unreadMessagesCount: number;
 }
 export const TEST_IDS = {
     DESKTOP_MENU: 'desktop-menu',
@@ -36,14 +34,13 @@ export const TopNavigationBar = ({
     onNavigate,
     user,
     isLoadingUser,
-    notificationsMap,
-    withTherifyWebsiteLink,
 }: TopNavigationBarProps) => {
     const theme = useTheme();
     const isMobileWidth = useMediaQuery(theme.breakpoints.down('md'));
 
     return (
-        <Topbar
+        <TopBar
+            v3
             leftSlot={
                 <DesktopLinkContainer data-testid={TEST_IDS.DESKTOP_MENU}>
                     {primaryMenu.map((link) => {
@@ -56,18 +53,13 @@ export const TopNavigationBar = ({
                                 <Link
                                     href={link.path}
                                     target={
-                                        link.path.startsWith('http')
+                                        link.path.startsWith('http') ||
+                                        link.isExternal
                                             ? '_blank'
                                             : undefined
                                     }
                                 >
                                     {link.displayName}
-                                    {(notificationsMap?.[link.path] ?? 0) >
-                                        0 && (
-                                        <NotificationCount>
-                                            {notificationsMap?.[link.path]}
-                                        </NotificationCount>
-                                    )}
                                 </Link>
                             </LinkItem>
                         );
@@ -86,17 +78,11 @@ export const TopNavigationBar = ({
                     onNavigate={onNavigate}
                     user={user}
                     isLoadingUser={isLoadingUser}
-                    withTherifyWebsiteLink={withTherifyWebsiteLink}
                 />
             }
         />
     );
 };
-
-const Topbar = styled(BaseTopBar)(({ theme }) => ({
-    borderBottom: '0px !important',
-    boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
-}));
 
 const DesktopLinkContainer = styled('ul')(({ theme }) => ({
     display: 'none',
@@ -126,13 +112,4 @@ const LinkItem = styled('li', {
             color: theme.palette.grey[200],
         },
     },
-}));
-
-const NotificationCount = styled(Avatar)(({ theme }) => ({
-    backgroundColor: theme.palette.error.main,
-    color: theme.palette.error.contrastText,
-    fontSize: '.75rem',
-    height: theme.spacing(6),
-    width: theme.spacing(6),
-    marginLeft: theme.spacing(2),
 }));
