@@ -53,7 +53,9 @@ export function Jumbotron({
                 {callToAction && (
                     <CallToActionButton
                         aria-label="button"
-                        useCelebrationStyling={backgroundProps.useCelebrationStyling}
+                        useCelebrationStyling={
+                            backgroundProps.useCelebrationStyling
+                        }
                         onClick={callToAction.onClick}
                     >
                         {callToAction.label}
@@ -78,9 +80,13 @@ const CallToActionButton = styled(Button, {
 })<{ useCelebrationStyling: boolean | undefined }>(
     ({ theme, useCelebrationStyling }) => ({
         ...(useCelebrationStyling && {
-            background: 'rgba(204, 204, 204, 0.0)',
+            background: 'transparent',
             border: `1px solid ${theme.palette.common.white}`,
             borderRadius: theme.shape.borderRadius,
+            ':hover': {
+                backgroundColor: theme.palette.common.white,
+                color: theme.palette.common.black,
+            },
         }),
     })
 );
