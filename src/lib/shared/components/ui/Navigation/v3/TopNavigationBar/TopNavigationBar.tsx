@@ -1,5 +1,5 @@
 import { TherifyUser } from '@/lib/shared/types/therify-user';
-import { NavigationLink } from '@/lib/sitemap';
+import { NavigationLink, URL_PATHS } from '@/lib/sitemap';
 import { useMediaQuery } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import Link from 'next/link';
@@ -69,6 +69,7 @@ export const TopNavigationBar = ({
             rightSlot={
                 <SecondaryNavigationControls
                     onNotificationsClick={onShowNotifications}
+                    onMessagesClick={() => onNavigate(URL_PATHS.MEMBERS.CHAT)}
                     notificationCount={notificationCount}
                     unreadMessagesCount={unreadMessagesCount}
                     isMobileWidth={isMobileWidth}

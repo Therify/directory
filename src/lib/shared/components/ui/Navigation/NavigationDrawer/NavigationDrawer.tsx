@@ -1,6 +1,6 @@
 import { CloseRounded as CloseIcon } from '@mui/icons-material';
 import { Box, Drawer as MuiDrawer } from '@mui/material';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import {
     H5,
     Avatar,
@@ -25,6 +25,9 @@ interface NavigationDrawerProps {
     onNavigate: (path: string) => void;
     children?: React.ReactNode;
 }
+export const TEST_IDS = {
+    DRAWER: 'drawer',
+} as const;
 
 export const NavigationDrawer = ({
     user,
@@ -37,7 +40,12 @@ export const NavigationDrawer = ({
     children,
 }: NavigationDrawerProps) => {
     return (
-        <Drawer anchor="right" open={isOpen} onClose={onClose}>
+        <Drawer
+            data-testid={TEST_IDS.DRAWER}
+            anchor="right"
+            open={isOpen}
+            onClose={onClose}
+        >
             <MenuHeader>
                 <CloseButton type={BUTTON_TYPE.TEXT} onClick={onClose}>
                     <CloseIcon fontSize="large" />

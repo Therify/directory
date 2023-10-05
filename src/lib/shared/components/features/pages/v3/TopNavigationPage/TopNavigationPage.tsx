@@ -12,10 +12,10 @@ import {
     BUTTON_TYPE,
     TopNavigationLayout,
     NavigationDrawer,
-    TopNavigationBar,
 } from '@/lib/shared/components/ui';
 import { NotificationDrawer } from '@/lib/modules/notifications/components/ui';
 import { useInAppNotifications } from '@/lib/modules/notifications/components/hooks';
+import { TopNavigationBar } from '@/lib/shared/components/ui/Navigation/v3/TopNavigationBar';
 
 export interface TopNavigationPageProps {
     primaryMenu: NavigationLink[];
@@ -89,7 +89,6 @@ export const TopNavigationPage = ({
                     toggleMobileMenu={() =>
                         setIsMobileMenuOpen(!isMobileMenuOpen)
                     }
-                    notificationsMap={notificationsMap}
                     user={user ?? undefined}
                     isLoadingUser={isLoadingUser}
                 />

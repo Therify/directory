@@ -27,6 +27,10 @@ interface NotificationDrawerProps {
     onClearNotifications?: () => void;
 }
 
+export const TEST_IDS = {
+    CLOSE_BUTTON: 'close-button',
+} as const;
+
 export const NotificationDrawer = ({
     isOpen,
     notifications,
@@ -51,6 +55,7 @@ export const NotificationDrawer = ({
             >
                 <H6>Notifications</H6>
                 <IconButton
+                    data-testid={TEST_IDS.CLOSE_BUTTON}
                     color="info"
                     type={BUTTON_TYPE.TEXT}
                     onClick={onClose}
