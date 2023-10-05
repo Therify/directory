@@ -10,14 +10,14 @@ export const TEST_IDS = {
 } as const;
 
 export interface CareJumbotronProps {
-    hasCompletedSelfAssessment: boolean;
+    isAwaitingRecommendations: boolean;
     hasRecommendationsForReview: boolean;
     hasCareTeam: boolean;
     careNavigatorName?: string;
 }
 
 export function CareJumbotron({
-    hasCompletedSelfAssessment,
+    isAwaitingRecommendations,
     hasRecommendationsForReview,
     hasCareTeam,
     careNavigatorName,
@@ -43,11 +43,11 @@ export function CareJumbotron({
             onClick: () => router.push(URL_PATHS.MEMBERS.CARE.ROOT),
         },
         backgroundProps: {
-            useCelebrationStyling: true,
+            withCelebrationStyling: true,
         },
     };
 
-    const hasPendingRecommendationsProps: JumbotronProps = {
+    const isAwaitingRecommendationsProps: JumbotronProps = {
         headerText: `${
             careNavigatorName ? `${careNavigatorName} is` : "We're"
         } looking for providers to recommend!`,
@@ -74,7 +74,7 @@ export function CareJumbotron({
     if (hasCareTeam) return <Jumbotron {...hasCareTeamProps} />;
     if (hasRecommendationsForReview)
         return <Jumbotron {...hasRecommendationsForReviewProps} />;
-    if (hasCompletedSelfAssessment)
-        return <Jumbotron {...hasPendingRecommendationsProps} />;
+    if (isAwaitingRecommendations)
+        return <Jumbotron {...isAwaitingRecommendationsProps} />;
     return <Jumbotron {...defaultProps} />;
 }

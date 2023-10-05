@@ -49,7 +49,7 @@ const noButtonProps: JumbotronProps = {
 const celebrationProps: JumbotronProps = {
     headerText: 'Top text',
     backgroundProps: {
-        useCelebrationStyling: true,
+        withCelebrationStyling: true,
     },
     callToAction: {
         label: 'Please click me',

@@ -7,7 +7,7 @@ const meta: Meta<typeof CareJumbotronUi> = {
     args: {
         hasCareTeam: false,
         hasRecommendationsForReview: false,
-        hasCompletedSelfAssessment: false,
+        isAwaitingRecommendations: false,
     }
 };
 

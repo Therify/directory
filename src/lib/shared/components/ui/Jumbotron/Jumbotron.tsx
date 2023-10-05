@@ -1,8 +1,7 @@
 import { Box } from '@mui/material';
-import { SxProps, Theme } from '@mui/material/styles';
+import { SxProps, Theme, styled } from '@mui/material/styles';
 import { Button } from '../Button';
 
-import { styled } from '@mui/material/styles';
 import { H1, Paragraph } from '../Typography/';
 import { CelebrationContainer } from '../Containers';
 
@@ -13,11 +12,11 @@ export const TEST_IDS = {
 
 interface BackgroundImage {
     backgroundImageUrl: string;
-    useCelebrationStyling?: false;
+    withCelebrationStyling?: never;
 }
 interface CelebrationStyling {
     backgroundImageUrl?: never;
-    useCelebrationStyling: true;
+    withCelebrationStyling: true;
 }
 
 export interface JumbotronProps {
@@ -44,7 +43,7 @@ export function Jumbotron({
             backgroundImageUrl={backgroundProps.backgroundImageUrl}
             sx={sx}
         >
-            {backgroundProps.useCelebrationStyling && (
+            {backgroundProps.withCelebrationStyling && (
                 <CelebrationBackground data-testid={TEST_IDS.CELEBRATION} />
             )}
             <ContentContainer>
@@ -54,7 +53,7 @@ export function Jumbotron({
                     <CallToActionButton
                         aria-label="button"
                         useCelebrationStyling={
-                            backgroundProps.useCelebrationStyling
+                            backgroundProps.withCelebrationStyling
                         }
                         onClick={callToAction.onClick}
                     >
