@@ -11,7 +11,6 @@ describe('Jumbotron', () => {
         );
         const container = getByTestId(TEST_IDS.CONTAINER);
         expect(container).toBeVisible();
-        console.log('hi');
     });
     it('should render header text', () => {
         const { getByText } = renderWithTheme(
@@ -20,7 +19,7 @@ describe('Jumbotron', () => {
                 backgroundProps={{ backgroundImageUrl: 'hi' }}
             />
         );
-        const header = getByText(/test text/i);
+        const header = getByText('Test text');
         expect(header).toBeVisible();
     });
     it('should render subheader text', () => {
@@ -38,7 +37,7 @@ describe('Jumbotron', () => {
         const { getByTestId } = renderWithTheme(
             <Jumbotron
                 headerText="Test text"
-                backgroundProps={{ useCelebrationStyling: true }}
+                backgroundProps={{ withCelebrationStyling: true }}
             />
         );
         const celebrationBackground = getByTestId(TEST_IDS.CELEBRATION);
@@ -55,7 +54,7 @@ describe('Jumbotron', () => {
                 backgroundProps={{ backgroundImageUrl: 'hi' }}
             />
         );
-        const button = getByText(/some button/i);
+        const button = getByText('Some button');
         button.click();
         expect(buttonCallback).toHaveBeenCalled();
     });
