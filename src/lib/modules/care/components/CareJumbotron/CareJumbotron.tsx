@@ -24,7 +24,6 @@ export function CareJumbotron({
 }: CareJumbotronProps) {
     const router = useRouter();
 
-    // TODO: change background image urls to the final images
     const hasCareTeamProps: JumbotronProps = {
         headerText: 'Build your Care Team!',
         callToAction: {
