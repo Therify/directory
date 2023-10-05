@@ -1,5 +1,5 @@
 import { ReactNode, useContext, useEffect, useState } from 'react';
-import { FirebaseClient, TherifyUser } from '@/lib/shared/context';
+import { FirebaseClient } from '@/lib/shared/context';
 import { Notification } from '@/lib/shared/types';
 import { handleNotifications } from './handle-notifications-change';
 import { useInAppPresence } from '../hooks';
