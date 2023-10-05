@@ -33,7 +33,7 @@ export function CareJumbotron({
         },
         backgroundProps: {
             backgroundImageUrl:
-                'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673453029/app.therify.co/login/8_jvntyl.jpg',
+                'https://res.cloudinary.com/dbrkfldqn/image/upload/v1696522450/site_photos/uxljywgfwgfey4e6ilz4.jpg',
         },
     };
 
@@ -44,8 +44,7 @@ export function CareJumbotron({
             onClick: () => router.push(URL_PATHS.MEMBERS.CARE.ROOT),
         },
         backgroundProps: {
-            backgroundImageUrl:
-                'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673453029/app.therify.co/login/10_dj9do6.jpg',
+            useCelebrationStyling: true,
         },
     };
 
@@ -57,7 +56,7 @@ export function CareJumbotron({
             "You'll be notified when your Recommendations are ready.",
         backgroundProps: {
             backgroundImageUrl:
-                'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673453029/app.therify.co/login/9_czs8ut.jpg',
+                'https://res.cloudinary.com/dbrkfldqn/image/upload/v1696522364/site_photos/peykqnf94dhqzmie8pvb.jpg',
         },
     };
 
@@ -69,7 +68,7 @@ export function CareJumbotron({
         },
         backgroundProps: {
             backgroundImageUrl:
-                'https://res.cloudinary.com/dbrkfldqn/image/upload/v1673453028/app.therify.co/login/7_rz30ni.jpg',
+                'https://res.cloudinary.com/dbrkfldqn/image/upload/v1696522151/site_photos/qjvbb13nnsrqh8ffnezq.jpg',
         },
     };
 
