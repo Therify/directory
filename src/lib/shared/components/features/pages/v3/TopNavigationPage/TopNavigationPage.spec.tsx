@@ -3,7 +3,6 @@ import { TEST_IDS as NOTIFICATION_DRAWER_TEST_IDS } from '@/lib/modules/notifica
 import { TEST_IDS as NAVIGATION_DRAWER_TEST_IDS } from '@/lib/shared/components/ui/Navigation/NavigationDrawer/NavigationDrawer';
 import { renderWithTheme } from '@/lib/shared/components/fixtures';
 import { TEST_IDS as TOP_NAVIGATION_TEST_IDS } from '@/lib/shared/components/ui/Navigation/v3/SecondaryNavigationControls/SecondaryNavigationControls';
-import {} from '@/lib/shared/components/ui/';
 import { Notification, TherifyUser } from '@/lib/shared/types';
 import {
     MEMBER_MAIN_MENU,
