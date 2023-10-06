@@ -20,28 +20,6 @@ describe('CareJumbotron', () => {
         const header = getByText('Get matched with your first Provider!');
         expect(header).toBeVisible();
     });
-    it('should render \'build care team\' message when \'hasCareTeam\' prop is true', () => {
-        const { getByText } = renderWithTheme(
-        <CareJumbotron
-            isAwaitingRecommendations={false}
-            hasRecommendationsForReview={false}
-            hasCareTeam={true}
-        />
-        );
-        const header = getByText('Build your Care Team!');
-        expect(header).toBeVisible();
-    });
-    it('should render \'build care team\' message when \'hasCareTeam\' prop is true, overriding other props', () => {
-        const { getByText } = renderWithTheme(
-        <CareJumbotron
-            isAwaitingRecommendations={true}
-            hasRecommendationsForReview={true}
-            hasCareTeam={true}
-        />
-        );
-        const header = getByText('Build your Care Team!');
-        expect(header).toBeVisible();
-    });
     it('should render \'has provider recommendations\' message when there are recommendations for review', () => {
         const { getByText } = renderWithTheme(
         <CareJumbotron
@@ -53,15 +31,37 @@ describe('CareJumbotron', () => {
         const header = getByText('You\'ve got Provider Recommendations!');
         expect(header).toBeVisible();
     });
-    it('should render \'has provider recommendations\' message when there are recommendations for review, overriding \'awaitingRecommendations\' prop', () => {
+    it('should render \'has provider recommendations\' message when there are recommendations for review, overriding other props', () => {
         const { getByText } = renderWithTheme(
         <CareJumbotron
             isAwaitingRecommendations={true}
             hasRecommendationsForReview={true}
-            hasCareTeam={false}
+            hasCareTeam={true}
         />
         );
         const header = getByText('You\'ve got Provider Recommendations!');
+        expect(header).toBeVisible();
+    });
+    it('should render \'build care team\' message when \'hasCareTeam\' prop is true', () => {
+        const { getByText } = renderWithTheme(
+        <CareJumbotron
+            isAwaitingRecommendations={false}
+            hasRecommendationsForReview={false}
+            hasCareTeam={true}
+        />
+        );
+        const header = getByText('Build your Care Team!');
+        expect(header).toBeVisible();
+    });
+    it('should render \'build care team\' message when \'hasCareTeam\' prop is true, overriding \'awaiting recommendations\' prop', () => {
+        const { getByText } = renderWithTheme(
+        <CareJumbotron
+            isAwaitingRecommendations={true}
+            hasRecommendationsForReview={false}
+            hasCareTeam={true}
+        />
+        );
+        const header = getByText('Build your Care Team!');
         expect(header).toBeVisible();
     });
     it('should render \'looking for providers\' message when awaiting recommendations', () => {

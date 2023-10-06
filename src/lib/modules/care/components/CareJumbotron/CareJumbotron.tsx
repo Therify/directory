@@ -71,9 +71,9 @@ export function CareJumbotron({
         },
     };
 
-    if (hasCareTeam) return <Jumbotron {...hasCareTeamProps} />;
     if (hasRecommendationsForReview)
         return <Jumbotron {...hasRecommendationsForReviewProps} />;
+    if (hasCareTeam) return <Jumbotron {...hasCareTeamProps} />;
     if (isAwaitingRecommendations)
         return <Jumbotron {...isAwaitingRecommendationsProps} />;
     return <Jumbotron {...defaultProps} />;
