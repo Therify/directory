@@ -28,10 +28,14 @@ export interface MemberNavigationPageProps
 
 export function MemberNavigationPage(props: MemberNavigationPageProps) {
     const router = useRouter();
-    const mainMenu = getMemberMenu(props.user?.hasChatEnabled ?? false);
+    const { flags } = useFeatureFlags(props.user ?? undefined);
+    const version = flags.isV3DirectoryEnabled ? 'v3' : 'v2';
+    const mainMenu = getMemberMenu(
+        props.user?.hasChatEnabled ?? false,
+        version
+    );
     const mobileMenu = getMemberMobileMenu(props.user?.hasChatEnabled ?? false);
     const { ChatProvider, unreadChatMessagesCount } = useChatClient(props.user);
-    const { flags } = useFeatureFlags(props.user ?? undefined);
 
     const chatNotifications =
         unreadChatMessagesCount > 0

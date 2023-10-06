@@ -32,10 +32,20 @@ export const MEMBER_MOBILE_MENU = [
     // ACCOUNT
 ] as const;
 
-export const getMemberMenu = (hasChatEnabled: boolean) => [
-    ...MEMBER_MAIN_MENU,
-    ...(hasChatEnabled ? [CHAT] : []),
-];
+// V3 Menus
+export const MEMBER_MAIN_MENU_V3 = [
+    HOME,
+    CARE,
+    { ...CONTENT_LIBRARY, displayName: 'Content' },
+] as const;
+
+export const getMemberMenu = (
+    hasChatEnabled: boolean,
+    version?: 'v3' | 'v2'
+) => {
+    if (version === 'v3') return [...MEMBER_MAIN_MENU_V3];
+    return [...MEMBER_MAIN_MENU, ...(hasChatEnabled ? [CHAT] : [])];
+};
 
 export const getMemberMobileMenu = (hasChatEnabled: boolean) => [
     ...MEMBER_MOBILE_MENU,
