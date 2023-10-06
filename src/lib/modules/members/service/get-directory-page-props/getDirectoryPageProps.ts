@@ -46,7 +46,7 @@ export function factory(params: MembersServiceParams) {
         if (!memberProfile || !rawSelfAssessment) {
             return {
                 redirect: {
-                    destination: URL_PATHS.MEMBERS.CARE,
+                    destination: URL_PATHS.MEMBERS.CARE.ROOT,
                     permanent: false,
                 },
             };
