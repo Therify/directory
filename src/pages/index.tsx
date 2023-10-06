@@ -52,7 +52,7 @@ function handleMemberRouting(user: TherifyUser.TherifyUser): string {
     if (user.isAccountAdmin && !user.roles.includes(Role.member_dtc)) {
         return URL_PATHS.MEMBERS.ACCOUNT.BILLING_AND_PAYMENTS;
     }
-    return URL_PATHS.MEMBERS.CARE;
+    return URL_PATHS.MEMBERS.CARE.ROOT;
 }
 
 const getUserRedirectPath = (user: TherifyUser.TherifyUser): string => {
