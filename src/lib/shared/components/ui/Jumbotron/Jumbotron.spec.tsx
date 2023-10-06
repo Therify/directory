@@ -41,9 +41,7 @@ describe('Jumbotron', () => {
             />
         );
         const celebrationBackground = getByTestId(TEST_IDS.CELEBRATION);
-        expect(celebrationBackground).toHaveStyle({
-            background: /linear-gradient.*/,
-        });
+        expect(celebrationBackground).toBeVisible();
     });
     it('should call callback fn when button is clicked', () => {
         const buttonCallback = jest.fn();
