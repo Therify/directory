@@ -71,10 +71,10 @@ export function CareJumbotron({
         },
     };
 
-    if (hasCareTeam) return <Jumbotron {...hasCareTeamProps} />;
     if (hasRecommendationsForReview)
         return <Jumbotron {...hasRecommendationsForReviewProps} />;
     if (isAwaitingRecommendations)
         return <Jumbotron {...isAwaitingRecommendationsProps} />;
+    if (hasCareTeam) return <Jumbotron {...hasCareTeamProps} />;
     return <Jumbotron {...defaultProps} />;
 }
