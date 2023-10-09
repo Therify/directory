@@ -11,6 +11,7 @@ import {
     CARE_DETAILS,
 } from './links';
 import { LOGOUT } from '../accountLinks';
+import { NAVIGATION_ICON } from '../../types';
 
 export const MEMBER_MAIN_MENU = [
     DIRECTORY,
@@ -41,7 +42,7 @@ export const MEMBER_MAIN_MENU_V3 = [
 export const MEMBER_SECONDARY_MENU_V3 = [
     ACCOUNT_SETTINGS,
     CARE_DETAILS,
-    LOGOUT,
+    { ...LOGOUT, icon: NAVIGATION_ICON.LOGOUT },
 ] as const;
 
 export const MEMBER_MOBILE_MENU_V3 = [
