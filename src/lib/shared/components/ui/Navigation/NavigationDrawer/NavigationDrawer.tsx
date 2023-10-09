@@ -107,6 +107,7 @@ const CloseButton = styled(IconButton)(({ theme }) => ({
     position: 'absolute',
     top: 0,
     right: 0,
+    zIndex: 1,
     color: theme.palette.text.primary,
     fontSize: '1.25rem',
 }));
