@@ -12,8 +12,8 @@ import { FloatingMenu } from '../../FloatingMenu';
 import { Avatar } from '../../../Avatar';
 
 interface SecondaryNavigationControlsProps {
-    onNotificationsClick?: () => void;
-    onMessagesClick?: () => void;
+    onNotificationsClick: () => void;
+    onMessagesClick: () => void;
     notificationCount?: number;
     unreadMessagesCount?: number;
     isMobileWidth: boolean;
