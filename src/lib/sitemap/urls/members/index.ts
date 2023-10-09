@@ -6,7 +6,7 @@ import { CARE_PATHS } from './care';
 export const MEMBER_PATHS = {
     REGISTER: '/members/register',
     REGISTER_SUCCESS: '/members/register/success',
-    HOME: './members/home',
+    HOME: '/members/home',
     FAVORITES: '/members/favorites',
     DIRECTORY: '/members/directory',
     CHAT: '/members/chat',

@@ -25,6 +25,8 @@ describe('SecondaryNavigationControls', () => {
                 onNavigate={() => {}}
                 isLoadingUser={false}
                 user={undefined}
+                onMessagesClick={() => {}}
+                onNotificationsClick={() => {}}
             />
         );
         expect(container.childElementCount).toBe(0);
@@ -40,6 +42,8 @@ describe('SecondaryNavigationControls', () => {
                 onNavigate={() => {}}
                 isLoadingUser
                 user={mockUser}
+                onMessagesClick={() => {}}
+                onNotificationsClick={() => {}}
             />
         );
         expect(getByTestId(TEST_IDS.LOADER)).toBeVisible();
@@ -55,6 +59,8 @@ describe('SecondaryNavigationControls', () => {
                     onNavigate={() => {}}
                     isLoadingUser={false}
                     user={mockUser}
+                    onMessagesClick={() => {}}
+                    onNotificationsClick={() => {}}
                 />
             );
             expect(getByTestId(TEST_IDS.MESSAGES_ICON)).toBeVisible();
@@ -70,6 +76,8 @@ describe('SecondaryNavigationControls', () => {
                     isLoadingUser={false}
                     user={mockUser}
                     unreadMessagesCount={1}
+                    onMessagesClick={() => {}}
+                    onNotificationsClick={() => {}}
                 />
             );
             const messagesIcon = getByTestId(TEST_IDS.MESSAGES_ICON);
@@ -88,6 +96,8 @@ describe('SecondaryNavigationControls', () => {
                     isLoadingUser={false}
                     user={mockUser}
                     unreadMessagesCount={0}
+                    onMessagesClick={() => {}}
+                    onNotificationsClick={() => {}}
                 />
             );
             const messagesIcon = getByTestId(TEST_IDS.MESSAGES_ICON);
@@ -108,6 +118,7 @@ describe('SecondaryNavigationControls', () => {
                     user={mockUser}
                     unreadMessagesCount={0}
                     onMessagesClick={mockOnClick}
+                    onNotificationsClick={() => {}}
                 />
             );
             const messagesIcon = getByTestId(TEST_IDS.MESSAGES_ICON);
@@ -126,6 +137,8 @@ describe('SecondaryNavigationControls', () => {
                     isLoadingUser={false}
                     user={mockUser}
                     unreadMessagesCount={0}
+                    onMessagesClick={() => {}}
+                    onNotificationsClick={() => {}}
                 />
             );
             const messagesIcon = queryByTestId(TEST_IDS.MESSAGES_ICON);
@@ -144,6 +157,8 @@ describe('SecondaryNavigationControls', () => {
                     onNavigate={() => {}}
                     isLoadingUser={false}
                     user={mockUser}
+                    onMessagesClick={() => {}}
+                    onNotificationsClick={() => {}}
                 />
             );
             expect(getByTestId(TEST_IDS.NOTIFICATIONS_ICON)).toBeVisible();
@@ -159,6 +174,8 @@ describe('SecondaryNavigationControls', () => {
                     isLoadingUser={false}
                     user={mockUser}
                     notificationCount={1}
+                    onMessagesClick={() => {}}
+                    onNotificationsClick={() => {}}
                 />
             );
             const notificationsIcon = getByTestId(TEST_IDS.NOTIFICATIONS_ICON);
@@ -177,6 +194,8 @@ describe('SecondaryNavigationControls', () => {
                     isLoadingUser={false}
                     user={mockUser}
                     notificationCount={0}
+                    onMessagesClick={() => {}}
+                    onNotificationsClick={() => {}}
                 />
             );
             const notificationsIcon = getByTestId(TEST_IDS.NOTIFICATIONS_ICON);
@@ -195,6 +214,7 @@ describe('SecondaryNavigationControls', () => {
                     isLoadingUser={false}
                     user={mockUser}
                     onNotificationsClick={mockOnClick}
+                    onMessagesClick={() => {}}
                 />
             );
             const notificationsIcon = getByTestId(TEST_IDS.NOTIFICATIONS_ICON);
@@ -219,6 +239,8 @@ describe('SecondaryNavigationControls', () => {
                     onNavigate={() => {}}
                     isLoadingUser={false}
                     user={mockUser}
+                    onMessagesClick={() => {}}
+                    onNotificationsClick={() => {}}
                 />
             );
             expect(getByTestId(TEST_IDS.SECONDARY_MENU)).toBeVisible();
@@ -234,6 +256,8 @@ describe('SecondaryNavigationControls', () => {
                     onNavigate={() => {}}
                     isLoadingUser={false}
                     user={mockUser}
+                    onMessagesClick={() => {}}
+                    onNotificationsClick={() => {}}
                 />
             );
 
@@ -249,6 +273,8 @@ describe('SecondaryNavigationControls', () => {
             const { getByTestId, getByText } = renderWithTheme(
                 <SecondaryNavigationControls
                     isMobileWidth={false}
+                    onMessagesClick={() => {}}
+                    onNotificationsClick={() => {}}
                     toggleMobileMenu={() => {}}
                     currentPath={'/'}
                     menu={mockSecondaryLinks}
@@ -277,6 +303,8 @@ describe('SecondaryNavigationControls', () => {
                     onNavigate={() => {}}
                     isLoadingUser={false}
                     user={mockUser}
+                    onMessagesClick={() => {}}
+                    onNotificationsClick={() => {}}
                 />
             );
             expect(getByTestId(TEST_IDS.MOBILE_MENU_ICON)).toBeVisible();
@@ -291,6 +319,8 @@ describe('SecondaryNavigationControls', () => {
                     onNavigate={() => {}}
                     isLoadingUser={false}
                     user={mockUser}
+                    onMessagesClick={() => {}}
+                    onNotificationsClick={() => {}}
                 />
             );
             expect(queryByTestId(TEST_IDS.MOBILE_MENU_ICON)).toBeNull();
@@ -306,6 +336,8 @@ describe('SecondaryNavigationControls', () => {
                     onNavigate={() => {}}
                     isLoadingUser={false}
                     user={mockUser}
+                    onMessagesClick={() => {}}
+                    onNotificationsClick={() => {}}
                 />
             );
 
