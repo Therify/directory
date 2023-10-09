@@ -1,7 +1,10 @@
 import {
     MEMBER_SECONDARY_MENU,
+    MEMBER_SECONDARY_MENU_V3,
     getMemberMobileMenu,
     getMemberMenu,
+    MEMBER_MAIN_MENU_V3,
+    MEMBER_MOBILE_MENU_V3,
 } from '@/lib/sitemap/menus/member-menu';
 import { useChatClient } from '@/lib/modules/messaging/hooks';
 import { URL_PATHS } from '@/lib/sitemap';
@@ -29,12 +32,6 @@ export interface MemberNavigationPageProps
 export function MemberNavigationPage(props: MemberNavigationPageProps) {
     const router = useRouter();
     const { flags } = useFeatureFlags(props.user ?? undefined);
-    const version = flags.isV3DirectoryEnabled ? 'v3' : 'v2';
-    const mainMenu = getMemberMenu(
-        props.user?.hasChatEnabled ?? false,
-        version
-    );
-    const mobileMenu = getMemberMobileMenu(props.user?.hasChatEnabled ?? false);
     const { ChatProvider, unreadChatMessagesCount } = useChatClient(props.user);
 
     const chatNotifications =
@@ -49,9 +46,9 @@ export function MemberNavigationPage(props: MemberNavigationPageProps) {
                 <TopNavigationPageV3
                     {...props}
                     onNavigate={router.push}
-                    primaryMenu={mainMenu}
-                    secondaryMenu={[...MEMBER_SECONDARY_MENU]}
-                    mobileMenu={mobileMenu}
+                    primaryMenu={[...MEMBER_MAIN_MENU_V3]}
+                    secondaryMenu={[...MEMBER_SECONDARY_MENU_V3]}
+                    mobileMenu={[...MEMBER_MOBILE_MENU_V3]}
                     isLoadingUser={false}
                     chatNotifications={chatNotifications}
                 />
@@ -59,9 +56,13 @@ export function MemberNavigationPage(props: MemberNavigationPageProps) {
                 <TopNavigationPageV2
                     {...props}
                     onNavigate={router.push}
-                    primaryMenu={mainMenu}
+                    primaryMenu={getMemberMenu(
+                        props.user?.hasChatEnabled ?? false
+                    )}
                     secondaryMenu={[...MEMBER_SECONDARY_MENU]}
-                    mobileMenu={mobileMenu}
+                    mobileMenu={getMemberMobileMenu(
+                        props.user?.hasChatEnabled ?? false
+                    )}
                     isLoadingUser={false}
                     chatNotifications={chatNotifications}
                 />

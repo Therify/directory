@@ -50,3 +50,15 @@ export const BILLING_AND_PAYMENTS: NavigationLink = {
     displayName: 'Billing & Payments',
     path: URL_PATHS.MEMBERS.ACCOUNT.BILLING_AND_PAYMENTS,
 };
+
+export const ACCOUNT_SETTINGS: NavigationLink = {
+    icon: NAVIGATION_ICON.SETTINGS,
+    displayName: 'Account Settings',
+    path: URL_PATHS.MEMBERS.ACCOUNT.SETTINGS.ROOT,
+};
+
+export const CARE_DETAILS: NavigationLink = {
+    icon: NAVIGATION_ICON.INFO,
+    displayName: 'Care Details',
+    path: URL_PATHS.MEMBERS.ACCOUNT.SETTINGS.CARE_DETAILS,
+};

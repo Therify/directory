@@ -1,9 +1,13 @@
 import { Box } from '@mui/material';
 import { renderWithTheme } from '@/lib/shared/components/fixtures';
-import { TEST_IDS as V3_SECONDARY_NAV_CONTROLS_TEST_IDS } from '@/lib/shared/components/ui/Navigation/v3/SecondaryNavigationControls/SecondaryNavigationControls';
 import { TherifyUser } from '@/lib/shared/types';
 import { Role } from '@prisma/client';
 import { MemberNavigationPage } from './MemberNavigationPage';
+import {
+    MEMBER_MAIN_MENU as MEMBER_MAIN_MENU_V2,
+    MEMBER_MAIN_MENU_V3,
+    MEMBER_NAVIGATION_LINKS,
+} from '@/lib/sitemap';
 
 const mockUseFeatureFlags = jest.fn();
 const mockUseChatClient = jest.fn();
@@ -16,7 +20,7 @@ jest.mock('@/lib/modules/messaging/hooks', () => ({
     useChatClient: (args: unknown) => mockUseChatClient(args),
 }));
 jest.mock('@/lib/shared/hooks/', () => ({
-    usePlanMonitoring: () => jest.fn().mockReturnValue({ hasAccess: true }),
+    usePlanMonitoring: () => ({ hasAccess: true }),
     useFeatureFlags: (args: unknown) => mockUseFeatureFlags(args),
 }));
 
@@ -51,11 +55,9 @@ describe('MemberNavigationPage', () => {
         mockUseNotifications
             .mockReset()
             .mockReturnValue(mockUseNotificationsResult);
-        mockUseFeatureFlags
-            .mockReset()
-            .mockReturnValue({
-                flags: { bannerContent: {}, isV3DirectoryEnabled: false },
-            });
+        mockUseFeatureFlags.mockReset().mockReturnValue({
+            flags: { bannerContent: {}, isV3DirectoryEnabled: false },
+        });
         mockUseChatClient.mockReset().mockReturnValue({
             ChatProvider: Box,
             unreadChatMessagesCount: 0,
@@ -67,26 +69,61 @@ describe('MemberNavigationPage', () => {
         );
         expect(mockUseChatClient).toHaveBeenCalledWith(mockUser);
     });
-    it('renders v2 top navigation when v3 flag is false', () => {
-        mockUseFeatureFlags.mockReturnValue({
-            flags: { bannerContent: {}, isV3DirectoryEnabled: false },
+    describe('v2', () => {
+        it('renders v2 top navigation when v3 flag is false', () => {
+            mockUseFeatureFlags.mockReturnValue({
+                flags: { bannerContent: {}, isV3DirectoryEnabled: false },
+            });
+            const { getByText } = renderWithTheme(
+                <MemberNavigationPage currentPath="/" user={mockUser} />
+            );
+            MEMBER_MAIN_MENU_V2.forEach((menuItem) => {
+                expect(getByText(menuItem.displayName)).toBeInTheDocument();
+            });
         });
-        const { queryByTestId } = renderWithTheme(
-            <MemberNavigationPage currentPath="/" user={mockUser} />
-        );
-        expect(
-            queryByTestId(V3_SECONDARY_NAV_CONTROLS_TEST_IDS.MESSAGES_ICON)
-        ).toBeNull();
+        it('renders chat link when chat enabled', () => {
+            mockUseFeatureFlags.mockReturnValue({
+                flags: { bannerContent: {}, isV3DirectoryEnabled: false },
+            });
+            const { getByText } = renderWithTheme(
+                <MemberNavigationPage
+                    currentPath="/"
+                    user={{ ...mockUser, hasChatEnabled: true }}
+                />
+            );
+            MEMBER_MAIN_MENU_V2.forEach((menuItem) => {
+                expect(getByText(menuItem.displayName)).toBeInTheDocument();
+            });
+            expect(
+                getByText(MEMBER_NAVIGATION_LINKS.CHAT.displayName)
+            ).toBeInTheDocument();
+        });
+        it('does not render chat link when chat is not enabled', () => {
+            mockUseFeatureFlags.mockReturnValue({
+                flags: { bannerContent: {}, isV3DirectoryEnabled: false },
+            });
+            const { queryByText } = renderWithTheme(
+                <MemberNavigationPage
+                    currentPath="/"
+                    user={{ ...mockUser, hasChatEnabled: false }}
+                />
+            );
+            expect(
+                queryByText(MEMBER_NAVIGATION_LINKS.CHAT.displayName)
+            ).not.toBeInTheDocument();
+        });
     });
-    it('renders v3 top navigation when v3 flag is true', () => {
-        mockUseFeatureFlags.mockReturnValue({
-            flags: { bannerContent: {}, isV3DirectoryEnabled: true },
+    describe('v3', () => {
+        it('renders v3 top navigation when v3 flag is true', () => {
+            mockUseFeatureFlags.mockReturnValue({
+                flags: { bannerContent: {}, isV3DirectoryEnabled: true },
+            });
+            const { getByText } = renderWithTheme(
+                <MemberNavigationPage currentPath="/" user={mockUser} />
+            );
+            MEMBER_MAIN_MENU_V3.forEach((menuItem) => {
+                expect(getByText(menuItem.displayName)).toBeInTheDocument();
+            });
         });
-        const { getByTestId } = renderWithTheme(
-            <MemberNavigationPage currentPath="/" user={mockUser} />
-        );
-        expect(
-            getByTestId(V3_SECONDARY_NAV_CONTROLS_TEST_IDS.MESSAGES_ICON)
-        ).toBeVisible();
     });
 });
