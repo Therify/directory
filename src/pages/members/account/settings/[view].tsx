@@ -6,7 +6,7 @@ import { RBAC } from '@/lib/shared/utils';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import {
     SettingsPage,
-    SETTINGS_TAB_IDS,
+    SettingsPageUtils,
 } from '@/lib/modules/accounts/components/settings';
 import { useFeatureFlags } from '@/lib/shared/hooks';
 import { membersService } from '@/lib/modules/members/service';
@@ -23,7 +23,9 @@ export default function ClientDetailsPage({
 }: MemberTherifyUserPageProps) {
     const { flags } = useFeatureFlags(user);
     const router = useRouter();
-
+    const view = Array.isArray(router.query.view)
+        ? router.query.view[0]
+        : router.query.view;
     useEffect(() => {
         if (flags.didFlagsLoad && !flags.isV3DirectoryEnabled) {
             router.push(URL_PATHS.PROVIDERS.COACH.CLIENTS);
@@ -38,7 +40,7 @@ export default function ClientDetailsPage({
         >
             <SettingsPage
                 user={user}
-                currentTab={getSettingsView(router.query.view)}
+                currentTab={SettingsPageUtils.getSettingsTabView(view)}
                 onTabChange={(tabId) =>
                     router.push(
                         `${URL_PATHS.MEMBERS.ACCOUNT.SETTINGS.ROOT}/${tabId}`
@@ -48,18 +50,3 @@ export default function ClientDetailsPage({
         </MemberNavigationPage>
     );
 }
-
-const getSettingsView = (view: string | string[] | undefined) => {
-    const currentView = Array.isArray(view) ? view[0] : view;
-    switch (currentView) {
-        case SETTINGS_TAB_IDS.CARE_DETAILS:
-            return SETTINGS_TAB_IDS.CARE_DETAILS;
-        case SETTINGS_TAB_IDS.BILLING:
-            return SETTINGS_TAB_IDS.BILLING;
-        case SETTINGS_TAB_IDS.NOTIFICATIONS:
-            return SETTINGS_TAB_IDS.NOTIFICATIONS;
-        case SETTINGS_TAB_IDS.ACCOUNT:
-        default:
-            return SETTINGS_TAB_IDS.ACCOUNT;
-    }
-};
