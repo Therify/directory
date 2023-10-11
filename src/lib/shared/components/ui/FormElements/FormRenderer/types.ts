@@ -3,7 +3,7 @@ import { PhoneNumberFormat } from '../form-validation/phone';
 import { SelectOption } from '../Select';
 
 export type FormConfig<T extends FieldValues> = {
-    title: string;
+    title?: string;
     subtitle?: string;
     sections: FormSection<T>[];
 };

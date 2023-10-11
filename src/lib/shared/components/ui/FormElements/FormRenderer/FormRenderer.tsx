@@ -59,7 +59,7 @@ export function FormRenderer<ValidationSchema extends z.ZodTypeAny>({
     return (
         <Form sx={sx} onSubmit={(e) => e.preventDefault()}>
             <FormContent isError={!!errorMessage}>
-                <Header>{config.title}</Header>
+                {config.title && <Header>{config.title}</Header>}
                 {config.subtitle && (
                     <Paragraph noMargin>{config.subtitle}</Paragraph>
                 )}
