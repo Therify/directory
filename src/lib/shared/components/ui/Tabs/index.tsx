@@ -15,6 +15,7 @@ interface TabProps {
     ariaLabel?: string;
     tabs: TabOption[];
     withBottomBorder?: boolean;
+    v3?: boolean;
 }
 
 export const TEST_IDS = {
@@ -27,6 +28,7 @@ export const Tabs = ({
     ariaLabel,
     tabs,
     withBottomBorder,
+    v3,
 }: TabProps) => {
     const theme = useTheme();
     const handleChange = (_: React.SyntheticEvent, newTabId: string) => {
@@ -41,6 +43,13 @@ export const Tabs = ({
             // TODO: Handle maxwidths for scrolling once breakpoints are implemented
             variant="scrollable"
             scrollButtons="auto"
+            sx={{
+                ...(v3 && {
+                    '& .MuiTabs-indicator': {
+                        backgroundColor: theme.palette.text.primary,
+                    },
+                }),
+            }}
         >
             {tabs.map(({ id, tabLabel, disabled, icon }) => (
                 <MuiTab
@@ -55,10 +64,16 @@ export const Tabs = ({
                         ) : undefined
                     }
                     iconPosition="end"
-                    style={{
+                    sx={{
                         padding: theme.spacing(4, 6),
                         lineHeight: 1,
                         textTransform: 'none',
+                        ...(v3 && {
+                            color: theme.palette.grey[500],
+                            '&.Mui-selected': {
+                                color: theme.palette.text.primary,
+                            },
+                        }),
                     }}
                 />
             ))}
