@@ -34,6 +34,7 @@ export const Default: StoryFn<typeof Component> = () => {
             user={user}
             currentTab={currentTab}
             onTabChange={setCurrentTab}
+            onUpdateUserDetails={console.log}
         />
     );
 };
