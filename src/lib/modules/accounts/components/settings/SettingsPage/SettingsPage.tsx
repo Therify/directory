@@ -1,3 +1,4 @@
+import { DeepPartial } from 'react-hook-form';
 import {
     H3,
     PageContentContainer,
@@ -7,7 +8,7 @@ import {
 import { TherifyUser } from '@/lib/shared/types';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
-import { AccountView, AccountForm } from './views';
+import { AccountView, AccountForm, AccountViewProps } from './views';
 
 export const SETTINGS_TAB_IDS = {
     ACCOUNT: 'account',
@@ -22,6 +23,9 @@ interface SettingsPageProps {
     currentTab: SettingsTabId;
     onTabChange: (tabId: SettingsTabId) => void;
     onUpdateUserDetails: (data: AccountForm) => void;
+    onImageUploadError: AccountViewProps['onImageUploadError'];
+    onImageUploadSuccess: AccountViewProps['onImageUploadSuccess'];
+    defaultAccountDetails?: DeepPartial<AccountForm>;
 }
 const tabs: TabOption[] = [
     { id: SETTINGS_TAB_IDS.ACCOUNT, tabLabel: 'Account' },
@@ -41,6 +45,7 @@ export const SettingsPage = ({
     currentTab,
     onTabChange,
     onUpdateUserDetails,
+    defaultAccountDetails,
 }: SettingsPageProps) => {
     return (
         <PageContainer>
@@ -62,6 +67,7 @@ export const SettingsPage = ({
                             imageUrl={user?.avatarUrl}
                             user={user}
                             onUpdateUserDetails={onUpdateUserDetails}
+                            defaultAccountDetails={defaultAccountDetails}
                         />
                     </TabContent>
                 )}

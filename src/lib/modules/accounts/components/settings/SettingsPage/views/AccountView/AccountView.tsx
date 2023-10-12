@@ -1,4 +1,5 @@
 import { Box, Stack } from '@mui/material';
+import { DeepPartial } from 'react-hook-form';
 import { CloudinaryUploadResult } from '@/lib/modules/media/components/hooks/userCloudinaryWidget';
 import { TherifyUser } from '@/lib/shared/types';
 import {
@@ -10,7 +11,7 @@ import {
 import { ImageUploadButton } from './ui/ImageUploadButton';
 import { accountForm, AccountForm } from './form';
 
-interface AccountViewProps {
+export interface AccountViewProps {
     onImageUploadSuccess: (
         error: Error | null,
         result: CloudinaryUploadResult
@@ -20,6 +21,7 @@ interface AccountViewProps {
 
     user: TherifyUser.TherifyUser;
     onUpdateUserDetails: (user: AccountForm) => void;
+    defaultAccountDetails?: DeepPartial<AccountForm>;
 }
 export const AccountView = ({
     onImageUploadSuccess,
@@ -27,6 +29,7 @@ export const AccountView = ({
     imageUrl,
     user,
     onUpdateUserDetails,
+    defaultAccountDetails,
 }: AccountViewProps) => {
     return (
         <Box>
@@ -56,7 +59,7 @@ export const AccountView = ({
                 validationSchema={accountForm.schema}
                 config={accountForm.config}
                 submitButtonText="Save Changes"
-                defaultValues={getDefaultValuesFromUser(user)}
+                defaultValues={defaultAccountDetails}
                 onSubmit={onUpdateUserDetails}
                 sx={{
                     maxWidth: 600,
@@ -68,15 +71,3 @@ export const AccountView = ({
         </Box>
     );
 };
-
-// TODO: Get this info from member profile query, not therify user
-const getDefaultValuesFromUser = (
-    user: TherifyUser.TherifyUser
-): Partial<AccountForm> => ({
-    accountDetails: {
-        givenName: user.givenName,
-        surname: user.surname,
-        emailAddress: user.emailAddress,
-        phoneNumber: '',
-    },
-});

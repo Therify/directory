@@ -72,16 +72,9 @@ const emergencyDetails: FormSection<AccountSettingsForm> = {
         {
             id: 'address',
             type: 'input',
-            label: 'Your Address',
+            label: 'Your Home Address',
             inputType: 'text',
             statePath: 'emergencyDetails.homeAddress',
-        },
-        {
-            id: 'emergencyPhoneNumber',
-            type: 'input',
-            label: 'Emergency Phone Number',
-            inputType: 'text',
-            statePath: 'emergencyDetails.contactPhoneNumber',
         },
         {
             id: 'emergencyContactName',
@@ -89,6 +82,13 @@ const emergencyDetails: FormSection<AccountSettingsForm> = {
             label: 'Emergency Contact Name',
             inputType: 'text',
             statePath: 'emergencyDetails.contactName',
+        },
+        {
+            id: 'emergencyPhoneNumber',
+            type: 'input',
+            label: 'Emergency Phone Number',
+            inputType: 'text',
+            statePath: 'emergencyDetails.contactPhoneNumber',
         },
         {
             id: 'emergencyContactcontactRelationship',

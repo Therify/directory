@@ -35,6 +35,8 @@ export const Default: StoryFn<typeof Component> = () => {
             currentTab={currentTab}
             onTabChange={setCurrentTab}
             onUpdateUserDetails={console.log}
+            onImageUploadSuccess={console.log}
+            onImageUploadError={console.log}
         />
     );
 };
