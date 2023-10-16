@@ -2,16 +2,13 @@ import { renderWithTheme } from '@/lib/shared/components/fixtures';
 import { Gender, UNITED_STATES, Ethnicity } from '@/lib/shared/types';
 import { TEST_IDS as AVATAR_TEST_IDS } from '@/lib/shared/components/ui/Avatar';
 import userEvent from '@testing-library/user-event';
-import { TherifyUser } from '@/lib/shared/types';
 import { AccountView } from './AccountView';
 import { AccountForm } from './form';
-import { sleep } from '@/lib/shared/utils';
+
 const mockUseCloudinaryWidget = jest.fn();
 jest.mock('@/lib/modules/media/components/hooks/userCloudinaryWidget', () => ({
     useCloudinaryWidget: (args: unknown) => mockUseCloudinaryWidget(args),
 }));
-
-const mockUser = {} as TherifyUser.TherifyUser;
 
 describe('SettingsPage > Account View', () => {
     const user = userEvent.setup();
@@ -23,7 +20,6 @@ describe('SettingsPage > Account View', () => {
             const onImageUploadSuccess = jest.fn();
             renderWithTheme(
                 <AccountView
-                    user={mockUser}
                     onUpdateUserDetails={jest.fn()}
                     onImageUploadSuccess={onImageUploadSuccess}
                     onImageUploadError={jest.fn()}
@@ -45,7 +41,6 @@ describe('SettingsPage > Account View', () => {
             const onImageUploadError = jest.fn();
             renderWithTheme(
                 <AccountView
-                    user={mockUser}
                     onUpdateUserDetails={jest.fn()}
                     onImageUploadSuccess={jest.fn()}
                     onImageUploadError={onImageUploadError}
@@ -64,7 +59,6 @@ describe('SettingsPage > Account View', () => {
             const mockImageUrl = 'test-url';
             const { getByTestId } = renderWithTheme(
                 <AccountView
-                    user={mockUser}
                     onUpdateUserDetails={jest.fn()}
                     onImageUploadSuccess={jest.fn()}
                     onImageUploadError={jest.fn()}
@@ -77,11 +71,6 @@ describe('SettingsPage > Account View', () => {
     });
 
     describe('Account Details Form', () => {
-        const mockAccountDetails = {
-            givenName: 'Test',
-            surname: 'User',
-            emailAddress: 'test@therify.co',
-        } as TherifyUser.TherifyUser;
         const mockUserDetails: AccountForm = {
             accountDetails: {
                 givenName: 'Updated',
@@ -104,7 +93,6 @@ describe('SettingsPage > Account View', () => {
         it('prefills the form', () => {
             const { getByLabelText } = renderWithTheme(
                 <AccountView
-                    user={mockAccountDetails}
                     onUpdateUserDetails={jest.fn()}
                     onImageUploadSuccess={jest.fn()}
                     onImageUploadError={jest.fn()}
@@ -152,7 +140,6 @@ describe('SettingsPage > Account View', () => {
             const onUpdateUserDetails = jest.fn();
             const { getByLabelText, getByText } = renderWithTheme(
                 <AccountView
-                    user={mockUser}
                     onUpdateUserDetails={onUpdateUserDetails}
                     onImageUploadSuccess={jest.fn()}
                     onImageUploadError={jest.fn()}
@@ -199,7 +186,11 @@ describe('SettingsPage > Account View', () => {
                 getByText(mockUserDetails.personalDetails.ethnicity)
             );
             await user.click(getByText('Save Changes'));
-            expect(onUpdateUserDetails).toHaveBeenCalledWith(mockUserDetails);
+            const updatedDataArg = onUpdateUserDetails.mock.calls[0][0];
+            const resetFormArg = onUpdateUserDetails.mock.calls[0][1];
+            expect(onUpdateUserDetails).toHaveBeenCalledTimes(1);
+            expect(updatedDataArg).toEqual(mockUserDetails);
+            expect(resetFormArg).toBeInstanceOf(Function);
         });
     });
 });

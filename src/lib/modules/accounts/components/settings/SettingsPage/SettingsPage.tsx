@@ -1,4 +1,4 @@
-import { DeepPartial } from 'react-hook-form';
+import { DeepPartial, UseFormReset } from 'react-hook-form';
 import {
     H3,
     PageContentContainer,
@@ -22,7 +22,10 @@ interface SettingsPageProps {
     user: TherifyUser.TherifyUser;
     currentTab: SettingsTabId;
     onTabChange: (tabId: SettingsTabId) => void;
-    onUpdateUserDetails: (data: AccountForm) => void;
+    onUpdateUserDetails: (
+        data: AccountForm,
+        reset: UseFormReset<AccountForm>
+    ) => void;
     onImageUploadError: AccountViewProps['onImageUploadError'];
     onImageUploadSuccess: AccountViewProps['onImageUploadSuccess'];
     defaultAccountDetails?: DeepPartial<AccountForm>;
@@ -65,7 +68,6 @@ export const SettingsPage = ({
                             onImageUploadError={() => {}}
                             onImageUploadSuccess={() => {}}
                             imageUrl={user?.avatarUrl}
-                            user={user}
                             onUpdateUserDetails={onUpdateUserDetails}
                             defaultAccountDetails={defaultAccountDetails}
                         />

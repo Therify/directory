@@ -1,7 +1,6 @@
 import { Box, Stack } from '@mui/material';
-import { DeepPartial } from 'react-hook-form';
+import { DeepPartial, UseFormReset } from 'react-hook-form';
 import { CloudinaryUploadResult } from '@/lib/modules/media/components/hooks/userCloudinaryWidget';
-import { TherifyUser } from '@/lib/shared/types';
 import {
     FormRenderer,
     Avatar,
@@ -18,16 +17,16 @@ export interface AccountViewProps {
     ) => void;
     onImageUploadError: (error: string | Error) => void;
     imageUrl?: string;
-
-    user: TherifyUser.TherifyUser;
-    onUpdateUserDetails: (user: AccountForm) => void;
+    onUpdateUserDetails: (
+        user: AccountForm,
+        reset: UseFormReset<AccountForm>
+    ) => void;
     defaultAccountDetails?: DeepPartial<AccountForm>;
 }
 export const AccountView = ({
     onImageUploadSuccess,
     onImageUploadError,
     imageUrl,
-    user,
     onUpdateUserDetails,
     defaultAccountDetails,
 }: AccountViewProps) => {

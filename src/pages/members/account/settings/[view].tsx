@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { Alerts } from '@/lib/modules/alerts/context';
 import { MemberNavigationPage } from '@/lib/shared/components/features/pages';
 import { URL_PATHS } from '@/lib/sitemap';
 import { RBAC } from '@/lib/shared/utils';
@@ -18,9 +19,10 @@ export const getServerSideProps = RBAC.requireMemberAuth(
     })
 );
 
-export default function ClientDetailsPage({
+export default function MemberSettingsPage({
     user,
 }: MemberTherifyUserPageProps) {
+    const { createAlert } = useContext(Alerts.Context);
     const { flags } = useFeatureFlags(user);
     const router = useRouter();
     const view = Array.isArray(router.query.view)
@@ -46,6 +48,39 @@ export default function ClientDetailsPage({
                         `${URL_PATHS.MEMBERS.ACCOUNT.SETTINGS.ROOT}/${tabId}`
                     )
                 }
+                onImageUploadError={(error) =>
+                    createAlert({
+                        title: error instanceof Error ? error.message : error,
+                        type: 'success',
+                    })
+                }
+                onImageUploadSuccess={(error) => {
+                    if (error) {
+                        createAlert({
+                            title: error.message,
+                            type: 'error',
+                        });
+                        return;
+                    }
+                    createAlert({
+                        title: 'Account details updated',
+                        type: 'success',
+                    });
+                }}
+                onUpdateUserDetails={(details, reset) => {
+                    // TODO: Update with TRPC mutation
+                    console.log({ details });
+                    reset(
+                        {
+                            ...details,
+                        },
+                        {
+                            keepIsValid: false,
+                            keepDirty: false,
+                            keepTouched: false,
+                        }
+                    );
+                }}
             />
         </MemberNavigationPage>
     );
