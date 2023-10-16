@@ -4,7 +4,7 @@ import { ReportProblemRounded } from '@mui/icons-material';
 import Box from '@mui/material/Box';
 import { SxProps, Theme, styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
-import { DeepPartial, useForm } from 'react-hook-form';
+import { DeepPartial, useForm, UseFormReset } from 'react-hook-form';
 import { ALERT_TYPE, Alert } from '../../Alert';
 import { Button } from '../../Button';
 import { CenteredContainer } from '../../Containers';
@@ -42,7 +42,10 @@ export function FormRenderer<ValidationSchema extends z.ZodTypeAny>({
     clearErrorMessage?: () => void;
     validationMode?: 'onBlur' | 'onChange' | 'onSubmit' | 'onTouched' | 'all';
     onBack?: () => void;
-    onSubmit: (data: z.infer<ValidationSchema>) => void;
+    onSubmit: (
+        data: z.infer<ValidationSchema>,
+        resetForm: UseFormReset<z.TypeOf<ValidationSchema>>
+    ) => void;
     sx?: SxProps<Theme>;
 }) {
     const form = useForm<z.infer<ValidationSchema>>({
@@ -54,6 +57,7 @@ export function FormRenderer<ValidationSchema extends z.ZodTypeAny>({
     const {
         formState: { isValid },
         handleSubmit,
+        reset,
     } = form;
 
     return (
@@ -131,7 +135,7 @@ export function FormRenderer<ValidationSchema extends z.ZodTypeAny>({
                     data-testid={TEST_IDS.SUBMIT_BUTTON}
                     disabled={!isValid || isSubmitting}
                     isLoading={isSubmitting}
-                    onClick={handleSubmit((values) => onSubmit(values))}
+                    onClick={handleSubmit((values) => onSubmit(values, reset))}
                 >
                     {submitButtonText}
                 </Button>

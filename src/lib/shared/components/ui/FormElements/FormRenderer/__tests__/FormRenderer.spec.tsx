@@ -234,5 +234,35 @@ describe('FormRenderer', () => {
 
             expect(button).toBeDisabled();
         });
+
+        it('resets the form', async () => {
+            const { getByTestId, getByPlaceholderText } = renderWithTheme(
+                <FormRenderer
+                    validationSchema={z.object({
+                        firstName: z.string(),
+                    })}
+                    config={getMockInputConfig({
+                        id: 'test',
+                        type: 'input',
+                        label: 'First Name',
+                        placeholder: 'First Name',
+                        statePath: 'firstName',
+                        inputType: 'text',
+                    })}
+                    validationMode={'onChange'}
+                    onSubmit={(_, reset) => {
+                        console.log('resetting', _);
+                        reset();
+                    }}
+                />
+            );
+            const name = 'John';
+            const input = getByPlaceholderText('First Name');
+            const submitButton = getByTestId(TEST_IDS.SUBMIT_BUTTON);
+            await user.type(input, name);
+            await userEvent.click(submitButton);
+            await sleep(0);
+            expect(input).toHaveValue('');
+        });
     });
 });
