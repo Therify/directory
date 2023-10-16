@@ -3,6 +3,12 @@ import { TherifyUser } from '@/lib/shared/types';
 import { SettingsPage, SETTINGS_TAB_IDS, TEST_IDS } from './SettingsPage';
 
 const mockUser = {} as TherifyUser.TherifyUser;
+
+const mockUseCloudinaryWidget = jest.fn();
+jest.mock('@/lib/modules/media/components/hooks/userCloudinaryWidget', () => ({
+    useCloudinaryWidget: (args: unknown) => mockUseCloudinaryWidget(args),
+}));
+
 describe('SettingsPage', () => {
     it('should render the Account tab', () => {
         const { getByTestId } = renderWithTheme(

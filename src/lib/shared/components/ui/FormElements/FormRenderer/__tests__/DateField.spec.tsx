@@ -55,7 +55,8 @@ describe('Date field', () => {
         await user.type(input, userInput);
         expect(input).toHaveValue(userInput);
         await user.click(submitButton);
-        expect(mockSubmit).toHaveBeenCalledWith({
+        const dataArg = mockSubmit.mock.calls[0][0];
+        expect(dataArg).toEqual({
             date: new Date(userInput),
         });
     });

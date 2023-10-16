@@ -19,9 +19,8 @@ describe('Select field', () => {
         options: ['Yes', 'No'],
     };
     const mockRadioSelectConfig = getMockInputConfig(radioSelectConfig);
-    const radioSelectDetails = mockRadioSelectConfig.sections[0].fields[0] as RadioSelectInput<
-        z.infer<typeof mockSchema>
-    >;
+    const radioSelectDetails = mockRadioSelectConfig.sections[0]
+        .fields[0] as RadioSelectInput<z.infer<typeof mockSchema>>;
 
     it('renders radio select', () => {
         const { getByText } = renderWithTheme(
@@ -49,7 +48,8 @@ describe('Select field', () => {
         const optionEl = getByText('Yes');
         await userEvent.click(optionEl);
         await user.click(submitButton);
-        expect(mockSubmit).toHaveBeenCalledWith({ yesOrNo: 'Yes' });
+        const dataArg = mockSubmit.mock.calls[0][0];
+        expect(dataArg).toEqual({ yesOrNo: 'Yes' });
     });
 
     it('requires selection to submit', async () => {
@@ -77,29 +77,30 @@ describe('Select field', () => {
                 isSubmitting
             />
         );
-        radioSelectDetails.options.forEach(option => {
+        radioSelectDetails.options.forEach((option) => {
             expect(getByText(option as string)).toHaveClass('Mui-disabled');
-        })
+        });
     });
 
     it('selects default value when given at the field level', async () => {
-            const mockSubmit = jest.fn();
-            const mockDefaultValueConfig = getMockInputConfig({
-                    ...radioSelectDetails,
-                    defaultValue: 'Yes',
-                });
-            const { getByText } = renderWithTheme(
-                <FormRenderer
-                    validationSchema={mockSchema}
-                    config={mockDefaultValueConfig}
-                    validationMode={'onChange'}
-                    onSubmit={mockSubmit}
-                />
-            );
-            // allow the default value to re-render before assertion occurs
-            await sleep(0);
-            const submitButton = getByText('Submit');
-            await user.click(submitButton);
-            expect(mockSubmit).toHaveBeenCalledWith({ yesOrNo: 'Yes' });
+        const mockSubmit = jest.fn();
+        const mockDefaultValueConfig = getMockInputConfig({
+            ...radioSelectDetails,
+            defaultValue: 'Yes',
         });
+        const { getByText } = renderWithTheme(
+            <FormRenderer
+                validationSchema={mockSchema}
+                config={mockDefaultValueConfig}
+                validationMode={'onChange'}
+                onSubmit={mockSubmit}
+            />
+        );
+        // allow the default value to re-render before assertion occurs
+        await sleep(0);
+        const submitButton = getByText('Submit');
+        await user.click(submitButton);
+        const dataArg = mockSubmit.mock.calls[0][0];
+        expect(dataArg).toEqual({ yesOrNo: 'Yes' });
+    });
 });

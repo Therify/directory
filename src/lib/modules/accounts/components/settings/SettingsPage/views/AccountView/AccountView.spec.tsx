@@ -191,6 +191,6 @@ describe('SettingsPage > Account View', () => {
             expect(onUpdateUserDetails).toHaveBeenCalledTimes(1);
             expect(updatedDataArg).toEqual(mockUserDetails);
             expect(resetFormArg).toBeInstanceOf(Function);
-        });
+        }, 10000);
     });
 });

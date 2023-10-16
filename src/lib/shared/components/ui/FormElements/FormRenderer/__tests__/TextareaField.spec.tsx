@@ -54,7 +54,8 @@ describe('Textarea field', () => {
         await user.type(input, description);
         expect(input).toHaveValue(description);
         await user.click(submitButton);
-        expect(mockSubmit).toHaveBeenCalledWith({ description });
+        const dataArg = mockSubmit.mock.calls[0][0];
+        expect(dataArg).toEqual({ description });
     });
 
     it('validates textarea', async () => {

@@ -90,7 +90,8 @@ describe('Toggle Field', () => {
         const submitButton = getByText('Submit');
         await user.click(toggle);
         await user.click(submitButton);
-        expect(mockSubmit).toHaveBeenCalledWith({ iAgree: true });
+        const dataArg = mockSubmit.mock.calls[0][0];
+        expect(dataArg).toEqual({ iAgree: true });
     });
 
     it('validates toggle', async () => {
