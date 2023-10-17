@@ -48,6 +48,8 @@ export const SettingsPage = ({
     currentTab,
     onTabChange,
     onUpdateUserDetails,
+    onImageUploadError,
+    onImageUploadSuccess,
     defaultAccountDetails,
 }: SettingsPageProps) => {
     return (
@@ -65,8 +67,8 @@ export const SettingsPage = ({
                 {currentTab === SETTINGS_TAB_IDS.ACCOUNT && (
                     <TabContent data-testid={TEST_IDS.ACCOUNT_TAB}>
                         <AccountView
-                            onImageUploadError={() => {}}
-                            onImageUploadSuccess={() => {}}
+                            onImageUploadError={onImageUploadError}
+                            onImageUploadSuccess={onImageUploadSuccess}
                             imageUrl={user?.avatarUrl}
                             onUpdateUserDetails={onUpdateUserDetails}
                             defaultAccountDetails={defaultAccountDetails}
