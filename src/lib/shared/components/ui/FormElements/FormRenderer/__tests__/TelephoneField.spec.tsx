@@ -54,7 +54,8 @@ describe('Telephone field', () => {
         const submitButton = getByText('Submit');
         await user.type(input, number);
         await user.click(submitButton);
-        expect(mockSubmit).toHaveBeenCalledWith({ phone: number });
+        const dataArg = mockSubmit.mock.calls[0][0];
+        expect(dataArg).toEqual({ phone: number });
     });
 
     it('masks telephone input', async () => {
@@ -108,7 +109,8 @@ describe('Telephone field', () => {
         await user.type(input, phone);
         expect(input).toHaveValue(formattedPhone);
         await user.click(submitButton);
-        expect(mockSubmit).toHaveBeenCalledWith({
+        const dataArg = mockSubmit.mock.calls[0][0];
+        expect(dataArg).toEqual({
             phone: expectedPhone,
         });
     });

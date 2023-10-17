@@ -52,7 +52,8 @@ describe('Password field', () => {
         await user.type(input, password);
         expect(input).toHaveValue(password);
         await user.click(submitButton);
-        expect(mockSubmit).toHaveBeenCalledWith({ password });
+        const dataArg = mockSubmit.mock.calls[0][0];
+        expect(dataArg).toEqual({ password });
     });
 
     it('validates password input', async () => {

@@ -1,3 +1,4 @@
+import { DeepPartial, UseFormReset } from 'react-hook-form';
 import {
     H3,
     PageContentContainer,
@@ -5,7 +6,9 @@ import {
     TabOption,
 } from '@/lib/shared/components/ui';
 import { TherifyUser } from '@/lib/shared/types';
+import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
+import { AccountView, AccountForm, AccountViewProps } from './views';
 
 export const SETTINGS_TAB_IDS = {
     ACCOUNT: 'account',
@@ -19,6 +22,13 @@ interface SettingsPageProps {
     user: TherifyUser.TherifyUser;
     currentTab: SettingsTabId;
     onTabChange: (tabId: SettingsTabId) => void;
+    onUpdateUserDetails: (
+        data: AccountForm,
+        reset: UseFormReset<AccountForm>
+    ) => void;
+    onImageUploadError: AccountViewProps['onImageUploadError'];
+    onImageUploadSuccess: AccountViewProps['onImageUploadSuccess'];
+    defaultAccountDetails?: DeepPartial<AccountForm>;
 }
 const tabs: TabOption[] = [
     { id: SETTINGS_TAB_IDS.ACCOUNT, tabLabel: 'Account' },
@@ -37,40 +47,69 @@ export const SettingsPage = ({
     user,
     currentTab,
     onTabChange,
+    onUpdateUserDetails,
+    onImageUploadError,
+    onImageUploadSuccess,
+    defaultAccountDetails,
 }: SettingsPageProps) => {
     return (
-        <PageContentContainer padding={8} paddingTop={10} maxWidth={1448}>
-            <H3 marginBottom={10}>Settings</H3>
-            <Tabs
-                v3
-                selectedTab={currentTab}
-                onTabChange={(tabId) => onTabChange(tabId as SettingsTabId)}
-                ariaLabel="Settings tabs"
-                withBottomBorder
-                tabs={tabs}
-            />
-            {currentTab === SETTINGS_TAB_IDS.ACCOUNT && (
-                <TabContent data-testid={TEST_IDS.ACCOUNT_TAB}>
-                    {/* TODO: Add Account view */}
-                </TabContent>
-            )}
-            {currentTab === SETTINGS_TAB_IDS.CARE_DETAILS && (
-                <TabContent data-testid={TEST_IDS.CARE_DETAILS_TAB}>
-                    {/* TODO: Add Care Details view */}
-                </TabContent>
-            )}
-            {currentTab === SETTINGS_TAB_IDS.BILLING && (
-                <TabContent data-testid={TEST_IDS.BILLING_TAB}>
-                    {/* TODO: Add Billing & Payments view */}
-                </TabContent>
-            )}
-            {currentTab === SETTINGS_TAB_IDS.NOTIFICATIONS && (
-                <TabContent data-testid={TEST_IDS.NOTIFICATIONS_TAB}>
-                    {/* TODO: Add Email Notifications view */}
-                </TabContent>
-            )}
-        </PageContentContainer>
+        <PageContainer>
+            <InnerContainer>
+                <H3 marginBottom={10}>Settings</H3>
+                <Tabs
+                    v3
+                    selectedTab={currentTab}
+                    onTabChange={(tabId) => onTabChange(tabId as SettingsTabId)}
+                    ariaLabel="Settings tabs"
+                    withBottomBorder
+                    tabs={tabs}
+                />
+                {currentTab === SETTINGS_TAB_IDS.ACCOUNT && (
+                    <TabContent data-testid={TEST_IDS.ACCOUNT_TAB}>
+                        <AccountView
+                            onImageUploadError={onImageUploadError}
+                            onImageUploadSuccess={onImageUploadSuccess}
+                            imageUrl={user?.avatarUrl}
+                            onUpdateUserDetails={onUpdateUserDetails}
+                            defaultAccountDetails={defaultAccountDetails}
+                        />
+                    </TabContent>
+                )}
+                {currentTab === SETTINGS_TAB_IDS.CARE_DETAILS && (
+                    <TabContent data-testid={TEST_IDS.CARE_DETAILS_TAB}>
+                        {/* TODO: Add Care Details view */}
+                    </TabContent>
+                )}
+                {currentTab === SETTINGS_TAB_IDS.BILLING && (
+                    <TabContent data-testid={TEST_IDS.BILLING_TAB}>
+                        {/* TODO: Add Billing & Payments view */}
+                    </TabContent>
+                )}
+                {currentTab === SETTINGS_TAB_IDS.NOTIFICATIONS && (
+                    <TabContent data-testid={TEST_IDS.NOTIFICATIONS_TAB}>
+                        {/* TODO: Add Email Notifications view */}
+                    </TabContent>
+                )}
+            </InnerContainer>
+        </PageContainer>
     );
 };
 
-const TabContent = styled('div')();
+const TabContent = styled('div')(({ theme }) => ({
+    padding: theme.spacing(10, 0),
+}));
+
+const PageContainer = styled(PageContentContainer)(({ theme }) => ({
+    padding: theme.spacing(8),
+    paddingTop: theme.spacing(10),
+    height: '100%',
+    width: '100%',
+    overflow: 'auto',
+    maxWidth: '100% !important',
+}));
+
+const InnerContainer = styled(Box)({
+    width: '100%',
+    maxWidth: '1448px',
+    margin: 'auto',
+});

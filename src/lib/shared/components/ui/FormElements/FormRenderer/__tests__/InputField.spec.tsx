@@ -62,7 +62,8 @@ describe('Input field', () => {
         await user.type(input, 'John');
         expect(input).toHaveValue('John');
         await user.click(submitButton);
-        expect(mockSubmit).toHaveBeenCalledWith({ firstName: 'John' });
+        const dataArg = mockSubmit.mock.calls[0][0];
+        expect(dataArg).toEqual({ firstName: 'John' });
     });
 
     it('captures number input', async () => {
@@ -90,7 +91,8 @@ describe('Input field', () => {
         await user.type(input, '1');
         expect(input).toHaveValue(1);
         await user.click(submitButton);
-        expect(mockSubmit).toHaveBeenCalledWith({ age: 1 });
+        const dataArg = mockSubmit.mock.calls[0][0];
+        expect(dataArg).toEqual({ age: 1 });
     });
 
     it('captures email input', async () => {
@@ -120,7 +122,8 @@ describe('Input field', () => {
         await user.type(input, emailAddress);
         expect(input).toHaveValue(emailAddress);
         await user.click(submitButton);
-        expect(mockSubmit).toHaveBeenCalledWith({
+        const dataArg = mockSubmit.mock.calls[0][0];
+        expect(dataArg).toEqual({
             email: emailAddress,
         });
     });
@@ -151,7 +154,8 @@ describe('Input field', () => {
         await user.type(input, phone);
         expect(input).toHaveValue(phone);
         await user.click(submitButton);
-        expect(mockSubmit).toHaveBeenCalledWith({
+        const dataArg = mockSubmit.mock.calls[0][0];
+        expect(dataArg).toEqual({
             phone,
         });
     });
@@ -183,7 +187,8 @@ describe('Input field', () => {
         await user.type(input, phone);
         expect(input).toHaveValue(expectedPhone);
         await user.click(submitButton);
-        expect(mockSubmit).toHaveBeenCalledWith({
+        const dataArg = mockSubmit.mock.calls[0][0];
+        expect(dataArg).toEqual({
             phone: expectedPhone,
         });
     });

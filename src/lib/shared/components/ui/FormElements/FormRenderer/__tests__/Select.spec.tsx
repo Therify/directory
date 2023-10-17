@@ -55,7 +55,8 @@ describe('Select field', () => {
         );
         await userEvent.click(optionEl);
         await user.click(submitButton);
-        expect(mockSubmit).toHaveBeenCalledWith({ yesOrNo: 'Yes' });
+        const dataArg = mockSubmit.mock.calls[0][0];
+        expect(dataArg).toEqual({ yesOrNo: 'Yes' });
     });
 
     it('requires selection to submit', async () => {
