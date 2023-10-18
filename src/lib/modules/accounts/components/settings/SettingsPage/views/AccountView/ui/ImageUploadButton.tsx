@@ -5,6 +5,7 @@ import {
 } from '@/lib/modules/media/components/hooks/userCloudinaryWidget';
 import { styled } from '@mui/material/styles';
 import React from 'react';
+import { UnderlinedButton } from '../../ui/UnderLinedButton';
 interface MediaUploadWidgetProps {
     folder?: string;
     buttonText?: string;
@@ -42,9 +43,9 @@ export const ImageUploadButton = React.memo(
             },
         });
         return (
-            <UploadButton ref={buttonRef} disabled={disabled}>
+            <UnderlinedButton ref={buttonRef} disabled={disabled}>
                 {buttonText}
-            </UploadButton>
+            </UnderlinedButton>
         );
     },
     (prevProps, nextProps) => {
@@ -54,13 +55,3 @@ export const ImageUploadButton = React.memo(
         );
     }
 );
-
-const UploadButton = styled('button')(({ theme }) => ({
-    textDecoration: 'underline',
-    background: 'transparent',
-    border: 'none',
-    color: theme.palette.primary.main,
-    cursor: 'pointer',
-    padding: 0,
-    margin: 0,
-}));

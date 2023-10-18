@@ -8,7 +8,13 @@ import {
 import { TherifyUser } from '@/lib/shared/types';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
-import { AccountView, AccountForm, AccountViewProps } from './views';
+import {
+    AccountView,
+    AccountForm,
+    AccountViewProps,
+    CareDetailsView,
+} from './views';
+import { InsuranceProviderForm } from './views/CareDetailsView/form';
 
 export const SETTINGS_TAB_IDS = {
     ACCOUNT: 'account',
@@ -29,6 +35,12 @@ interface SettingsPageProps {
     onImageUploadError: AccountViewProps['onImageUploadError'];
     onImageUploadSuccess: AccountViewProps['onImageUploadSuccess'];
     defaultAccountDetails?: DeepPartial<AccountForm>;
+    memberInsuranceProvider?: InsuranceProviderForm['insuranceProvider'];
+    onCreateShareableLink: () => void;
+    onUpdateInsuranceDetails: (
+        data: InsuranceProviderForm,
+        resetForm: UseFormReset<InsuranceProviderForm>
+    ) => void;
 }
 const tabs: TabOption[] = [
     { id: SETTINGS_TAB_IDS.ACCOUNT, tabLabel: 'Account' },
@@ -43,6 +55,7 @@ export const TEST_IDS = {
     BILLING_TAB: 'billing',
     NOTIFICATIONS_TAB: 'notifications',
 } as const;
+
 export const SettingsPage = ({
     user,
     currentTab,
@@ -51,6 +64,9 @@ export const SettingsPage = ({
     onImageUploadError,
     onImageUploadSuccess,
     defaultAccountDetails,
+    onCreateShareableLink,
+    onUpdateInsuranceDetails,
+    memberInsuranceProvider,
 }: SettingsPageProps) => {
     return (
         <PageContainer>
@@ -77,7 +93,20 @@ export const SettingsPage = ({
                 )}
                 {currentTab === SETTINGS_TAB_IDS.CARE_DETAILS && (
                     <TabContent data-testid={TEST_IDS.CARE_DETAILS_TAB}>
-                        {/* TODO: Add Care Details view */}
+                        <CareDetailsView
+                            plan={user?.plan}
+                            dependents={[
+                                {
+                                    givenName: 'John',
+                                    surname: 'Doe',
+                                    emailAddress: 'test@therify.co',
+                                    id: '123',
+                                },
+                            ]}
+                            insuranceProvider={memberInsuranceProvider}
+                            onCreateShareableLink={onCreateShareableLink}
+                            onUpdateInsuranceDetails={onUpdateInsuranceDetails}
+                        />
                     </TabContent>
                 )}
                 {currentTab === SETTINGS_TAB_IDS.BILLING && (
@@ -111,5 +140,6 @@ const PageContainer = styled(PageContentContainer)(({ theme }) => ({
 const InnerContainer = styled(Box)({
     width: '100%',
     maxWidth: '1448px',
+    minHeight: '100%',
     margin: 'auto',
 });
