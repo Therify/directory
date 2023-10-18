@@ -16,7 +16,7 @@ export const PlanBadge = ({ plan }: PlanBadgeProps) => {
             icon={isPlanActive ? <CheckCircle /> : <CancelRounded />}
             color={isPlanActive ? 'success' : 'error'}
             sx={{
-                ml: 2,
+                ml: 4,
             }}
         >
             {getPlanStatusText(plan.status)}

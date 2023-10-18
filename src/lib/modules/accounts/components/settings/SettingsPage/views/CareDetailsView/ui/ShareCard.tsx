@@ -24,7 +24,7 @@ export const ShareCard = ({ onCreateShareableLink }: ShareCardProps) => {
                     startIcon={<ContentCopyRounded />}
                     onClick={onCreateShareableLink}
                 >
-                    Create a shareable Link
+                    Create a shareable link
                 </Button>
             </Container>
         </Paper>
