@@ -15,6 +15,7 @@ import {
     CareDetailsView,
     Dependent,
     InsuranceProviderForm,
+    BillingView,
 } from './views';
 
 export const SETTINGS_TAB_IDS = {
@@ -45,6 +46,7 @@ interface SettingsPageProps {
     dependents: Dependent[];
     onRemoveDependent: (dependentId: string) => void;
     dependentInvitationLink?: string;
+    launchStripePortal?: () => void;
 }
 const tabs: TabOption[] = [
     { id: SETTINGS_TAB_IDS.ACCOUNT, tabLabel: 'Account' },
@@ -74,6 +76,7 @@ export const SettingsPage = ({
     onRemoveDependent,
     dependents,
     dependentInvitationLink,
+    launchStripePortal,
 }: SettingsPageProps) => {
     return (
         <PageContainer>
@@ -113,7 +116,7 @@ export const SettingsPage = ({
                 )}
                 {currentTab === SETTINGS_TAB_IDS.BILLING && (
                     <TabContent data-testid={TEST_IDS.BILLING_TAB}>
-                        {/* TODO: Add Billing & Payments view */}
+                        <BillingView launchStripePortal={launchStripePortal} />
                     </TabContent>
                 )}
                 {currentTab === SETTINGS_TAB_IDS.NOTIFICATIONS && (
