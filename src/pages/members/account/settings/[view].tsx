@@ -103,9 +103,7 @@ export default function MemberSettingsPage({
                 onRemoveDependent={handleRemoveDependent}
                 onCreateShareableLink={console.log}
                 onUpdateInsuranceDetails={console.log}
-                dependentInvitationLink={
-                    'https://therify.co/members/dependent/invite/1234'
-                }
+                dependentInvitationLink={undefined}
             />
         </MemberNavigationPage>
     );
