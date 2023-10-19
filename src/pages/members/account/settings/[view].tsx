@@ -19,6 +19,22 @@ export const getServerSideProps = RBAC.requireMemberAuth(
     })
 );
 
+// TODO: Remove mock data
+const mockDependents = [
+    {
+        id: '1',
+        givenName: 'John',
+        surname: 'Doe',
+        emailAddress: 'test@therify.co',
+    },
+    {
+        id: '2',
+        givenName: 'Jane',
+        surname: 'Doe',
+        emailAddress: 'test2@therify.co',
+    },
+];
+
 export default function MemberSettingsPage({
     user,
 }: MemberTherifyUserPageProps) {
@@ -33,7 +49,9 @@ export default function MemberSettingsPage({
             router.push(URL_PATHS.PROVIDERS.COACH.CLIENTS);
         }
     }, [flags.isV3DirectoryEnabled, flags.didFlagsLoad, router]);
-
+    const handleRemoveDependent = (dependentId: string) => {
+        console.log({ dependentId });
+    };
     if (!user || !flags.isV3DirectoryEnabled) return null;
     return (
         <MemberNavigationPage
@@ -81,6 +99,13 @@ export default function MemberSettingsPage({
                         }
                     );
                 }}
+                dependents={mockDependents}
+                onRemoveDependent={handleRemoveDependent}
+                onCreateShareableLink={console.log}
+                onUpdateInsuranceDetails={console.log}
+                dependentInvitationLink={
+                    'https://therify.co/members/dependent/invite/1234'
+                }
             />
         </MemberNavigationPage>
     );
