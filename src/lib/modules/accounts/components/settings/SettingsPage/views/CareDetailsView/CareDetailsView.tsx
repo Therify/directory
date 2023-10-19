@@ -10,6 +10,7 @@ interface CareDetailsViewProps {
     dependents: Dependent[];
     insuranceProvider?: InsuranceProviderForm['insuranceProvider'];
     onCreateShareableLink: () => void;
+    onRemoveDependent: (dependentId: string) => void;
     onUpdateInsuranceDetails: (
         data: InsuranceProviderForm,
         resetForm: UseFormReset<InsuranceProviderForm>
@@ -20,11 +21,16 @@ export const CareDetailsView = ({
     dependents,
     onCreateShareableLink,
     onUpdateInsuranceDetails,
+    onRemoveDependent,
     insuranceProvider,
 }: CareDetailsViewProps) => {
     return (
         <Container>
-            <PlanDetails plan={plan} dependents={dependents} />
+            <PlanDetails
+                plan={plan}
+                dependents={dependents}
+                onRemoveDependent={onRemoveDependent}
+            />
             <ShareCard onCreateShareableLink={onCreateShareableLink} />
             <InsuranceForm
                 defaultValues={{

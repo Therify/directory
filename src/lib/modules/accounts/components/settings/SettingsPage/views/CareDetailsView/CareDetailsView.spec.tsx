@@ -39,6 +39,7 @@ describe('SettingsPage > Care Details View', () => {
                     onCreateShareableLink={jest.fn()}
                     insuranceProvider={undefined}
                     dependents={[]}
+                    onRemoveDependent={jest.fn()}
                 />
             );
             expect(getByText('Active')).toBeVisible();
@@ -51,6 +52,7 @@ describe('SettingsPage > Care Details View', () => {
                     onCreateShareableLink={jest.fn()}
                     insuranceProvider={undefined}
                     dependents={[]}
+                    onRemoveDependent={jest.fn()}
                 />
             );
             expect(getByText('Canceled')).toBeVisible();
@@ -66,6 +68,7 @@ describe('SettingsPage > Care Details View', () => {
                     onCreateShareableLink={jest.fn()}
                     insuranceProvider={undefined}
                     dependents={[]}
+                    onRemoveDependent={jest.fn()}
                 />
             );
             expect(getByText('Unknown')).toBeVisible();
@@ -78,6 +81,7 @@ describe('SettingsPage > Care Details View', () => {
                     onCreateShareableLink={jest.fn()}
                     insuranceProvider={undefined}
                     dependents={[]}
+                    onRemoveDependent={jest.fn()}
                 />
             );
             expect(getByText('Started: Jan 1st, 2001')).toBeVisible();
@@ -92,11 +96,52 @@ describe('SettingsPage > Care Details View', () => {
                     onCreateShareableLink={jest.fn()}
                     insuranceProvider={undefined}
                     dependents={mockDependents}
+                    onRemoveDependent={jest.fn()}
                 />
             );
             expect(getByText('Dependents: John Doe, Jane Doe')).toBeVisible();
         });
-        it.todo('removes dependents');
+
+        it('removes dependents', async () => {
+            const onRemoveDependent = jest.fn();
+            const { getByText } = renderWithTheme(
+                <CareDetailsView
+                    plan={mockPlan}
+                    onUpdateInsuranceDetails={jest.fn()}
+                    onCreateShareableLink={jest.fn()}
+                    insuranceProvider={undefined}
+                    dependents={mockDependents}
+                    onRemoveDependent={onRemoveDependent}
+                />
+            );
+            await user.click(getByText('Remove dependents'));
+            const removeButton = getByText(
+                `${mockDependents[0].givenName} ${mockDependents[0].surname}`
+            ).nextElementSibling;
+            await user.click(removeButton!);
+            expect(onRemoveDependent).toHaveBeenCalledWith(
+                mockDependents[0].id
+            );
+        });
+
+        it('allows canceling when removing dependents', async () => {
+            const onRemoveDependent = jest.fn();
+            const { queryByText, getByText } = renderWithTheme(
+                <CareDetailsView
+                    plan={mockPlan}
+                    onUpdateInsuranceDetails={jest.fn()}
+                    onCreateShareableLink={jest.fn()}
+                    insuranceProvider={undefined}
+                    dependents={mockDependents}
+                    onRemoveDependent={onRemoveDependent}
+                />
+            );
+            await user.click(getByText('Remove dependents'));
+            const dependentName = `${mockDependents[0].givenName} ${mockDependents[0].surname}`;
+            expect(getByText(dependentName)).toBeVisible();
+            await user.click(getByText('Cancel'));
+            expect(queryByText(dependentName)).toBeNull();
+        });
     });
 
     describe('Shareable link', () => {
@@ -109,6 +154,7 @@ describe('SettingsPage > Care Details View', () => {
                     onCreateShareableLink={onCreateShareableLink}
                     insuranceProvider={undefined}
                     dependents={mockDependents}
+                    onRemoveDependent={jest.fn()}
                 />
             );
 
@@ -128,6 +174,7 @@ describe('SettingsPage > Care Details View', () => {
                     onCreateShareableLink={jest.fn()}
                     insuranceProvider={insuranceProvider}
                     dependents={mockDependents}
+                    onRemoveDependent={jest.fn()}
                 />
             );
 
@@ -147,6 +194,7 @@ describe('SettingsPage > Care Details View', () => {
                     onCreateShareableLink={jest.fn()}
                     insuranceProvider={insuranceProvider}
                     dependents={mockDependents}
+                    onRemoveDependent={jest.fn()}
                 />
             );
             await user.click(getByLabelText('Insurance Provider'));

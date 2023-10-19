@@ -13,6 +13,7 @@ import {
     AccountForm,
     AccountViewProps,
     CareDetailsView,
+    Dependent,
 } from './views';
 import { InsuranceProviderForm } from './views/CareDetailsView/form';
 
@@ -41,6 +42,8 @@ interface SettingsPageProps {
         data: InsuranceProviderForm,
         resetForm: UseFormReset<InsuranceProviderForm>
     ) => void;
+    dependents: Dependent[];
+    onRemoveDependent: (dependentId: string) => void;
 }
 const tabs: TabOption[] = [
     { id: SETTINGS_TAB_IDS.ACCOUNT, tabLabel: 'Account' },
@@ -67,6 +70,8 @@ export const SettingsPage = ({
     onCreateShareableLink,
     onUpdateInsuranceDetails,
     memberInsuranceProvider,
+    onRemoveDependent,
+    dependents,
 }: SettingsPageProps) => {
     return (
         <PageContainer>
@@ -95,17 +100,11 @@ export const SettingsPage = ({
                     <TabContent data-testid={TEST_IDS.CARE_DETAILS_TAB}>
                         <CareDetailsView
                             plan={user?.plan}
-                            dependents={[
-                                {
-                                    givenName: 'John',
-                                    surname: 'Doe',
-                                    emailAddress: 'test@therify.co',
-                                    id: '123',
-                                },
-                            ]}
+                            dependents={dependents}
                             insuranceProvider={memberInsuranceProvider}
                             onCreateShareableLink={onCreateShareableLink}
                             onUpdateInsuranceDetails={onUpdateInsuranceDetails}
+                            onRemoveDependent={onRemoveDependent}
                         />
                     </TabContent>
                 )}
