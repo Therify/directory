@@ -104,6 +104,7 @@ export default function MemberSettingsPage({
                 onCreateShareableLink={console.log}
                 onUpdateInsuranceDetails={console.log}
                 dependentInvitationLink={undefined}
+                launchStripePortal={() => console.log('launch stripe portal')}
             />
         </MemberNavigationPage>
     );
