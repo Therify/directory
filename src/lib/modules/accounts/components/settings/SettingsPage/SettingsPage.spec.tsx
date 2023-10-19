@@ -19,6 +19,10 @@ describe('SettingsPage', () => {
                 onUpdateUserDetails={jest.fn()}
                 onImageUploadSuccess={jest.fn()}
                 onImageUploadError={jest.fn()}
+                dependents={[]}
+                onRemoveDependent={jest.fn()}
+                onCreateShareableLink={jest.fn()}
+                onUpdateInsuranceDetails={jest.fn()}
             />
         );
         expect(getByTestId(TEST_IDS.ACCOUNT_TAB)).toBeVisible();
@@ -32,6 +36,10 @@ describe('SettingsPage', () => {
                 onUpdateUserDetails={jest.fn()}
                 onImageUploadSuccess={jest.fn()}
                 onImageUploadError={jest.fn()}
+                dependents={[]}
+                onRemoveDependent={jest.fn()}
+                onCreateShareableLink={jest.fn()}
+                onUpdateInsuranceDetails={jest.fn()}
             />
         );
         expect(getByTestId(TEST_IDS.CARE_DETAILS_TAB)).toBeVisible();
@@ -45,6 +53,10 @@ describe('SettingsPage', () => {
                 onUpdateUserDetails={jest.fn()}
                 onImageUploadSuccess={jest.fn()}
                 onImageUploadError={jest.fn()}
+                dependents={[]}
+                onRemoveDependent={jest.fn()}
+                onCreateShareableLink={jest.fn()}
+                onUpdateInsuranceDetails={jest.fn()}
             />
         );
         expect(getByTestId(TEST_IDS.BILLING_TAB)).toBeVisible();
@@ -58,6 +70,10 @@ describe('SettingsPage', () => {
                 onUpdateUserDetails={jest.fn()}
                 onImageUploadSuccess={jest.fn()}
                 onImageUploadError={jest.fn()}
+                dependents={[]}
+                onRemoveDependent={jest.fn()}
+                onCreateShareableLink={jest.fn()}
+                onUpdateInsuranceDetails={jest.fn()}
             />
         );
         expect(getByTestId(TEST_IDS.NOTIFICATIONS_TAB)).toBeVisible();
@@ -72,6 +88,10 @@ describe('SettingsPage', () => {
                 onUpdateUserDetails={jest.fn()}
                 onImageUploadSuccess={jest.fn()}
                 onImageUploadError={jest.fn()}
+                dependents={[]}
+                onRemoveDependent={jest.fn()}
+                onCreateShareableLink={jest.fn()}
+                onUpdateInsuranceDetails={jest.fn()}
             />
         );
         getByText('Care Details').click();
