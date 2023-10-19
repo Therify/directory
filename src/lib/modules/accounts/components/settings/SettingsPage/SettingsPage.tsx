@@ -14,8 +14,8 @@ import {
     AccountViewProps,
     CareDetailsView,
     Dependent,
+    InsuranceProviderForm,
 } from './views';
-import { InsuranceProviderForm } from './views/CareDetailsView/form';
 
 export const SETTINGS_TAB_IDS = {
     ACCOUNT: 'account',
