@@ -9,6 +9,7 @@ interface CareDetailsViewProps {
     plan: TherifyUser.TherifyUser['plan'];
     dependents: Dependent[];
     insuranceProvider?: InsuranceProviderForm['insuranceProvider'];
+    dependentInvitationLink?: string;
     onCreateShareableLink: () => void;
     onRemoveDependent: (dependentId: string) => void;
     onUpdateInsuranceDetails: (
@@ -23,6 +24,7 @@ export const CareDetailsView = ({
     onUpdateInsuranceDetails,
     onRemoveDependent,
     insuranceProvider,
+    dependentInvitationLink,
 }: CareDetailsViewProps) => {
     return (
         <Container>
@@ -31,7 +33,10 @@ export const CareDetailsView = ({
                 dependents={dependents}
                 onRemoveDependent={onRemoveDependent}
             />
-            <ShareCard onCreateShareableLink={onCreateShareableLink} />
+            <ShareCard
+                dependentInvitationLink={dependentInvitationLink}
+                onCreateShareableLink={onCreateShareableLink}
+            />
             <InsuranceForm
                 defaultValues={{
                     insuranceProvider,

@@ -30,6 +30,10 @@ const mockDependents: Dependent[] = [
 
 describe('SettingsPage > Care Details View', () => {
     const user = userEvent.setup();
+    const mockWriteText = jest.fn();
+    beforeEach(() => {
+        mockWriteText.mockClear();
+    });
     describe('Plan details', () => {
         it('renders active plan status', () => {
             const { getByText } = renderWithTheme(
@@ -161,7 +165,43 @@ describe('SettingsPage > Care Details View', () => {
             await user.click(getByText('Create a shareable link'));
             expect(onCreateShareableLink).toHaveBeenCalled();
         });
-        it.todo('renders the shareable link');
+
+        it('renders the shareable link', () => {
+            const shareableLink = 'https://therify.co/invite/123';
+            const { getByText } = renderWithTheme(
+                <CareDetailsView
+                    plan={mockPlan}
+                    onUpdateInsuranceDetails={jest.fn()}
+                    onCreateShareableLink={jest.fn()}
+                    insuranceProvider={undefined}
+                    dependents={mockDependents}
+                    onRemoveDependent={jest.fn()}
+                    dependentInvitationLink={shareableLink}
+                />
+            );
+            expect(getByText(shareableLink)).toBeVisible();
+        });
+
+        it('copies the shareable link', async () => {
+            global.window.navigator.clipboard.writeText = async (
+                args: unknown
+            ) => mockWriteText(args);
+            const shareableLink = 'https://therify.co/invite/123';
+            const { getByText } = renderWithTheme(
+                <CareDetailsView
+                    plan={mockPlan}
+                    onUpdateInsuranceDetails={jest.fn()}
+                    onCreateShareableLink={jest.fn()}
+                    insuranceProvider={undefined}
+                    dependents={mockDependents}
+                    onRemoveDependent={jest.fn()}
+                    dependentInvitationLink={shareableLink}
+                />
+            );
+            const inviteButton = getByText(shareableLink).nextElementSibling!;
+            await user.click(inviteButton);
+            expect(mockWriteText).toHaveBeenCalledWith(shareableLink);
+        });
     });
 
     describe('Insurance Details', () => {

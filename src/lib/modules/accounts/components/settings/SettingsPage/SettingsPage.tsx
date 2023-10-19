@@ -44,6 +44,7 @@ interface SettingsPageProps {
     ) => void;
     dependents: Dependent[];
     onRemoveDependent: (dependentId: string) => void;
+    dependentInvitationLink?: string;
 }
 const tabs: TabOption[] = [
     { id: SETTINGS_TAB_IDS.ACCOUNT, tabLabel: 'Account' },
@@ -72,6 +73,7 @@ export const SettingsPage = ({
     memberInsuranceProvider,
     onRemoveDependent,
     dependents,
+    dependentInvitationLink,
 }: SettingsPageProps) => {
     return (
         <PageContainer>
@@ -105,6 +107,7 @@ export const SettingsPage = ({
                             onCreateShareableLink={onCreateShareableLink}
                             onUpdateInsuranceDetails={onUpdateInsuranceDetails}
                             onRemoveDependent={onRemoveDependent}
+                            dependentInvitationLink={dependentInvitationLink}
                         />
                     </TabContent>
                 )}
