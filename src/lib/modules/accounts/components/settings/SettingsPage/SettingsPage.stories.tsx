@@ -37,6 +37,10 @@ export const Default: StoryFn<typeof Component> = () => {
             onUpdateUserDetails={console.log}
             onImageUploadSuccess={console.log}
             onImageUploadError={console.log}
+            onRemoveDependent={console.log}
+            dependents={[]}
+            onUpdateInsuranceDetails={console.log}
+            onCreateShareableLink={console.log}
         />
     );
 };
