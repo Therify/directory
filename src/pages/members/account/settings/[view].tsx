@@ -105,6 +105,27 @@ export default function MemberSettingsPage({
                 onUpdateInsuranceDetails={console.log}
                 dependentInvitationLink={undefined}
                 launchStripePortal={() => console.log('launch stripe portal')}
+                onUpdateNotifications={(details, reset) => {
+                    // TODO: Update with TRPC mutation
+                    console.log({ details });
+                    reset(
+                        {
+                            ...details,
+                        },
+                        {
+                            keepIsValid: false,
+                            keepDirty: false,
+                            keepTouched: false,
+                        }
+                    );
+                }}
+                defaultNotificationSettings={{
+                    isEmailNotificationsOn: true,
+                    email: {
+                        newMessages: true,
+                        matchProgress: true,
+                    },
+                }}
             />
         </MemberNavigationPage>
     );

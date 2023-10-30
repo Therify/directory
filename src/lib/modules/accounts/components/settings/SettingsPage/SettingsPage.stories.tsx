@@ -41,6 +41,7 @@ export const Default: StoryFn<typeof Component> = () => {
             dependents={[]}
             onUpdateInsuranceDetails={console.log}
             onCreateShareableLink={console.log}
+            onUpdateNotifications={console.log}
         />
     );
 };

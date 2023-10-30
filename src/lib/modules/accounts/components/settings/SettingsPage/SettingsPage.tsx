@@ -16,6 +16,8 @@ import {
     Dependent,
     InsuranceProviderForm,
     BillingView,
+    NotificationsView,
+    NotificationsForm,
 } from './views';
 
 export const SETTINGS_TAB_IDS = {
@@ -47,6 +49,11 @@ interface SettingsPageProps {
     onRemoveDependent: (dependentId: string) => void;
     dependentInvitationLink?: string;
     launchStripePortal?: () => void;
+    onUpdateNotifications: (
+        data: NotificationsForm,
+        reset: UseFormReset<NotificationsForm>
+    ) => void;
+    defaultNotificationSettings?: DeepPartial<NotificationsForm>;
 }
 const tabs: TabOption[] = [
     { id: SETTINGS_TAB_IDS.ACCOUNT, tabLabel: 'Account' },
@@ -77,6 +84,8 @@ export const SettingsPage = ({
     dependents,
     dependentInvitationLink,
     launchStripePortal,
+    onUpdateNotifications,
+    defaultNotificationSettings,
 }: SettingsPageProps) => {
     return (
         <PageContainer>
@@ -121,7 +130,10 @@ export const SettingsPage = ({
                 )}
                 {currentTab === SETTINGS_TAB_IDS.NOTIFICATIONS && (
                     <TabContent data-testid={TEST_IDS.NOTIFICATIONS_TAB}>
-                        {/* TODO: Add Email Notifications view */}
+                        <NotificationsView
+                            onUpdateNotifications={onUpdateNotifications}
+                            defaultValues={defaultNotificationSettings}
+                        />
                     </TabContent>
                 )}
             </InnerContainer>
