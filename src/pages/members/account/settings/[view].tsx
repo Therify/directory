@@ -119,6 +119,13 @@ export default function MemberSettingsPage({
                         }
                     );
                 }}
+                defaultNotificationSettings={{
+                    isEmailNotificationsOn: true,
+                    email: {
+                        newMessages: true,
+                        matchProgress: true,
+                    },
+                }}
             />
         </MemberNavigationPage>
     );
