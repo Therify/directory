@@ -1,21 +1,21 @@
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
-import { Paragraph, Caption, FormRenderer } from '@/lib/shared/components/ui';
-import { NotificationsForm, notificationsForm } from './form';
+import { Paragraph, Caption } from '@/lib/shared/components/ui';
+import { NotificationsForm as NotificationsFormType } from './form';
 import { DeepPartial, UseFormReset } from 'react-hook-form';
+import { NotificationsForm } from './ui/NotificationsForm';
 
 interface NotificationsViewProps {
     onUpdateNotifications: (
-        data: NotificationsForm,
-        resetForm: UseFormReset<NotificationsForm>
+        data: NotificationsFormType,
+        resetForm: UseFormReset<NotificationsFormType>
     ) => void;
-    defaultValues?: DeepPartial<NotificationsForm>;
+    defaultValues?: DeepPartial<NotificationsFormType>;
 }
 export const NotificationsView = ({
     onUpdateNotifications,
     defaultValues,
 }: NotificationsViewProps) => {
-    console.log('notificationsForm.config', notificationsForm.config);
     return (
         <Container>
             <Paragraph bold>Notifications</Paragraph>
@@ -23,17 +23,9 @@ export const NotificationsView = ({
                 Send me an email when
             </Caption>
 
-            <FormRenderer
-                validationSchema={notificationsForm.schema}
-                config={notificationsForm.config}
+            <NotificationsForm
                 defaultValues={defaultValues}
                 onSubmit={onUpdateNotifications}
-                sx={{
-                    maxWidth: 600,
-                    '& > div': {
-                        padding: 0,
-                    },
-                }}
             />
         </Container>
     );
