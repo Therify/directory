@@ -43,7 +43,7 @@ import { getYear, intervalToDuration } from 'date-fns';
 import { ConnectionWidget } from '../ConnectionWidget/ConnectionWidget';
 import { CalloutBanner } from './CalloutBanner';
 import { CriteriaCard, CRITERIA_CARD_TYPES } from './CriteriaCard';
-import Lottie from 'react-lottie';
+// import Lottie from 'react-lottie';
 import ANIMATION_DATA from '../DirectoryCard/favoriteAnimation.json';
 import Favorite from '@mui/icons-material/Favorite';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
@@ -79,19 +79,20 @@ function renderFavoriteAnimation({
     isPaused,
     callback,
 }: RenderFavoriteAnimationProps) {
-    return (
-        <Lottie
-            options={DEFAULT_ANIMATION_OPTIONS}
-            isStopped={isStopped}
-            isPaused={isPaused}
-            eventListeners={[
-                {
-                    eventName: 'complete',
-                    callback,
-                },
-            ]}
-        />
-    );
+    return null
+    // (
+        // <Lottie
+        //     options={DEFAULT_ANIMATION_OPTIONS}
+        //     isStopped={isStopped}
+        //     isPaused={isPaused}
+        //     eventListeners={[
+        //         {
+        //             eventName: 'complete',
+        //             callback,
+        //         },
+        //     ]}
+        // />
+    // );
 }
 
 interface RenderFavoriteIconProps {

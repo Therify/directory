@@ -12,7 +12,7 @@ import { H4 } from '@/lib/shared/components/ui/Typography/Headers';
 import { Subhead } from '@/lib/shared/components/ui/Typography/Subhead';
 import { Button } from '@/lib/shared/components/ui/Button';
 import React from 'react';
-import Lottie from 'react-lottie';
+// import Lottie from 'react-lottie';
 import ANIMATION_DATA from './favoriteAnimation.json';
 import { DirectoryProfile } from '@/lib/shared/types/presentation';
 import { Badge } from '@/lib/shared/components/ui';
@@ -47,19 +47,20 @@ function renderFavoriteAnimation({
     isPaused,
     callback,
 }: RenderFavoriteAnimationProps) {
-    return (
-        <Lottie
-            options={DEFAULT_ANIMATION_OPTIONS}
-            isStopped={isStopped}
-            isPaused={isPaused}
-            eventListeners={[
-                {
-                    eventName: 'complete',
-                    callback,
-                },
-            ]}
-        />
-    );
+    return null 
+    // (
+        // <Lottie
+        //     options={DEFAULT_ANIMATION_OPTIONS}
+        //     isStopped={isStopped}
+        //     isPaused={isPaused}
+        //     eventListeners={[
+        //         {
+        //             eventName: 'complete',
+        //             callback,
+        //         },
+        //     ]}
+        // />
+    // );
 }
 
 interface RenderFavoriteIconProps {
